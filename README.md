@@ -2,4 +2,4 @@
 
 Currently under development.
 
-To check what features are currently support, please open and run the Jupyter notebook [un_CO2_emission.ipynb](./run_CO2_emission.ipynb)
+To check what features are currently support, please open and run the Jupyter notebook [run_CO2_emission.ipynb](./run_CO2_emission.ipynb)
