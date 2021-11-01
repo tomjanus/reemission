@@ -69,7 +69,7 @@ class MonthlyTemperature:
     def __post_init__(self):
         assert len(self.temp_profile) == 12
 
-    def calculate_eff_temp(self, coeff=0.05) -> float:
+    def calculate_eff_temp(self, coeff: float = 0.05) -> float:
         """ Calculate effective annual Temperature CO2 (deg C; for CO2
         diffusion estimation) """
         return math.log10(
@@ -110,14 +110,23 @@ class CarbonDioxideEmission(Emission):
     soil_carbon: float
     reservoir_tp: float
     pre_impoundment_table: dict
+    area_fractions: List[float]
 
     def __init__(self, catchment_area, reservoir_area, eff_temp,
-                 soil_carbon, reservoir_tp, config_file='config.ini'):
+                 soil_carbon, reservoir_tp, area_fractions,
+                 config_file='config.ini'):
         super().__init__(catchment_area, reservoir_area, config_file)
         # Initialise input data specific to carbon dioxide emissions
         self.eff_temp = eff_temp  # EFF temp CO2
         self.soil_carbon = soil_carbon  # in kg/m2 (section 4.12; sheet 'input data')
         self.reservoir_tp = reservoir_tp  # in ppb / ug L-1 (section 5.10; sheet 'input data')
+        try:
+            assert len(area_fractions) == len(Landuse)
+            self.area_fractions = area_fractions
+        except AssertionError:
+            print(
+                'List of area fractions not equal to number of landuse types')
+            self.area_fractions = None
         # Read the tables
         self.pre_impoundment_table = read_table(
             os.path.join('tables', 'Carbon_Dioxide', 'pre-impoundment.yaml'))
@@ -180,23 +189,16 @@ class CarbonDioxideEmission(Emission):
         return (self.__gross_total_emission() -
                 self.__fluxes_per_year(years=(100,)))
 
-    def __pre_impoundment_emission(self, area_fractions: List[float],
-                                   climate: str, soil_type: str) -> float:
+    def __pre_impoundment_emission(self, climate: str, soil_type: str) -> float:
         """
         Calculate CO2 emissions  g CO2eq m-2 yr-1 from the inundated area
         prior to impoundment
         """
         # TODO: Check if sum of fractions == 1, otherwise raise error
         __list_of_landuses = list(Landuse.__dict__['_member_map_'].values())
-        try:
-            assert len(area_fractions) == len(Landuse)
-        except AssertionError:
-            print(
-                'List of area fractions not equal to number of landuse types')
-            return None
 
         emissions = []
-        for landuse, fraction in zip(__list_of_landuses, area_fractions):
+        for landuse, fraction in zip(__list_of_landuses, self.area_fractions):
             # Calculate area in ha (not km2) allocated to each landuse
             area_landuse = (100 * self.reservoir_area) * fraction
             coeff = self.pre_impoundment_table.get(
@@ -209,28 +211,26 @@ class CarbonDioxideEmission(Emission):
         # Total emission in g CO2eq m-2 yr-1
         return tot_emission/((100 * self.reservoir_area)*0.01)
 
-    def calculate_profile(self, area_fractions: List[float], climate: str,
+    def calculate_profile(self, climate: str,
                           soil_type: str,
                           years: Tuple[int] = (1, 5, 10, 20, 30, 40, 50, 100)) \
             -> List[float]:
         """ Calculate CO2 emissions for a list of years given as an argument
         Flux at year x age - pre-impoundment emissions - non-anthropogenic
         emissions """
-        pre_impoundment = self.__pre_impoundment_emission(
-            area_fractions, climate, soil_type)
+        pre_impoundment = self.__pre_impoundment_emission(climate, soil_type)
         integrated_emission = self.__fluxes_per_year((100,))
         fluxes_profile = self.__fluxes_per_year(years)
         final_profile = [flux - integrated_emission - pre_impoundment for
                          flux in fluxes_profile]
         return final_profile
 
-    def calculate_total(self, area_fractions: List[float], climate: str,
-                        soil_type: str) -> float:
+    def calculate_total(self, climate: str, soil_type: str) -> float:
         """ Overall integrated emissions for lifetime, taken as 100 yrs
             unit:  g CO2eq m-2 yr-1 """
         net_total_emission = self.__net_total_emission()
         pre_impoundment_emission = \
-            self.__pre_impoundment_emission(area_fractions, climate, soil_type)
+            self.__pre_impoundment_emission(climate, soil_type)
         return net_total_emission - pre_impoundment_emission
 
 
