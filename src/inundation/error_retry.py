@@ -3,8 +3,8 @@
 """
 
 import time
-import math
 from functools import wraps
+
 
 def retry(ExceptionToCheck, tries=4, delay=3, backoff=1, logger=None):
     """Retry calling the decorated function using an exponential backoff.
@@ -46,12 +46,13 @@ def retry(ExceptionToCheck, tries=4, delay=3, backoff=1, logger=None):
 
     return deco_retry
 
+
 def main():
     @retry(Exception, tries=4)
     def test_fail(text):
         raise Exception("Fail")
     test_fail("check error retry")
 
+
 if __name__ == "__main__":
     main()
-
