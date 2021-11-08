@@ -12,6 +12,13 @@ from pathlib import Path
 from numpy import mean
 import yaml
 
+# Get relative imports to data
+module_dir = os.path.dirname(__file__)
+INI_FILE = os.path.abspath(
+    os.path.join(module_dir, '..', '..', 'config', 'emissions', 'config.ini'))
+TABLES = os.path.abspath(
+    os.path.join(module_dir, '..', '..', 'data', 'emissions'))
+
 
 class Climate(Enum):
     """ Enumeration class with climate types """
@@ -53,12 +60,17 @@ def read_config(file_path: Path) -> dict:
 
 def read_table(file_path: Path) -> Optional[dict]:
     """ Read yaml table given in file_path """
-    with open(file_path, "r") as stream:
-        try:
-            return yaml.safe_load(stream)
-        except yaml.YAMLError as exc:
-            print(exc)
-            return None
+    try:
+        stream = open(file_path, "r")
+        return yaml.safe_load(stream)
+    except FileNotFoundError as exc:
+        print(exc)
+        print(f"File in {file_path} not found.")
+    except yaml.YAMLError as exc:
+        print(exc)
+        print(f"File in {file_path} cannot be parsed.")
+    finally:
+        stream.close()
 
 
 @dataclass
@@ -84,7 +96,7 @@ class Emission(ABC):
     preinund_area: float
 
     def __init__(self, catchment_area, reservoir_area,
-                 config_file='config.ini'):
+                 config_file=INI_FILE):
         self.catchment_area = catchment_area
         self.reservoir_area = reservoir_area  # in km2
         self.config = read_config(config_file)
@@ -114,7 +126,7 @@ class CarbonDioxideEmission(Emission):
 
     def __init__(self, catchment_area, reservoir_area, eff_temp,
                  soil_carbon, reservoir_tp, area_fractions,
-                 config_file='config.ini'):
+                 config_file=INI_FILE):
         super().__init__(catchment_area, reservoir_area, config_file)
         # Initialise input data specific to carbon dioxide emissions
         self.eff_temp = eff_temp  # EFF temp CO2
@@ -129,7 +141,7 @@ class CarbonDioxideEmission(Emission):
             self.area_fractions = None
         # Read the tables
         self.pre_impoundment_table = read_table(
-            os.path.join('tables', 'Carbon_Dioxide', 'pre-impoundment.yaml'))
+            os.path.join(TABLES, 'Carbon_Dioxide', 'pre-impoundment.yaml'))
         self.par = self.__initialize_parameters_from_config(
             ['c_1', 'age', 'temp', 'resArea', 'soilC', 'ResTP', 'calc',
              'conv_coeff'])
