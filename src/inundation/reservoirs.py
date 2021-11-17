@@ -108,6 +108,7 @@ class Layer(ABC):
     def data(self) -> Any:
         pass
 
+
 @dataclass
 class Collection(ABC):
     """ Base Collection Class """
@@ -130,6 +131,7 @@ class Collection(ABC):
     def to_dict(self) -> Dict[str, str]:
         """ Get a dictionary with names as keys and paths as values """
         return {layer.name: layer.path for layer in self.collection}
+
 
 @dataclass
 class Vector(Layer):
@@ -163,6 +165,7 @@ class Vector(Layer):
         if self._data is None:
             self.load()
         return [json.loads(self._data.to_json())['features'][0]['geometry']]
+
 
 @dataclass
 class Dams(Vector):
@@ -426,9 +429,9 @@ class Dem(Layer):
         Path(output_path).mkdir(parents=True, exist_ok=True)
         output_file = os.path.join(output_path, self.name + '_stream.tif')
         remove_file(output_file)
-        wbt.extract_streams(flow_accum = self.path,
-                    output = output_file,
-                    threshold = stream_order)
+        wbt.extract_streams(flow_accum=self.path,
+                            output=output_file,
+                            threshold=stream_order)
 
     def stream_to_vec(self, d8_flow_pointer: str, output_path: str) -> None:
         """ Convert a raster stream file into a vector file.
@@ -471,7 +474,7 @@ class DemCollection(Collection):
         hydrologically correct) on all Dems in collection`
         """
         n_workers = specify_max_workers()
-        dask_client = Client(n_workers = n_workers)
+        dask_client = Client(n_workers=n_workers)
 
         if not parallel:
             for dem in self.collection:
@@ -490,7 +493,6 @@ class DemCollection(Collection):
         # always gets closed
         dask_client.close()
 
-
     def breach(self, output_path: str, dist: int = 5, fill: bool = True,
                parallel: bool = True, manual_split: bool = False) -> None:
         # TODO: Decide whether to specify workers and initialize dask client or
@@ -500,7 +502,7 @@ class DemCollection(Collection):
         hydrologically correct) on all Dems in collection`
         """
         n_workers = specify_max_workers()
-        dask_client = Client(n_workers = n_workers)
+        dask_client = Client(n_workers=n_workers)
 
         if not parallel:
             for dem in self.collection:
@@ -509,7 +511,7 @@ class DemCollection(Collection):
             compute_list = []
             for index, dem in enumerate(self.collection):
                 process = delayed(dem.breach)(output_path=output_path,
-                                            dist=dist, fill=fill)
+                                              dist=dist, fill=fill)
                 compute_list.append(process)
                 if manual_split and not index % n_workers:
                     _ = dask.compute(*compute_list)
@@ -521,11 +523,10 @@ class DemCollection(Collection):
         # always gets closed
         dask_client.close()
 
-
     def accumulate(self, output_path: str, parallel: bool = True) -> None:
         """ Performs flow accumulation on a collection of rasters """
 
-        #TODO: Shall we start dask client in here for parallel computation?
+        # TODO: Shall we start dask client in here for parallel computation?
         if parallel:
             compute_list = []
             for _, dem in enumerate(self.collection):
@@ -559,14 +560,14 @@ class DemCollection(Collection):
             compute_list = []
             for _, dem in enumerate(self.collection):
                 process = delayed(dem.extract_streams)(
-                    output_path = output_path,
-                    stream_order = stream_order)
+                    output_path=output_path,
+                    stream_order=stream_order)
                 compute_list.append(process)
             dask.compute(*compute_list)
         else:
             for _, dem in enumerate(self.collection):
-                dem.extract_streams(output_path = output_path,
-                                    stream_order = stream_order)
+                dem.extract_streams(output_path=output_path,
+                                    stream_order=stream_order)
 
     def stream_to_vec(self, output_path: str,
                       d8_flow_pntr_list: List[str],
@@ -579,7 +580,7 @@ class DemCollection(Collection):
         if parallel:
             compute_list = []
             for index, stream in enumerate(self.collection):
-                d8_flow_pointer =  d8_flow_pntr_list[index]
+                d8_flow_pointer = d8_flow_pntr_list[index]
                 process = delayed(stream.stream_to_vec)(
                     d8_flow_pointer=d8_flow_pointer,
                     output_path=output_path)
@@ -587,7 +588,7 @@ class DemCollection(Collection):
             dask.compute(*compute_list)
         else:
             for index, stream in enumerate(self.collection):
-                d8_flow_pointer =  d8_flow_pntr_list[index]
+                d8_flow_pointer = d8_flow_pntr_list[index]
                 stream.stream_to_vec(
                     d8_flow_pointer=d8_flow_pointer,
                     output_path=output_path)
