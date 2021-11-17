@@ -1,0 +1,63 @@
+---
+# Pre impoundment emissions – via landcover of inundated rea – soil type EFs -  kg CH4/ha/yr
+Boreal:
+  mineral:
+    bare: 0.0
+    crops: 0.0
+    forest: 0.0
+    shrubs: 0.0
+    urban: 0.0
+    wetlands: 0.0
+  organic:
+    bare: 6.1
+    crops: 0.0
+    forest: 4.5
+    shrubs: 1.4
+    urban: 19.6
+    wetlands: 89.0
+Subtropical:
+  mineral:
+    bare: 0.0
+    crops: 0.0
+    forest: 0.0
+    shrubs: 0.0
+    urban: 0.0
+    wetlands: 0.0
+  organic:
+    bare: 7.0
+    crops: 0.0
+    forest: 2.5
+    shrubs: 7.0
+    urban: 19.6
+    wetlands: 116.3
+Temperate:
+  mineral:
+    bare: 0.0
+    crops: 0.0
+    forest: 0.0
+    shrubs: 0.0
+    urban: 0.0
+    wetlands: 0.0
+  organic:
+    bare: 6.1
+    crops: 0.0
+    forest: 0.0
+    shrubs: 18.9
+    urban: 19.6
+    wetlands: 0.0
+Tropical:
+  mineral:
+    bare: 0.0
+    crops: 0.0
+    forest: 0.0
+    shrubs: 0.0
+    urban: 0.0
+    wetlands: 0.0
+  organic:
+    bare: 7.0
+    crops: 75.0
+    forest: 1.8
+    shrubs: 7.0
+    urban: 19.6
+    wetlands: 41.0
+...
