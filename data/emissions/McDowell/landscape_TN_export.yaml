@@ -1,0 +1,74 @@
+---
+# McDowell et al. 2020 landscape TN export model
+# Regression model based on global empirical solute data
+# Biomes categorical as intercept terms.
+# Model predicts natural log (mg/L) to which the bias correction factor is
+# applied. The mean annual catchment TN loading (kg yr-1) is then the predicted
+# concentration (mg/L) * annual discharge (m3 yr-1) * 10-3
+# Units and descriptions
+# mean_prec: Mean precipitation (mean monthly, mm)
+# mean_slope: Mean slope of the catchment (%)
+# cropland: Percent of catchment area covered with croplands (%)
+# soil_wet: Soil wetness (mm over profile)
+# corr: Bias correction factor (-)
+# coeff_det: Coefficient of determination (-)
+# Biomes
+# 1: deserts & xeric shrublands
+# 2: mediterranean forests, woodlands & scrub
+# 3: montane grasslands & shrublands
+# 4: temperate broadleaf & mixed forests
+# 5: temperate conifer forests
+# 6: temperate grasslands, savannas & shrublands
+# 7: tropical & subtropical dry broadleaf forests
+# 8: tropical & subtropical grasslands, savannas & shrublands
+# 9: tropical & subtropical moist broadleaf forests
+# 10: tundra
+intercept:
+  coeff: -1.5181
+  se: 0.2136
+mean_prec:
+  coeff: -0.0089
+  se: 0.0012
+mean_slope:
+  coeff: -0.1838
+  se: 0.0193
+cropland:
+  coeff: 0.0106
+  se: 0.0011
+soil_wet:
+  coeff: 0.0055
+  se: 0.0015
+biome:
+  1:
+    coeff: 1.9935
+    se: 0.2435
+  2:
+    coeff: 3.2782
+    se: 0.4312
+  3:
+    coeff: 1.5238
+    se: 0.2471
+  4:
+    coeff: 1.3245
+    se: 0.1829
+  5:
+    coeff: 1.8488
+    se: 0.2202
+  6:
+    coeff: 1.6756
+    se: 0.1891
+  7:
+    coeff: 1.0801
+    se: 0.2509
+  8:
+    coeff: 0.5203
+    se: 0.2309
+  9:
+    coeff: 1.2144
+    se: 0.2089
+  10:
+    coeff: 0.0
+    se: 0.0
+corr: 0.595
+coeff_det: 0.60
+...
