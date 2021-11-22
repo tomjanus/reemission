@@ -1,0 +1,9 @@
+---
+# Human P load factors (portion of P from human activities entering
+# the waterbodies of the catchment, depending on the level of wastewater
+# treatment
+none: 1
+primary: 0.9
+secondary: 0.3
+tertiary: 0.1
+...
