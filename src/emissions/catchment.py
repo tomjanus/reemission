@@ -11,7 +11,7 @@ from .constants import (TreatmentFactor, Landuse, LanduseIntensity,
 
 # Set up module logger
 log = logging.getLogger(__name__)
-
+# Load path to Yaml tables
 module_dir = os.path.dirname(__file__)
 TABLES = os.path.abspath(
     os.path.join(module_dir, '..', '..', 'data', 'emissions'))
@@ -24,7 +24,6 @@ p_loads_pop: ClassVar[Dict] = read_table(
     os.path.join(TABLES, 'phosphorus_loads.yaml'))
 p_exports: ClassVar[Dict] = read_table(
     os.path.join(TABLES, 'phosphorus_exports.yaml'))
-
 # Margin for error by which the sum of landuse fractions can differ from 1.0
 EPS = 0.01
 
@@ -174,7 +173,7 @@ class Catchment:
             return inflow_p
 
         # Define the wrapper function for running find_inflow in a recurrent
-        # manner
+        # manner until convergence
         def recurrence(p_conc):
             """ Calls find_inflow_tp in a recurrent manner until output
                  concentration is equal to input concentration (within set
