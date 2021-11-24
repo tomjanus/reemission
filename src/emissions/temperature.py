@@ -22,3 +22,16 @@ class MonthlyTemperature:
         """
         return math.log10(
             mean([10**(temp * coeff) for temp in self.temp_profile]))/coeff
+
+    @property
+    def coldest(self):
+        """ Finds coldest monthly temperature within the monthly profile """
+        return min(self.temp_profile)
+
+    def mean_warmest_four(self, number_of_months: int = 4) -> float:
+        """ Finds the mean temperature of the warmest n months
+            By default the function calculates the mean of 4 warmest months """
+        sorted_temp_profile = self.temp_profile.copy()
+        sorted_temp_profile.sort(reverse=True)
+        return sum(sorted_temp_profile[:number_of_months])/len(
+            sorted_temp_profile[:number_of_months])
