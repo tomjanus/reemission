@@ -3,11 +3,10 @@ import os
 import logging
 import math
 from dataclasses import dataclass
-from typing import Dict, List, Type, Optional, ClassVar
+from typing import Dict, List, ClassVar
 from .utils import read_table, find_enum_index
-from .reservoir import Reservoir
-from .constants import (TreatmentFactor, Landuse, LanduseIntensity,
-                        Biome, P_MOLAR, N_MOLAR)
+from .biogenic import BiogenicFactors
+from .constants import Landuse
 
 # Set up module logger
 log = logging.getLogger(__name__)
@@ -39,8 +38,8 @@ class Catchment:
     etransp: float  # Mean annual evapotranspiration in mm/year
     soil_wetness: float  # Soil wetness in mm over profile
     area_fractions: List[float]  # Fractions of catchment area allocated
-    # to specific landuse types given in Landue Enum type
-    reservoir: Optional[Type[Reservoir]] = None
+    biogenic_factors: BiogenicFactors  # categorical descriptors playing part
+    # in the determination of the trophic status of the the reservoir
 
     def __post_init__(self):
         """ Check if the provided list of landuse fractions has the same
@@ -67,32 +66,29 @@ class Catchment:
         """ Return landuse area from catchment area and landuse fraction """
         return self.area * landuse_fraction
 
-    def add_reservoir(self, reservoir: Type[Reservoir]) -> None:
-        """ Add reservoir to the Catchment object """
-        self.reservoir = reservoir
-
     @property
     def discharge(self) -> float:
         """ Calculate mean annual discharge in m3/year from runoff in mmm/year
             and area in ha """
         return 10.0 * self.runoff * self.area
 
-    def phosphorus_load_pop_gres(
-            self, treatment: TreatmentFactor = TreatmentFactor.NONE) -> float:
+    def phosphorus_load_pop_gres(self) -> float:
         """ Return phosphorus load in kg P yr-1 from human activity from the
             population and the level of wastewater treament.
             Follows the methodology applied in g-res tool:
             https://g-res.hydropower.org/. """
-        load = 0.002 * 365.25 * self.population * p_loads_pop[treatment.value]
+        treatment_factor = self.biogenic_factors.treatment_factor
+        load = 0.002 * 365.25 * self.population * p_loads_pop[
+            treatment_factor.value]
         return load
 
-    def phosphorus_load_land_gres(
-            self, intensity: LanduseIntensity = LanduseIntensity.LOW) -> float:
+    def phosphorus_load_land_gres(self) -> float:
         """ Calculate phosphorus load from land in the catchment, considering
             differences in P emissions across different landuse types.
             Phosphorus load returned in kg P yr-1.
             Follows the methodology applied in g-res tool:
             https://g-res.hydropower.org/. """
+        intensity = self.biogenic_factors.landuse_intensity
         landuse_names = [landuse.value for landuse in Landuse]
 
         # Define two inner funtions to determine land cover export coefficients
@@ -127,28 +123,31 @@ class Catchment:
             load += coefficient * area_fraction * self.area
         return load
 
-    def phosphorus_load_mcdowell(self, biome: Type[Biome]):
+    def phosphorus_load_gres(self):
+        """ Return annual discharge of P from catchment to the reservoir in
+            kg P yr-1 using g-res approach """
+        return self.phosphorus_load_pop_gres() + \
+            self.phosphorus_load_land_gres()
+
+    def phosphorus_load_mcdowell(self):
         """ Calculate annual discharge of P from catchment to the reservoir
-            in kg P yr-1 """
-        inflow_p = self.__inflow_p_mcdowell(biome=biome)  # micrograms/L
+            in kg P yr-1 using McDowell regression """
+        inflow_p = self.__inflow_p_mcdowell()  # micrograms/L
         # discharge is given in m3/year
         return 1e-6 * inflow_p * self.discharge
 
-    def __inflow_p_gres(
-            self,
-            treatment: TreatmentFactor = TreatmentFactor.NONE,
-            intensity: LanduseIntensity = LanduseIntensity.LOW) -> float:
+    def __inflow_p_gres(self) -> float:
         """ Calculate influent phosphorus concentration to the reservoir
             in micrograms/L following the G-Res approach. """
-        load_pop = self.phosphorus_load_pop_gres(treatment=treatment)
-        load_land = self.phosphorus_load_land_gres(intensity=intensity)
+        load_pop = self.phosphorus_load_pop_gres()
+        load_land = self.phosphorus_load_land_gres()
         load_total = load_pop + load_land
         return 10**6 * load_total / self.discharge
 
-    def __inflow_p_mcdowell(self, biome: Type[Biome],
-                            init_p: float = 5.0, eps=1e-6) -> float:
+    def __inflow_p_mcdowell(self, init_p: float = 5.0, eps=1e-6) -> float:
         """ Calculate influent phosphorus concetration to the reservoir
             in micrograms/L using regression model of McDowell 2020 """
+        biome = self.biogenic_factors.biome
         # Calculate natural logarithm of total phosphorus conc. in mg/L
         # Find percentage of catchment area allocated to crops
         crop_index = find_enum_index(enum=Landuse, to_find=Landuse.CROPS)
@@ -185,26 +184,23 @@ class Catchment:
 
         return recurrence(init_p)
 
-    def median_inflow_p(self, method: str = "g-res", **kwargs) -> float:
+    def median_inflow_p(self, method: str = "g-res") -> float:
         """ Calculate median influent total phosphorus concentration in
             micrograms/L entering the reservoir with runoff """
         if method == "g-res":
-            treatment = kwargs.get('treatment', TreatmentFactor.NONE)
-            intensity = kwargs.get('intensity', LanduseIntensity.LOW)
-            return self.__inflow_p_gres(treatment, intensity)
+            return self.__inflow_p_gres()
         if method == "mcdowell":
-            biome = kwargs.get('biome', Biome.TROPICALGRASSLANDS)
-            return self.__inflow_p_mcdowell(biome)
+            return self.__inflow_p_mcdowell()
         else:
             log.warning('Unrecognize method %s. Returning None', method)
             return None
 
-    def median_inflow_n(
-            self, biome: Type[Biome] = Biome.TROPICALGRASSLANDS) -> float:
+    def median_inflow_n(self) -> float:
         """ Calculate median influent total nitrogen concentration in
             micrograms/L entering the reservoir with runoff.
             Contrary to phosphorus, no other method than McDowell is used.
         """
+        biome = self.biogenic_factors.biome
         intercept = tn_coeff_table['intercept']['coeff']
         prec_coeff = tn_coeff_table['mean_prec']['coeff']
         slope_coeff = tn_coeff_table['mean_slope']['coeff']
@@ -221,41 +217,14 @@ class Catchment:
             biome_coeff) * bias_corr
         return inflow_n
 
-    def nitrogen_load(
-            self, biome: Type[Biome] = Biome.TROPICALGRASSLANDS) -> float:
+    def nitrogen_load(self) -> float:
         """ Calculate total nitrogen (TN) load in kg N yr-1 entering the
             reservoir with catchment runoff """
-        inflow_n = self.median_inflow_n(biome)
+        inflow_n = self.median_inflow_n()
         return 1e-5 * self.area * self.runoff * inflow_n
 
-    # CARRY ON FROM HERE:
-
-    def tn_fixation_load(self) -> float:
-        """ Calculate total N internal fixation load following the method
-            described in Maarva et al (2018)
-            --------------------------------------------------------------
-            Total N fixation depends on water residence time and molar TN:TP
-            stoichiometry. It is formulated as the % of the riverine inflow
-            TN load using the following formula:
-            tn_fix (%) = [ 37.2 / (1 + exp(0.5 * tn_tp_ratio – 6.877))  ] * mu
-            where:
-            mu = erf ((residence_time - 0.028) / 0.04), with residence_time
-                given in years
-            Molar weights of P and N are as follows:
-            * P_molar = 30.97 gP / mole
-            * N_molar = 14 gN / mole
-            --------------------------------------------------------------
-            To account for uncertainties in the tn_fix estimates, a normal
-            distribution with standard deviation of +/-10% was assumed
-            around the predict tn_fix values (Akbarzahdeh 2019)
-            --------------------------------------------------------------
-        """
-        tp_load_annual = 8622  # kg P / yr
-        tn_load_annual = 65953  # kg N / yr
-        residence_time = 0.0058  # yrs
-        mu = max(0, math.erf((residence_time-0.028)/0.04))
-        #  molar ratio of inflow TP and TN loads (-)
-        tn_tp_ratio = (tn_load_annual/N_MOLAR) / (tp_load_annual/P_MOLAR)
-        tn_fix_percent = (37.2/(1+math.exp(0.5*tn_tp_ratio-6.877))) * mu
-        # Calculate total internal N fixation in kg/yr
-        tn_fix_total = 0.01 * tn_fix_percent * tn_load_annual
+    def phosphorus_load(self) -> float:
+        """ Calculate total phosphorus (TP) load in kg P yr-1 entering the
+            reservoir with catchment runoff """
+        inflow_p = self.median_inflow_p()
+        return 1e-5 * self.area * self.runoff * inflow_p
