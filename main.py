@@ -63,6 +63,8 @@ def test_emissions():
     print("CO2 emission profile: ", co2_emission_profile)
     print("CO2 emission factor: ", co2_emission_factor)
     print("N2O emission factor: ", n2o_emission_factor)
+    print('Calculate N concentration downstream of the reservoir')
+    print(em_no2.nitrogen_downstream_conc())
 
 
 if __name__ == '__main__':

@@ -67,6 +67,10 @@ class CarbonDioxideEmission(Emission):
 
         # Initialise input data specific to carbon dioxide emissions
         self.eff_temp = eff_temp  # EFF temp CO2
+        if p_calc_method not in ('g-res', 'mcdowell'):
+            p_calc_method = 'g-res'
+            print('P calculation method %s unknown. ' % p_calc_method +
+                  ' Initializing with default g-res method')
         self.p_calc_method = p_calc_method
         # Read the tables
         self.par = self.__initialize_parameters_from_config(
@@ -144,7 +148,6 @@ class CarbonDioxideEmission(Emission):
         Calculate CO2 emissions  g CO2eq m-2 yr-1 from the inundated area
         prior to impoundment
         """
-        # TODO: Check if sum of fractions == 1, otherwise raise error
         __list_of_landuses = list(Landuse.__dict__['_member_map_'].values())
         climate = self.catchment.biogenic_factors.climate
         soil_type = self.catchment.biogenic_factors.soil_type
@@ -198,6 +201,10 @@ class NitrousOxideEmission(Emission):
 
     def __init__(self, catchment, reservoir, preinund_area=None,
                  config_file=INI_FILE, model='model 1'):
+        if model not in ('model 1', 'model 2'):
+            print('Model %s unknown. ' % model +
+                  'Initializing with default model 1')
+            model = 'model 1'
         self.model = model
         super().__init__(catchment=catchment,
                          reservoir=reservoir,
@@ -249,6 +256,7 @@ class NitrousOxideEmission(Emission):
             return self.__n2o_emission_m1_co2()
         if self.model == "model 2":
             return self.__n2o_emission_m2_co2()
+        return None
 
     def profile(self,
                 years: Tuple[int] = (1, 5, 10, 20, 30, 40, 50, 100)) \
@@ -259,6 +267,24 @@ class NitrousOxideEmission(Emission):
             the returned profile is a straight line with values equal to
             the N2O emission factor """
         return [self.factor()] * len(years)
+
+    def __n2o_emission_m1_co2(self) -> float:
+        """ Calculate N2O emission in gCO2eq m-2 yr-1 according to model 1 """
+        # 1. Calculate total N2O emission (kgN yr-1)
+        total_n2o_emission = self.__n2o_denitrification_m1() + \
+            self.__n2o_nitrification_m1()
+        # 2. Calculate unit total N2O emission in mmolN/m^2/yr
+        unit_n2o_emission = self.total_to_unit(total_n2o_emission)
+        # 3. Calculate emission in gCO2eq/m2/yr
+        total_n2o = N_MOLAR * (1+O_MOLAR/(2*N_MOLAR)) * N2O_GWP100 * \
+            unit_n2o_emission * 10**(-3)
+        return total_n2o
+
+    def __n2o_emission_m2_co2(self) -> float:
+        """ Calculate N2O emission in gCO2eq m-2 yr-1 according to model 2 """
+        total_n2o = N_MOLAR * (1+O_MOLAR/(2*N_MOLAR)) * N2O_GWP100 * \
+            self.__unit_n2o_emission_m2() * 10**(-3)
+        return total_n2o
 
     def __n2o_denitrification_m1(self) -> float:
         """ Calculate N2O emission (kgN yr-1) from denitrification using
@@ -282,21 +308,6 @@ class NitrousOxideEmission(Emission):
             (0.5144*math.erf(0.3692*self.reservoir.residence_time))
         return n2o_emission_nitr
 
-    def __n2o_emission_m1_n(self) -> float:
-        """ Calculate total N2O emission (kgN yr-1) using Model 1 """
-        return self.__n2o_denitrification_m1() + self.__n2o_nitrification_m1()
-
-    def __n2o_emission_m1_co2(self) -> float:
-        """ Calculate N2O emission in gCO2eq m-2 yr-1 according to model 1 """
-        # Emission in gCO2eq/m2/yr
-        total_n2o = N_MOLAR * (1+O_MOLAR/(2*N_MOLAR)) * N2O_GWP100 * \
-            self.__unit_n2o_emission_m1() * 10**(-3)
-        return total_n2o
-
-    def __unit_n2o_emission_m1(self) -> float:
-        """ Calculate unit total N2O emission in mmolN/m^2/yr using Model 1 """
-        return self.total_to_unit(self.__n2o_emission_m1_n())
-
     def __n2o_emission_m2_n(self) -> float:
         """ Calculate total N2O emission (kgN yr-1) using Model 2
             --------------------------------------------------------
@@ -313,13 +324,6 @@ class NitrousOxideEmission(Emission):
         n2o_emission = self.catchment.nitrogen_load() * (
             0.002277 * math.erf(1.63*self.reservoir.residence_time))
         return n2o_emission
-
-    def __n2o_emission_m2_co2(self) -> float:
-        """ Calculate N2O emission in gCO2eq m-2 yr-1 according to model 2 """
-        # Emission in gCO2eq/m2/yr
-        total_n2o = N_MOLAR * (1+O_MOLAR/(2*N_MOLAR)) * N2O_GWP100 * \
-            self.__unit_n2o_emission_m2() * 10**(-3)
-        return total_n2o
 
     def __unit_n2o_emission_m2(self) -> float:
         """ Calculate unit total N2O emission in mmolN/m^2/yr using Model 2 """
@@ -344,3 +348,29 @@ class NitrousOxideEmission(Emission):
             self.total_to_unit(self.__n2o_denitrification_m2())
         # Return N2O emission in kgN/yr
         return self.unit_to_total(unit_n2o_nitrification)
+
+    # Additional methods calculating effluent nitrogen load and concentration
+    # from the reservoir associated with the calculated N2O emission
+    def nitrogen_downstream_load(self) -> float:
+        """ Calculate downstream TN load in kg N yr-1 """
+        # 1. Calculate TN burial as a factor of input TN
+        tn_burial_factor = 0.51 * math.erf(
+            0.4723 * self.reservoir.residence_time)
+        # 2. Calculate TN denitrification as a factor of input TN
+        tn_denitr_factor = 0.3833 * math.erf(
+            0.4723 * self.reservoir.residence_time)
+        # 3. Calculate TN loading (catchment + fixation) in kg N yr-1
+        tn_loading = self.catchment.nitrogen_load() + \
+            self.tn_fixation_load()
+        # 4. Calculate TN burial in kg N yr-1
+        tn_burial = tn_burial_factor * tn_loading
+        # 5. Calculate TN denitrification in kg N yr-1
+        tn_denitr = tn_denitr_factor * tn_loading
+        # 6. Calculate TN downstream load in kg N yr-1
+        tn_downstream_load = tn_loading - tn_burial - tn_denitr
+        return tn_downstream_load
+
+    def nitrogen_downstream_conc(self) -> float:
+        """ Calculate downstream TN concentration in mg / L """
+        return 1e02 * self.nitrogen_downstream_load()/(
+            self.catchment.area*self.catchment.runoff)

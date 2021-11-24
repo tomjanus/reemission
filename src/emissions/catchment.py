@@ -191,9 +191,10 @@ class Catchment:
             return self.__inflow_p_gres()
         if method == "mcdowell":
             return self.__inflow_p_mcdowell()
-        else:
-            log.warning('Unrecognize method %s. Returning None', method)
-            return None
+
+        log.warning('Unrecognize method %s. ', method +
+                    '. Using default g-res method.')
+        return self.__inflow_p_gres()
 
     def median_inflow_n(self) -> float:
         """ Calculate median influent total nitrogen concentration in
