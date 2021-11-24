@@ -28,7 +28,7 @@ class MonthlyTemperature:
         """ Finds coldest monthly temperature within the monthly profile """
         return min(self.temp_profile)
 
-    def mean_warmest_four(self, number_of_months: int = 4) -> float:
+    def mean_warmest(self, number_of_months: int = 4) -> float:
         """ Finds the mean temperature of the warmest n months
             By default the function calculates the mean of 4 warmest months """
         sorted_temp_profile = self.temp_profile.copy()
