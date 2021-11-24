@@ -14,6 +14,8 @@ EPS = 0.01
 class Reservoir:
     """ Model of a generic reservoir """
     volume: float  # m3
+    max_depth: float  # Maximum reservoir depth in m
+    mean_depth: float  # Mean reservoir depth in m
     inflow_rate: float  # m3/year
     area: float  # Inundated area of the reservoir in km2
     soil_carbon: float  # Mass of C in inundated area in kg/m2
