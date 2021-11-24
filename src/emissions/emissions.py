@@ -10,6 +10,7 @@ from .utils import read_config, read_table
 from .constants import Landuse, N_MOLAR, P_MOLAR, O_MOLAR, N2O_GWP100
 from .catchment import Catchment
 from .reservoir import Reservoir
+from .temperature import MonthlyTemperature
 
 # Get relative imports to data
 module_dir = os.path.dirname(__file__)
@@ -191,6 +192,71 @@ class CarbonDioxideEmission(Emission):
 @dataclass
 class MethaneEmission(Emission):
     """ Class for calculating methane emissions from reservoirs """
+    monthly_temp: Type[MonthlyTemperature]
+
+    def __init__(self, catchment, reservoir, monthly_temp,
+                 preinund_area=None,
+                 config_file=INI_FILE):
+        self.monthly_temp = monthly_temp
+        super().__init__(catchment=catchment,
+                         reservoir=reservoir,
+                         config_file=config_file,
+                         preinund_area=preinund_area)
+        # List of parameters required for CH4 emission calculations
+        par_list = ['int_diff', 'age_diff', 'littoral_diff', 'eff_temp_CH4',
+                    'int_ebull', 'littoral_ebull', 'irrad_ebull', 'int_degas',
+                    'tw_degas', 'ch4_diff', 'ch_diff_age_term', 'conv_coeff']
+        # Read the parameters from config
+        self.diff_par = self.__initialize_parameters_from_config(par_list)
+
+    def __initialize_parameters_from_config(self, list_of_constants: list) \
+            -> SimpleNamespace:
+        """ Read constants (parameters) from config file """
+        const_dict = {name: self.config.getfloat('METHANE', name)
+                      for name in list_of_constants}
+        return SimpleNamespace(**const_dict)
+
+    def thermocline_depth(self, wind_speed: float,
+                          wind_height: float = 50) -> float:
+        """ Calculate thermocline depth required for the calculation of CH4
+            degassing. Assumes that the surface water temperature is equal to
+            the mean monthly air temperature from 4 warmest months in the year
+        """
+        def water_density(temp: float) -> float:
+            """ Calculate water density in kg/m3 as a function of temperature
+                in deg C """
+            density = 1000 * (
+                1-((temp+288.9414)/(508929.2*(temp+68.12963)))*(temp-3.9863)**2)
+            return density
+
+        # Calculate CD coefficient
+        cd_coeff = 0.001 if wind_speed < 5.0 else 0.000015
+        # Calculate air density (units?)
+        air_density = 101325.0/(
+            287.05*(self.monthly_temp.mean_warmest(number_of_months=4)+273.15))
+        wind_at_10m = wind_speed / (1 - 10/4 * math.log10(10.0/wind_height) *
+                                    math.sqrt(cd_coeff))
+        if self.monthly_temp.coldest > 1.4:
+            hypolimnion_temp = (0.6565 * self.monthly_temp.coldest) + 10.7
+        else:
+            hypolimnion_temp = (0.2345 * self.monthly_temp.coldest) + 10.11
+        hypolimnion_density = water_density(temp=hypolimnion_temp)
+        epilimnion_temp = self.monthly_temp.mean_warmest(number_of_months=4)
+        epilimnion_density = water_density(temp=epilimnion_temp)
+        # Find thermocline depth in metres
+        aux_var_1 = cd_coeff * air_density * wind_at_10m
+        aux_var_2 = 9.80665 * (hypolimnion_density - epilimnion_density)
+        aux_var_3 = math.sqrt(self.reservoir.area*10**6)
+        depth = 2 * math.sqrt(aux_var_1/aux_var_2) * math.sqrt(aux_var_3)
+        return depth
+
+    def factor(self, number_of_years: int = 666) -> float:
+        return 0.0
+
+    def profile(self,
+                years: Tuple[int] = (1, 5, 10, 20, 30, 40, 50, 100)) \
+            -> List[float]:
+        return [0] * len(years)
 
 
 @dataclass
