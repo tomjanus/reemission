@@ -193,11 +193,13 @@ class CarbonDioxideEmission(Emission):
 class MethaneEmission(Emission):
     """ Class for calculating methane emissions from reservoirs """
     monthly_temp: Type[MonthlyTemperature]
+    mean_ir: float  # mean InfraRed Radiation in kwh-1d-1
 
-    def __init__(self, catchment, reservoir, monthly_temp,
+    def __init__(self, catchment, reservoir, monthly_temp, mean_ir,
                  preinund_area=None,
                  config_file=INI_FILE):
         self.monthly_temp = monthly_temp
+        self.mean_ir = mean_ir
         super().__init__(catchment=catchment,
                          reservoir=reservoir,
                          config_file=config_file,
@@ -207,7 +209,7 @@ class MethaneEmission(Emission):
                     'int_ebull', 'littoral_ebull', 'irrad_ebull', 'int_degas',
                     'tw_degas', 'ch4_diff', 'ch_diff_age_term', 'conv_coeff']
         # Read the parameters from config
-        self.diff_par = self.__initialize_parameters_from_config(par_list)
+        self.par = self.__initialize_parameters_from_config(par_list)
 
     def __initialize_parameters_from_config(self, list_of_constants: list) \
             -> SimpleNamespace:
@@ -249,6 +251,24 @@ class MethaneEmission(Emission):
         aux_var_3 = math.sqrt(self.reservoir.area*10**6)
         depth = 2 * math.sqrt(aux_var_1/aux_var_2) * math.sqrt(aux_var_3)
         return depth
+
+    def ebullition(self):
+        """ Calculate CH4 emission in g CO2eq m-2 yr-1 through ebullition
+            Ebullition fluxes are not time-dependent, hence no emission profile
+            is calculated """
+        # Bathymetric shape (-)
+        g_bath_shape = (self.reservoir.max_depth/self.reservoir.mean_depth)-1.0
+        # Percentage of surface area that is littoral (near the shore)
+        littoral_perc = (1-(1-(3/self.reservoir.max_depth))**g_bath_shape)*100
+        # Calculate CH4 emission in mg CH4-C m-2 d-1
+        emission_in_ch4 = 10**(
+            self.par.int_ebull +
+            self.par.littoral_ebull*math.log10(littoral_perc/100) +
+            365*self.par.irrad_ebull*self.mean_ir/30.4)
+        # Calculate CH4 emission in g CO2eq m-2 yr-1
+        emission_in_co2 = emission_in_ch4 * self.par.conv_coeff
+        return emission_in_co2
+
 
     def factor(self, number_of_years: int = 666) -> float:
         return 0.0
