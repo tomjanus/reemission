@@ -14,7 +14,7 @@ class MonthlyTemperature:
     def __post_init__(self):
         assert len(self.temp_profile) == 12
 
-    def calculate_eff_temp(self, coeff: float = 0.052) -> float:
+    def eff_temp(self, coeff: float = 0.052) -> float:
         """ Calculate effective annual Temperature CO2 in deg C for the
             estimation of CO2 and CH4 diffusion)
             - Currently the coefficient used in CO2 calcs is 0.05 whilst for CH4
