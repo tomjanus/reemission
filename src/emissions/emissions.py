@@ -96,11 +96,11 @@ class CarbonDioxideEmission(Emission):
                 method=self.p_calc_method))
         return reservoir_tp
 
-    def __fluxes_per_year(self,
-                          years: Tuple[int] = (1, 5, 10, 20, 30, 40, 50, 100)) \
+    def __flux_profile(self,
+                       years: Tuple[int] = (1, 5, 10, 20, 30, 40, 50, 100)) \
             -> Optional[list]:
         """ Calculate CO2 fluxes for a list of years given as an argument """
-        def find_flux(year: int) -> float:
+        def flux(year: int) -> float:
             """ Inner function for calculating flux for a defined year
                 return flux in g CO2eq m-2 yr-1
             """
@@ -115,10 +115,10 @@ class CarbonDioxideEmission(Emission):
             return flux
 
         if len(years) == 1:
-            return find_flux(years[0])
+            return flux(years[0])
 
         # Calculate flux per each year in the list of years
-        return [find_flux(year) for year in years]
+        return [flux(year) for year in years]
 
     def __gross_total_emission(self) -> float:
         """
@@ -143,7 +143,7 @@ class CarbonDioxideEmission(Emission):
         given in number_of_years
         """
         return (self.__gross_total_emission() -
-                self.__fluxes_per_year(years=(number_of_years,)))
+                self.__flux_profile(years=(number_of_years,)))
 
     def __pre_impoundment_emission(self) -> float:
         """
@@ -175,8 +175,8 @@ class CarbonDioxideEmission(Emission):
         Flux at year x age - pre-impoundment emissions - non-anthropogenic
         emissions """
         pre_impoundment = self.__pre_impoundment_emission()
-        integrated_emission = self.__fluxes_per_year((years[-1],))
-        fluxes_profile = self.__fluxes_per_year(years)
+        integrated_emission = self.__flux_profile((years[-1],))
+        fluxes_profile = self.__flux_profile(years)
         final_profile = [flux - integrated_emission - pre_impoundment for
                          flux in fluxes_profile]
         return final_profile
@@ -201,6 +201,8 @@ class MethaneEmission(Emission):
                  config_file=INI_FILE):
         self.monthly_temp = monthly_temp
         self.mean_ir = mean_ir
+        self.pre_impoundment_table = read_table(
+            os.path.join(TABLES, 'Methane', 'pre-impoundment.yaml'))
         super().__init__(catchment=catchment,
                          reservoir=reservoir,
                          config_file=config_file,
@@ -235,6 +237,7 @@ class MethaneEmission(Emission):
         """ Calculate thermocline depth required for the calculation of CH4
             degassing. Assumes that the surface water temperature is equal to
             the mean monthly air temperature from 4 warmest months in the year
+            Follows the equation in Gorham and Boyce (1989)
         """
         def water_density(temp: float) -> float:
             """ Calculate water density in kg/m3 as a function of temperature
@@ -387,6 +390,31 @@ class MethaneEmission(Emission):
         """ Calculate degassing profile for a for a vector of years """
         init_flux = self.__init_degassing_flux()
         return [init_flux * math.exp(-0.033*year) for year in years]
+
+    def pre_impoundment(self):
+        """ Calculate pre_impoundment CH4 emissions in g CO2eq m-2 yr-1
+            Pre-impoundment emissions are subtracted from the total CH4
+            emission, comprised of the sum of degassing, ebullition and
+            diffusion emission estimates (as CO2 equivalents)
+        """
+        __list_of_landuses = list(Landuse.__dict__['_member_map_'].values())
+        climate = self.catchment.biogenic_factors.climate
+        soil_type = self.catchment.biogenic_factors.soil_type
+        emissions = []
+        for landuse, fraction in zip(__list_of_landuses,
+                                     self.reservoir.area_fractions):
+            # Area in ha allocated to each landuse
+            area_landuse = 100 * self.reservoir.area * fraction
+            coeff = self.pre_impoundment_table.get(
+                climate.value, {}).get(
+                    soil_type.value, {}).get(
+                        landuse.value, 0)
+            # Create a list of emissions per area fraction, in kg CH4 yr-1
+            emissions.append(area_landuse * coeff)
+        # Total emission in g CO2eq m-2 yr-1
+        tot_emission = sum(emissions) * 1e-3 * (16/12) * CH4_GWP100 / \
+            self.reservoir.area
+        return tot_emission
 
     def factor(self, number_of_years: int = 666) -> float:
         return 0.0
