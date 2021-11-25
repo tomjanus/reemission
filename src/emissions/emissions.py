@@ -218,6 +218,17 @@ class MethaneEmission(Emission):
                       for name in list_of_constants}
         return SimpleNamespace(**const_dict)
 
+    @staticmethod
+    def litoral_area_frac(max_depth: float, q_bath_shape: float) -> float:
+        """ Calculate percentage of reservoir's surface area that is
+            littoral, i.e. close to the shore """
+        return 100*(1-(1-3.0/max_depth)**q_bath_shape)
+
+    @staticmethod
+    def q_bath_shape(max_depth: float, mean_depth: float) -> float:
+        """ Calculate q-bathymetric shape """
+        return max_depth/mean_depth - 1.0
+
     def thermocline_depth(self, wind_speed: float,
                           wind_height: float = 50) -> float:
         """ Calculate thermocline depth required for the calculation of CH4
@@ -257,9 +268,12 @@ class MethaneEmission(Emission):
             Ebullition fluxes are not time-dependent, hence no emission profile
             is calculated """
         # Bathymetric shape (-)
-        g_bath_shape = (self.reservoir.max_depth/self.reservoir.mean_depth)-1.0
+        q_bath_shape = self.q_bath_shape(max_depth=self.reservoir.max_depth,
+                                         mean_depth=self.reservoir.mean_depth)
         # Percentage of surface area that is littoral (near the shore)
-        littoral_perc = (1-(1-(3/self.reservoir.max_depth))**g_bath_shape)*100
+        littoral_perc = self.litoral_area_frac(
+            max_depth=self.reservoir.max_depth, q_bath_shape=q_bath_shape)
+
         # Calculate CH4 emission in mg CH4-C m-2 d-1
         emission_in_ch4 = 10**(
             self.par.int_ebull +
@@ -268,6 +282,77 @@ class MethaneEmission(Emission):
         # Calculate CH4 emission in g CO2eq m-2 yr-1
         emission_in_co2 = emission_in_ch4 * self.par.conv_coeff
         return emission_in_co2
+
+    def ebull_profile(self,
+                      years: Tuple[int] = (1, 5, 10, 20, 30, 40, 50, 100)) \
+            -> List[float]:
+        """ Converts ebullition emission into a profile. Since ebullition does
+            not have an emission profile, the output will be a list with values
+            all equal to CH4 emission factor through ebullition """
+        return [self.ebullition] * len(years)
+
+    def diffusion(self, number_of_years=100):
+        """ Calculate CH4 emission via diffusion. The emission in
+            g CO2eq m-2 yr-1 is integrated over a target number of years.
+            The default time horizon is 100 years. """
+        # Calculate effective annual temperature for CH4
+        eff_temp = self.monthly_temp.eff_temp(coeff=0.052)
+        # Bathymetric shape (-)
+        q_bath_shape = self.q_bath_shape(max_depth=self.reservoir.max_depth,
+                                         mean_depth=self.reservoir.mean_depth)
+        # Percentage of surface area that is littoral (near the shore)
+        littoral_perc = self.litoral_area_frac(
+            max_depth=self.reservoir.max_depth, q_bath_shape=q_bath_shape)
+        # Calculate CH4 emission in g CO2eq m-2 yr-1 spread over the target
+        # number of years provided as argument
+        aux_var_1 = self.par.littoral_diff * math.log10(littoral_perc/100)
+        aux_var_2 = -number_of_years * self.par.age_diff * math.log(10)
+        aux_var_3 = number_of_years * self.par.age_diff
+        aux_var_4 = self.par.eff_temp_CH4 * eff_temp
+        # Return CH4 emission in g CO2eq m-2 yr-1
+        emission = self.par.conv_coeff / aux_var_2 * \
+            ((1-10**aux_var_3) * 10**(self.par.int_diff+aux_var_1+aux_var_4))
+        return emission
+
+    def diff_profile(self,
+                     years: Tuple[int] = (1, 5, 10, 20, 30, 40, 50, 100)) \
+            -> List[float]:
+        """ Calculate CH4 emission profile for a vector of years """
+        # Calculate effective annual temperature for CH4
+        eff_temp = self.monthly_temp.eff_temp(coeff=0.052)
+        # Bathymetric shape (-)
+        q_bath_shape = self.q_bath_shape(max_depth=self.reservoir.max_depth,
+                                         mean_depth=self.reservoir.mean_depth)
+        # Percentage of surface area that is littoral (near the shore)
+        littoral_perc = self.litoral_area_frac(
+            max_depth=self.reservoir.max_depth, q_bath_shape=q_bath_shape)
+
+        def diff_emission(year: float) -> float:
+            """ Calculate emission in g CO2eq m-2 yr-1 for a given year """
+            aux_var_1 = self.par.age_diff * year
+            aux_var_2 = self.par.littoral_diff * math.log10(littoral_perc/100)
+            aux_var_3 = self.par.eff_temp_CH4 * eff_temp
+            diff_year = 10**(self.par.int_diff + aux_var_1 + aux_var_2 +
+                             aux_var_3) * self.par.conv_coeff
+            return diff_year
+
+        return [diff_emission(year) for year in years]
+
+    def degassing(self) -> float:
+        """ Calculate CH4 emissions due to degassing
+        Degassing emissions are computed when the hydroleclectric facility has
+        a deep water draw off point & when this deep water draw off takes water
+        from below the thermocline of a stratified system. For this reason,
+        deep water draw off depth and thermocline depth are required for formal
+        assesment of whether a degassing flux should be estimated. In general,
+        neither of these two data can be reliably measured/estimated. However,
+        we can assume that most new hydroelectric facilities will operate deep
+        water draw offs, and at least in the tropics in deeper systems
+        (>10m mean depth), stratification will occur. There exist models for
+        estimating the thermocline depth as a function of monthly air
+        temperatures and mean annual wind speeds.
+        """
+        return 0.0
 
 
     def factor(self, number_of_years: int = 666) -> float:
