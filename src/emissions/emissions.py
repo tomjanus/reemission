@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from types import SimpleNamespace
 from typing import List, Tuple, Optional, Type
 from abc import ABC, abstractmethod
+import numpy as np
 from .utils import read_config, read_table
 from .constants import (Landuse, N_MOLAR, P_MOLAR, O_MOLAR, N2O_GWP100,
                         CH4_GWP100)
@@ -293,7 +294,7 @@ class MethaneEmission(Emission):
         """ Converts ebullition emission into a profile. Since ebullition does
             not have an emission profile, the output will be a list with values
             all equal to CH4 emission factor through ebullition """
-        return [self.ebullition] * len(years)
+        return [self.ebullition()] * len(years)
 
     def diffusion(self, number_of_years=100):
         """ Calculate CH4 emission via diffusion. The emission in
@@ -416,13 +417,25 @@ class MethaneEmission(Emission):
             self.reservoir.area
         return tot_emission
 
-    def factor(self, number_of_years: int = 666) -> float:
-        return 0.0
+    def factor(self, number_of_years: int = 100) -> float:
+        """ Return integrated per area CH4 emission in g CO2eq m-2 yr-1 """
+        factor = self.diffusion(number_of_years=number_of_years) + \
+            self.ebullition() + \
+            self.degassing(number_of_years=number_of_years) - \
+            self.pre_impoundment()
+        return factor
 
     def profile(self,
                 years: Tuple[int] = (1, 5, 10, 20, 30, 40, 50, 100)) \
             -> List[float]:
-        return [0] * len(years)
+        """ Return emission profile of CH4 in g CO2eq m-2 yr-1 """
+        diff_profile = self.diff_profile(years=years)
+        ebull_profile = self.ebull_profile(years=years)
+        deg_profile = self.deg_profile(years=years)
+        pre_impound_profile = [-self.pre_impoundment() for _ in years]
+        tot_prof = np.array([diff_profile, ebull_profile, deg_profile,
+                             pre_impound_profile])
+        return list(np.sum(tot_prof, axis=0))
 
 
 @dataclass
