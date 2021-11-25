@@ -7,7 +7,8 @@ from types import SimpleNamespace
 from typing import List, Tuple, Optional, Type
 from abc import ABC, abstractmethod
 from .utils import read_config, read_table
-from .constants import Landuse, N_MOLAR, P_MOLAR, O_MOLAR, N2O_GWP100
+from .constants import (Landuse, N_MOLAR, P_MOLAR, O_MOLAR, N2O_GWP100,
+                        CH4_GWP100)
 from .catchment import Catchment
 from .reservoir import Reservoir
 from .temperature import MonthlyTemperature
@@ -338,7 +339,28 @@ class MethaneEmission(Emission):
 
         return [diff_emission(year) for year in years]
 
-    def degassing(self) -> float:
+    def __init_degassing_flux(self) -> float:
+        """ Calculate initial degassing flux at year 0 """
+        emission_diffusion = self.diffusion(100)
+        # CH4 conc. diff in mg CH4-C L-1
+        ch4_conc = 10**(self.par.int_degas +
+                        self.par.tw_degas * math.log10(
+                            self.reservoir.residence_time) +
+                        self.par.ch4_diff * math.log10(emission_diffusion))
+        # CH4 outflow flux in t CH4-C  yr-1
+        ch4_out_flux = 0.9 * 1e-6 * ch4_conc * self.reservoir.discharge
+        # Integrated emissiom over 100 years in g CH4-C  m-2 yr-1
+        ch4_em_ch4c = ch4_out_flux/self.reservoir.area
+        # Integrated emissiom over 100 years in g CO2eq m-2 yr-1
+        _ = ch4_em_ch4c * 16/12 * CH4_GWP100
+        # Initial degassing flux in g CH4-C  m-2 yr-1
+        flux_init_ch4c = ch4_em_ch4c/(1-10**(100*self.par.ch_diff_age_term)) * \
+            (100*(-self.par.ch_diff_age_term)*math.log(10))
+        # Initial degassing flux in g CO2eq m-2 yr-1
+        flux_init_co2 = flux_init_ch4c * 16/12 * CH4_GWP100
+        return flux_init_co2
+
+    def degassing(self, number_of_years=100) -> float:
         """ Calculate CH4 emissions due to degassing
         Degassing emissions are computed when the hydroleclectric facility has
         a deep water draw off point & when this deep water draw off takes water
@@ -352,8 +374,19 @@ class MethaneEmission(Emission):
         estimating the thermocline depth as a function of monthly air
         temperatures and mean annual wind speeds.
         """
-        return 0.0
+        # Calculated CH4 emission in CO2eq integrated for the number of years
+        # specified in the argument. Unit: g CO2eq m-2 yr-1
+        emission = self.__init_degassing_flux() * \
+            (1-10**(number_of_years*self.par.ch_diff_age_term)) / \
+            (number_of_years*(-self.par.ch_diff_age_term)*math.log(10))
+        return emission
 
+    def deg_profile(self,
+                    years: Tuple[int] = (1, 5, 10, 20, 30, 40, 50, 100)) \
+            -> List[float]:
+        """ Calculate degassing profile for a for a vector of years """
+        init_flux = self.__init_degassing_flux()
+        return [init_flux * math.exp(-0.033*year) for year in years]
 
     def factor(self, number_of_years: int = 666) -> float:
         return 0.0

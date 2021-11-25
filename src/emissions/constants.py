@@ -1,10 +1,12 @@
 """ Project-wide collection of constants """
 from enum import Enum, unique
 
+C_MOLAR = 12  # gC / mole
 P_MOLAR = 30.97  # gP / mole
 N_MOLAR = 14.0  # gN / mole
 O_MOLAR = 16  # gO / mole
-N2O_GWP100 = 298  # Global Warming Potential of N2O (265–298)
+N2O_GWP100 = 298  # Global Warming Potential of N2O (265–298) over 100 years
+CH4_GWP100 = 34  # Global Warming Potential of CH4 (28–36) over 100 years
 
 
 @unique

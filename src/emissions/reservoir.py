@@ -53,7 +53,8 @@ class Reservoir:
     @property
     def discharge(self) -> float:
         """ Discharge from the reservervoir over a long enough time-scale
-            in comparison to residence time, is equal to the inflow rate """
+            in comparison to residence time, is equal to the inflow rate
+            in m3/year """
         return self.inflow_rate
 
     @property
