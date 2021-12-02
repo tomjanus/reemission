@@ -62,7 +62,7 @@ class Catchment:
             log.error('Setting fractions to a vector of all zeros.')
             self.area_fractions = [0] * len(Landuse)
 
-    def __landuse_area(self, landuse_fraction):
+    def _landuse_area(self, landuse_fraction):
         """ Return landuse area from catchment area and landuse fraction """
         return self.area * landuse_fraction
 
@@ -109,7 +109,7 @@ class Catchment:
             try:
                 p_export_coeff = 0.01 * 10**(
                     reg_coeffs[0] - reg_coeffs[1] * math.log10(
-                        self.__landuse_area(area_fraction)))
+                        self._landuse_area(area_fraction)))
             except ValueError:
                 p_export_coeff = 0.0
             return p_export_coeff
@@ -132,11 +132,11 @@ class Catchment:
     def phosphorus_load_mcdowell(self):
         """ Calculate annual discharge of P from catchment to the reservoir
             in kg P yr-1 using McDowell regression """
-        inflow_p = self.__inflow_p_mcdowell()  # micrograms/L
+        inflow_p = self._inflow_p_mcdowell()  # micrograms/L
         # discharge is given in m3/year
         return 1e-6 * inflow_p * self.discharge
 
-    def __inflow_p_gres(self) -> float:
+    def _inflow_p_gres(self) -> float:
         """ Calculate influent phosphorus concentration to the reservoir
             in micrograms/L following the G-Res approach. """
         load_pop = self.phosphorus_load_pop_gres()
@@ -144,7 +144,7 @@ class Catchment:
         load_total = load_pop + load_land
         return 10**6 * load_total / self.discharge
 
-    def __inflow_p_mcdowell(self, init_p: float = 5.0, eps=1e-6) -> float:
+    def _inflow_p_mcdowell(self, init_p: float = 5.0, eps=1e-6) -> float:
         """ Calculate influent phosphorus concetration to the reservoir
             in micrograms/L using regression model of McDowell 2020 """
         biome = self.biogenic_factors.biome
@@ -188,13 +188,13 @@ class Catchment:
         """ Calculate median influent total phosphorus concentration in
             micrograms/L entering the reservoir with runoff """
         if method == "g-res":
-            return self.__inflow_p_gres()
+            return self._inflow_p_gres()
         if method == "mcdowell":
-            return self.__inflow_p_mcdowell()
+            return self._inflow_p_mcdowell()
 
         log.warning('Unrecognize method %s. ', method +
                     '. Using default g-res method.')
-        return self.__inflow_p_gres()
+        return self._inflow_p_gres()
 
     def median_inflow_n(self) -> float:
         """ Calculate median influent total nitrogen concentration in
