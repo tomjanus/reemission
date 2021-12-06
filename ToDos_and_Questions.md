@@ -1,3 +1,5 @@
+## QUESTIONS FOR CHRIS
+
 1. Units for pre-impoundment emissions. For CO2 the unit is t CO2eq/ha/yr, while for CH4 it's in  kg CH4/ha/yr. Double check if there's no error in one of the tables.
 2. EFF_TEMP: the coefficient for CO2 is 0.05 but for CH4 it is 0.052. Is this a roundoff error or are these coefficients different (albeit only slightly)?
 3. McDowell's Landscape TP export model has one less biome to the TP model used in CO2 calcs, namely tundra
@@ -13,6 +15,14 @@ the coefficients are already provided.
 11. Can you explain the (16/12) coefficient in CH4 emmisions, specifically integrated emission over 100 years.
 
 
-TODOs:
-CASCADED TN NITROGEN LOADING
-ADDITION OF UNERTAINTIES IN THE CALCULATIONS?
+## TODOs:
+### 1. Package development
+* WRITE TESTS
+* WRITE DOCUMENTATION - sphinx?
+* CREATE PACKAGING - setuptools? poetry?
+* DECIDE UPON LICENSING - MIT? GPL?
+* ADD TO PYPI AND TRAVIS
+### 2. Calculation methodology
+* CASCADED TN NITROGEN LOADING
+* ADDITION OF UNERTAINTIES IN THE CALCULATIONS?
+
