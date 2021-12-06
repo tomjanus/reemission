@@ -8,6 +8,7 @@ setup(
     version='0.0.1',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    description='Calculate GHG gas emissions from hydroelectric reservoirs',
+    description='Calculation tool for GHG gas emissions from hydroelectric reservoirs',
+    packages = find_packages(),
     py_modules=['dam-emissions'],
     package_dir={"", "src"})
