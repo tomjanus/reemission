@@ -1,0 +1,131 @@
+---
+# Output to calculate and save for reporting of results
+# INPUTS
+# GWP Factors (for all emissions)
+gwp100:
+  include: True
+  name: "Global Warming Potential for a 100-year timescale"
+# Conversion factors to gCO2eq m-2 yr-1
+conv_factors:
+  include: True
+  name: "Conversion factor to gCO2eq m-2 yr-1"
+
+# OUTPUTS
+print_long_descriptions: False
+plot_profiles: False
+plot_emission_bars: False
+
+# CO2 emission through diffusion
+co2_diffusion:
+  include: True
+  name: "CO2 emission via diffusion"
+  unit: ""
+  long_description: ""
+# CO2 emission through diffusion, non-anthropogenic
+co2_diffusion_nonanthro:
+  include: True
+  name: "Nonanthropogenic CO2 emission via diffusion"
+  unit: ""
+  long_description: ""
+# CO2 preimpoundment emissions
+co2_preimp:
+  include: True
+  name: "Preimpoundment CO2 emissions"
+  unit: ""
+  long_description: ""
+# CO2 emission minus non-anthropogenic emission
+co2_minus_nonanthro:
+  include: True
+  name: "CO2 emission minus non-anthropogenic"
+  unit: ""
+  long_description: ""
+# Net CO2 emission
+co2_net:
+  include: True
+  name: "Net CO2 emission"
+  unit: ""
+  long_description: ""
+# CO2 emission profile
+co2_profile:
+  include: True
+  name: "CO2 emission profile"
+  years: null
+  unit: ""
+  long_description: ""
+
+# CH4 emission via diffusion
+ch4_diffusion:
+  include: True
+  name: "CH4 emission via diffusion"
+  unit: ""
+  long_description: ""
+# CH4 emission via ebullition
+ch4_ebullition:
+  include: True
+  name: "CH4 emission via ebullition"
+  unit: ""
+  long_description: ""
+# CH4 emission via degassing
+ch4_degassing:
+  include: True
+  name: "CH4 emission via degassing"
+  unit: ""
+  long_description: ""
+# CH4 preimpoundment emission
+ch4_preimp:
+  include: True
+  name: "Pre-impounment CH4 emission"
+  unit: ""
+  long_description: ""
+# Net CH4 emission
+ch4_net:
+  include: "Pre-impounment CH4 emission"
+  unit: ""
+  long_description: ""
+# CH4 emission profile
+ch4_profile:
+  include: True
+  name: "CH4 emission profile"
+  years: null
+  unit: ""
+  long_description: ""
+
+# N2O emission method A
+n2o_methodA:
+  include: True
+  name: ""
+  unit: ""
+  long_description: ""
+# N2O emission method B
+n2o_methodB:
+  include: True
+  name: ""
+  unit: ""
+  long_description: ""
+# N2O emission mean (method A + method B divided by 2)
+n2o_mean:
+  include: True
+  name: ""
+  unit: ""
+  long_description: ""
+# CH4 emission profile
+n2o_profile:
+  include: True
+  name: "N2O emission profile"
+  years: null
+  unit: ""
+  long_description: ""
+
+# CO2 emissions plus CH4 emissions
+co2_ch4:
+  include: True
+  name: ""
+  unit: ""
+  long_description: ""
+# Total (CO2+CH4+N2O)
+co2_ch4_n2o:
+  include: True
+  name: ""
+  unit: ""
+  long_description: ""
+...

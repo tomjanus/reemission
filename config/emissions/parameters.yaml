@@ -1,0 +1,11 @@
+---
+# Parameters included in reporting of results
+# GWP Factors (for all emissions)
+gwp100:
+  include: True
+  name: "Global Warming Potential for a 100-year timescale"
+# Conversion factors to gCO2eq m-2 yr-1
+conv_factors:
+  include: True
+  name: "Conversion factor to gCO2eq m-2 yr-1"
+...

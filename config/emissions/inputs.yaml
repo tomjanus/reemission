@@ -1,0 +1,72 @@
+---
+# Inputs to calculate and save for reporting of results
+monthly_temp:
+  include: True
+  name: "Monthly Temperature"
+  long_description: ""
+  unit: "deg C"
+biogenic_factors:
+  include: True
+  name: "Biogenic factors"
+  long_description: "Biome, Climate, Soil Type, Treatment Factor, Landuse Intensity"
+  unit: ""
+year_profile:
+  include: True
+  name: "Years"
+  long_description: "List of years for which emission profiles are calculated"
+  unit: ""
+catchment_inputs:
+  include: True
+  name: "Inputs for catchment-level process calculations"
+  long_description: ""
+  var_dict:
+    runoff:
+      name: "Annual runoff"
+      unit: "mm/year"
+    area:
+      name: "Catchment area"
+      unit: "ha"
+    population:
+      name: "Population"
+      unit: "capita"
+    area_fractions:
+      name: "Area fractions"
+      unit: "-"
+    slope:
+      name: "Mean catchment slope"
+      unit: "%"
+    precip:
+      name: "Mean annual precipitation"
+      unit: "mm/year"
+    etransp:
+      name: "Mean annual evapotranspiration"
+      unit: "mm/year"
+    soil_wetness:
+      name: "Soil wetness"
+      unit: "mm over profile"
+reservoir_inputs:
+  include: True
+  name: "Inputs for reservoir-level process calculations"
+  long_description: ""
+  var_dict:
+    volume:
+      name: "Reservoir volume"
+      unit: "m3"
+    area:
+      name: "Reservoir area"
+      unit: "km2"
+    max_depth:
+      name: "Maximum reservoir depth"
+      unit: "m"
+    mean_depth':
+      name: "Mean reservoir depth"
+      unit: "m"
+    area_fractions:
+      name: "Inundated area fractions"
+      unit: "-"
+    soil_carbon:
+      name: "Soil carbon in inundated area"
+      unit: "kg/m2"
+
+print_long_descriptions: False
+...
