@@ -1,8 +1,8 @@
 ---
 # Inputs to calculate and save for reporting of results
-monthly_temp:
+monthly_temps:
   include: True
-  name: "Monthly Temperature"
+  name: "Monthly Temperatures"
   long_description: ""
   unit: "deg C"
 biogenic_factors:
