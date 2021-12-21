@@ -2,16 +2,15 @@
 import sys
 sys.path.append("..")
 import unittest
-
 from src.emissions.temperature import MonthlyTemperature
 from src.emissions.reservoir import Reservoir
 
 
-class TestEmissions(unittest.TestCase):
+class TestTemperature(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.good_temperatures = \
+        cls.test_temperatures = \
             [10.56, 11.99, 15.46, 18.29, 20.79, 22.09, 22.46,
              22.66, 21.93, 19.33, 15.03, 11.66]
 
@@ -20,14 +19,15 @@ class TestEmissions(unittest.TestCase):
         pass
 
     def setUp(self):
-        self.temperature = MonthlyTemperature(self.good_temperatures)
+        self.temperature = MonthlyTemperature(self.test_temperatures)
 
     def tearDown(self):
         pass
 
-    def test_sample(self):
-        print(self.temperature.eff_temp())
-        self.assertEqual(1, 1)
+    # TODO: add tests
+    def test_coldest(self):
+        self.assertEqual(
+            self.temperature.coldest, min(self.temperature.temp_profile))
 
 
 if __name__ == '__main__':
