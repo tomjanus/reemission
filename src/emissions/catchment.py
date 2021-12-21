@@ -30,14 +30,14 @@ EPS = 0.01
 @dataclass
 class Catchment:
     """ Class representing a generic catchment """
-    area: float  # in ha
-    runoff: float  # in Mean annual runoff in mm/year
-    population: int  # Population in capita
-    slope: float  # Catchment mean slope in %
-    precip: float  # Mean annual precipitation in mm/year
-    etransp: float  # Mean annual evapotranspiration in mm/year
+    area: float  # Catchment area. ha
+    runoff: float  # Mean annual runoff, mm/year
+    population: int  # Population, capita
+    slope: float  # Catchment mean slope, %
+    precip: float  # Mean annual precipitation, mm/year
+    etransp: float  # Mean annual evapotranspiration, mm/year
     soil_wetness: float  # Soil wetness in mm over profile
-    area_fractions: List[float]  # Fractions of catchment area allocated
+    area_fractions: List[float]  # Fractions of catchment area allocated, -
     biogenic_factors: BiogenicFactors  # categorical descriptors playing part
     # in the determination of the trophic status of the the reservoir
 
@@ -98,6 +98,8 @@ class Catchment:
         def fun_exp(area_fraction: float, fun_name: str) -> float:
             """ Regression vs area fraction for P export from crops and
                 forest """
+            # TODO: Explain what are these two exponential functions and how
+            #       to choose between them
             if fun_name == 'fun_exp1':
                 reg_coeffs = (1.818, 0.227)
             elif fun_name == 'fun_exp2':
@@ -164,8 +166,9 @@ class Catchment:
 
         # Define the inner function calculating the final output P conc.
         def find_inflow_p(p_conc):
-            """ Calculate inflow TP using McDowell's regression coefficients """
-            ln_tp = intercept + olsen_p * p_conc + prec_coeff*self.precip/12 + \
+            """ Calculate inflow TP using McDowell's regression coeffs """
+            ln_tp = intercept + olsen_p * p_conc + \
+                prec_coeff*self.precip/12 + \
                 slope_coeff * self.slope + cropland_coeff * crop_percent + \
                 et_coeff * self.etransp / 12 + biome_coeff
             inflow_p = 10**3 * bias_corr * math.exp(ln_tp)
@@ -181,7 +184,6 @@ class Catchment:
                 recurrence(find_inflow_p(p_conc))
             else:
                 return find_inflow_p(p_conc)
-
         return recurrence(init_p)
 
     def median_inflow_p(self, method: str = "g-res") -> float:
