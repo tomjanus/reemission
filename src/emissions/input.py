@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import Dict, List, Tuple
 import json
 import logging
+from .biogenic import BiogenicFactors
 
 # Set up module logger
 log = logging.getLogger(__name__)
@@ -25,7 +26,10 @@ class Input:
     @property
     def catchment_data(self) -> Dict:
         """ Retrieve input data for catchment-scale process calculations """
-        return self.input_data.get('catchment')
+        catchment_dict = self.input_data.get('catchment')
+        catchment_dict["biogenic_factors"] = \
+            BiogenicFactors.fromdict(catchment_dict["biogenic_factors"])
+        return catchment_dict
 
     @property
     def emission_factors(self) -> List[str]:
