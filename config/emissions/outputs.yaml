@@ -1,131 +1,157 @@
 ---
 # Output to calculate and save for reporting of results
-# INPUTS
-# GWP Factors (for all emissions)
-gwp100:
-  include: True
-  name: "Global Warming Potential for a 100-year timescale"
-# Conversion factors to gCO2eq m-2 yr-1
-conv_factors:
-  include: True
-  name: "Conversion factor to gCO2eq m-2 yr-1"
+global:
+  print_long_descriptions: False
+  plot_profiles: False
+  plot_emission_bars: False
 
 # OUTPUTS
-print_long_descriptions: False
-plot_profiles: False
-plot_emission_bars: False
-
-# CO2 emission through diffusion
-co2_diffusion:
-  include: True
-  name: "CO2 emission via diffusion"
-  unit: ""
-  long_description: ""
-# CO2 emission through diffusion, non-anthropogenic
-co2_diffusion_nonanthro:
-  include: True
-  name: "Nonanthropogenic CO2 emission via diffusion"
-  unit: ""
-  long_description: ""
-# CO2 preimpoundment emissions
-co2_preimp:
-  include: True
-  name: "Preimpoundment CO2 emissions"
-  unit: ""
-  long_description: ""
-# CO2 emission minus non-anthropogenic emission
-co2_minus_nonanthro:
-  include: True
-  name: "CO2 emission minus non-anthropogenic"
-  unit: ""
-  long_description: ""
-# Net CO2 emission
-co2_net:
-  include: True
-  name: "Net CO2 emission"
-  unit: ""
-  long_description: ""
-# CO2 emission profile
-co2_profile:
-  include: True
-  name: "CO2 emission profile"
-  years: null
-  unit: ""
-  long_description: ""
-
-# CH4 emission via diffusion
-ch4_diffusion:
-  include: True
-  name: "CH4 emission via diffusion"
-  unit: ""
-  long_description: ""
-# CH4 emission via ebullition
-ch4_ebullition:
-  include: True
-  name: "CH4 emission via ebullition"
-  unit: ""
-  long_description: ""
-# CH4 emission via degassing
-ch4_degassing:
-  include: True
-  name: "CH4 emission via degassing"
-  unit: ""
-  long_description: ""
-# CH4 preimpoundment emission
-ch4_preimp:
-  include: True
-  name: "Pre-impounment CH4 emission"
-  unit: ""
-  long_description: ""
-# Net CH4 emission
-ch4_net:
-  include: "Pre-impounment CH4 emission"
-  unit: ""
-  long_description: ""
-# CH4 emission profile
-ch4_profile:
-  include: True
-  name: "CH4 emission profile"
-  years: null
-  unit: ""
-  long_description: ""
-
-# N2O emission method A
-n2o_methodA:
-  include: True
-  name: ""
-  unit: ""
-  long_description: ""
-# N2O emission method B
-n2o_methodB:
-  include: True
-  name: ""
-  unit: ""
-  long_description: ""
-# N2O emission mean (method A + method B divided by 2)
-n2o_mean:
-  include: True
-  name: ""
-  unit: ""
-  long_description: ""
-# CH4 emission profile
-n2o_profile:
-  include: True
-  name: "N2O emission profile"
-  years: null
-  unit: ""
-  long_description: ""
-
-# CO2 emissions plus CH4 emissions
-co2_ch4:
-  include: True
-  name: ""
-  unit: ""
-  long_description: ""
-# Total (CO2+CH4+N2O)
-co2_ch4_n2o:
-  include: True
-  name: ""
-  unit: ""
-  long_description: ""
+outputs:
+  co2:
+    # CO2 emission through diffusion
+    co2_diffusion:
+      include: True
+      name: "CO2 diffusion flux"
+      fun_name: "gross_total"
+      unit: "gCO2eq m-2 yr-1"
+      long_description: "Total CO2 emissions from a reservoir integrated over lifetime"
+      hint: ""
+    # CO2 emission through diffusion, non-anthropogenic
+    co2_diffusion_nonanthro:
+      include: True
+      name: "Nonanthropogenic CO2 diffusion flux"
+      fun_name: "flux_nonanthro"
+      unit: "gCO2eq m-2 yr-1"
+      long_description: "CO2 diffusion flux taken at (after) 100 years"
+      hint: ""
+    # CO2 preimpoundment emissions
+    co2_preimp:
+      include: True
+      name: "Preimpoundment CO2 emissions"
+      fun_name: "pre_impoundment"
+      unit: "gCO2eq m-2 yr-1"
+      long_description: "CO2 emission in the area covered by the reservoir prior to impoundment"
+      hint: "Negative values denote C sink (atmosphere to land flux)"
+    # CO2 emission minus non-anthropogenic emission
+    co2_minus_nonanthro:
+      include: True
+      name: "CO2 emission minus non-anthropogenic"
+      fun_name: "net_total"
+      unit: "gCO2eq m-2 yr-1"
+      long_description: "CO2 emissions minus non-anthropogenic over a number of years"
+      hint: "By default integrated over 100 years"
+    # Net CO2 emission
+    co2_net:
+      include: True
+      name: "Net CO2 emission"
+      fun_name: "factor"
+      unit: "gCO2eq m-2 yr-1"
+      long_description: "Overall integrated emissions for lifetime"
+      hint: "By default integrated over 100 years"
+    # CO2 emission profile (year vector defined in inputs.yaml)
+    co2_profile:
+      include: True
+      name: "CO2 emission profile"
+      fun_name: "profile"
+      unit: "gCO2eq m-2 yr-1"
+      long_description: "CO2 emission per year for a defined list of years"
+      hint: "Flux(year) x age - pre-impoundment - non-anthropogenic"
+  ch4:
+    # CH4 emission via diffusion
+    ch4_diffusion:
+      include: True
+      name: "CH4 emission via diffusion"
+      fun_name: "diffusion"
+      unit: "g CO2eq m-2 yr-1"
+      long_description: "CH4 emission via diffusion integrated over a number of years."
+      hint: "The default time horizon is 100 years"
+    # CH4 emission via ebullition
+    ch4_ebullition:
+      include: True
+      name: "CH4 emission via ebullition"
+      fun_name: "ebullition"
+      unit: "g CO2eq m-2 yr-1"
+      long_description: "CH4 emission via ebullition"
+      hint: "Ebullition fluxes are not time-dependent"
+    # CH4 emission via degassing
+    ch4_degassing:
+      include: True
+      name: "CH4 emission via degassing"
+      fun_name: "degassing"
+      unit: "g CO2eq m-2 yr-1"
+      long_description: "CH4 emission via degassing integrated for a number of years"
+      hint: "The default time horizon is 100 years"
+    # CH4 preimpoundment emission
+    ch4_preimp:
+      include: True
+      name: "Pre-impounment CH4 emission"
+      fun_name: "pre_impoundment"
+      unit: "g CO2eq m-2 yr-1"
+      long_description: "Pre-impounment CH4 emission"
+      hint: "Pre-impoundment emissions are subtracted from the total CH4 emission"
+    # Net CH4 emission
+    ch4_net:
+      include: True
+      name: "Net per area CH4 emission"
+      fun_name: "factor"
+      unit: "g CO2eq m-2 yr-1"
+      long_description: "Net per area CH4 emission"
+      hint: ""
+    # CH4 emission profile (year vector defined in inputs.yaml)
+    ch4_profile:
+      include: True
+      name: "CH4 emission profile"
+      fun_name: "profile"
+      unit: "g CO2eq m-2 yr-1"
+      long_description: "CH4 emission per year for a defined list of years"
+      hint: ""
+  n2o:
+    # N2O emission method A
+    n2o_methodA:
+      include: True
+      name: "N2O emission, method A"
+      fun_name: "factor"
+      unit: "g CO2eq m-2 yr-1"
+      long_description: "N2O emission, method A"
+      hint: ""
+    # N2O emission method B
+    n2o_methodB:
+      include: True
+      name: "N2O emission, method B"
+      fun_name: "factor"
+      unit: "g CO2eq m-2 yr-1"
+      long_description: "N2O emission, method B"
+      hint: ""
+    # N2O emission mean (method A + method B divided by 2)
+    n2o_mean:
+      include: True
+      name: "N2O emission, mean value"
+      fun_name: "factor"
+      unit: "g CO2eq m-2 yr-1"
+      long_description: "N2O emission factor, average of two methods"
+      hint: ""
+    # N2O emission profile (year vector defined in inputs.yaml)
+    n2o_profile:
+      include: True
+      name: "N2O emission profile"
+      fun_name: "profile"
+      unit: "g CO2eq m-2 yr-1"
+      long_description: "N2O emission per year for a defined list of years"
+      hint: ""
+    # CO2 emissions plus CH4 emissions
+    co2_ch4:
+      include: False
+      name: "CO2 + CH4 emission"
+      fun_name: "co2_ch4"
+      unit: "g CO2eq m-2 yr-1"
+      long_description: "Sum of CO2 and CH4 emissions"
+      hint: ""
+    # Total (CO2+CH4+N2O)
+    co2_ch4_n2o:
+      include: False
+      name: "CO2 + CH4 + N2O emission"
+      fun_name: "co2_ch4_n2o"
+      unit: "g CO2eq m-2 yr-1"
+      long_description: "Sum of CO2, CH4 and N2O emissions"
+      hint: ""
 ...
