@@ -32,9 +32,9 @@ class Input:
         return catchment_dict
 
     @property
-    def emission_factors(self) -> List[str]:
+    def gasses(self) -> List[str]:
         """ Retrieve a list of emission factors to be calculated """
-        return self.input_data.get('emission_factors')
+        return self.input_data.get('gasses')
 
     @property
     def year_vector(self) -> Tuple[float]:
