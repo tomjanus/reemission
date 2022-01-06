@@ -3,6 +3,8 @@ import sys
 sys.path.append("..")
 import unittest
 from src.emissions.input import Input, Inputs
+from types import SimpleNamespace
+from src.emissions.utils import read_table
 
 
 class TestInput(unittest.TestCase):
@@ -17,7 +19,7 @@ class TestInput(unittest.TestCase):
             "monthly_temps": [13.56, 14.99, 18.46, 21.29, 23.79, 25.09,
                               25.46, 25.66, 24.93, 22.33, 18.03, 14.66],
             "year_vector": [1, 5, 10, 20, 30, 40, 50, 65, 80, 100],
-            "emission_factors": ["co2", "ch4"],
+            "gasses": ["co2", "ch4"],
             "catchment":
             {
                 "runoff": 3000,
@@ -51,24 +53,32 @@ class TestInput(unittest.TestCase):
     def setUp(self) -> None:
         self.input = None
 
+    def test_read_yaml(self) -> None:
+        """ Test reading of yaml files """
+        table = read_table(
+            '../data/emissions/McDowell/landscape_TP_export.yaml')
+        table_ns = SimpleNamespace(**table)
+        self.assertIsInstance(table_ns.biome, dict)
+
     def test_input_fromfile(self) -> None:
         """ Test input object initialization """
         # Check if instiating with wrong key does not raise an error
         reservoir_name = "Reservoir 3"
         self.input = Input.fromfile(file=self.input_file,
                                     reservoir_name=reservoir_name)
-        self.assertIsNone(self.input.input_data)
+        self.assertIsNone(self.input.data)
+
         # Assert that instantiating with the key creates a dict inside Input
         reservoir_name = "Reservoir 2"
         self.input = Input.fromfile(file=self.input_file,
                                     reservoir_name=reservoir_name)
-        self.assertIsInstance(self.input.input_data, dict)
+        self.assertIsInstance(self.input.data, dict)
         self.assertEqual(self.input.name, reservoir_name)
 
     def test_input_from_dict(self) -> None:
         """ Test input object initialization from data in dict format """
         self.input = Input(self.test_name, self.test_dict)
-        self.assertIsInstance(self.input.input_data, dict)
+        self.assertIsInstance(self.input.data, dict)
 
     def test_retrieve_reservoir_data(self) -> None:
         """ Test reservoir data retrieval """
@@ -83,7 +93,7 @@ class TestInput(unittest.TestCase):
     def test_retrieve_emission_factors(self) -> None:
         """ Test emission factors (list) data retrieval """
         self.input = Input(self.test_name, self.test_dict)
-        self.assertIsNotNone(self.input.emission_factors)
+        self.assertIsNotNone(self.input.gasses)
 
     def test_retrieve_year_vector(self) -> None:
         """ Test retrieval of the vector of years (for calculation of
@@ -146,7 +156,7 @@ class TestInputs(unittest.TestCase):
     def test_inputs_fromfile(self) -> None:
         """ Test input object initialization """
         self.inputs = Inputs.fromfile(file=self.input_file)
-        self.assertIsInstance(self.inputs.inputs, list)
+        self.assertIsInstance(self.inputs.inputs, dict)
 
     def test_add_new_data(self) -> None:
         """ Initialize inputs from file and add a new reservoir dict """
