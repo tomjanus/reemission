@@ -1,7 +1,8 @@
 """ Module with simulation/calculation facilities for calculating GHG
     emissions for man-made reservoirs """
 from dataclasses import dataclass, field
-from typing import Type, Dict, List, Tuple, Union, Optional
+from typing import Type, Dict, Tuple, Union, Optional, List
+import logging
 from itertools import chain
 import yaml
 from .input import Inputs
@@ -11,7 +12,11 @@ from .reservoir import Reservoir
 from .emissions import (CarbonDioxideEmission,
                         NitrousOxideEmission,
                         MethaneEmission)
-from .presenter import Presenter
+from .presenter import Presenter, Writer
+
+# Set up module logger
+logging.basicConfig(level=logging.INFO)
+log = logging.getLogger(__name__)
 
 # TODO: potential problems in Python <= 3.6 because dicts are not ordered
 #       pay attention
@@ -23,9 +28,10 @@ falses = [False, 'false', 'False', 'no', 'off', 'null']
 class EmissionModel:
     """ Calculates emissions for a set of data provided in a dictionary
         format """
-    config: Union[Dict, str]
-    presenters: Optional[List[Type[Presenter]]] = None
+    inputs: Inputs
     outputs: Dict = field(init=False)
+    config: Union[Dict, str]
+    presenter: Optional[Type[Presenter]] = None
 
     def __post_init__(self):
         self.outputs = {}
@@ -55,8 +61,7 @@ class EmissionModel:
                 'co2_net': {'ref': co2_em.factor,
                             'args': {'number_of_years': years[-1]}},
                 'co2_profile': {'ref': co2_em.profile,
-                                'args': {'years': years}}
-            }
+                                'args': {'years': years}}}
         if ch4_em:
             ch4_exec = {
                 'ch4_diffusion': {'ref': ch4_em.diffusion,
@@ -70,8 +75,7 @@ class EmissionModel:
                 'ch4_net': {'ref': ch4_em.factor,
                             'args': {'number_of_years': years[-1]}},
                 'ch4_profile': {'ref': ch4_em.profile,
-                                'args': {'years': years}}
-            }
+                                'args': {'years': years}}}
         if n2o_em:
             n2o_exec = {
                 'n2o_methodA': {'ref': n2o_em.factor,
@@ -81,28 +85,42 @@ class EmissionModel:
                 'n2o_mean': {'ref': n2o_em.factor,
                              'args': {'mean': True}},
                 'n2o_profile': {'ref': n2o_em.profile,
-                                'args': {'years': years}},
-                }
+                                'args': {'years': years}}}
         exec_dict = dict(chain.from_iterable(
             d.items() for d in (co2_exec, ch4_exec, n2o_exec)))
         return exec_dict
 
-    def add_presenter(self, presenter: Type[Presenter]) -> None:
-        """ Add presenters to the emission model for data output formatting """
+    def add_presenter(self, writers: List[Type[Writer]],
+                      output_files: List[str]) -> None:
+        """ Instantiates a presenter class to the emission model for data
+            output formatting """
+        self.presenter = Presenter(inputs=self.inputs, outputs=self.outputs)
         try:
-            self.presenters.append(presenter)
-        except AttributeError:
-            self.presenters = []
-            self.presenters.append(presenter)
+            assert len(writers) == len(output_files)
+        except AssertionError:
+            log.error("Number of writers not equal to the number of files.")
+            return None
+        for writer, output_file in zip(writers, output_files):
+            self.presenter.add_writer(writer=writer, output_file=output_file)
+        return None
 
-    def save_results(self):
+    def save_results(self) -> None:
         """ Save results using presenters defined in the presenters list """
+        if not bool(self.outputs):
+            log.error("Output dictionary empty. Run calculations first and " +
+                      " try again.")
+            return None
+        try:
+            self.presenter.output()
+        except AttributeError:
+            log.error("Presenter not defined")
+        return None
 
-    def calculate(self, inputs: Type[Inputs], p_calc_method='g-res',
+    def calculate(self, p_calc_method='g-res',
                   n2o_model='model 1') -> None:
         """ Calculate emissions for a number of variables defined in config """
         # Iterate through each set of inputs and output results in a dict
-        for model_input in inputs.inputs:
+        for model_input in self.inputs.inputs:
             monthly_temp = MonthlyTemperature(model_input.monthly_temps)
             # Instantiate Catchment and Reservoir objects
             catchment = Catchment(**model_input.catchment_data)
