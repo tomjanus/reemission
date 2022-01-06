@@ -1,7 +1,7 @@
 """ Module for calculation of inundated reservoir area
     using digital elevation map and dam heights and locations
     Methodology and coding by Aung Kyaw Kyaw, 01/11/2021
-    Refactored by T. Janus, 06/11/2021
+    Refactored by T. Janus and Aung Kyaw Kyaw
 """
 
 # Currently known issues 09-Nov-2021
@@ -17,48 +17,31 @@
 
 # Python packages
 import os
-from os.path import isfile, join
-import copy
-import time
 from dataclasses import dataclass, field
 from pathlib import Path
 import json
-from typing import Optional, Union, TypeVar, Dict, List, Any
-# Numpy, pandas, geopandas
+from typing import Optional, TypeVar, Dict, List, Any, Union
 import numpy as np
 import pandas as pd
 import geopandas as gpd
-# Computer software library for reading and writing raster and vector geospatial
-# data formats
-from osgeo import gdal
 # Parallel computing library that scales the existing Python ecosystem
 import dask
 from dask.distributed import Client
 from dask import delayed
-# Support for labelled multi-dimensional arrays
-import xarray as xr
+import xarray
 # rioxarray extends xarray with the rio accessor, used to clip, merge, and
 # reproject rasters
 import rioxarray as rxr
-# Package for map visualisations
-import folium
-from folium.plugins import MarkerCluster
 # GIS package for reading, writing, and converting between various common
 # coordinate reference system
 # (CRS) string and data source formats
 import pycrs
-# Fiona reads and writes spatial data files
-from fiona.crs import from_epsg
-# Set-theoretic analysis and manipulation of planar features
-from shapely.geometry import box
 # Raster data library with high-level bindings to GDAL
 import rasterio
-from rasterio import Affine, MemoryFile
 from rasterio.enums import Resampling
-from rasterio.plot import show, show_hist
 from rasterio.mask import mask
 from rasterio.errors import RasterioIOError
-from rasterio.warp import calculate_default_transform, reproject, Resampling
+from rasterio.warp import Resampling
 # advanced geospatial data analysis platform with 480 tools, also for
 # hydrologic analysis
 from whitebox.whitebox_tools import WhiteboxTools
@@ -81,7 +64,16 @@ def find_pointers(dem_names: List[str], pointer_path: str) -> List[str]:
     for dem_name in dem_names:
         for pointer_file in os.listdir(pointer_path):
             pointer_name, ext = os.path.splitext(pointer_file)
-            if pointer_name in dem_name:
+            _str = ''
+            _container = []
+
+            for i in pointer_name:
+                if len(_container) < 2:
+                    if i == '_':
+                        _container.append(i)
+                    _str = _str + i
+
+            if _str in dem_name:
                 matching_pointer = os.path.join(pointer_path, pointer_file)
                 pointer_files.append(matching_pointer)
     try:
@@ -166,6 +158,39 @@ class Vector(Layer):
             self.load()
         return [json.loads(self._data.to_json())['features'][0]['geometry']]
 
+    # Can use with list of points which is even faster but the Whitebox
+    # algorithm neglects the overlapping area.
+    # There is overhead cost for each individual points
+    def shp_individual(self, output_path: str) -> None:
+        """ Get ID-ed shapefile for each dam (to be used later to find catchment
+            areas via individual points)
+            Function assumes that 'ID' column is present in the shape file
+        """
+        Path(output_path, self.name + 'fill_').mkdir(parents=True,
+                                                     exist_ok=True)
+        df = self.data
+        for ID in df.ID:
+            df_ = df[df.ID == ID]
+            output_file = os.path.join(
+                output_path, self.name + 'fill_', str(ID) + '.shp')
+            remove_file(output_file)
+            df_.to_file(output_file)
+
+    def to_single_polygon(self, output_path: str) -> None:
+        """ Get single polygon , get rid of islands
+            This processing step may not be needed depending on the
+            the outcome of an earlier hydrological correction/fill
+            depressions step
+        """
+        Path(output_path).mkdir(parents=True, exist_ok=True)
+        output_file = os.path.join(output_path, self.name + '.shp')
+        remove_file(output_file)
+        df_test = self.data
+        df_test['new_column'] = 0
+        df_test = df_test.dissolve(by='new_column')
+        df_test.to_file(output_file)
+        # df_test.dissolve(by='new_column').to_file(output_file)
+
 
 @dataclass
 class Dams(Vector):
@@ -212,7 +237,7 @@ class Dams(Vector):
             dams_in_zone = dams_df.loc[found_dams]
             # Write to shape file
             dam_shape_file = os.path.join(output_path,
-                                          'dam_' + zone_name + '_.shp')
+                                          'dam_' + zone_name + '_fill_.shp')
             remove_file(dam_shape_file)
             dams_in_zone.to_file(dam_shape_file)
 
@@ -239,6 +264,11 @@ class Dem(Layer):
         except RasterioIOError as e:
             print(e, "Data could not be loaded")
 
+    def load_array(self) -> Union[xarray.Dataset, xarray.DataArray,
+                                  List[xarray.Dataset]]:
+        """Load raster to xarray"""
+        return rxr.open_rasterio(self.path)
+
     @property
     def data(self) -> RasterioRaster:
         """ Defer loading data until data needs to be accessed """
@@ -249,7 +279,7 @@ class Dem(Layer):
     def resize(self, new_path: str, upscale_factor: float = 0.5,
                verbose: bool = False) -> None:
         """ Resize digital elevation model by an upscale factor
-            values < 1 indicate that the size will be reduced """
+            values < 1 indicate that the resolution will be reduced """
         dataset = self.data
         profile = dataset.profile
         # resample data to target
@@ -276,6 +306,15 @@ class Dem(Layer):
             print('Original DEM size: {}, Resampled DEM size: {}'.format(
                   dataset.shape, target.shape))
 
+    def clip_raster_to_polygon(self, output_path: str) -> None:
+        """ Clip raster to a polygon """
+        Path(output_path).mkdir(parents=True, exist_ok=True)
+        output_file = os.path.join(output_path, output_file)
+        remove_file(output_file)
+        wbt = WhiteboxTools()
+
+        wbt.clip_raster_to_polygon(self.path, output=output_path)
+
     def clip_to_polygon(self, zone: Vector, clipped_path: str,
                         parallel: bool = False,
                         copy_raster: bool = True) -> None:
@@ -296,17 +335,14 @@ class Dem(Layer):
         #       random access/read errors. It is possible to catch the error
         #       and wait until read can be resumed. Other possibility is lower-
         #       level parallelization with DASK
-
         if parallel and copy_raster:
             raster = rasterio.open(self.path)
-
         if parallel and not copy_raster:
             raster = self.data
-
         if not parallel:
             raster = self.data
 
-        # Read epsg code
+        # Read epsg code; Need internet for pycrs information retrieval.
         epsg_code = int(raster.crs.data['init'][5:])
         epsg_string = pycrs.parse.from_epsg_code(epsg_code).to_proj4()
         # Obtain coordinates from the zone vector layer
@@ -339,11 +375,13 @@ class Dem(Layer):
     @retry(RasterioIOError, tries=4)
     def clip_to_polygons(self, zones: Collection,
                          clipped_path: str,
-                         parallel=True,
-                         copy_raster=False) -> None:
+                         parallel: bool = True,
+                         copy_raster: bool = False) -> None:
         """ Implement clip_to_polygon to clip raster to multiple polygons
             (zones) using parallelization feature in Dask """
         # Prepare the list of parallel task to be executed by dask
+        n_workers = specify_max_workers()
+        dask_client = Client(n_workers=n_workers)
         compute_list = []
         for zone in zones.collection:
             process = delayed(self.clip_to_polygon)(zone=zone,
@@ -398,6 +436,19 @@ class Dem(Layer):
             dist=dist,
             fill=fill)
 
+    def fill_depression(
+            self, output_path: str, flat_increment: float = 0.001) -> None:
+        """ Efficient and quick DEM filling (replace fill + breach steps by the
+            two functions above)"""
+        wbt = WhiteboxTools()
+        Path(output_path).mkdir(parents=True, exist_ok=True)
+        output_file = os.path.join(
+            output_path, self.name + "_fill_depression.tif"
+        )
+        remove_file(output_file)
+        wbt.fill_depressions(
+            dem=self.path, output=output_file, flat_increment=flat_increment)
+
     def accumulate(self, output_path: str) -> None:
         """Perform flow accumulation, necessary for stream extraction"""
         wbt = WhiteboxTools()
@@ -448,12 +499,158 @@ class Dem(Layer):
                                      d8_pntr=d8_flow_pointer,
                                      output=output_file)
 
+    def snap_pour_pt(self, pt_zone: Vector, output_path: str,
+                     snap_dist: float = 0.6) -> None:
+        """snapp the existing dam locations to nearest streams"""
+        wbt = WhiteboxTools()
+        Path(output_path).mkdir(parents=True, exist_ok=True)
+        out_shp = os.path.join(output_path, pt_zone.name + '_fill_.shp')
+        remove_file(out_shp)
+        # Careful with the usage of the below method. Know the units of your
+        # data
+        wbt.jenson_snap_pour_points(pour_pts=pt_zone.path,
+                                    streams=self.path,
+                                    output=out_shp,
+                                    snap_dist=snap_dist)
+
+    def watershed_individual(self, output_path: str,
+                             snapped_pts: Vector) -> None:
+        """ Find upper catchment/watershed based on a snapped point or list of
+            snapped points
+            If using the list of points at once, please set snapped_pts as
+            zone-based pts rather than individual points"""
+        Path(output_path, self.name+'_watershed').mkdir(
+            parents=True, exist_ok=True)
+        wbt = WhiteboxTools()
+        output_file = os.path.join(output_path, self.name+'_watershed',
+                                   snapped_pts.name+'.tif')
+        remove_file(output_file)
+        wbt.watershed(d8_pntr=self.path,
+                      pour_pts=snapped_pts.path,
+                      output=output_file)
+
+    def raster_to_polygon(self, output_path: str) -> None:
+        """vectorize ID-ed watersheds"""
+        wbt = WhiteboxTools()
+        Path(output_path).mkdir(parents=True, exist_ok=True)
+        output_file = os.path.join(output_path, self.name+'.shp')
+        remove_file(output_file)
+        wbt.raster_to_vector_polygons(
+            self.path, output=output_file, callback=None)
+
+    def clip_raster_to_polygon(
+            self, output_path: str, polygon: Vector) -> None:
+        """ Clip raster to polygon
+            Similar to clip_to_polygon.
+            Introduced here since the former function seems slower """
+        wbt = WhiteboxTools()
+        Path(output_path).mkdir(parents=True, exist_ok=True)
+        output_file = os.path.join(output_path, polygon.name+'.tif')
+        remove_file(output_file)
+        wbt.clip_raster_to_polygon(
+            self.path, polygons=polygon.path, output=output_file)
+
+    def clip_raster_to_polygons(
+            self, output_path: str, polygons: List[Vector],
+            parallel: bool = True) -> None:
+        n_workers = specify_max_workers()
+        dask_client = Client(n_workers=n_workers)
+        if not parallel:
+
+            for vector in polygons:
+                self.clip_raster_to_polygon(
+                    output_path=output_path, polygon=vector)
+        else:
+            compute_list = []
+            for vector in polygons:
+                process = delayed(self.clip_raster_to_polygon)(
+                    output_path=output_path, polygon=vector)
+                compute_list.append(process)
+            _ = dask.compute(*compute_list)
+
+    def extract_inundated_area(
+            self, gdf: Vector, output_path: str, output_path2: str) -> None:
+        Path(output_path).mkdir(parents=True, exist_ok=True)
+        output_file = os.path.join(output_path, self.name+'_values.tif')
+        remove_file(output_file)
+        Path(output_path2).mkdir(parents=True, exist_ok=True)
+        output_file2 = os.path.join(output_path2, self.name+'.tif')
+        remove_file(output_file2)
+
+        dem_data = self.load_array()
+        result = dem_data.where(
+            dem_data <= (
+                gdf.data[gdf.data.ID == int(self.name)].DAM_HEIGHT.values +
+                dem_data.min().values), drop=True)
+        result.rio.to_raster(output_file, masked=False, dtype="uint16")
+
+        """ The following second part is used to simpify raster-to-polygon
+            process """
+        result = dem_data.where(
+            ~(dem_data <= (
+                gdf.data[gdf.data.ID == int(self.name)].DAM_HEIGHT.values +
+                dem_data.min().values)), other=100)
+        result = result.where(result == 100, other=np.nan)
+        result.rio.to_raster(output_file2, masked=False, dtype="uint16")
+
+
+class VectorCollection(Collection):
+    """ Collection Class for Dem Layers """
+    collection: List[Vector] = field(default_factory=list)
+
+    def from_path(self, path: str) -> None:
+        """ Initialize collection from path instead of explicitly by providing
+            a list of Dem objects """
+        self.collection = []
+        files = find_files(path=path, ext='.shp')
+        self.collection = [Vector(file) for file in files]
+
+    # can use with list of points which is even faster but the Whitebox
+    # algorithm neglects the overlapping area.
+    # There is overhead cost for each individual points
+    def shp_individuals(self, output_path: str) -> None:
+        """ Get ID-ed shapefile for each dam (to be used later in catchment
+            area finding via individual points) """
+        for vector in self.collection:
+            vector.shp_individual(output_path)
+
+    def to_single_polygons(self, output_path: str,
+                           parallel: bool = True) -> None:
+        """ Merge polygons to a single polygon """
+        n_workers = specify_max_workers()
+        dask_client = Client(n_workers=n_workers)
+
+        if not parallel:
+            for vector in self.collection:
+                vector.to_single_polygon(output_path=output_path)
+        else:
+            compute_list = []
+            for vector in self.collection:
+                process = delayed(vector.to_single_polygon)(
+                    output_path=output_path)
+                compute_list.append(process)
+            _ = dask.compute(*compute_list)
+
+    def merge_vectors(self, output_path: str,
+                      name: str = 'combined_shape.shp') -> None:
+        """ Combine  shapefiles """
+        Path(output_path).mkdir(parents=True, exist_ok=True)
+        output_file = os.path.join(output_path, name)
+        remove_file(output_file)
+        gdf = pd.concat([
+            gpd.read_file(shp)
+            for shp in self.paths
+        ]).pipe(gpd.GeoDataFrame)
+        # change projection
+        gdf = gdf.set_crs('epsg:4326')
+        gdf.to_file(output_file)
+
 
 class DemCollection(Collection):
     """ Collection Class for Dem Layers """
     collection: List[Dem] = field(default_factory=list)
 
-    def from_path(self, path):
+    def from_path(self, path: str):
         """ Initialize collection from path instead of explicitly by providing
             a list of Dem objects """
         self.collection = []
@@ -523,9 +720,34 @@ class DemCollection(Collection):
         # always gets closed
         dask_client.close()
 
+    def fill_depressions(self, output_path: str, parallel: bool = True,
+                         flat_increment: float = 0.001) -> None:
+        """Performs fill depressions"""
+        if parallel:
+            compute_list = []
+            for _, dem in enumerate(self.collection):
+                process = delayed(dem.fill_depression)(output_path=output_path)
+                compute_list.append(process)
+            dask.compute(*compute_list)
+        else:
+            for _, dem in enumerate(self.collection):
+                dem.fill_depression(
+                    output_path=output_path, flat_increment=flat_increment)
+
+    def rho8_accumulate(self, output_path: str, parallel: bool = True) -> None:
+        """Performs fill depressions"""
+        if parallel:
+            compute_list = []
+            for _, dem in enumerate(self.collection):
+                process = delayed(dem.rho8_accumulate)(output_path=output_path)
+                compute_list.append(process)
+            dask.compute(*compute_list)
+        else:
+            for _, dem in enumerate(self.collection):
+                dem.rho8_accumulate(output_path=output_path)
+
     def accumulate(self, output_path: str, parallel: bool = True) -> None:
         """ Performs flow accumulation on a collection of rasters """
-
         # TODO: Shall we start dask client in here for parallel computation?
         if parallel:
             compute_list = []
@@ -592,3 +814,98 @@ class DemCollection(Collection):
                 stream.stream_to_vec(
                     d8_flow_pointer=d8_flow_pointer,
                     output_path=output_path)
+
+    def snap_pour_pts(self, pt_zones: VectorCollection, output_path: str,
+                      snap_dist: float = 0.6,
+                      parallel: bool = True) -> None:
+        n_workers = specify_max_workers()
+        dask_client = Client(n_workers=n_workers)
+
+        if not parallel:
+            for dem, vector in zip(self.collection, pt_zones.collection):
+                dem.snap_pour_pt(vector, output_path=output_path,
+                                 snap_dist=snap_dist)
+        else:
+            compute_list = []
+            for dem, vector in zip(self.collection, pt_zones.collection):
+                process = delayed(dem.snap_pour_pt)(
+                    vector, output_path=output_path, snap_dist=snap_dist)
+                compute_list.append(process)
+            _ = dask.compute(*compute_list)
+
+    def watershed_individuals(
+            self, output_path: str, snapped_pts: VectorCollection,
+            parallel: bool = True) -> None:
+        """ Find upper catchment/watershed based on a snapped point or list of
+            snapped points.
+            If using the list of points at once, please set snapped_pts as
+            zone_based pts rather than individual points """
+        n_workers = specify_max_workers()
+        dask_client = Client(n_workers=n_workers)
+
+        if not parallel:
+            for dem, vector in zip(self.collection, snapped_pts.collection):
+                dem.watershed_individual(
+                    snapped_pts=vector, output_path=output_path)
+        else:
+            compute_list = []
+            for dem, vector in zip(self.collection, snapped_pts.collection):
+                process = delayed(dem.watershed_individual)(
+                    snapped_pts=vector, output_path=output_path)
+                compute_list.append(process)
+            _ = dask.compute(*compute_list)
+
+    def clip_raster_to_polygons(
+            self, output_path: str, polygons: VectorCollection,
+            parallel: bool = True) -> None:
+        n_workers = specify_max_workers()
+        dask_client = Client(n_workers=n_workers)
+
+        if not parallel:
+            for dem, vector in zip(self.collection, polygons.collection):
+                dem.clip_raster_to_polygon(
+                    output_path=output_path, polygon=vector)
+        else:
+            compute_list = []
+            for dem, vector in zip(self.collection, polygons.collection):
+                process = delayed(dem.clip_raster_to_polygon)(
+                    output_path=output_path, polygon=vector)
+                compute_list.append(process)
+            _ = dask.compute(*compute_list)
+
+    def raster_to_polygons(self, output_path: str,
+                           parallel: bool = True) -> None:
+        """vectorize ID-ed watersheds"""
+        n_workers = specify_max_workers()
+        dask_client = Client(n_workers=n_workers)
+
+        if not parallel:
+            for dem in self.collection:
+                dem.raster_to_polygon(output_path=output_path)
+        else:
+            compute_list = []
+            for dem in self.collection:
+                process = delayed(dem.raster_to_polygon)(output_path=output_path)
+                compute_list.append(process)
+            _ = dask.compute(*compute_list)
+
+    def extract_inundated_areas(
+            self, output_path: str, output_path2: str,
+            gdf: Vector, parallel: bool = True) -> None:
+        """ Run extract inundated area for a collection of points/dams """
+        n_workers = specify_max_workers()
+        dask_client = Client(n_workers=n_workers)
+        if not parallel:
+            for dem in self.collection:
+                dem.extract_inundated_area(
+                    output_path=output_path, output_path2=output_path2,
+                    gdf=gdf)
+        else:
+            compute_list = []
+            for dem in self.collection:
+                process = delayed(dem.extract_inundated_area)(
+                    output_path=output_path, output_path2=output_path2,
+                    gdf=gdf)
+
+                compute_list.append(process)
+            _ = dask.compute(*compute_list)

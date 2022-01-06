@@ -129,8 +129,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Test files
-*_test.*
+# Tex and pdf files (reporting
+*.tex
+*.pdf
 
 # Files created by Dask
 dask-worker-space/
