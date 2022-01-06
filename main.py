@@ -1,14 +1,6 @@
 """ Main caller of the toolbox functions """
-from types import SimpleNamespace
-from src.emissions.utils import read_table
 from src.emissions.model import EmissionModel
 from src.emissions.input import Inputs
-
-
-def test_read_yaml():
-    table = read_table('./data/emissions/McDowell/landscape_TP_export.yaml')
-    table_ns = SimpleNamespace(**table)
-    print(table_ns)
 
 
 def test_emissions():
@@ -17,8 +9,10 @@ def test_emissions():
     input_data = Inputs.fromfile(
         '/home/lepton/Dropbox (The University of Manchester)/git_projects/' +
         'dam-emissions/tests/test_data/inputs.json')
-    model = EmissionModel()
-    model.calculate(inputs=input_data)
+    output_config = '/home/lepton/Dropbox (The University of Manchester)/' + \
+        'git_projects/dam-emissions/config/emissions/outputs.yaml'
+    model = EmissionModel(inputs=input_data, config=output_config)
+    model.calculate()
 
 
 if __name__ == '__main__':
