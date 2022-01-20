@@ -61,7 +61,6 @@ from rasterio.plot import show, show_hist
 from rasterio.mask import mask
 from rasterio.errors import RasterioIOError
 from rasterio.warp import calculate_default_transform, reproject, Resampling
-import earthpy 
 # advanced geospatial data analysis platform with 480 tools, also for
 # hydrologic analysis
 from whitebox.whitebox_tools import WhiteboxTools
@@ -99,56 +98,29 @@ dask_instance.init_cluster(dask_instance)
 #     except AssertionError:
 #         return None
 #     return pointer_files
-def find_pointers(dem_names: List[str], pointer_path: str, d8: bool) -> List[str]:
+def find_pointers(dem_names: List[str], pointer_path: str) -> List[str]:
     # Find files matching the names of files in a list file_names
     # Return a list of paths to pointer files matching dems
     pointer_files = []
-    if d8:
-        for dem_name in dem_names:
-            for pointer_file in os.listdir(pointer_path):
-                pointer_name, ext = os.path.splitext(pointer_file)
-                _str=''
-                for i in pointer_name:
+    for dem_name in dem_names:
+        for pointer_file in os.listdir(pointer_path):
+            pointer_name, ext = os.path.splitext(pointer_file)
+            _str=''
+            _container = []
+            
+            for i in pointer_name:
+                if len(_container)<2:
                     
                     if i == '_':
-                        break
+                        _container.append(i)
+
+
                     _str = _str+i
-                _str = _str+"_"
-                dem_name, ext = os.path.splitext(dem_name)
-                dem_name = os.path.basename(dem_name)
-                if len(_str) >2 :
-                    pass
-                else:
-                    _str = pointer_name[:-2]
-                if _str in dem_name:
-                    matching_pointer = os.path.join(pointer_path, pointer_file)
-                    pointer_files.append(matching_pointer)
-    else:
-        for dem_name in dem_names:
-            for pointer_file in os.listdir(pointer_path):
-                pointer_name, ext = os.path.splitext(pointer_file)
-                _str=''
-                _container = []
                 
-                for i in pointer_name:
-                    if len(_container)<2:
-                        
-                        if i == '_':
-                            _container.append(i)
-
-
-                        _str = _str+i
-                name = _str[:-1].split('_')[0]
-                last = _str[:-1].split('_')[1]
-                try: 
-                    int(last)
-                    
-                except ValueError:
-                    _str = name   
-                
-                if _str in dem_name:
-                    matching_pointer = os.path.join(pointer_path, pointer_file)
-                    pointer_files.append(matching_pointer)
+            
+            if _str in dem_name:
+                matching_pointer = os.path.join(pointer_path, pointer_file)
+                pointer_files.append(matching_pointer)
     try:
         assert len(pointer_files) == len(dem_names)
     except AssertionError:
@@ -252,9 +224,8 @@ class Vector(Layer):
         df_test['new_column'] = 0
         #df_test = df_test[df_test.pixelvalue!=0] ## cox we used wbt method which only frame the true extent
         df_test = df_test.dissolve(by='new_column')
-        df_test['dam_id'] = self.name
-        df_test.to_file(output_file)
-        #df_test.dissolve(by='new_column').to_file(output_file)
+
+        df_test.dissolve(by='new_column').to_file(output_file)
      
 
 @dataclass
@@ -443,9 +414,7 @@ class Dem(Layer):
         
         try: 
             epsg_code = int(raster.crs.data['init'][5:])
-            epsg_string = earthpy.epsg[str(epsg_code)] 
-            #epsg_string = pycrs.parse.from_epsg_code(epsg_code).to_proj4()
-            #epsg_string = raster.crs.data.to_proj4()
+            epsg_string = pycrs.parse.from_epsg_code(epsg_code).to_proj4()
         except KeyError:
             epsg_string = raster.crs.to_proj4()
 
@@ -519,17 +488,12 @@ class Dem(Layer):
     # BREACH METHODS
     # Arent fill and breach equivalent? If so, one could choose one or another
 
-    def fill(self, output_path: str, verbose: bool=False) -> None:
+    def fill(self, output_path: str) -> None:
         """
         Fill dem to enforce flow direction (i.e., make it hydrologically
         correct)
         """
         wbt = WhiteboxTools()
-        if verbose: 
-            pass
-        else:
-            #wbt.set_default_callback(callback_func = lambda output_path: print(None))
-            wbt.set_verbose_mode(val=verbose)
         # Make paths to store filled and breached versions of DEMs
         Path(output_path).mkdir(parents=True, exist_ok=True)
         output_file = os.path.join(
@@ -541,17 +505,12 @@ class Dem(Layer):
             output=output_file)
 
     def breach(self, output_path: str, dist: int = 5,
-               fill: bool = True, verbose: bool=False) -> None:
+               fill: bool = True) -> None:
         """
         Breach DEM to enforce flow direction (i.e., make it hydrologically
         correct)
         """
         wbt = WhiteboxTools()
-        if verbose: 
-            pass
-        else:
-            #wbt.set_default_callback(callback_func = lambda output_path: print(None))
-            wbt.set_verbose_mode(val=verbose)
         Path(output_path).mkdir(parents=True, exist_ok=True)
         output_file = os.path.join(
             output_path, self.name + "_breached.tif")
@@ -562,15 +521,9 @@ class Dem(Layer):
             output=output_file,
             dist=dist,
             fill=fill)
-    def fill_depression(self, output_path: str, flat_increment: float=0.001, verbose: bool=False) -> None:
+    def fill_depression(self, output_path: str, flat_increment: float=0.001) -> None:
         """efficient and quick DEM filling (replace fill + breach steps by the two functions above)"""
         wbt = WhiteboxTools()
-        if verbose: 
-            pass
-        else:
-            #wbt.set_default_callback(callback_func = lambda output_path: print(None))
-            wbt.set_verbose_mode(val=verbose)
-             
         Path(output_path).mkdir(parents=True, exist_ok=True)
         output_file = os.path.join(
             output_path, self.name+"_fill_depression.tif"
@@ -578,7 +531,6 @@ class Dem(Layer):
         remove_file(output_file)
         wbt.fill_depressions(
             dem=self.path, output = output_file, flat_increment = flat_increment
-
         )
     
 
@@ -586,14 +538,9 @@ class Dem(Layer):
         
 
 
-    def accumulate(self, output_path: str, verbose: bool=False) -> None:
+    def accumulate(self, output_path: str) -> None:
         """Perform flow accumulation, necessary for stream extraction"""
         wbt = WhiteboxTools()
-        if verbose: 
-            pass
-        else:
-            #wbt.set_default_callback(callback_func = lambda output_path: print(None))
-            wbt.set_verbose_mode(val=verbose)
         Path(output_path).mkdir(parents=True, exist_ok=True)
         output_file = os.path.join(output_path, self.name + '_acc.tif')
         remove_file(output_file)
@@ -605,15 +552,10 @@ class Dem(Layer):
         )
     
 
-    def d8_pointer(self, output_path: str, verbose:bool=False) -> None:
+    def d8_pointer(self, output_path: str) -> None:
         """ Generate a flow pointer grid using the simple D8
             (O'Callaghan and Mark, 1984) algorithm """
         wbt = WhiteboxTools()
-        if verbose: 
-            pass
-        else:
-            #wbt.set_default_callback(callback_func = lambda output_path: print(None))
-            wbt.set_verbose_mode(val=verbose)
         Path(output_path).mkdir(parents=True, exist_ok=True)
         output_file = os.path.join(output_path, self.name + '_d8.tif')
         remove_file(output_file)
@@ -621,15 +563,10 @@ class Dem(Layer):
             dem=self.path,
             output=output_file)
 
-    def extract_streams(self, output_path: str, stream_order: int, verbose:bool=False) -> None:
+    def extract_streams(self, output_path: str, stream_order: int) -> None:
         """ Extract, or map, the likely stream cells from an input
             flow-accumulation image """
         wbt = WhiteboxTools()
-        if verbose: 
-            pass
-        else:
-            #wbt.set_default_callback(callback_func = lambda output_path: print(None))
-            wbt.set_verbose_mode(val=verbose)
         Path(output_path).mkdir(parents=True, exist_ok=True)
         output_file = os.path.join(output_path, self.name + '_stream.tif')
         remove_file(output_file)
@@ -637,7 +574,7 @@ class Dem(Layer):
                     output = output_file,
                     threshold = stream_order)
 
-    def stream_to_vec(self, d8_flow_pointer: str, output_path: str, verbose:bool=False) -> None:
+    def stream_to_vec(self, d8_flow_pointer: str, output_path: str) -> None:
         """ Convert a raster stream file into a vector file.
             Requires: 1) the name of the raster streams file
                       2) the name of the D8 flow pointer file
@@ -645,25 +582,15 @@ class Dem(Layer):
         """
         streams = self.path
         wbt = WhiteboxTools()
-        if verbose: 
-            pass
-        else:
-            #wbt.set_default_callback(callback_func = lambda output_path: print(None))
-            wbt.set_verbose_mode(val=verbose)
         Path(output_path).mkdir(parents=True, exist_ok=True)
         output_file = os.path.join(output_path, self.name + '_stream.shp')
         remove_file(output_file)
         wbt.raster_streams_to_vector(streams=streams,
                                      d8_pntr=d8_flow_pointer,
                                      output=output_file)
-    def snap_pour_pt(self, pt_zone: Vector, output_path: str, snap_dist: float = 0.6, verbose:bool=False) -> None:
+    def snap_pour_pt(self, pt_zone: Vector, output_path: str, snap_dist: float = 0.6) -> None:
         """snapp the existing dam locations to nearest streams"""
         wbt = WhiteboxTools()
-        if verbose: 
-            pass
-        else:
-            #wbt.set_default_callback(callback_func = lambda output_path: print(None))
-            wbt.set_verbose_mode(val=verbose)
         Path(output_path).mkdir(parents=True, exist_ok=True)
         out_shp = os.path.join(output_path, pt_zone.name + '_fill_.shp')
         remove_file(out_shp) 
@@ -672,30 +599,20 @@ class Dem(Layer):
                                     output = out_shp,
                                     snap_dist = snap_dist) #careful with this! Know the units of your data
 
-    def watershed_individual(self, output_path: str, snapped_pts: Vector, verbose:bool=False) -> None:
+    def watershed_individual(self, output_path: str, snapped_pts: Vector) -> None:
         """find upper catchment/watershed based on a snapped point or list of snapped points;
         If using the list of points at once, please set snapped_pts as zone_based pts rather than individual points"""
         Path(output_path, self.name+'_watershed').mkdir(parents=True, exist_ok=True)
         wbt = WhiteboxTools()
-        if verbose: 
-            pass
-        else:
-            #wbt.set_default_callback(callback_func = lambda output_path: print(None))
-            wbt.set_verbose_mode(val=verbose)
         output_file = os.path.join(output_path,self.name+'_watershed',snapped_pts.name+'.tif')
         remove_file(output_file)
         wbt.watershed(d8_pntr = self.path,
                 pour_pts = snapped_pts.path,
                 output = output_file)
 
-    def raster_to_polygon(self, output_path: str, verbose:bool=False ) -> None:
+    def raster_to_polygon(self, output_path: str ) -> None:
         """vectorize ID-ed watersheds"""
         wbt = WhiteboxTools()
-        if verbose: 
-            pass
-        else:
-            #wbt.set_default_callback(callback_func = lambda output_path: print(None))
-            wbt.set_verbose_mode(val=verbose)
         Path(output_path).mkdir(parents=True, exist_ok=True)
         output_file = os.path.join(output_path,self.name+'.shp')
         remove_file(output_file)
