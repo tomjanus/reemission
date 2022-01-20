@@ -8,8 +8,7 @@ from typing import List, Tuple, Optional, Type
 from abc import ABC, abstractmethod
 import numpy as np
 from .utils import read_config, read_table
-from .constants import (Landuse, N_MOLAR, P_MOLAR, O_MOLAR, N2O_GWP100,
-                        CH4_GWP100)
+from .constants import Landuse, N_MOLAR, P_MOLAR, O_MOLAR
 from .catchment import Catchment
 from .reservoir import Reservoir
 from .temperature import MonthlyTemperature
@@ -89,6 +88,29 @@ class CarbonDioxideEmission(Emission):
                       for name in list_of_constants}
         return SimpleNamespace(**const_dict)
 
+    def flux(self, year: int) -> float:
+        """ Calculate CO2 flux for a given year.
+            Return flux in g CO2eq m-2 yr-1
+        """
+        flux = self.par.conv_coeff * 10.0 ** (
+            self.par.c_1 +
+            math.log10(year) * self.par.age +
+            self.eff_temp * self.par.temp +
+            math.log10(self.reservoir.area) * self.par.resArea +
+            self.reservoir.soil_carbon * self.par.soilC +
+            math.log10(self.reservoir_tp) * self.par.ResTP) * \
+            (1 - (self.preinund_area/self.reservoir.area))
+        return flux
+
+    def flux_nonanthro(self) -> float:
+        """ Calculate nonanthropogenic CO2 flux as CO2 flux
+            after 100 years. It is assumed that all anthropogenic effects
+            become null after 100 years and the flux that remains after
+            100 years is due to non-anthropogenic sources.
+            Return flux in g CO2eq m-2 yr-1
+        """
+        return self.flux(year=100)
+
     @property
     def reservoir_tp(self) -> float:
         """ Return reservoir total phosphorus concentration """
@@ -101,27 +123,14 @@ class CarbonDioxideEmission(Emission):
                       years: Tuple[int] = (1, 5, 10, 20, 30, 40, 50, 100)) \
             -> Optional[list]:
         """ Calculate CO2 fluxes for a list of years given as an argument """
-        def flux(year: int) -> float:
-            """ Inner function for calculating flux for a defined year
-                return flux in g CO2eq m-2 yr-1
-            """
-            flux = self.par.conv_coeff * 10.0 ** (
-                self.par.c_1 +
-                math.log10(year) * self.par.age +
-                self.eff_temp * self.par.temp +
-                math.log10(self.reservoir.area) * self.par.resArea +
-                self.reservoir.soil_carbon * self.par.soilC +
-                math.log10(self.reservoir_tp) * self.par.ResTP) * \
-                (1 - (self.preinund_area/self.reservoir.area))
-            return flux
 
         if len(years) == 1:
-            return flux(years[0])
+            return self.flux(years[0])
 
         # Calculate flux per each year in the list of years
-        return [flux(year) for year in years]
+        return [self.flux(year) for year in years]
 
-    def _gross_total_emission(self) -> float:
+    def gross_total(self, number_of_years: int = 100) -> float:
         """
         Calculate gross total CO2 emissions in g CO2eq m-2 yr-1
         from a reservoir over 100 years
@@ -133,20 +142,21 @@ class CarbonDioxideEmission(Emission):
             self.reservoir.soil_carbon * self.par.soilC +
             math.log10(self.reservoir_tp) * self.par.ResTP) * \
             (1 - (self.preinund_area/self.reservoir.area)) * \
-            ((100**(self.par.calc+1) -
-              0.5**(self.par.calc+1)) / ((self.par.calc+1)*(100-0.5)))
+            ((number_of_years**(self.par.calc+1) -
+              0.5**(self.par.calc+1)) / ((self.par.calc+1) *
+                                         (number_of_years-0.5)))
         return flux
 
-    def _net_total_emission(self, number_of_years: int) -> float:
+    def net_total(self, number_of_years: int = 100) -> float:
         """
         Calculate net total CO2 emissions, i.e. gross - non anthropogenic
         (in g CO2eq m-2 yr-1) from a reservoir over a number of years
         given in number_of_years
         """
-        return (self._gross_total_emission() -
-                self._flux_profile(years=(number_of_years,)))
+        return self.gross_total(number_of_years=number_of_years) - \
+            self.flux_nonanthro()
 
-    def _pre_impoundment_emission(self) -> float:
+    def pre_impoundment(self) -> float:
         """
         Calculate CO2 emissions  g CO2eq m-2 yr-1 from the inundated area
         prior to impoundment
@@ -174,8 +184,8 @@ class CarbonDioxideEmission(Emission):
             -> List[float]:
         """ Calculate CO2 emissions for a list of years given as an argument
         Flux at year x age - pre-impoundment emissions - non-anthropogenic
-        emissions """
-        pre_impoundment = self._pre_impoundment_emission()
+        emissions, unit: g CO2eq m-2 yr-1 """
+        pre_impoundment = self.pre_impoundment()
         integrated_emission = self._flux_profile((years[-1],))
         fluxes_profile = self._flux_profile(years)
         final_profile = [flux - integrated_emission - pre_impoundment for
@@ -184,10 +194,10 @@ class CarbonDioxideEmission(Emission):
 
     def factor(self, number_of_years: int = 100) -> float:
         """ Overall integrated emissions for lifetime, taken by default
-            as 100 yrs, unit:  g CO2eq m-2 yr-1 """
-        net_total_emission = self._net_total_emission(number_of_years)
+            as 100 yrs, unit: g CO2eq m-2 yr-1 """
+        net_total_emission = self.net_total(number_of_years=number_of_years)
         pre_impoundment_emission = \
-            self._pre_impoundment_emission()
+            self.pre_impoundment()
         return net_total_emission - pre_impoundment_emission
 
 
@@ -211,7 +221,8 @@ class MethaneEmission(Emission):
         # List of parameters required for CH4 emission calculations
         par_list = ['int_diff', 'age_diff', 'littoral_diff', 'eff_temp_CH4',
                     'int_ebull', 'littoral_ebull', 'irrad_ebull', 'int_degas',
-                    'tw_degas', 'ch4_diff', 'ch_diff_age_term', 'conv_coeff']
+                    'tw_degas', 'ch4_diff', 'ch_diff_age_term', 'conv_coeff',
+                    'ch4_gwp100']
         # Read the parameters from config
         self.par = self._initialize_params_from_config(par_list)
 
@@ -282,7 +293,7 @@ class MethaneEmission(Emission):
         # Calculate CH4 emission in mg CH4-C m-2 d-1
         emission_in_ch4 = 10**(
             self.par.int_ebull +
-            self.par.littoral_ebull*math.log10(littoral_perc/100) +
+            self.par.littoral_ebull*math.log10(littoral_perc/100.0) +
             365*self.par.irrad_ebull*self.mean_ir/30.4)
         # Calculate CH4 emission in g CO2eq m-2 yr-1
         emission_in_co2 = emission_in_ch4 * self.par.conv_coeff
@@ -310,7 +321,7 @@ class MethaneEmission(Emission):
             max_depth=self.reservoir.max_depth, q_bath_shape=q_bath_shape)
         # Calculate CH4 emission in g CO2eq m-2 yr-1 spread over the target
         # number of years provided as argument
-        aux_var_1 = self.par.littoral_diff * math.log10(littoral_perc/100)
+        aux_var_1 = self.par.littoral_diff * math.log10(littoral_perc/100.0)
         aux_var_2 = -number_of_years * self.par.age_diff * math.log(10)
         aux_var_3 = number_of_years * self.par.age_diff
         aux_var_4 = self.par.eff_temp_CH4 * eff_temp
@@ -356,12 +367,12 @@ class MethaneEmission(Emission):
         # Integrated emissiom over 100 years in g CH4-C  m-2 yr-1
         ch4_em_ch4c = ch4_out_flux/self.reservoir.area
         # Integrated emissiom over 100 years in g CO2eq m-2 yr-1
-        _ = ch4_em_ch4c * 16/12 * CH4_GWP100
+        _ = ch4_em_ch4c * 16/12 * self.par.ch4_gwp100
         # Initial degassing flux in g CH4-C  m-2 yr-1
         flux_init_ch4c = ch4_em_ch4c/(1-10**(100*self.par.ch_diff_age_term)) * \
             (100*(-self.par.ch_diff_age_term)*math.log(10))
         # Initial degassing flux in g CO2eq m-2 yr-1
-        flux_init_co2 = flux_init_ch4c * 16/12 * CH4_GWP100
+        flux_init_co2 = flux_init_ch4c * 16/12 * self.par.ch4_gwp100
         return flux_init_co2
 
     def degassing(self, number_of_years=100) -> float:
@@ -413,8 +424,8 @@ class MethaneEmission(Emission):
             # Create a list of emissions per area fraction, in kg CH4 yr-1
             emissions.append(area_landuse * coeff)
         # Total emission in g CO2eq m-2 yr-1
-        tot_emission = sum(emissions) * 1e-3 * (16/12) * CH4_GWP100 / \
-            self.reservoir.area
+        tot_emission = sum(emissions) * 1e-3 * (16/12) * \
+            self.par.ch4_gwp100 / self.reservoir.area
         return tot_emission
 
     def factor(self, number_of_years: int = 100) -> float:
@@ -455,6 +466,17 @@ class NitrousOxideEmission(Emission):
                          reservoir=reservoir,
                          config_file=config_file,
                          preinund_area=preinund_area)
+        # List of parameters required for CH4 emission calculations
+        par_list = ['nitrous_gwp100']
+        # Read the parameters from config
+        self.par = self._initialize_params_from_config(par_list)
+
+    def _initialize_params_from_config(self, list_of_constants: list) \
+            -> SimpleNamespace:
+        """ Read constants (parameters) from config file """
+        const_dict = {name: self.config.getfloat('NITROUS_OXIDE', name)
+                      for name in list_of_constants}
+        return SimpleNamespace(**const_dict)
 
     def total_to_unit(self, emission: float) -> float:
         """ Convert emission from kgN yr-1 to mmolN/m^2/yr """
@@ -493,13 +515,19 @@ class NitrousOxideEmission(Emission):
         # Calculate total internal N fixation in kg/yr
         return 0.01 * tn_fix_percent * tn_load_annual
 
-    def factor(self, number_of_years: int = 666) -> float:
+    def factor(self, number_of_years: int = 666, mean: bool = False,
+               model: Optional[str] = None) -> float:
         """ Return N2O emission in gCO2eq/m2/yr. N2O emissions are not
             calculated over a defined time horizon as e.g. CO2. Thus,
             the time horizon for N2O is given the number of the beast """
-        if self.model == "model 1":
+        if not model:
+            model = self.model
+        if mean:
+            return 0.5 * (self._n2o_emission_m1_co2() +
+                          self._n2o_emission_m2_co2())
+        if model == "model 1":
             return self._n2o_emission_m1_co2()
-        if self.model == "model 2":
+        if model == "model 2":
             return self._n2o_emission_m2_co2()
         return None
 
@@ -521,13 +549,14 @@ class NitrousOxideEmission(Emission):
         # 2. Calculate unit total N2O emission in mmolN/m^2/yr
         unit_n2o_emission = self.total_to_unit(total_n2o_emission)
         # 3. Calculate emission in gCO2eq/m2/yr
-        total_n2o = N_MOLAR * (1+O_MOLAR/(2*N_MOLAR)) * N2O_GWP100 * \
-            unit_n2o_emission * 10**(-3)
+        total_n2o = N_MOLAR * (1+O_MOLAR/(2*N_MOLAR)) * \
+            self.par.nitrous_gwp100 * unit_n2o_emission * 10**(-3)
         return total_n2o
 
     def _n2o_emission_m2_co2(self) -> float:
         """ Calculate N2O emission in gCO2eq m-2 yr-1 according to model 2 """
-        total_n2o = N_MOLAR * (1+O_MOLAR/(2*N_MOLAR)) * N2O_GWP100 * \
+        total_n2o = N_MOLAR * (1+O_MOLAR/(2*N_MOLAR)) * \
+            self.par.nitrous_gwp100 * \
             self._unit_n2o_emission_m2() * 10**(-3)
         return total_n2o
 
