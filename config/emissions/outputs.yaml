@@ -11,6 +11,7 @@ outputs:
   co2_diffusion:
     include: True
     name: "CO2 diffusion flux"
+    gas_name: "CO2"
     name_latex: "CO$_2$ diffusion flux"
     unit: "gCO2eq m-2 yr-1"
     unit_latex: "gCO$_2$ m$^{-2}$ yr$^{-1}$"
@@ -20,6 +21,7 @@ outputs:
   co2_diffusion_nonanthro:
     include: True
     name: "Nonanthropogenic CO2 diffusion flux"
+    gas_name: "CO2"
     name_latex: "Nonanthropogenic CO$_2$ diffusion flux"
     unit: "gCO2eq m-2 yr-1"
     unit_latex: "gCO$_2$ m$^{-2}$ yr$^{-1}$"
@@ -29,6 +31,7 @@ outputs:
   co2_preimp:
     include: True
     name: "Preimpoundment CO2 emissions"
+    gas_name: "CO2"
     name_latex: "Preimpoundment CO$_2$ emissions"
     unit: "gCO2eq m-2 yr-1"
     unit_latex: "gCO$_2$ m$^{-2}$ yr$^{-1}$"
@@ -38,6 +41,7 @@ outputs:
   co2_minus_nonanthro:
     include: True
     name: "CO2 emission minus non-anthropogenic"
+    gas_name: "CO2"
     name_latex: "CO$_2$ emission minus non-anthropogenic"
     unit: "gCO2eq m-2 yr-1"
     unit_latex: "gCO$_2$ m$^{-2}$ yr$^{-1}$"
@@ -58,6 +62,7 @@ outputs:
   co2_profile:
     include: True
     name: "CO2 emission profile"
+    gas_name: "CO2"
     name_latex: "CO$_2$ emission profile"
     unit: "gCO2eq m-2 yr-1"
     unit_latex: "gCO$_2$ m$^{-2}$ yr$^{-1}$"
@@ -67,6 +72,7 @@ outputs:
   ch4_diffusion:
     include: True
     name: "CH4 emission via diffusion"
+    gas_name: "CH4"
     name_latex: "CH$_4$ emission via diffusion"
     unit: "g CO2eq m-2 yr-1"
     unit_latex: "gCO$_2$ m$^{-2}$ yr$^{-1}$"
@@ -76,6 +82,7 @@ outputs:
   ch4_ebullition:
     include: True
     name: "CH4 emission via ebullition"
+    gas_name: "CH4"
     name_latex: "CH$_4$ emission via ebullition"
     unit: "g CO2eq m-2 yr-1"
     unit_latex: "gCO$_2$ m$^{-2}$ yr$^{-1}$"
@@ -85,6 +92,7 @@ outputs:
   ch4_degassing:
     include: True
     name: "CH4 emission via degassing"
+    gas_name: "CH4"
     name_latex: "CH$_4$ emission via degassing"
     unit: "g CO2eq m-2 yr-1"
     unit_latex: "gCO$_2$ m$^{-2}$ yr$^{-1}$"
@@ -94,6 +102,7 @@ outputs:
   ch4_preimp:
     include: True
     name: "Pre-impounment CH4 emission"
+    gas_name: "CH4"
     name_latex: "Pre-impounment CH$_4$ emission"
     unit: "g CO2eq m-2 yr-1"
     unit_latex: "gCO$_2$ m$^{-2}$ yr$^{-1}$"
@@ -114,6 +123,7 @@ outputs:
   ch4_profile:
     include: True
     name: "CH4 emission profile"
+    gas_name: "CH4"
     name_latex: "CH$_4$ emission profile"
     unit: "g CO2eq m-2 yr-1"
     unit_latex: "gCO$_2$ m$^{-2}$ yr$^{-1}$"
@@ -123,6 +133,7 @@ outputs:
   n2o_methodA:
     include: True
     name: "N2O emission, method A"
+    gas_name: "N2O"
     name_latex: "Net N$_2$O emission, method A"
     unit: "g CO2eq m-2 yr-1"
     unit_latex: "gCO$_2$ m$^{-2}$ yr$^{-1}$"
@@ -132,6 +143,7 @@ outputs:
   n2o_methodB:
     include: True
     name: "N2O emission, method B"
+    gas_name: "N2O"
     name_latex: "Net N$_2$O emission, method B"
     unit: "g CO2eq m-2 yr-1"
     unit_latex: "gCO$_2$ m$^{-2}$ yr$^{-1}$"
@@ -152,6 +164,7 @@ outputs:
   n2o_profile:
     include: True
     name: "N2O emission profile"
+    gas_name: "N2O"
     name_latex: "N$_2$O emission profile"
     unit: "g CO2eq m-2 yr-1"
     unit_latex: "gCO$_2$ m$^{-2}$ yr$^{-1}$"
@@ -161,6 +174,7 @@ outputs:
   co2_ch4:
     include: True
     name: "CO2 + CH4 emission"
+    gas_name: "CO2 + CH4"
     name_latex: "CO$_2$ + CH$_4$ emission"
     unit: "g CO2eq m-2 yr-1"
     unit_latex: "gCO$_2$ m$^{-2}$ yr$^{-1}$"
@@ -170,6 +184,7 @@ outputs:
   co2_ch4_n2o:
     include: True
     name: "CO2 + CH4 + N2O emission"
+    gas_name: "CO2 + CH4 + N2O"
     name_latex: "CO$_2$ + CH$_4$ + N$_2$O emission"
     unit: "g CO2eq m-2 yr-1"
     unit_latex: "gCO$_2$ m$^{-2}$ yr$^{-1}$"
