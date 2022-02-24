@@ -312,7 +312,6 @@ class Dem(Layer):
         output_file = os.path.join(output_path, output_file)
         remove_file(output_file)
         wbt = WhiteboxTools()
-
         wbt.clip_raster_to_polygon(self.path, output=output_path)
 
     def clip_to_polygon(self, zone: Vector, clipped_path: str,

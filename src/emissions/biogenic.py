@@ -26,3 +26,13 @@ class BiogenicFactors:
                    TreatmentFactor[data_dict['treatment_factor']],
                    landuse_intensity=
                    LanduseIntensity[data_dict['landuse_intensity']])
+
+    def todict(self) -> Dict:
+        """ Convert the class to a dictionary representation """
+        biogenic_factors = {}
+        biogenic_factors['biome'] = self.biome.name
+        biogenic_factors['climate'] = self.climate.name
+        biogenic_factors['soil_type'] = self.soil_type.name
+        biogenic_factors['treatment_factor'] = self.treatment_factor.name
+        biogenic_factors['landuse_intensity'] = self.landuse_intensity.name
+        return biogenic_factors
