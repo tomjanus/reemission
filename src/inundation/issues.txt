@@ -1,0 +1,15 @@
+Resolution is two-fold in issues:
+Both (low and high resolution) resutls in large inudated area
+but low resolution tends to understimate compared to high resolution (which can be countered by
+the use of original resolution after delineation part)
+
+
+Other senstivies parameters:
+1. stream order
+2. accuracy for locations of dems
+3. above-ground height of dams 
+
+
+Suggestions:
+Better validate the results with manual processes using GIS software (for weird looking inudations such as 
+long-stretched one, weredly large and small inudation areas or better avoid in the study for those locations.)

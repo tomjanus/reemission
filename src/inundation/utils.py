@@ -1,7 +1,8 @@
 """ Utility functions for inundation area calculations"""
 # Python packages
 import os
-import gdal
+#import gdal
+from osgeo import gdal 
 from typing import Optional, TypeVar, List
 import geopandas as gpd
 
