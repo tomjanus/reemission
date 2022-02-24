@@ -20,8 +20,8 @@ log = logging.getLogger(__name__)
 
 # TODO: potential problems in Python <= 3.6 because dicts are not ordered
 #       pay attention
-truths = [True, 'true', 'True', 'yes', 'on']
-falses = [False, 'false', 'False', 'no', 'off', 'null']
+TRUTHS = [True, 'true', 'True', 'yes', 'on']
+FALSES = [False, 'false', 'False', 'no', 'off', 'null']
 
 
 @dataclass
@@ -90,11 +90,19 @@ class EmissionModel:
             d.items() for d in (co2_exec, ch4_exec, n2o_exec)))
         return exec_dict
 
+    @property
+    def get_inputs(self):
+        """ Returns the Inputs object """
+        return self.inputs
+
     def add_presenter(self, writers: List[Type[Writer]],
-                      output_files: List[str]) -> None:
+                      output_files: List[str], author="Anonymus",
+                      title="HEET Results") -> None:
         """ Instantiates a presenter class to the emission model for data
             output formatting """
-        self.presenter = Presenter(inputs=self.inputs, outputs=self.outputs)
+        self.presenter = Presenter(
+            inputs=self.inputs, outputs=self.outputs, author=author,
+            title=title)
         try:
             assert len(writers) == len(output_files)
         except AssertionError:
@@ -110,45 +118,46 @@ class EmissionModel:
             log.error("Output dictionary empty. Run calculations first and " +
                       " try again.")
             return None
-        try:
-            self.presenter.output()
-        except AttributeError:
-            log.error("Presenter not defined")
+        self.presenter.output()
         return None
 
     def calculate(self, p_calc_method='g-res',
                   n2o_model='model 1') -> None:
         """ Calculate emissions for a number of variables defined in config """
         # Iterate through each set of inputs and output results in a dict
-        for model_input in self.inputs.inputs:
-            monthly_temp = MonthlyTemperature(model_input.monthly_temps)
+        for _, model_input in self.inputs.inputs.items():
+            monthly_temp = MonthlyTemperature(model_input.data['monthly_temps'])
             # Instantiate Catchment and Reservoir objects
             catchment = Catchment(**model_input.catchment_data)
-            reservoir = Reservoir(**model_input.reservoir_data,
+            reservoir = Reservoir(**model_input.data['reservoir'],
                                   inflow_rate=catchment.discharge)
             # Instantiate emission objects for every gas to be computed
             em_co2, em_n2o, em_ch4 = None, None, None
-            if "co2" in model_input.gasses:
+
+            # Calculate gas emissions
+            if "co2" in model_input.data['gasses']:
                 em_co2 = CarbonDioxideEmission(
                     catchment=catchment, reservoir=reservoir,
                     eff_temp=monthly_temp.eff_temp(),
                     p_calc_method=p_calc_method)
-            if "ch4" in model_input.gasses:
+            if "ch4" in model_input.data['gasses']:
                 em_ch4 = MethaneEmission(
                     catchment=catchment, reservoir=reservoir,
                     monthly_temp=monthly_temp, mean_ir=4.46)
-            if "n2o" in model_input.gasses:
+            if "n2o" in model_input.data['gasses']:
                 em_n2o = NitrousOxideEmission(
                     catchment=catchment, reservoir=reservoir, model=n2o_model)
 
             exec_dict = self.create_exec_dictionary(
                 co2_em=em_co2, ch4_em=em_ch4, n2o_em=em_n2o,
-                years=model_input.year_vector)
+                years=model_input.data['year_vector'])
 
             output = {}
-            for gas in model_input.gasses:
-                for emission, em_config in self.config['outputs'][gas].items():
-                    if em_config['include'] in truths:
-                        output[emission] = exec_dict[emission]['ref'](
-                            **exec_dict[emission]['args'])
+            # Iterate through all emission components and record those that
+            # are marked for outputting
+            for emission, em_config in self.config['outputs'].items():
+                if emission in exec_dict.keys() and \
+                        em_config['include'] in TRUTHS:
+                    output[emission] = exec_dict[emission]['ref'](
+                        **exec_dict[emission]['args'])
             self.outputs[model_input.name] = output

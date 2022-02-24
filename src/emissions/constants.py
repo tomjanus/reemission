@@ -48,7 +48,7 @@ class Landuse(Enum):
 
 @unique
 class LanduseIntensity(Enum):
-    """ Enumeration lass for landuse intensities for calculating
+    """ Enumeration class for landuse intensities for calculating
         land cover export coefficients in kg P ha-1 yr-1 """
     LOW = "low_intensity"
     HIGH = "high_intensity"
