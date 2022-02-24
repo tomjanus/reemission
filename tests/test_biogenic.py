@@ -39,6 +39,13 @@ class TestBiogenic(unittest.TestCase):
             biogenic_factors.landuse_intensity.value,
             LanduseIntensity.LOW.value)
 
+    def test_convert_to_dict(self):
+        """ Test conversion to a dictionary """
+        # Initialize BiogenicFactors from dictionary and then convert
+        # the data to a dictionary and check if both are equal
+        biogenic_factors = BiogenicFactors.fromdict(self.data)
+        self.assertEqual(self.data, biogenic_factors.todict())
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -3,7 +3,7 @@ import os
 import logging
 import math
 from dataclasses import dataclass
-from typing import Dict, List, ClassVar
+from typing import Dict, List, ClassVar, Type
 from .utils import read_table, find_enum_index
 from .biogenic import BiogenicFactors
 from .constants import Landuse
@@ -193,7 +193,6 @@ class Catchment:
             return self._inflow_p_gres()
         if method == "mcdowell":
             return self._inflow_p_mcdowell()
-
         log.warning('Unrecognize method %s. ', method +
                     '. Using default g-res method.')
         return self._inflow_p_gres()

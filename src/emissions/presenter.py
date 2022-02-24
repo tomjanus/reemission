@@ -2,7 +2,7 @@
     """
 from collections.abc import Iterable
 from dataclasses import dataclass, field
-from typing import Dict, List, Type
+from typing import Dict, List, Type, Union
 from abc import ABC, abstractmethod
 import configparser
 import os
@@ -36,12 +36,16 @@ TICK_FONTSIZE = 10
 ANNOTATION_FONTSIZE = 10
 
 # Config paths
-CONFIG_DIR = os.path.abspath(
-    os.path.join(os.getcwd(), '..', 'config', 'emissions'))
+#CONFIG_DIR = os.path.abspath(
+#    os.path.join('..', 'config', 'emissions'))
+CONFIG_DIR = '/home/lepton/Dropbox (The University of Manchester)/git_projects/dam-emissions/config/emissions/'
 INPUT_CONFIG_PATH = os.path.join(CONFIG_DIR, 'inputs.yaml')
 OUTPUT_CONFIG_PATH = os.path.join(CONFIG_DIR, 'outputs.yaml')
 PARAMETER_CONFIG_PATH = os.path.join(CONFIG_DIR, 'parameters.yaml')
 CONFIG_INI_PATH = os.path.join(CONFIG_DIR, 'config.ini')
+
+# JSONWriter parameters
+JSON_NUMBER_DECIMALS = 2
 
 
 class Writer(ABC):
@@ -64,11 +68,161 @@ class JSONWriter(Writer):
     config_ini: configparser.ConfigParser
     author: str
     title: str
+    json_dict: Dict = field(init=False)
+
+    def __post_init__(self):
+        """ Initialie output_dict which will be output as JSON """
+        self.json_dict = {}
+
+    @staticmethod
+    def round_parameter(number: Union[float, list],
+                        number_decimals: int) -> Union[float, list]:
+        """ Rounds numbers to number of decimals provided in the argument """
+        if isinstance(number, list):
+            number = [round(num, number_decimals) for num in number]
+        else:
+            number = round(number, number_decimals)
+        return number
+
+    def add_inputs(self, reservoir_name: str) -> None:
+        """ Create an inputs dictionary for a given reservoir and append to
+            json_dict """
+        input_names = ['monthly_temps', 'biogenic_factors', 'year_profile',
+                       'catchment_inputs', 'reservoir_inputs', 'gasses']
+        input_data = self.inputs.inputs[reservoir_name].data
+        input_dict = {'inputs': {}}
+        # Find out which inputs to include in the presentation
+        included_inputs = []
+        for input_name in input_names:
+            input_data_conf = self.input_config[input_name]
+            if input_data_conf['include']:
+                included_inputs.append(input_name)
+        if len(included_inputs) < 1:
+            return None
+        # Go through all included inputs
+        config_to_data = {
+            "monthly_temps": "monthly_temps",
+            "year_profile": "year_vector",
+            "gasses": "gasses"}
+        for input_name in ["monthly_temps", "year_profile", "gasses"]:
+            if input_name in included_inputs:
+                param_dict = {}
+                param_dict['name'] = self.input_config[input_name]['name']
+                param_dict['unit'] = self.input_config[input_name]['unit']
+                param_dict['value'] = input_data[
+                    config_to_data[input_name]]
+                input_dict['inputs'][input_name] = \
+                    param_dict
+        # Add biogenic factors
+        if 'biogenic_factors' in included_inputs:
+            param_dict = {}
+            factor_names = {
+                "biome": "Biome",
+                "climate": "Climate",
+                "soil_type": "Soil Type",
+                "treatment_factor": "Treatment Factor",
+                "landuse_intensity": "Landuse Intensity"}
+            param_dict['name'] = self.input_config[
+                'biogenic_factors']['name']
+            # Check if biogenic factors are of BiogenicFactors type
+            # instead of a dictionary - the data is a dictionary in
+            # text input files but then is converted to BiogenicFactors
+            # type
+            biogenic_factors = input_data['catchment'][
+                'biogenic_factors']
+            if not isinstance(biogenic_factors, dict):
+                try:
+                    biogenic_factors = biogenic_factors.todict()
+                except AttributeError:
+                    log.error('Variable biogenic factors cannot be ' +
+                              'converted to a dictionary')
+            for input_name, input_value in biogenic_factors.items():
+                param_dict[input_name] = {}
+                param_dict[input_name]['name'] = factor_names[input_name]
+                param_dict[input_name]['unit'] = ''
+                param_dict[input_name]['value'] = input_value
+            input_dict['inputs']['biogenic_factors'] = \
+                param_dict
+        # Add catchment inputs
+        if 'catchment_inputs' in included_inputs:
+            param_dict = {}
+            param_dict['name'] = self.input_config['catchment_inputs'][
+                'name']
+            # Get input data
+            for input_name, input_value in \
+                    input_data['catchment'].items():
+                if input_name == 'biogenic_factors':
+                    break
+                param_dict[input_name] = {}
+                # Get input name and unit from config
+                conf_input = self.input_config[
+                    'catchment_inputs']['var_dict'][input_name]
+                param_dict[input_name]['name'] = conf_input['name']
+                param_dict[input_name]['unit'] = conf_input['unit']
+                if isinstance(input_value, Iterable):
+                    input_value = ', '.join(
+                        [str(item) for item in input_value])
+                param_dict[input_name]['value'] = input_value
+            input_dict['inputs']['catchment_inputs'] = \
+                param_dict
+        # Add reservoir inputs
+        if 'reservoir_inputs' in included_inputs:
+            param_dict = {}
+            param_dict['name'] = self.input_config['reservoir_inputs'][
+                'name']
+            # Get input data
+            for input_name, input_value in \
+                    input_data['reservoir'].items():
+                param_dict[input_name] = {}
+                # Get input name and unit from config
+                conf_input = self.input_config[
+                    'reservoir_inputs']['var_dict'][input_name]
+                param_dict[input_name]['name'] = conf_input['name']
+                param_dict[input_name]['unit'] = conf_input['unit']
+                if isinstance(input_value, Iterable):
+                    input_value = ', '.join(
+                        [str(item) for item in input_value])
+                param_dict[input_name]['value'] = input_value
+            input_dict['inputs']['reservoir_inputs'] = \
+                param_dict
+        try:
+            self.json_dict[reservoir_name].update(input_dict)
+        except KeyError:
+            self.json_dict[reservoir_name] = input_dict
+
+    def add_outputs(self, reservoir_name: str) -> None:
+        """ Create an outputs dictionary for a given reservoir and append to
+            json_dict """
+        config = self.output_config['outputs']
+        data = self.outputs[reservoir_name]
+        output_dict = {'outputs': {}}
+        for parameter, parameter_value in data.items():
+            # Add parameter if the parameter is marked for presentation
+            if config[parameter]['include']:
+                param_dict = {parameter: {}}
+                for item_name in ['name', 'gas_name', 'unit',
+                                  'long_description']:
+                    item = config[parameter].get(item_name)
+                    param_dict[parameter][item_name] = item
+                param_dict[parameter]['value'] = self.round_parameter(
+                    parameter_value, JSON_NUMBER_DECIMALS)
+                output_dict['outputs'].update(param_dict)
+        try:
+            self.json_dict[reservoir_name].update(output_dict)
+        except KeyError:
+            self.json_dict[reservoir_name] = output_dict
 
     def write(self) -> None:
-        """ Writes output data (all reservoir) to a JSON file """
+        """ Write output data (all reservoirs) to a JSON file """
+        if not bool(self.outputs):
+            log.error("Attempting to write before generating outputs")
+            return None
+        for reservoir_name in self.outputs:
+            self.add_inputs(reservoir_name=reservoir_name)
+            self.add_outputs(reservoir_name=reservoir_name)
         with open(self.output_file_path, 'w') as file_pointer:
-            json.dump(self.outputs, file_pointer, indent=4)
+            json.dump(self.json_dict, file_pointer, indent=4)
+        return None
 
 
 @dataclass
@@ -414,8 +568,20 @@ class LatexWriter(Writer):
                     data_table.add_row(
                         (MultiColumn(3, align='c', data=row_name),))
                     data_table.add_hline()
-                    for input_name, input_value in input_data[
-                            'catchment']['biogenic_factors'].items():
+                    # Check if biogenic factors are of BiogenicFactors type
+                    # instead of a dictionary - the data is a dictionary in
+                    # text input files but then is converted to BiogenicFactors
+                    # type
+                    biogenic_factors = input_data['catchment'][
+                        'biogenic_factors']
+                    if not isinstance(biogenic_factors, dict):
+                        try:
+                            biogenic_factors = biogenic_factors.todict()
+                        except AttributeError:
+                            log.error('Variable biogenic factors cannot be ' +
+                                      'converted to a dictionary')
+
+                    for input_name, input_value in biogenic_factors.items():
                         name = factor_names[input_name]
                         unit = '-'
                         row = [name, unit, input_value]
@@ -515,7 +681,7 @@ class LatexWriter(Writer):
                            plot_fraction=plot_fraction)
 
     def write(self) -> None:
-        """ Writes output data (all reservoir) to a text file """
+        """ Writes output data (all reservoir) to a tex and pdf files """
         if not bool(self.outputs):
             return None
         self.add_header()
@@ -577,7 +743,7 @@ class Presenter:
     def output(self) -> None:
         """ Present GHG emission calculation results using writers """
         if self.writers is None:
-            log.info("No writers specified. Results could be output.")
+            log.info("No writers specified. Results could not be output.")
             return None
         for writer in self.writers:
             writer.write()

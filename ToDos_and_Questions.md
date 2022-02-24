@@ -12,17 +12,16 @@ the coefficients are already provided.
 8. N2O total emission does not have a time horizon. Is it assumed that it is over 100 years or does it happen as long as the reservoir is in place?
 9. In calculations of wind speed at 10m, does the input wind need to be at 50 or does the relationship interpolate from other wind speeds provided that the hight of the measurement is provided as input variable x?
 10. There are different versions of water density vs temperature equation in hypolimnion and epilimnion density calculations. One might have a missing bracket somewhere. Needs to be checked which one is correct.
-11. Can you explain the (16/12) coefficient in CH4 emmisions, specifically integrated emission over 100 years.
+11. Can you explain the (16/12) coefficient in CH4 emissions, specifically integrated emission over 100 years.
 
 
 ## TODOs:
 ### 1. Package development
-* WRITE TESTS
 * WRITE DOCUMENTATION - sphinx?
 * CREATE PACKAGING - setuptools? poetry?
 * DECIDE UPON LICENSING - MIT? GPL?
 * ADD TO PYPI AND TRAVIS
+* PATHS - MAKE ENTRY POINT AND CREATE PLATFORM INDEPNDENT PATHS
 ### 2. Calculation methodology
 * CASCADED TN NITROGEN LOADING
 * ADDITION OF UNERTAINTIES IN THE CALCULATIONS?
-

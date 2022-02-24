@@ -136,3 +136,6 @@ dmypy.json
 # Files created by Dask
 dask-worker-space/
 
+# Outputs
+outputs/
+
