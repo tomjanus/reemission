@@ -9,7 +9,7 @@
 
 <!-- PROJECT LOGO -->
 <p align="center">
-    <img alt="reemission-logo" height="70" src="hhttps://github.com/tomjanus/re-emission/blob/master/graphics/logo.png?raw=true"/>
+    <img alt="reemission-logo" height="70" src="https://github.com/tomjanus/re-emission/blob/master/graphics/logo.png?raw=true"/>
 </p>
 <pre>
     _____           ______               _               _                 
