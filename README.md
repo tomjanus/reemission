@@ -1,101 +1,157 @@
-# Tool for calculating biogenic greenhouse gas (GHG) emissions from reservoirs
+<div id="top"></div>
 
-A quick run-through of a GHG emission calculation process for a hypothetical reservoir is given in the Jupyter notebook [run_CO2_emission.ipynb](./run_CO2_emission.ipynb)
+<!-- PROJECT SHIELDS -->
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
 
-## GAS EMISSIONS - GENERAL INFORMATION
-All constants/parameters for the calculation of each gas can be adjusted in ./config/emissions/config.ini
+<!-- PROJECT LOGO -->
+<p align="center">
+    <img alt="reemission-logo" height="70" src="hhttps://github.com/tomjanus/re-emission/blob/master/graphics/logo.png?raw=true"/>
+</p>
+<pre>
+    _____           ______               _               _                 
+   |  __ \         |  ____|             (_)             (_)                
+   | |__) |   ___  | |__     _ __ ___    _   ___   ___   _    ___    _ __  
+   |  _  /   / _ \ |  __|   | '_ ` _ \  | | / __| / __| | |  / _ \  | '_ \ 
+   | | \ \  |  __/ | |____  | | | | | | | | \__ \ \__ \ | | | (_) | | | | |
+   |_|  \_\  \___| |______| |_| |_| |_| |_| |___/ |___/ |_|  \___/  |_| |_|
+                                                    
+</pre>
 
-#### Temperature-dependent diffusion
-CO2 and CH4 emission calculations require estimation of temperature-dependent gas diffusion.
-The monthly average temperatures can be obtained from Global Climate database (Hijmans et al., 2005).
-Average temperatures for the period 1950- 2000 are available at: https://www.worldclim.org/data/monthlywth.html
-See also:
-Willmott, C.J. & Matsuura, K. (2001). http://climate.geog.udel.edu/~climate/html_pages/download.html and http://climate.geog.udel.edu/%7Eclimate/html_pages/download.html
+Re-Emission is a Python library for estimating **CO2**, **CH4** and **N2O** emisions from man-made reservoirs.
+It estimates full life-cycle emissions as well as emission profiles over time for each of the three greenhouse gases.
 
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-library">About The Library</a>
+      <ul>
+        <li><a href="#features">Features</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#contributors">Contributors</a></li>
+  </ol>
+</details>
 
-####
+<!-- ABOUT THE PROJECT -->
+## About The Library
 
-## 1. Carbon Dioxide (CO2) emissions estimation
+### Features
 
-### Model description
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-### Constants/parameters
-1. *c_1* [provide definition]
-2. *age* [provide definition]
-3. *temp* [provide definition]
-4. *resArea* [provide definition]
-5. *soilC* [provide definition]
-6. *ResTP* [provide definition]
-7. *calc* [provide definition]
-8. *conv_coeff* [provide definition]
+<!-- GETTING STARTED -->
+## Getting Started
 
-### Model inputs
+### Prerequisites
 
-### Model outputs
+If you would like to generate output documents in a PDF form, you will need to install <img src="https://render.githubusercontent.com/render/math?math=\LaTeX"> on your computer.
 
-### Usage:
+Write here the installation instruction for latex under windows and linux
 
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-## 2. Methane (CH4) emissions estimation
+## Installation
 
-### Model description
+### From PyPi
 
-### Constants/parameters
-1. *conv_coeff* = 16.55
-#### CH4 diffusion
-2. *int_diff* [provide definition]
-3. *age_diff* [provide definition]
-4. *littoral_diff* [provide definition]
-5. *eff_temp_CH4* [provide definition]
-#### CH4 ebullition
-6. *int_ebull* [provide definition]
-7. *littoral_ebull* [provide definition]
-8. *irrad_ebull* [provide definition]
-#### CH4 degassing
-9. *int_degas* [provide definition]
-10. *tw_degas* [provide definition]
-11. *ch4_diff* [provide definition]
-12. *ch_diff_age_term* [provide definition]
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
 
+```bash
+pip install re-emission
+```
 
+### From GitHub
+1. Clone the repo using either:
+   - HTTPS
+   ```sh
+   git clone https://github.com/tomjanus/re-emission.git
+   ```
+   - SSH
+   ```sh
+   git clone git@github.com:tomjanus/re-emission.git
+   ```
+2. Install from source:
+   ```sh
+   pip install -e
+   ```
 
-## 3. Nitrous Oxide (N2O) emissions estimation
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-Contrary to CO2 and CH4 N2O emissions are not only dependent on the characteristics of the inundated land but are more dependent on the total nitrogen loading to the system and the processes within the reservoir that depend on water residence time and Nitrogen:Phosphorus stoichiometry with regard to N fixation.
+<!-- USAGE EXAMPLES -->
+## Usage
 
-The N20 emissions can be calculated with two alternative models, referred to as: Model 1 (N2O_M1) and Model 2 (N2O_M2). Model 2 follows the approach described in Maarvara et al. 2018 [provide reference]. Both models calculate upper and lower bounds on emission estimates.
+From within a python file
+```python
+import re-emission
+```
 
-### Model description
+Using CLI
+```bash
+re-emission [input-file] [output-file]
+```
 
-#### Model 1
-Model 1 calculates total N2O emissions in three separate steps listed below.
-1. Annual denitrification is estimated as a function of the influent total nitrogen (TN) load entering the reservoir with the river inflow
-2. Annual N fixation is estimated as a function of the riverine influent TN and total phosphorus (TP) loads.
-3. The N2O emissions are estimated by applying a default EF [define EF] of 0.9% to each of the above processes, i.e. denitrification and N fixation, as derived by Beaulieu et al (2011) [[1]](#1). This total quantity is taken as the annual N2O emission from the reservoir.
+_For more examples, please refer to the [Documentation](https://example.com)_
 
-#### Model 2
-Model 2 estimates total N2O emissions as functions of riverine TN loading and water residence time in a single step using the method described in Maarvara et al. 2018 [provide reference]
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-This model follows the following steps:
-1. Annual N fixation is estimated as a function of the riverine input load of TN and TP. It assumes the same EF = 0.9% as in Model 1.
-2. EF for denitrification is derived to account for internal consumpton of N2O at longer residence times (see Eq. 10 in Maarvara et al 2018 [reference]). In other words, different value than the default value of 0.9% is used by denitrification is estimated with the same equations as in Model 1.
-3. A further adjustment of emissions is made to account for N2O evasion where water N2O pressure is above atmopsheric. In other words, where water to air N2O flux occurs.
+<!-- CONTRIBUTING -->
+## Contributing
 
-### Comparison of Model 1 and Model 2
-On the basis of the differences between Model 1 and Model 2, Model 2 is expected to provide lower evasion estimates. The difference in evasion estimates between those two models is expected to increase with water residence time.
-At very short residence times [provide a range of values that are considered very short] there should be little difference between the two approaches and Model 1 might even provide lower evasion estimates than Model 2.
-Individual estimates of N20 associated with denitrification and nitrification pathways are calculated within the model but do not constitute the main outputs required for gross GHG esimation from reservoirs.
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-### Model inputs
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
 
-1. Annual total nitrogen loading : This load estimate employes a regression model for predicting the median annual TN concentration of runoff to the reservoir
-2.
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-### Model outputs
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-### Usage:
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
 
+<p align="right">(<a href="#top">back to top</a>)</p>
 
+<!-- CONTACT -->
+## Contact
+Tomasz Janus -tomasz.k.janus@gmail.com
+
+Project Link: [https://github.com/tomjanus/re-emission](https://github.com/tomjanus/re-emission)
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- ACKNOWLEDGMENTS -->
+## Acknowledgments
+
+* [Best README Template](https://github.com/othneildrew/Best-README-Template)
+* [Choose an Open Source License](https://choosealicense.com)
+* [Img Shields](https://shields.io)
+* [GitHub Pages](https://pages.github.com)
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- ACKNOWLEDGMENTS -->
 ## References
 <a id="1">[1]</a>
 Beaulieu, J. J., Tank, J. L., Hamilton, S. K., Wollheim, W. M., Hall, R. O.,
@@ -104,4 +160,38 @@ denitrification in stream and river networks*. Proceedings of the
 National Academy of Sciences of the United States of America, 108(1),
 214–219. https://doi.org/10.1073/pnas.1011464108
 
-<a id="2">[2]</a>
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+## Contributors ✨
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/tomjanus"><img src="https://avatars.githubusercontent.com/tomjanus" width="100px;" alt=""/><br /><sub><b>Tomasz Janus</b></sub></a><br /><a href="https://github.com/tomjanus/re-emission/commits?author=tomjanus" title="Code">💻</a><a href="https://github.com/tomjanus/re-emission/commits?author=tomjanus" title="Tests">⚠️</a> <a href="https://github.com/tomjanus/re-emission/issues/created_by/tomjanus" title="Bug reports">🐛</a><a href="#design-TJanus" title="Design">🎨</a></td>
+    <td align="center"><a href="https://github.com/jojo0094"><img src="https://avatars.githubusercontent.com/jojo0094" width="100px;" alt=""/><br /><sub><b>Aung Kyaw Kyaw</b></sub></a><br /><a href="https://github.com/tomjanus/re-emission/commits?author=jojo0094" title="Code">💻</a><a href="https://github.com/tomjanus/re-emission/commits?author=jojo0094" title="Tests">⚠️</a></td>
+    <td align="center"><a href=""><img src="" width="100px;" alt=""/><br /><sub><b>Chris Barry</b></sub></a><br /><a href="#content-cbarry" title="Methods">🖋</a><a href="#ideas-cbarry" title="Ideas, Planning, & Feedback">🤔</a><a href="" title="Documentation">📖</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/tomjanus/re-emission.svg?style=for-the-badge
+[contributors-url]: https://github.com/tomjanus/re-emission/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/tomjanus/re-emission.svg?style=for-the-badge
+[forks-url]: https://github.com/tomjanus/re-emission/network/members
+[stars-shield]: https://img.shields.io/github/stars/tomjanus/re-emission.svg?style=for-the-badge
+[stars-url]: https://github.com/tjanus/re-emission/stargazers
+[issues-shield]: https://img.shields.io/github/issues/tomjanus/re-emission.svg?style=for-the-badge
+[issues-url]: https://github.com/tomjanus/re-emission/issues
+[license-shield]: https://img.shields.io/github/license/tomjanus/re-emission.svg?style=for-the-badge
+[license-url]: https://github.com/tomjanus/re-emission/blob/master/LICENSE.txt
