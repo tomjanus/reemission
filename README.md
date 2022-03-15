@@ -11,15 +11,6 @@
 <p align="center">
     <img alt="reemission-logo" height="70" src="https://github.com/tomjanus/re-emission/blob/master/graphics/logo.png?raw=true"/>
 </p>
-<pre>
-    _____           ______               _               _                 
-   |  __ \         |  ____|             (_)             (_)                
-   | |__) |   ___  | |__     _ __ ___    _   ___   ___   _    ___    _ __  
-   |  _  /   / _ \ |  __|   | '_ ` _ \  | | / __| / __| | |  / _ \  | '_ \ 
-   | | \ \  |  __/ | |____  | | | | | | | | \__ \ \__ \ | | | (_) | | | | |
-   |_|  \_\  \___| |______| |_| |_| |_| |_| |___/ |___/ |_|  \___/  |_| |_|
-                                                    
-</pre>
 
 Re-Emission is a Python library for estimating **CO2**, **CH4** and **N2O** emisions from man-made reservoirs.
 It estimates full life-cycle emissions as well as emission profiles over time for each of the three greenhouse gases.
