@@ -1,4 +1,7 @@
-include README
 include LICENSE
-recursive-include data/ *
+include README.md
+include pyproject.toml
+recursive-include parameters/ *
 recursive-include config/ *
+recursive-include examples/ *
+recursive-include graphics/ *
