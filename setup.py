@@ -1,14 +1,9 @@
-from setuptools import setup, find_packages
+#!/usr/bin/env python
+from setuptools import setup
 
-with open('README.md', 'r') as fh:
-    long_description = fh.read()
-
-setup(
-    name='dam-emissions',
-    version='0.0.1',
-    long_description=long_description,
-    long_description_content_type='text/markdown',
-    description='Calculation tool for GHG gas emissions from hydroelectric reservoirs',
-    packages = find_packages(),
-    py_modules=['dam-emissions'],
-    package_dir={"", "src"})
+if __name__ == '__main__':
+    # The use_scm_version option indicates that we want to use the
+    # setuptools_scm package to set the version automatically based on git
+    # tags, which will produce version strings such as 0.13 for a stable
+    # release, or 0.16.0.dev113+g3d1a8747 for a developer version.
+    setup(use_scm_version=True)
