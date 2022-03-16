@@ -139,3 +139,5 @@ dask-worker-space/
 # Outputs
 outputs/
 
+# Unused legacy files
+legacy/
