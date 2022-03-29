@@ -1,0 +1,7 @@
+numpy
+click
+matplotlib
+pylatex
+pytest
+unittest
+coverage
