@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+""" Runner of the setup method with configuration given in setup.cfg """
+
 from setuptools import setup
 
 if __name__ == '__main__':
@@ -6,4 +7,6 @@ if __name__ == '__main__':
     # setuptools_scm package to set the version automatically based on git
     # tags, which will produce version strings such as 0.13 for a stable
     # release, or 0.16.0.dev113+g3d1a8747 for a developer version.
-    setup(use_scm_version=True)
+    setup()
+# use_scm_version=True,
+# setup_requires=['setuptools_scm']
