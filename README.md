@@ -12,6 +12,11 @@
     <img alt="reemission-logo" height="120" src="https://github.com/tomjanus/re-emission/blob/master/graphics/logo-banner-bw.png?raw=true"/>
 </p>
 
+## CURRENTLY UNDER CONSTRUCTION - PLEASE COME BACK SOON!
+<p align="center">
+    <img src="https://github.com/tomjanus/re-emission/blob/master/graphics/under-construction.png"/>
+</p>
+
 Re-Emission is a Python library for estimating **CO2**, **CH4** and **N2O** emisions from man-made reservoirs.
 It estimates full life-cycle emissions as well as emission profiles over time for each of the three greenhouse gases.
 
@@ -80,8 +85,16 @@ pip install re-emission
    git clone git@github.com:tomjanus/re-emission.git
    ```
 2. Install from source:
+   - in an editable manner
    ```sh
-   pip install -e
+   pip install -e .
+   ```
+   - as a build
+   ```sh
+   pip install build .
+   ``` or
+   ```sh
+   python3 -m build --sdist --wheel .
    ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -176,13 +189,13 @@ This project follows the [all-contributors](https://github.com/all-contributors/
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/tomjanus/re-emission.svg?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/tomjanus/re-emission.svg?style=plastic
 [contributors-url]: https://github.com/tomjanus/re-emission/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/tomjanus/re-emission.svg?style=for-the-badge
+[forks-shield]: https://img.shields.io/github/forks/tomjanus/re-emission.svg?style=plastic
 [forks-url]: https://github.com/tomjanus/re-emission/network/members
-[stars-shield]: https://img.shields.io/github/stars/tomjanus/re-emission.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/tomjanus/re-emission.svg?style=plastic
 [stars-url]: https://github.com/tjanus/re-emission/stargazers
-[issues-shield]: https://img.shields.io/github/issues/tomjanus/re-emission.svg?style=for-the-badge
+[issues-shield]: https://img.shields.io/github/issues/tomjanus/re-emission.svg?style=plastic
 [issues-url]: https://github.com/tomjanus/re-emission/issues
-[license-shield]: https://img.shields.io/github/license/tomjanus/re-emission.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/tomjanus/re-emission.svg?style=plastic
 [license-url]: https://github.com/tomjanus/re-emission/blob/master/LICENSE.txt
