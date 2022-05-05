@@ -12,14 +12,6 @@
     <img alt="reemission-logo" height="120" src="https://github.com/tomjanus/re-emission/blob/master/graphics/logo-banner-bw.png?raw=true"/>
 </p>
 
-## CURRENTLY UNDER CONSTRUCTION - PLEASE COME BACK SOON!
-<p align="center">
-    <img src="https://github.com/tomjanus/re-emission/blob/master/graphics/under-construction.png"/>
-</p>
-
-Re-Emission is a Python library for estimating **CO2**, **CH4** and **N2O** emisions from man-made reservoirs.
-It estimates full life-cycle emissions as well as emission profiles over time for each of the three greenhouse gases.
-
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
@@ -31,12 +23,17 @@ It estimates full life-cycle emissions as well as emission profiles over time fo
       </ul>
     </li>
     <li>
-      <a href="#getting-started">Getting Started</a>
+      <a href="#prerequisites">Prerequisites</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
+        <li><a href="#latex-installation-guidelines">LaTeX installation guidelines</a></li>
+        <ul>
+        <li><a href="#debian-based-linux-distributions">Debian-based Linux Distributions</a></li>
+        <li><a href="#mac-os">Mac OS</a></li>
+        <li><a href="#windows">Windows</a></li>
+        </ul>
       </ul>
     </li>
+    <li><a href="#installation">Installation</a></li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
@@ -48,19 +45,50 @@ It estimates full life-cycle emissions as well as emission profiles over time fo
 
 <!-- ABOUT THE PROJECT -->
 ## About The Library
+*Re-Emission* is a Python library and a command line interface (CLI) tool for estimating **CO<sub>2</sub>**, **CH<sub>4</sub>** and **N<sub>2</sub>O** emissions from man-made reservoirs.
+It calculates full life-cycle emissions as well as emission profiles over time for each of the three greenhouse gases.
 
-### Features
+### :fire: Features
+* Calculates CO<sub>2</sub>, CH<sub>4</sub> and N<sub>2</sub>O emissions for a single reservoir and for batches of reservoirs.
+* Two reservoir Phosphorus mass balance calculation methods in CO<sub>2</sub> emission calculations: G-Res method and McDowell method.
+* Two N<sub>2</sub>O calculation methods.
+* Model parameters, and presentation of outputs are fully configurable using YAML files.
+* Inputs can be constructed in Python using the ```Input``` class or read from JSON files.
+* Outputs can be presented in JSON, LaTeX and PDF format and are configurable in the ```outputs.yaml``` configuration file.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-<!-- GETTING STARTED -->
-## Getting Started
+<!-- PREREQUISITES -->
+## Prerequisites
 
-### Prerequisites
+If you would like to generate output documents in a PDF format, you will need to install LaTeX. Without LaTeX, upon an attempt to compile the generated LaTeX source code to PDF, ```pylatex``` library implemented in this software will throw ```pylatex.errors.CompilerError```. LaTeX source file with output results will still be created but it will not be able to get compiled to PostScript or PDF.
 
-If you would like to generate output documents in a PDF form, you will need to install <img src="https://render.githubusercontent.com/render/math?math=\LaTeX"> on your computer.
+### LaTeX installation guidelines
 
-Write here the installation instruction for latex under windows and linux
+#### Debian-based Linux Distributions
+For basic LaTex version (recommended)
+```bash
+sudo apt install texlive
+```
+For full LaTeX version with all packages (requires around 2GB to download and 5GB free space on a local hard drive)
+```bash
+sudo apt install texlive-full
+```
+
+
+#### Mac OS
+BasicTeX (100MB) - minimum install without editor
+```brew
+brew install --cask basictex
+```
+MacTeX with built-in editor (3.2GB) - uses TeXLive
+```brew
+brew install --cask mactex
+```
+
+#### Windows
+For easy install, download and run [install-tl-windows.exe](https://mirror.ctan.org/systems/texlive/tlnet/install-tl-windows.exe)
+For more installation options, visit [https://tug.org/texlive/windows.html](https://tug.org/texlive/windows.html). Or, make your life easier by getting yourself a Linux. :smirk:
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -68,14 +96,20 @@ Write here the installation instruction for latex under windows and linux
 
 ### From PyPi
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install ```re-emission```.
 
 ```bash
 pip install re-emission
 ```
 
+Type
+```bash
+pip install re-emission -r requirements.txt -e .
+```
+if you'd like to use the package in a development mode.
+
 ### From GitHub
-1. Clone the repo using either:
+1. Clone the repository using either:
    - HTTPS
    ```sh
    git clone https://github.com/tomjanus/re-emission.git
@@ -85,43 +119,149 @@ pip install re-emission
    git clone git@github.com:tomjanus/re-emission.git
    ```
 2. Install from source:
-   - in an editable manner
+   - for development
    ```sh
-   pip install -e .
+   pip install -r requirements.txt -e .
    ```
-   - as a build
-   ```sh
-   pip install build .
-   ``` or
-   ```sh
-   python3 -m build --sdist --wheel .
-   ```
+   - or as a build
+      ```bash
+      pip install build .
+      ```
+
+        or
+
+      ```sh
+      python3 -m build --sdist --wheel .
+      ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-From within a python file
+#### As a toolbox
+For calculation of emissions for a number of reservoirs with input data in ```inputs.json``` file and output configuration in ```outputs.yaml``` file.
 ```python
 import re-emission
+# Import from the model module
+from re-emission.model import EmissionModel
+# Import from the input module
+from re-emission.input import Inputs
+input_data = Inputs.fromfile('../tests/test_data/inputs.json')
+output_config = '../config/emissions/outputs.yaml')
+model = EmissionModel(inputs=input_data, config=output_config)
+model.calculate()
+print(mode.outputs)
 ```
 
-Using CLI
+#### Jupyter Notebook Examples
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tomjanus/re-emission/blob/master/notebooks/index.ipynb)
+
+#### Using Command Line Interface (CLI)
+In Terminal/Console
 ```bash
 re-emission [input-file] [output-file]
 ```
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+For more examples, please refer to the [Documentation](https://example.com)
+
+## Configuration
+Coefficients of the regressions constituting the model as well as parameters of different categories of soil and land use are stored in a number of **yaml** files in ```parameters/emissions/```.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+### Inputs
+
+Information about the names and the units of the model inputs is stored and can be configured in ```config/emissions/inputs.yaml```
+e.g. for monthly temperatures which are represented in variable ```monthly_temps```:
+
+```yaml
+monthly_temps:
+  include: True
+  name: "Monthly Temperatures"
+  long_description: ""
+  unit: "deg C"
+  unit_latex: "$^o$C"
+```
+
+- ```include```: (boolean): If the variable is to be included in the output files for reporting.
+- ```name```: (string): Name of the variable
+- ```long_description```: (string): Description of the variable
+- ```unit```: (string): Unit in text format
+- ```unit_latex```: (string): Unit in LaTeX format
+
+Finally, a global flag ```print_long_descriptions``` controls whether long descriptions are included alongside the included input variables in the output files.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+### Outputs
+
+Similarly to inputs, definitions and units of model outputs and whether they are to be output in the output files, are stored in ```config/emissions/outputs.yaml```, e.g. for pre-impoundment CO<sub>2</sub> emissions defined in variable ```co2_preimp```:
+```yaml
+co2_preimp:
+  include: True
+  name: "Preimpoundment CO2 emissions"
+  gas_name: "CO2"
+  name_latex: "Preimpoundment CO$_2$ emissions"
+  unit: "gCO2eq m-2 yr-1"
+  unit_latex: "gCO$_2$ m$^{-2}$ yr$^{-1}$"
+  long_description: "CO2 emission in the area covered by the reservoir prior to impoundment"
+  hint: "Negative values denote C sink (atmosphere to land flux)"
+```
+- ```include```: (boolean): If the variable is to be included in the output files for reporting.
+- ```name```: (string): Name of the variable
+- ```gas_name```: (string): Name of the gas the variable is related to
+- ```name_latex```: (string): variable name in LaTeX format
+- ```unit```: (string): Unit in text format
+- ```unit_latex```: (string): Unit in LaTeX format
+- ```long_description```: (string): Description of the variable
+- ```hint```: (string): Further information about the variable
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+### Global Parameters
+Information about global parameters such as e.g. Global Warming Potentials ```gwp100``` is stored in ```config/emissions/parameters.yaml```
+
+```yaml
+gwp100:
+  include: True
+  name: "Global Warming Potential for a 100-year timescale"
+  name_latex: "Global Warming Potential for a 100-year timescale"
+  unit: "-"
+  unit_latex: "-"
+  long_description: ""
+```
+
+### Model coefficients
+Values of model coefficients, i.e. regressions used to estimate different gas emissions are stored in ```config/emissions/config.ini``` file. E.g. coefficients for CO<sub>2</sub> emission calculations are listed below.
+```ini
+[CARBON_DIOXIDE]
+# Parameters reated to CO2 emissions
+c_1 = 1.8569682
+age = -0.329955
+temp = 0.0332459
+resArea = 0.0799146
+soilC = 0.015512
+ResTP = 0.2263344
+calc = -0.32996
+# Conversion from mg~CO2-C~m-2~d-1 to g~CO2eq~m-2~yr-1
+# Based on stoichiometric relationship CO2/C = 44/12 and GWP100 of 1.0
+conv_coeff = 1.33833
+# Global Warming Potential of CO2 over 100 years
+co2_gwp100 = 1.0
+```
+In addition, various coefficient tables and parameters required to calculate various emission components are stored in multiple YAML files in ```parameters/emissions/```.
+
+## :books: Documentation
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- CONTRIBUTING -->
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+If you have a suggestion that would make this better, please fork the repository and create a pull request. You can also simply open an issue with the tag "*enhancement*".
 Don't forget to give the project a star! Thanks again!
 
 1. Fork the Project
@@ -137,9 +277,26 @@ Don't forget to give the project a star! Thanks again!
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+<!-- CITING -->
+## Citing
+
+If you use RE-Emission for academic research, please cite the library using the following BibTeX entry.
+
+```bibtext
+@misc{reemission2022,
+ author = {Tomasz Janus, Christopher Barry, Jaise Kuriakose},
+ title = {RE-Emission: Python tool for calculating greenhouse gas emissions from man-made reservoirs},
+ year = {2022},
+ url = {https://github.com/tomjanus/re-emission},
+}
+```
+<p align="right">(<a href="#top">back to top</a>)</p>
+
 <!-- CONTACT -->
-## Contact
-Tomasz Janus -tomasz.k.janus@gmail.com
+## :mailbox_with_mail: Contact
+- Tomasz Janus -tomasz.janus@manchester.ac.uk
+- Christopher Barry - c.barry@ceh.ac.uk
+- Jaise Kuriakose - jaise.kuriakose@manchester.ac.uk
 
 Project Link: [https://github.com/tomjanus/re-emission](https://github.com/tomjanus/re-emission)
 
@@ -148,6 +305,18 @@ Project Link: [https://github.com/tomjanus/re-emission](https://github.com/tomja
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
+### Institutions
+Development of this software was funded, to a large degree, by the [University of Manchester](https://www.manchester.ac.uk/) and the [FutureDams](https://www.futuredams.org/) project.
+<table>
+  <tr>
+<td align="center"><a href="https://www.manchester.ac.uk/"><img src="https://github.com/tomjanus/re-emission/blob/master/graphics/TAB_col_white_background.png?raw=true" height="100px;" alt=""/></td>
+<td align="center"><a href="https://www.futuredams.org/"><img src="https://github.com/tomjanus/re-emission/blob/master/graphics/futuredams-small.png?raw=true" height="90px;" alt=""/></td>
+  </tr>
+</table>
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+### Resources
 * [Best README Template](https://github.com/othneildrew/Best-README-Template)
 * [Choose an Open Source License](https://choosealicense.com)
 * [Img Shields](https://shields.io)
@@ -157,12 +326,21 @@ Project Link: [https://github.com/tomjanus/re-emission](https://github.com/tomja
 
 <!-- ACKNOWLEDGMENTS -->
 ## References
-<a id="1">[1]</a>
-Beaulieu, J. J., Tank, J. L., Hamilton, S. K., Wollheim, W. M., Hall, R. O.,
-Mulholland, P. J., Dahm, C. N. (2011). *Nitrous oxide emission from
-denitrification in stream and river networks*. Proceedings of the
-National Academy of Sciences of the United States of America, 108(1),
+
+<a id="1">[[1]](https://www.sciencedirect.com/science/article/pii/S0301421504001892)</a> Marco Aurelio dos Santos, Luiz Pinguelli Rosa, Bohdan Sikar, Elizabeth Sikar, Ednaldo Oliveira dos Santos. (2006). *Gross greenhouse gas fluxes from hydro-power reservoir compared to thermo-power plants*. Energy Policy, Volume 34, Issue 4, pp. 481-488, ISSN 0301-421. https://doi.org/10.1016/j.enpol.2004.06.015
+
+<a id="2">[[2]](https://www.pnas.org/doi/10.1073/pnas.1011464108)</a>
+Beaulieu, J. J., Tank, J. L., Hamilton, S. K., Wollheim, W. M., Hall, R. O., Mulholland, P. J., Dahm, C. N. (2011). *Nitrous oxide emission from denitrification in stream and river networks*. Proceedings of the National Academy of Sciences of the United States of America, 108(1),
 214–219. https://doi.org/10.1073/pnas.1011464108
+
+<a id="3">[[3]](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0161947)</a>
+Scherer, Laura and Pfister, Stephan (2016) *Hydropower's Biogenic Carbon Footprint*. PLOS ONE, Volume 9, 1-11, https://doi.org/10.1371/journal.pone.0161947.
+
+<a id="4">[[4]](https://www.sciencedirect.com/science/article/pii/S1364815221001602)</a>
+Yves T. Prairie, Sara Mercier-Blais, John A. Harrison, Cynthia Soued, Paul del Giorgio, Atle Harby, Jukka Alm, Vincent Chanudet, Roy Nahas (2021) *A new modelling framework to assess biogenic GHG emissions from reservoirs: The G-res tool*. Environmental Modelling & Software, Volume 143, 105-117, ISSN 1364-8152, https://doi.org/10.1016/j.envsoft.2021.105117.
+
+<a id="5">[[5]](https://g-res.hydropower.org/wp-content/uploads/2021/10/G-res-Technical-Document-v3.0.pdf)</a> Prairie YT, Alm J, Harby A, Mercier-Blais S, Nahas R. 2017. *The GHG Reservoir Tool (G-res) Technical documentation. Updated version 3.0 (2021-10-27)*. UNESCO/IHA research
+project on the GHG status of freshwater reservoirs. Joint publication of the UNESCO Chair in Global Environmental Change and the International Hydropower Association. 73 pages.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -173,9 +351,10 @@ National Academy of Sciences of the United States of America, 108(1),
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/tomjanus"><img src="https://avatars.githubusercontent.com/tomjanus" width="100px;" alt=""/><br /><sub><b>Tomasz Janus</b></sub></a><br /><a href="https://github.com/tomjanus/re-emission/commits?author=tomjanus" title="Code">💻</a><a href="https://github.com/tomjanus/re-emission/commits?author=tomjanus" title="Tests">⚠️</a> <a href="https://github.com/tomjanus/re-emission/issues/created_by/tomjanus" title="Bug reports">🐛</a><a href="#design-TJanus" title="Design">🎨</a></td>
+    <td align="center"><a href="https://github.com/tomjanus"><img src="https://avatars.githubusercontent.com/tomjanus" width="100px;" alt=""/><br /><sub><b>Tomasz Janus</b></sub></a><br /><a href="https://github.com/tomjanus/re-emission/commits?author=tomjanus" title="Code">💻</a><a href="https://github.com/tomjanus/re-emission/commits?author=tomjanus" title="Tests">⚠️</a> <a href="https://github.com/tomjanus/re-emission/issues/created_by/tomjanus" title="Bug reports">🐛</a><a href="#design-TJanus" title="Design">🎨</a><a href="" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/jojo0094"><img src="https://avatars.githubusercontent.com/jojo0094" width="100px;" alt=""/><br /><sub><b>Aung Kyaw Kyaw</b></sub></a><br /><a href="https://github.com/tomjanus/re-emission/commits?author=jojo0094" title="Code">💻</a><a href="https://github.com/tomjanus/re-emission/commits?author=jojo0094" title="Tests">⚠️</a></td>
-    <td align="center"><a href=""><img src="" width="100px;" alt=""/><br /><sub><b>Chris Barry</b></sub></a><br /><a href="#content-cbarry" title="Methods">🖋</a><a href="#ideas-cbarry" title="Ideas, Planning, & Feedback">🤔</a><a href="" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/cdb0101"><img src="https://avatars.githubusercontent.com/cdb0101" width="100px;" alt=""/><br /><sub><b>Chris Barry</b></sub></a><br /><a href="#content-cbarry" title="Methods">🖋</a><a href="#ideas-cbarry" title="Ideas, Planning, & Feedback">🤔</a><a href="" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/Climatejaise"><img src="https://avatars.githubusercontent.com/Climatejaise" width="100px;" alt=""/><br /><sub><b>Jaise Kurkakose</b></sub></a><br /><a href="#content-jkuriakose" title="Methods">🖋</a><a href="#ideas-jkuriakose" title="Ideas, Planning, & Feedback">🤔</a><a href="" title="Documentation">📖</a></td>
   </tr>
 </table>
 
