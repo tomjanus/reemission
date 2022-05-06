@@ -27,18 +27,50 @@
       <ul>
         <li><a href="#latex-installation-guidelines">LaTeX installation guidelines</a></li>
         <ul>
-        <li><a href="#debian-based-linux-distributions">Debian-based Linux Distributions</a></li>
-        <li><a href="#mac-os">Mac OS</a></li>
-        <li><a href="#windows">Windows</a></li>
+           <li><a href="#debian-based-linux-distributions">Debian-based Linux Distributions</a></li>
+           <li><a href="#mac-os">Mac OS</a></li>
+           <li><a href="#windows">Windows</a></li>
         </ul>
       </ul>
     </li>
     <li><a href="#installation">Installation</a></li>
+      <ul>
+        <li><a href="#from-pypi">From PyPi</a></li>
+        <li><a href="#from-github">From GitHub</a></li>
+      </ul>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
+    <ul>
+      <li><a href="#as-a-toolbox">As a Toolbox</a></li>
+      <li><a href="#jupyter-notebook-examples">Jupyter Notebook Examples</a></li>
+      <li><a href="#using-command-line-interface-(cli)">Using Command Line Interface (CLI)</a></li>
+    </ul>
+    <li><a href="#example-inputs">Example inputs</a></li>
+    <ul>
+    <li><a href="#input-json-file">Input JSON file</a></li>
+    </ul>
+    <li><a href="#example-outputs">Example outputs</a></li>
+    <ul>
+    <li><a href="#outputs-in-json-format">Outputs in JSON format</a></li>
+    <li><a href="#outputs-in-a-PDF-report-format">Outputs in a PDF report format</a></li>
+    </ul>
+      <li><a href="#configuration">Configuration</a></li>
+        <ul>
+          <li><a href="#configuration-of-inputs">Configuration of inputs</a></li>
+          <li><a href="#configuration-of-outputs">Configuration of outputs</a></li>
+          <li><a href="#configuration-of-global-parameters">Configuration of global parameters</a></li>
+          <li><a href="#model-coefficients">Model coefficients</a></li>
+        </ul>    
+    <li><a href="#documentation">Documentation</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
+    <li><a href="#citing">Citing</a></li>
     <li><a href="#contact">Contact</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+      <ul>
+        <li><a href="#institutions">Institutions</a></li>
+        <li><a href="#resources">Resources</a></li>
+      </ul>
+    <li><a href="#references">References</a></li>
     <li><a href="#contributors">Contributors</a></li>
   </ol>
 </details>
@@ -120,9 +152,9 @@ if you'd like to use the package in a development mode.
    ```
 2. Install from source:
    - for development
-   ```sh
-   pip install -r requirements.txt -e .
-   ```
+      ```sh
+      pip install -r requirements.txt -e .
+      ```
    - or as a build
       ```bash
       pip install build .
@@ -147,8 +179,8 @@ import re-emission
 from re-emission.model import EmissionModel
 # Import from the input module
 from re-emission.input import Inputs
-input_data = Inputs.fromfile('../tests/test_data/inputs.json')
-output_config = '../config/emissions/outputs.yaml')
+input_data = Inputs.fromfile('re-emission/tests/test_data/inputs.json')
+output_config = 're-emission/config/emissions/outputs.yaml'
 model = EmissionModel(inputs=input_data, config=output_config)
 model.calculate()
 print(mode.outputs)
@@ -165,12 +197,132 @@ re-emission [input-file] [output-file]
 
 For more examples, please refer to the [Documentation](https://example.com)
 
+### Example inputs
+#### Input JSON file
+
+```json
+{
+    "Reservoir 1":
+    {
+        "monthly_temps": [10.56,11.99,15.46,18.29,20.79,22.09,22.46,22.66,
+                          21.93,19.33,15.03,11.66],
+        "year_vector": [1, 5, 10, 20, 30, 40, 50, 65, 80, 100],
+        "gasses": ["co2", "ch4", "n2o"],
+        "catchment":
+        {
+            "runoff": 1685.5619,
+            "area": 78203.0,
+            "population": 8463,
+            "area_fractions": [0.0, 0.0, 0.0, 0.0, 0.0, 0.01092, 0.11996,
+                               0.867257],
+            "slope": 8.0,
+            "precip": 2000.0,
+            "etransp": 400.0,
+            "soil_wetness": 140.0,
+            "biogenic_factors":
+            {
+                "biome": "TROPICALMOISTBROADLEAF",
+                "climate": "TROPICAL",
+                "soil_type": "MINERAL",
+                "treatment_factor": "NONE",
+                "landuse_intensity": "LOW"
+            }
+        },
+        "reservoir":{
+            "volume": 7663812,
+            "area": 0.56470,
+            "max_depth": 32.0,
+            "mean_depth": 13.6,
+            "area_fractions": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+            "soil_carbon": 10.228
+        }
+    }
+}
+```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+### Example outputs
+#### Outputs in JSON format
+```json
+{
+    "Reservoir 1": {
+        "co2_diffusion": 243.65,
+        "co2_diffusion_nonanthro": 167.25,
+        "co2_preimp": -140.0,
+        "co2_minus_nonanthro": 76.40,
+        "co2_net": 216.40,
+        "co2_profile": [
+            737.05,
+            422.16,
+            330.28,
+            257.19,
+            221.57,
+            199.04,
+            182.98,
+            165.54,
+            152.78,
+            140.00
+        ],
+        "ch4_diffusion": 95.09,
+        "ch4_ebullition": 83.52,
+        "ch4_degassing": 361.83,
+        "ch4_preimp": 0.00,
+        "ch4_net": 540.44,
+        "ch4_profile": [
+            1585.01,
+            1399.71,
+            1199.89,
+            886.67,
+            661.33,
+            499.21,
+            382.58,
+            266.01,
+            194.88,
+            141.16
+        ],
+        "n2o_methodA": 1.198,
+        "n2o_methodB": 1.332,
+        "n2o_mean": 1.265,
+        "n2o_profile": [
+            1.20,
+            1.20,
+            1.20,
+            1.20,
+            1.20,
+            1.20,
+            1.20,
+            1.20,
+            1.20,
+            1.20
+        ]
+    }
+}
+```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+#### Outputs in a PDF report format
+1. Input data in a tabular format in the output report in PDF format
+
+<p align="center"><img style="width: 600px"; src="https://github.com/tomjanus/re-emission/blob/master/graphics/inputs_table_from_pdf.png?raw=true" alt="Inputs Table PDF format"></p>
+
+2. Output data in a tabular format in the output report in PDF format
+
+<p align="center"><img style="width: 600px"; src="https://github.com/tomjanus/re-emission/blob/master/graphics/outputs_table_from_pdf.png?raw=true" alt="Outputs Table PDF format"></p>
+
+2. Output plots in the output report in PDF format
+
+<p align="center"><img style="width: 600px"; src="https://github.com/tomjanus/re-emission/blob/master/graphics/emission_plots_from_pdf.png?raw=true" alt="Output Plots"></p>
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
 ## Configuration
 Coefficients of the regressions constituting the model as well as parameters of different categories of soil and land use are stored in a number of **yaml** files in ```parameters/emissions/```.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-### Inputs
+### Configuration of inputs
 
 Information about the names and the units of the model inputs is stored and can be configured in ```config/emissions/inputs.yaml```
 e.g. for monthly temperatures which are represented in variable ```monthly_temps```:
@@ -194,7 +346,7 @@ Finally, a global flag ```print_long_descriptions``` controls whether long descr
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-### Outputs
+### Configuration of outputs
 
 Similarly to inputs, definitions and units of model outputs and whether they are to be output in the output files, are stored in ```config/emissions/outputs.yaml```, e.g. for pre-impoundment CO<sub>2</sub> emissions defined in variable ```co2_preimp```:
 ```yaml
@@ -219,7 +371,7 @@ co2_preimp:
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-### Global Parameters
+### Configuration of global parameters
 Information about global parameters such as e.g. Global Warming Potentials ```gwp100``` is stored in ```config/emissions/parameters.yaml```
 
 ```yaml
@@ -282,7 +434,7 @@ Don't forget to give the project a star! Thanks again!
 
 If you use RE-Emission for academic research, please cite the library using the following BibTeX entry.
 
-```bibtext
+```
 @misc{reemission2022,
  author = {Tomasz Janus, Christopher Barry, Jaise Kuriakose},
  title = {RE-Emission: Python tool for calculating greenhouse gas emissions from man-made reservoirs},
@@ -307,7 +459,7 @@ Project Link: [https://github.com/tomjanus/re-emission](https://github.com/tomja
 
 ### Institutions
 Development of this software was funded, to a large degree, by the [University of Manchester](https://www.manchester.ac.uk/) and the [FutureDams](https://www.futuredams.org/) project.
-<table>
+<table style="border: 0px hidden white;margin-left:auto;margin-right:auto;">
   <tr>
 <td align="center"><a href="https://www.manchester.ac.uk/"><img src="https://github.com/tomjanus/re-emission/blob/master/graphics/TAB_col_white_background.png?raw=true" height="100px;" alt=""/></td>
 <td align="center"><a href="https://www.futuredams.org/"><img src="https://github.com/tomjanus/re-emission/blob/master/graphics/futuredams-small.png?raw=true" height="90px;" alt=""/></td>
