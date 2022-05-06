@@ -9,7 +9,7 @@
 
 <!-- PROJECT LOGO -->
 <p align="center">
-    <img alt="reemission-logo" height="120" src="https://github.com/tomjanus/re-emission/blob/master/graphics/logo-banner-bw.png?raw=true"/>
+    <img alt="reemission-logo" height="120" src="https://github.com/tomjanus/reemission/blob/master/graphics/logo-banner-bw.png?raw=true"/>
 </p>
 
 <!-- TABLE OF CONTENTS -->
@@ -128,15 +128,15 @@ For more installation options, visit [https://tug.org/texlive/windows.html](http
 
 ### From PyPi
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install ```re-emission```.
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install ```reemission```.
 
 ```bash
-pip install re-emission
+pip install re-mission
 ```
 
 Type
 ```bash
-pip install re-emission -r requirements.txt -e .
+pip install reemission -r requirements.txt -e .
 ```
 if you'd like to use the package in a development mode.
 
@@ -144,11 +144,11 @@ if you'd like to use the package in a development mode.
 1. Clone the repository using either:
    - HTTPS
    ```sh
-   git clone https://github.com/tomjanus/re-emission.git
+   git clone https://github.com/tomjanus/reemission.git
    ```
    - SSH
    ```sh
-   git clone git@github.com:tomjanus/re-emission.git
+   git clone git@github.com:tomjanus/reemission.git
    ```
 2. Install from source:
    - for development
@@ -174,25 +174,25 @@ if you'd like to use the package in a development mode.
 #### As a toolbox
 For calculation of emissions for a number of reservoirs with input data in ```inputs.json``` file and output configuration in ```outputs.yaml``` file.
 ```python
-import re-emission
+import reemission
 # Import from the model module
-from re-emission.model import EmissionModel
+from reemission.model import EmissionModel
 # Import from the input module
-from re-emission.input import Inputs
-input_data = Inputs.fromfile('re-emission/tests/test_data/inputs.json')
-output_config = 're-emission/config/emissions/outputs.yaml'
+from reemission.input import Inputs
+input_data = Inputs.fromfile('reemission/tests/test_data/inputs.json')
+output_config = 'reemission/config/emissions/outputs.yaml'
 model = EmissionModel(inputs=input_data, config=output_config)
 model.calculate()
 print(mode.outputs)
 ```
 
 #### Jupyter Notebook Examples
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tomjanus/re-emission/blob/master/notebooks/index.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tomjanus/reemission/blob/master/notebooks/index.ipynb)
 
 #### Using Command Line Interface (CLI)
 In Terminal/Console
 ```bash
-re-emission [input-file] [output-file]
+reemission [input-file] [output-file]
 ```
 
 For more examples, please refer to the [Documentation](https://example.com)
@@ -305,15 +305,15 @@ For more examples, please refer to the [Documentation](https://example.com)
 #### Outputs in a PDF report format
 1. Input data in a tabular format in the output report in PDF format
 
-<p align="center"><img style="width: 600px"; src="https://github.com/tomjanus/re-emission/blob/master/graphics/inputs_table_from_pdf.png?raw=true" alt="Inputs Table PDF format"></p>
+<p align="center"><img style="width: 600px"; src="https://github.com/tomjanus/reemission/blob/master/graphics/inputs_table_from_pdf.png?raw=true" alt="Inputs Table PDF format"></p>
 
 2. Output data in a tabular format in the output report in PDF format
 
-<p align="center"><img style="width: 600px"; src="https://github.com/tomjanus/re-emission/blob/master/graphics/outputs_table_from_pdf.png?raw=true" alt="Outputs Table PDF format"></p>
+<p align="center"><img style="width: 600px"; src="https://github.com/tomjanus/reemission/blob/master/graphics/outputs_table_from_pdf.png?raw=true" alt="Outputs Table PDF format"></p>
 
 2. Output plots in the output report in PDF format
 
-<p align="center"><img style="width: 600px"; src="https://github.com/tomjanus/re-emission/blob/master/graphics/emission_plots_from_pdf.png?raw=true" alt="Output Plots"></p>
+<p align="center"><img style="width: 600px"; src="https://github.com/tomjanus/reemission/blob/master/graphics/emission_plots_from_pdf.png?raw=true" alt="Output Plots"></p>
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -439,7 +439,7 @@ If you use RE-Emission for academic research, please cite the library using the 
  author = {Tomasz Janus, Christopher Barry, Jaise Kuriakose},
  title = {RE-Emission: Python tool for calculating greenhouse gas emissions from man-made reservoirs},
  year = {2022},
- url = {https://github.com/tomjanus/re-emission},
+ url = {https://github.com/tomjanus/reemission},
 }
 ```
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -450,7 +450,7 @@ If you use RE-Emission for academic research, please cite the library using the 
 - Christopher Barry - c.barry@ceh.ac.uk
 - Jaise Kuriakose - jaise.kuriakose@manchester.ac.uk
 
-Project Link: [https://github.com/tomjanus/re-emission](https://github.com/tomjanus/re-emission)
+Project Link: [https://github.com/tomjanus/reemission](https://github.com/tomjanus/reemission)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -461,8 +461,8 @@ Project Link: [https://github.com/tomjanus/re-emission](https://github.com/tomja
 Development of this software was funded, to a large degree, by the [University of Manchester](https://www.manchester.ac.uk/) and the [FutureDams](https://www.futuredams.org/) project.
 <table style="border: 0px hidden white;margin-left:auto;margin-right:auto;">
   <tr>
-<td align="center"><a href="https://www.manchester.ac.uk/"><img src="https://github.com/tomjanus/re-emission/blob/master/graphics/TAB_col_white_background.png?raw=true" height="100px;" alt=""/></td>
-<td align="center"><a href="https://www.futuredams.org/"><img src="https://github.com/tomjanus/re-emission/blob/master/graphics/futuredams-small.png?raw=true" height="90px;" alt=""/></td>
+<td align="center"><a href="https://www.manchester.ac.uk/"><img src="https://github.com/tomjanus/reemission/blob/master/graphics/TAB_col_white_background.png?raw=true" height="100px;" alt=""/></td>
+<td align="center"><a href="https://www.futuredams.org/"><img src="https://github.com/tomjanus/reemission/blob/master/graphics/futuredams-small.png?raw=true" height="90px;" alt=""/></td>
   </tr>
 </table>
 
@@ -503,8 +503,8 @@ project on the GHG status of freshwater reservoirs. Joint publication of the UNE
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/tomjanus"><img src="https://avatars.githubusercontent.com/tomjanus" width="100px;" alt=""/><br /><sub><b>Tomasz Janus</b></sub></a><br /><a href="https://github.com/tomjanus/re-emission/commits?author=tomjanus" title="Code">💻</a><a href="https://github.com/tomjanus/re-emission/commits?author=tomjanus" title="Tests">⚠️</a> <a href="https://github.com/tomjanus/re-emission/issues/created_by/tomjanus" title="Bug reports">🐛</a><a href="#design-TJanus" title="Design">🎨</a><a href="" title="Documentation">📖</a></td>
-    <td align="center"><a href="https://github.com/jojo0094"><img src="https://avatars.githubusercontent.com/jojo0094" width="100px;" alt=""/><br /><sub><b>Aung Kyaw Kyaw</b></sub></a><br /><a href="https://github.com/tomjanus/re-emission/commits?author=jojo0094" title="Code">💻</a><a href="https://github.com/tomjanus/re-emission/commits?author=jojo0094" title="Tests">⚠️</a></td>
+    <td align="center"><a href="https://github.com/tomjanus"><img src="https://avatars.githubusercontent.com/tomjanus" width="100px;" alt=""/><br /><sub><b>Tomasz Janus</b></sub></a><br /><a href="https://github.com/tomjanus/reemission/commits?author=tomjanus" title="Code">💻</a><a href="https://github.com/tomjanus/reemission/commits?author=tomjanus" title="Tests">⚠️</a> <a href="https://github.com/tomjanus/reemission/issues/created_by/tomjanus" title="Bug reports">🐛</a><a href="#design-TJanus" title="Design">🎨</a><a href="" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/jojo0094"><img src="https://avatars.githubusercontent.com/jojo0094" width="100px;" alt=""/><br /><sub><b>Aung Kyaw Kyaw</b></sub></a><br /><a href="https://github.com/tomjanus/reemission/commits?author=jojo0094" title="Code">💻</a><a href="https://github.com/tomjanus/reemission/commits?author=jojo0094" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://github.com/cdb0101"><img src="https://avatars.githubusercontent.com/cdb0101" width="100px;" alt=""/><br /><sub><b>Chris Barry</b></sub></a><br /><a href="#content-cbarry" title="Methods">🖋</a><a href="#ideas-cbarry" title="Ideas, Planning, & Feedback">🤔</a><a href="" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/Climatejaise"><img src="https://avatars.githubusercontent.com/Climatejaise" width="100px;" alt=""/><br /><sub><b>Jaise Kurkakose</b></sub></a><br /><a href="#content-jkuriakose" title="Methods">🖋</a><a href="#ideas-jkuriakose" title="Ideas, Planning, & Feedback">🤔</a><a href="" title="Documentation">📖</a></td>
   </tr>
@@ -520,13 +520,13 @@ This project follows the [all-contributors](https://github.com/all-contributors/
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/tomjanus/re-emission.svg?style=plastic
-[contributors-url]: https://github.com/tomjanus/re-emission/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/tomjanus/re-emission.svg?style=plastic
-[forks-url]: https://github.com/tomjanus/re-emission/network/members
-[stars-shield]: https://img.shields.io/github/stars/tomjanus/re-emission.svg?style=plastic
-[stars-url]: https://github.com/tjanus/re-emission/stargazers
-[issues-shield]: https://img.shields.io/github/issues/tomjanus/re-emission.svg?style=plastic
-[issues-url]: https://github.com/tomjanus/re-emission/issues
-[license-shield]: https://img.shields.io/github/license/tomjanus/re-emission.svg?style=plastic
-[license-url]: https://github.com/tomjanus/re-emission/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/tomjanus/reemission.svg?style=plastic
+[contributors-url]: https://github.com/tomjanus/reemission/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/tomjanus/reemission.svg?style=plastic
+[forks-url]: https://github.com/tomjanus/reemission/network/members
+[stars-shield]: https://img.shields.io/github/stars/tomjanus/reemission.svg?style=plastic
+[stars-url]: https://github.com/tjanus/reemission/stargazers
+[issues-shield]: https://img.shields.io/github/issues/tomjanus/reemission.svg?style=plastic
+[issues-url]: https://github.com/tomjanus/reemission/issues
+[license-shield]: https://img.shields.io/github/license/tomjanus/reemission.svg?style=plastic
+[license-url]: https://github.com/tomjanus/reemission/blob/master/LICENSE.txt
