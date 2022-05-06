@@ -12,11 +12,12 @@ import yaml
 import matplotlib.pyplot as plt
 import numpy as np
 from pylatex.utils import bold
+from pylatex.errors import CompilerError
 from pylatex import PageStyle, Head, simple_page_number, Figure, NoEscape, \
     Tabu, Center, Quantity, Description, Document, Section, Subsection, \
     Command, MultiColumn
-from .utils import read_config
-from .input import Inputs
+from reemission.utils import read_config
+from reemission.input import Inputs
 
 # Set up module logger
 logging.basicConfig(level=logging.INFO)
@@ -692,8 +693,15 @@ class LatexWriter(Writer):
             with self.document.create(Section(reservoir_name)):
                 self.add_inputs_subsection(reservoir_name=reservoir_name)
                 self.add_outputs_subsection(reservoir_name=reservoir_name)
-        self.document.generate_pdf(clean_tex=False)
+        # Generate a Tex Source file
         self.document.generate_tex()
+        log.info("Created a LaTeX document with outputs.")
+        # Generate a PDF (requires a LaTeX compiler present in the system)
+        try:
+            self.document.generate_pdf(clean_tex=False)
+        except CompilerError:
+            log.error("LaTeX compiler not found. PDF could not be created.")
+
         return None
 
 
