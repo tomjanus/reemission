@@ -1,7 +1,8 @@
-include LICENSE
-include README.md
+exclude MANIFEST.in
+include LICENSE.txt, README.md
 include pyproject.toml
+recursive-include tests *.py *.ini *.xlsx *.ipynb
+recursive-include tests/test_data *
 recursive-include parameters/ *
-recursive-include config/ *
-recursive-include examples/ *
-recursive-include graphics/ *
+recursive-include config/emissions *
+recursive-include notebooks/ *
