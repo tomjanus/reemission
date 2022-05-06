@@ -7,18 +7,18 @@ from types import SimpleNamespace
 from typing import List, Tuple, Optional, Type
 from abc import ABC, abstractmethod
 import numpy as np
-from .utils import read_config, read_table
-from .constants import Landuse, N_MOLAR, P_MOLAR, O_MOLAR
-from .catchment import Catchment
-from .reservoir import Reservoir
-from .temperature import MonthlyTemperature
+from reemission.utils import read_config, read_table
+from reemission.constants import Landuse, N_MOLAR, P_MOLAR, O_MOLAR
+from reemission.catchment import Catchment
+from reemission.reservoir import Reservoir
+from reemission.temperature import MonthlyTemperature
 
 # Get relative imports to data
 module_dir = os.path.dirname(__file__)
 INI_FILE = os.path.abspath(
     os.path.join(module_dir, '..', '..', 'config', 'emissions', 'config.ini'))
 TABLES = os.path.abspath(
-    os.path.join(module_dir, '..', '..', 'data', 'emissions'))
+    os.path.join(module_dir, '..', '..', 'parameters', 'emissions'))
 
 
 @dataclass

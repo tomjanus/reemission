@@ -5,14 +5,14 @@ from typing import Type, Dict, Tuple, Union, Optional, List
 import logging
 from itertools import chain
 import yaml
-from .input import Inputs
-from .temperature import MonthlyTemperature
-from .catchment import Catchment
-from .reservoir import Reservoir
-from .emissions import (CarbonDioxideEmission,
+from reemission.input import Inputs
+from reemission.temperature import MonthlyTemperature
+from reemission.catchment import Catchment
+from reemission.reservoir import Reservoir
+from reemission.emissions import (CarbonDioxideEmission,
                         NitrousOxideEmission,
                         MethaneEmission)
-from .presenter import Presenter, Writer
+from reemission.presenter import Presenter, Writer
 
 # Set up module logger
 logging.basicConfig(level=logging.INFO)

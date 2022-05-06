@@ -2,7 +2,7 @@
 import logging
 from dataclasses import dataclass
 from typing import List
-from .constants import Landuse
+from reemission.constants import Landuse
 
 # Set up module logger
 log = logging.getLogger(__name__)

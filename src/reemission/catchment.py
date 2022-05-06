@@ -4,16 +4,16 @@ import logging
 import math
 from dataclasses import dataclass
 from typing import Dict, List, ClassVar, Type
-from .utils import read_table, find_enum_index
-from .biogenic import BiogenicFactors
-from .constants import Landuse
+from reemission.utils import read_table, find_enum_index
+from reemission.biogenic import BiogenicFactors
+from reemission.constants import Landuse
 
 # Set up module logger
 log = logging.getLogger(__name__)
 # Load path to Yaml tables
 module_dir = os.path.dirname(__file__)
 TABLES = os.path.abspath(
-    os.path.join(module_dir, '..', '..', 'data', 'emissions'))
+    os.path.join(module_dir, '..', '..', 'parameters', 'emissions'))
 # Provide tables as module variables
 tn_coeff_table: ClassVar[Dict] = read_table(
     os.path.join(TABLES, 'McDowell', 'landscape_TN_export.yaml'))

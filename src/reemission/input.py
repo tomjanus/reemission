@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import Dict, List, Tuple
 import json
 import logging
-from .biogenic import BiogenicFactors
+from reemission.biogenic import BiogenicFactors
 
 # Set up module logger
 logging.basicConfig(level=logging.INFO)

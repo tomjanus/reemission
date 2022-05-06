@@ -2,7 +2,7 @@
     in the determination of the trophic status of the the reservoir """
 from dataclasses import dataclass
 from typing import Type, Dict
-from .constants import (Biome, Climate, SoilType, TreatmentFactor,
+from reemission.constants import (Biome, Climate, SoilType, TreatmentFactor,
                         LanduseIntensity)
 
 
