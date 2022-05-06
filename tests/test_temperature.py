@@ -1,9 +1,7 @@
 """ Tests for the Emission classes """
-import sys
-sys.path.append("..")
 import unittest
-from src.emissions.temperature import MonthlyTemperature
-from src.emissions.reservoir import Reservoir
+from reemission.temperature import MonthlyTemperature
+from reemission.reservoir import Reservoir
 
 
 class TestTemperature(unittest.TestCase):

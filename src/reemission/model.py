@@ -9,9 +9,8 @@ from reemission.input import Inputs
 from reemission.temperature import MonthlyTemperature
 from reemission.catchment import Catchment
 from reemission.reservoir import Reservoir
-from reemission.emissions import (CarbonDioxideEmission,
-                        NitrousOxideEmission,
-                        MethaneEmission)
+from reemission.emissions import (
+    CarbonDioxideEmission, NitrousOxideEmission, MethaneEmission)
 from reemission.presenter import Presenter, Writer
 
 # Set up module logger

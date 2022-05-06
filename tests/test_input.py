@@ -1,10 +1,17 @@
 """ Tests for the Input and Inputs classes """
-import sys
-sys.path.append("..")
+import os
 import unittest
-from src.emissions.input import Input, Inputs
 from types import SimpleNamespace
-from src.emissions.utils import read_table
+from reemission.input import Input, Inputs
+from reemission.utils import read_table
+
+module_dir = os.path.dirname(__file__)
+json_input_file = os.path.abspath(
+    os.path.join(module_dir, 'test_data', 'inputs.json'))
+landscape_TP_export_table = os.path.abspath(
+    os.path.join(
+        module_dir,
+        '../parameters/emissions/McDowell/landscape_TP_export.yaml'))
 
 
 class TestInput(unittest.TestCase):
@@ -13,7 +20,7 @@ class TestInput(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.input_file = 'test_data/inputs.json'
+        cls.input_file = json_input_file
         cls.test_name = "Reservoir 2"
         cls.test_dict = {
             "monthly_temps": [13.56, 14.99, 18.46, 21.29, 23.79, 25.09,
@@ -55,8 +62,7 @@ class TestInput(unittest.TestCase):
 
     def test_read_yaml(self) -> None:
         """ Test reading of yaml files """
-        table = read_table(
-            '../data/emissions/McDowell/landscape_TP_export.yaml')
+        table = read_table(file_path=landscape_TP_export_table)
         table_ns = SimpleNamespace(**table)
         self.assertIsInstance(table_ns.biome, dict)
 
@@ -113,7 +119,7 @@ class TestInputs(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.input_file = 'test_data/inputs.json'
+        cls.input_file = json_input_file
         cls.new_reservoir = "Reservoir 3"
         cls.new_reservoir_data = {
             "monthly_temps": [13.56, 14.99, 18.46, 21.29, 23.79, 25.09,

@@ -1,10 +1,8 @@
 """ Tests for BiogenicFactors """
-import sys
-sys.path.append("..")
 import unittest
-from src.emissions.biogenic import BiogenicFactors
-from src.emissions.constants import (Biome, Climate, SoilType, TreatmentFactor,
-                                     LanduseIntensity)
+from reemission.biogenic import BiogenicFactors
+from reemission.constants import (Biome, Climate, SoilType, TreatmentFactor,
+                                  LanduseIntensity)
 
 
 class TestBiogenic(unittest.TestCase):

@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 from typing import Type, Dict
 from reemission.constants import (Biome, Climate, SoilType, TreatmentFactor,
-                        LanduseIntensity)
+                                  LanduseIntensity)
 
 
 @dataclass

@@ -36,10 +36,10 @@ TITLE_FONTSIZE = 11
 TICK_FONTSIZE = 10
 ANNOTATION_FONTSIZE = 10
 
-# Config paths
-#CONFIG_DIR = os.path.abspath(
-#    os.path.join('..', 'config', 'emissions'))
-CONFIG_DIR = '/home/lepton/Dropbox (The University of Manchester)/git_projects/dam-emissions/config/emissions/'
+# Get the file paths
+MODULE_DIR = os.path.dirname(__file__)
+CONFIG_DIR = os.path.abspath(
+    os.path.join(MODULE_DIR, '../../config/emissions'))
 INPUT_CONFIG_PATH = os.path.join(CONFIG_DIR, 'inputs.yaml')
 OUTPUT_CONFIG_PATH = os.path.join(CONFIG_DIR, 'outputs.yaml')
 PARAMETER_CONFIG_PATH = os.path.join(CONFIG_DIR, 'parameters.yaml')

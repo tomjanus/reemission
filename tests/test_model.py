@@ -1,8 +1,6 @@
 """ Tests for the EmissionModel class functionalities """
-import sys
-sys.path.append("..")
 import unittest
-from src.emissions.model import EmissionModel
+from reemission.model import EmissionModel
 
 
 class TestEmissionModel(unittest.TestCase):

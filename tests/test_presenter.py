@@ -1,17 +1,24 @@
 """ Tests for the Presenter and Writer classes """
+import os
 from typing import Optional
-import sys
-sys.path.append("..")
 import unittest
 import json
-from src.emissions.presenter import Presenter, LatexWriter
-from src.emissions.input import Inputs
+from reemission.presenter import Presenter, LatexWriter
+from reemission.input import Inputs
+
+module_dir = os.path.dirname(__file__)
+input_json_file = os.path.abspath(
+    os.path.join(module_dir, 'test_data', 'inputs.json'))
+output_json_file = os.path.abspath(
+    os.path.join(module_dir, 'test_data', 'outputs.json'))
+output_tex_file = os.path.abspath(
+    os.path.join(module_dir, 'test_data', 'output.tex'))
 
 
 class TestPresenter(unittest.TestCase):
     """ Class for testing the Presenter functionality """
-    input_file_path: str = './test_data/inputs.json'
-    output_file_path: str = './test_data/outputs.json'
+    input_file_path: str = input_json_file
+    output_file_path: str = output_json_file
     inputs: Optional[Inputs] = None
     outputs: Optional[dict] = None
 
@@ -46,7 +53,7 @@ class TestPresenter(unittest.TestCase):
                                author="Gallus Anonymus",
                                title="HEET Test Results")
         pres_latex.add_writer(writer=LatexWriter,
-                              output_file='./test_data/output.tex')
+                              output_file=output_tex_file)
         pres_latex.output()
 
 
