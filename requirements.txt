@@ -5,3 +5,6 @@ pylatex
 pytest
 unittest
 coverage
+notebook
+pyyaml
+quantities
