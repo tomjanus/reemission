@@ -14,11 +14,9 @@ from reemission.reservoir import Reservoir
 from reemission.temperature import MonthlyTemperature
 
 # Get relative imports to data
-module_dir = os.path.dirname(__file__)
-INI_FILE = os.path.abspath(
-    os.path.join(module_dir, '..', '..', 'config', 'emissions', 'config.ini'))
-TABLES = os.path.abspath(
-    os.path.join(module_dir, '..', '..', 'parameters', 'emissions'))
+MODULE_DIR = os.path.dirname(__file__)
+INI_FILE = os.path.abspath(os.path.join(MODULE_DIR, 'config', 'config.ini'))
+TABLES = os.path.abspath(os.path.join(MODULE_DIR, 'parameters'))
 
 
 @dataclass

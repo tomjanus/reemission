@@ -38,8 +38,7 @@ ANNOTATION_FONTSIZE = 10
 
 # Get the file paths
 MODULE_DIR = os.path.dirname(__file__)
-CONFIG_DIR = os.path.abspath(
-    os.path.join(MODULE_DIR, '../../config/emissions'))
+CONFIG_DIR = os.path.abspath(os.path.join(MODULE_DIR, 'config'))
 INPUT_CONFIG_PATH = os.path.join(CONFIG_DIR, 'inputs.yaml')
 OUTPUT_CONFIG_PATH = os.path.join(CONFIG_DIR, 'outputs.yaml')
 PARAMETER_CONFIG_PATH = os.path.join(CONFIG_DIR, 'parameters.yaml')
