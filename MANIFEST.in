@@ -1,8 +1,11 @@
+include *.in
+include *.md
+include *.py
+include *.txt
+recursive-include docs/notebooks *.md
+recursive-include src *.ini
+recursive-include src *.yaml
+recursive-include tests *.json
+recursive-include tests *.py
+recursive-include tests/test_data inputs*
 exclude MANIFEST.in
-include LICENSE.txt, README.md
-include pyproject.toml
-recursive-include tests *.py *.ini *.xlsx *.ipynb
-recursive-include tests/test_data *
-recursive-include parameters/ *
-recursive-include config/emissions *
-recursive-include notebooks/ *

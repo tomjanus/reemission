@@ -187,7 +187,7 @@ print(mode.outputs)
 ```
 
 #### Jupyter Notebook Examples
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tomjanus/reemission/blob/master/notebooks/index.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tomjanus/reemission/blob/master/docs/notebooks/index.ipynb)
 
 #### Using Command Line Interface (CLI)
 In Terminal/Console
@@ -473,6 +473,8 @@ Development of this software was funded, to a large degree, by the [University o
 * [Choose an Open Source License](https://choosealicense.com)
 * [Img Shields](https://shields.io)
 * [GitHub Pages](https://pages.github.com)
+* [Cookiecutter template for a Python library](https://github.com/ionelmc/cookiecutter-pylibrary)
+* [Cookiecutter template for a Python package](https://github.com/audreyfeldroy/cookiecutter-pypackage)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
