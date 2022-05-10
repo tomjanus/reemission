@@ -13,9 +13,22 @@ import matplotlib.pyplot as plt
 import numpy as np
 from pylatex.utils import bold
 from pylatex.errors import CompilerError
-from pylatex import PageStyle, Head, simple_page_number, Figure, NoEscape, \
-    Tabu, Center, Quantity, Description, Document, Section, Subsection, \
-    Command, MultiColumn
+from pylatex import (
+    PageStyle,
+    Head,
+    simple_page_number,
+    Figure,
+    NoEscape,
+    Tabu,
+    Center,
+    Quantity,
+    Description,
+    Document,
+    Section,
+    Subsection,
+    Command,
+    MultiColumn,
+)
 from reemission.utils import read_config
 from reemission.input import Inputs
 
@@ -24,11 +37,13 @@ logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
 # Format pyplot
-plt.rcParams.update({
-    "text.usetex": True,
-    "font.family": "serif",
-    "font.serif": ["Palatino"],
-})
+plt.rcParams.update(
+    {
+        "text.usetex": True,
+        "font.family": "serif",
+        "font.serif": ["Palatino"],
+    }
+)
 
 # Plot parameters
 LABEL_FONTSIZE = 10
@@ -49,16 +64,18 @@ JSON_NUMBER_DECIMALS = 2
 
 
 class Writer(ABC):
-    """ Abstract base class for all writers """
+    """Abstract base class for all writers"""
+
     @abstractmethod
     def write(self):
-        """ Writes outputs to the format of choice """
+        """Writes outputs to the format of choice"""
         ...
 
 
 @dataclass
 class JSONWriter(Writer):
-    """ Format and write data to a JSON file """
+    """Format and write data to a JSON file"""
+
     inputs: Inputs
     outputs: Dict
     output_file_path: str
@@ -71,13 +88,12 @@ class JSONWriter(Writer):
     json_dict: Dict = field(init=False)
 
     def __post_init__(self):
-        """ Initialie output_dict which will be output as JSON """
+        """Initialie output_dict which will be output as JSON"""
         self.json_dict = {}
 
     @staticmethod
-    def round_parameter(number: Union[float, list],
-                        number_decimals: int) -> Union[float, list]:
-        """ Rounds numbers to number of decimals provided in the argument """
+    def round_parameter(number: Union[float, list], number_decimals: int) -> Union[float, list]:
+        """Rounds numbers to number of decimals provided in the argument"""
         if isinstance(number, list):
             number = [round(num, number_decimals) for num in number]
         else:
@@ -85,10 +101,9 @@ class JSONWriter(Writer):
         return number
 
     def add_inputs(self, reservoir_name: str) -> None:
-        """ Create an inputs dictionary for a given reservoir and append to
-            json_dict """
-        input_names = ['monthly_temps', 'biogenic_factors', 'year_profile',
-                       'catchment_inputs', 'reservoir_inputs', 'gasses']
+        """Create an inputs dictionary for a given reservoir and append to
+        json_dict"""
+        input_names = ['monthly_temps', 'biogenic_factors', 'year_profile', 'catchment_inputs', 'reservoir_inputs', 'gasses']
         input_data = self.inputs.inputs[reservoir_name].data
         input_dict = {'inputs': {}}
         # Find out which inputs to include in the presentation
@@ -100,19 +115,14 @@ class JSONWriter(Writer):
         if len(included_inputs) < 1:
             return None
         # Go through all included inputs
-        config_to_data = {
-            "monthly_temps": "monthly_temps",
-            "year_profile": "year_vector",
-            "gasses": "gasses"}
+        config_to_data = {"monthly_temps": "monthly_temps", "year_profile": "year_vector", "gasses": "gasses"}
         for input_name in ["monthly_temps", "year_profile", "gasses"]:
             if input_name in included_inputs:
                 param_dict = {}
                 param_dict['name'] = self.input_config[input_name]['name']
                 param_dict['unit'] = self.input_config[input_name]['unit']
-                param_dict['value'] = input_data[
-                    config_to_data[input_name]]
-                input_dict['inputs'][input_name] = \
-                    param_dict
+                param_dict['value'] = input_data[config_to_data[input_name]]
+                input_dict['inputs'][input_name] = param_dict
         # Add biogenic factors
         if 'biogenic_factors' in included_inputs:
             param_dict = {}
@@ -121,78 +131,65 @@ class JSONWriter(Writer):
                 "climate": "Climate",
                 "soil_type": "Soil Type",
                 "treatment_factor": "Treatment Factor",
-                "landuse_intensity": "Landuse Intensity"}
-            param_dict['name'] = self.input_config[
-                'biogenic_factors']['name']
+                "landuse_intensity": "Landuse Intensity",
+            }
+            param_dict['name'] = self.input_config['biogenic_factors']['name']
             # Check if biogenic factors are of BiogenicFactors type
             # instead of a dictionary - the data is a dictionary in
             # text input files but then is converted to BiogenicFactors
             # type
-            biogenic_factors = input_data['catchment'][
-                'biogenic_factors']
+            biogenic_factors = input_data['catchment']['biogenic_factors']
             if not isinstance(biogenic_factors, dict):
                 try:
                     biogenic_factors = biogenic_factors.todict()
                 except AttributeError:
-                    log.error('Variable biogenic factors cannot be ' +
-                              'converted to a dictionary')
+                    log.error('Variable biogenic factors cannot be ' + 'converted to a dictionary')
             for input_name, input_value in biogenic_factors.items():
                 param_dict[input_name] = {}
                 param_dict[input_name]['name'] = factor_names[input_name]
                 param_dict[input_name]['unit'] = ''
                 param_dict[input_name]['value'] = input_value
-            input_dict['inputs']['biogenic_factors'] = \
-                param_dict
+            input_dict['inputs']['biogenic_factors'] = param_dict
         # Add catchment inputs
         if 'catchment_inputs' in included_inputs:
             param_dict = {}
-            param_dict['name'] = self.input_config['catchment_inputs'][
-                'name']
+            param_dict['name'] = self.input_config['catchment_inputs']['name']
             # Get input data
-            for input_name, input_value in \
-                    input_data['catchment'].items():
+            for input_name, input_value in input_data['catchment'].items():
                 if input_name == 'biogenic_factors':
                     break
                 param_dict[input_name] = {}
                 # Get input name and unit from config
-                conf_input = self.input_config[
-                    'catchment_inputs']['var_dict'][input_name]
+                conf_input = self.input_config['catchment_inputs']['var_dict'][input_name]
                 param_dict[input_name]['name'] = conf_input['name']
                 param_dict[input_name]['unit'] = conf_input['unit']
                 if isinstance(input_value, Iterable):
-                    input_value = ', '.join(
-                        [str(item) for item in input_value])
+                    input_value = ', '.join([str(item) for item in input_value])
                 param_dict[input_name]['value'] = input_value
-            input_dict['inputs']['catchment_inputs'] = \
-                param_dict
+            input_dict['inputs']['catchment_inputs'] = param_dict
         # Add reservoir inputs
         if 'reservoir_inputs' in included_inputs:
             param_dict = {}
-            param_dict['name'] = self.input_config['reservoir_inputs'][
-                'name']
+            param_dict['name'] = self.input_config['reservoir_inputs']['name']
             # Get input data
-            for input_name, input_value in \
-                    input_data['reservoir'].items():
+            for input_name, input_value in input_data['reservoir'].items():
                 param_dict[input_name] = {}
                 # Get input name and unit from config
-                conf_input = self.input_config[
-                    'reservoir_inputs']['var_dict'][input_name]
+                conf_input = self.input_config['reservoir_inputs']['var_dict'][input_name]
                 param_dict[input_name]['name'] = conf_input['name']
                 param_dict[input_name]['unit'] = conf_input['unit']
                 if isinstance(input_value, Iterable):
-                    input_value = ', '.join(
-                        [str(item) for item in input_value])
+                    input_value = ', '.join([str(item) for item in input_value])
                 param_dict[input_name]['value'] = input_value
-            input_dict['inputs']['reservoir_inputs'] = \
-                param_dict
+            input_dict['inputs']['reservoir_inputs'] = param_dict
         try:
             self.json_dict[reservoir_name].update(input_dict)
         except KeyError:
             self.json_dict[reservoir_name] = input_dict
 
     def add_outputs(self, reservoir_name: str) -> None:
-        """ Create an outputs dictionary for a given reservoir and append to
-            json_dict """
+        """Create an outputs dictionary for a given reservoir and append to
+        json_dict"""
         config = self.output_config['outputs']
         data = self.outputs[reservoir_name]
         output_dict = {'outputs': {}}
@@ -200,12 +197,10 @@ class JSONWriter(Writer):
             # Add parameter if the parameter is marked for presentation
             if config[parameter]['include']:
                 param_dict = {parameter: {}}
-                for item_name in ['name', 'gas_name', 'unit',
-                                  'long_description']:
+                for item_name in ['name', 'gas_name', 'unit', 'long_description']:
                     item = config[parameter].get(item_name)
                     param_dict[parameter][item_name] = item
-                param_dict[parameter]['value'] = self.round_parameter(
-                    parameter_value, JSON_NUMBER_DECIMALS)
+                param_dict[parameter]['value'] = self.round_parameter(parameter_value, JSON_NUMBER_DECIMALS)
                 output_dict['outputs'].update(param_dict)
         try:
             self.json_dict[reservoir_name].update(output_dict)
@@ -213,7 +208,7 @@ class JSONWriter(Writer):
             self.json_dict[reservoir_name] = output_dict
 
     def write(self) -> None:
-        """ Write output data (all reservoirs) to a JSON file """
+        """Write output data (all reservoirs) to a JSON file"""
         if not bool(self.outputs):
             log.error("Attempting to write before generating outputs")
             return None
@@ -227,7 +222,8 @@ class JSONWriter(Writer):
 
 @dataclass
 class LatexWriter(Writer):
-    """ Format and write data to a latex file using PyLaTeX"""
+    """Format and write data to a latex file using PyLaTeX"""
+
     inputs: Inputs
     outputs: Dict
     output_file_path: str
@@ -244,28 +240,17 @@ class LatexWriter(Writer):
 
     @staticmethod
     def geometry() -> Dict:
-        """ Create document geometry """
-        document_geometry = {
-            "head": "0.0in",
-            "margin": "0.75in",
-            "top": "0.55in",
-            "bottom": "0.55in",
-            "includeheadfoot": True
-        }
+        """Create document geometry"""
+        document_geometry = {"head": "0.0in", "margin": "0.75in", "top": "0.55in", "bottom": "0.55in", "includeheadfoot": True}
         return document_geometry
 
-    def plot_profile(self, axis: plt.Axes, emission: str,
-                     output_name: str, annotate: bool = True) -> None:
-        """ Plot an emission profile using matplotlib """
-        emission_var = {"co2": "co2_profile", "ch4": "ch4_profile",
-                        "n2o": "n2o_profile"}
+    def plot_profile(self, axis: plt.Axes, emission: str, output_name: str, annotate: bool = True) -> None:
+        """Plot an emission profile using matplotlib"""
+        emission_var = {"co2": "co2_profile", "ch4": "ch4_profile", "n2o": "n2o_profile"}
         data = self.outputs[output_name]
         # Create title and y_label
-        title = ", ".join((
-            self.output_config[
-                'outputs'][emission_var[emission]]['name_latex'], output_name))
-        emission_unit = self.output_config[
-            'outputs'][emission_var[emission]]['unit_latex']
+        title = ", ".join((self.output_config['outputs'][emission_var[emission]]['name_latex'], output_name))
+        emission_unit = self.output_config['outputs'][emission_var[emission]]['unit_latex']
         y_label = "Emission, " + emission_unit
         # Get the x and y data
         y_data = data[emission_var[emission]]
@@ -294,30 +279,26 @@ class LatexWriter(Writer):
                     xy=(x_coord, y_coord),
                     xytext=(0, 5),
                     textcoords='offset points',
-                    fontsize=ANNOTATION_FONTSIZE)
+                    fontsize=ANNOTATION_FONTSIZE,
+                )
 
     def plot_emission_bars(self, axis: plt.Axes, output_name: str) -> None:
-        """ Visualise total emissions (unit x surface area) for the
-            calculated gases """
+        """Visualise total emissions (unit x surface area) for the
+        calculated gases"""
         data = self.outputs[output_name]
         vars_to_plot = ('co2_net', 'ch4_net', 'n2o_mean')
-        bars = [self.output_config['outputs'][var]['gas_name_latex'] for
-                var in vars_to_plot if var in data]
+        bars = [self.output_config['outputs'][var]['gas_name_latex'] for var in vars_to_plot if var in data]
         # Get reservoir area from inputs (convert from km2 to m2)
-        area = self.inputs.inputs[output_name].data[
-            'reservoir']['area'] * 10**6
-        values = [data[var] * area * 10**(-6) for var in vars_to_plot if
-                  var in data]
+        area = self.inputs.inputs[output_name].data['reservoir']['area'] * 10**6
+        values = [data[var] * area * 10 ** (-6) for var in vars_to_plot if var in data]
         y_pos = np.arange(len(bars))[::-1]
         plt.barh(y_pos, values, color=(0.2, 0.4, 0.6, 0.6), edgecolor='blue')
         plt.yticks(y_pos, bars)
         plt.xticks(fontsize=TICK_FONTSIZE)
         plt.yticks(fontsize=TICK_FONTSIZE)
-        axis.set_xlabel("Total annual emission, tonnes CO$_2$ yr$^{-1}$",
-                        fontsize=LABEL_FONTSIZE)
+        axis.set_xlabel("Total annual emission, tonnes CO$_2$ yr$^{-1}$", fontsize=LABEL_FONTSIZE)
         axis.set_ylabel("Gas", fontsize=LABEL_FONTSIZE)
-        axis.set_title("Total annual gas emissions, {}".format(output_name),
-                       fontsize=TITLE_FONTSIZE, pad=15)
+        axis.set_title("Total annual gas emissions, {}".format(output_name), fontsize=TITLE_FONTSIZE, pad=15)
         # Make the (visible) axes thicker
         for axis_pos in ['bottom', 'left']:
             axis.spines[axis_pos].set_linewidth(2)
@@ -327,8 +308,8 @@ class LatexWriter(Writer):
         axis.spines['top'].set_visible(False)
 
     def add_plots(self, output_name: str, plot_fraction: float = 0.85) -> None:
-        """ Checks the number of plots to be produced and plots them in
-            subfigures """
+        """Checks the number of plots to be produced and plots them in
+        subfigures"""
         profile_plots = bool(self.output_config['global']['plot_profiles'])
         bar_plot = bool(self.output_config['global']['plot_emission_bars'])
         # Find out how many subplots to define
@@ -352,9 +333,7 @@ class LatexWriter(Writer):
                 for gas in ['co2', 'ch4', 'n2o']:
                     if gas in self.inputs.inputs[output_name].data['gasses']:
                         axis = fig.add_subplot(*subplot_dim, fig_index)
-                        self.plot_profile(axis=axis, emission=gas,
-                                          output_name=output_name,
-                                          annotate=False)
+                        self.plot_profile(axis=axis, emission=gas, output_name=output_name, annotate=False)
                         fig_index += 1
             if bar_plot:
                 axis = fig.add_subplot(*subplot_dim, fig_index)
@@ -368,106 +347,80 @@ class LatexWriter(Writer):
         return None
 
     def add_parameters(self) -> None:
-        """ Adds information about model parameters such as conversion factors
-            and other information that might be useful to report alongside
-            calculation results """
+        """Adds information about model parameters such as conversion factors
+        and other information that might be useful to report alongside
+        calculation results"""
         number_precision = 4
-        round_options = {'round-precision': number_precision,
-                         'round-mode': 'figures'}
+        round_options = {'round-precision': number_precision, 'round-mode': 'figures'}
         # TODO: Currently only supports two parameters
         #       If we would like to output more/all parameters, this will have
         #       to be made more generic. Potentially .ini file could be
         #       translated into yaml
         if self.parameter_config['parameters']['gwp100']['include']:
-            with self.document.create(
-                    Subsection(
-                        'Global Warming Potentials (GWPs) over 100 years')):
+            with self.document.create(Subsection('Global Warming Potentials (GWPs) over 100 years')):
                 with self.document.create(Description()) as desc:
                     try:
-                        desc.add_item(
-                            NoEscape("GWP100 for CO$_2$: "),
-                            self.config_ini.getfloat(
-                                'CARBON_DIOXIDE', 'co2_gwp100'))
-                        desc.add_item(
-                            NoEscape("GWP100 for CH$_4$: "),
-                            self.config_ini.getfloat(
-                                'METHANE', 'ch4_gwp100'))
-                        desc.add_item(
-                            NoEscape("GWP100 for N$_2$O: "),
-                            self.config_ini.getfloat(
-                                'NITROUS_OXIDE', 'nitrous_gwp100'))
+                        desc.add_item(NoEscape("GWP100 for CO$_2$: "), self.config_ini.getfloat('CARBON_DIOXIDE', 'co2_gwp100'))
+                        desc.add_item(NoEscape("GWP100 for CH$_4$: "), self.config_ini.getfloat('METHANE', 'ch4_gwp100'))
+                        desc.add_item(NoEscape("GWP100 for N$_2$O: "), self.config_ini.getfloat('NITROUS_OXIDE', 'nitrous_gwp100'))
                     except configparser.NoSectionError:
                         pass
         if self.parameter_config['parameters']['conv_factors']['include']:
-            with self.document.create(
-                    Subsection("Unit conversion factors")):
+            with self.document.create(Subsection("Unit conversion factors")):
                 try:
                     with self.document.create(Description()) as desc:
-                        conv_coeff = self.config_ini.getfloat(
-                            'CARBON_DIOXIDE', 'conv_coeff')
+                        conv_coeff = self.config_ini.getfloat('CARBON_DIOXIDE', 'conv_coeff')
                         desc.add_item(
-                            NoEscape('Conversion from mg~CO$_2$-C~m$^{-2}$~' +
-                                     'd$^{-1}$ to g~CO$_{2,eq}$~m$^{-2}$~' +
-                                     'yr$^{-1}$: '),
-                            Quantity(conv_coeff, options=round_options))
+                            NoEscape('Conversion from mg~CO$_2$-C~m$^{-2}$~' + 'd$^{-1}$ to g~CO$_{2,eq}$~m$^{-2}$~' + 'yr$^{-1}$: '),
+                            Quantity(conv_coeff, options=round_options),
+                        )
                     with self.document.create(Description()) as desc:
-                        conv_coeff = self.config_ini.getfloat(
-                            'METHANE', 'conv_coeff')
+                        conv_coeff = self.config_ini.getfloat('METHANE', 'conv_coeff')
                         desc.add_item(
-                            NoEscape('Conversion from mg CH$_4$~m$^{-2}$~' +
-                                     'd$^{-1}$ to g~CO$_{2,eq}$~m$^{-2}$~' +
-                                     'yr$^{-1}$: '),
-                            Quantity(conv_coeff, options=round_options))
+                            NoEscape('Conversion from mg CH$_4$~m$^{-2}$~' + 'd$^{-1}$ to g~CO$_{2,eq}$~m$^{-2}$~' + 'yr$^{-1}$: '),
+                            Quantity(conv_coeff, options=round_options),
+                        )
                     with self.document.create(Description()) as desc:
-                        conv_coeff = self.config_ini.getfloat(
-                            'NITROUS_OXIDE', 'conv_coeff')
+                        conv_coeff = self.config_ini.getfloat('NITROUS_OXIDE', 'conv_coeff')
                         desc.add_item(
-                            NoEscape('Conversion from $\\mu$g~N$_2$O~' +
-                                     'm$^{-2}$~d$^{-1}$ to g~CO$_{2,eq}$~' +
-                                     'm$^{-2}$~yr$^{-1}$: '),
-                            Quantity(conv_coeff, options=round_options))
+                            NoEscape('Conversion from $\\mu$g~N$_2$O~' + 'm$^{-2}$~d$^{-1}$ to g~CO$_{2,eq}$~' + 'm$^{-2}$~yr$^{-1}$: '),
+                            Quantity(conv_coeff, options=round_options),
+                        )
                 except configparser.NoSectionError:
                     pass
 
     def add_outputs_table(self, output_name: str) -> None:
-        """ Adds outputs table to latex source code """
+        """Adds outputs table to latex source code"""
         number_precision = 4
-        round_options = {'round-precision': number_precision,
-                         'round-mode': 'figures'}
+        round_options = {'round-precision': number_precision, 'round-mode': 'figures'}
         column_names = ["Name", "Unit", "Value"]
         table_format = "p{10cm} X[c] X[l]"
         data = self.outputs[output_name]
         with self.document.create(Center()) as centered:
-            with centered.create(Tabu(table_format, booktabs=True,
-                                      row_height=1.0)) as data_table:
+            with centered.create(Tabu(table_format, booktabs=True, row_height=1.0)) as data_table:
                 data_table.add_row(column_names, mapper=[bold])
                 data_table.add_hline()
                 # Iterate through outputs and generate rows of data to be
                 # entered into the table
                 for parameter, value in data.items():
-                    parameter_name = NoEscape(
-                        self.output_config['outputs'][parameter]['name_latex'])
-                    unit = NoEscape(
-                        self.output_config['outputs'][parameter]['unit_latex'])
-                    if self.output_config['outputs'][parameter]['include'] and \
-                            not isinstance(value, list):
+                    parameter_name = NoEscape(self.output_config['outputs'][parameter]['name_latex'])
+                    unit = NoEscape(self.output_config['outputs'][parameter]['unit_latex'])
+                    if self.output_config['outputs'][parameter]['include'] and not isinstance(value, list):
                         # Lists describe profiles and should not be put in the
                         # table
                         value = Quantity(value, options=round_options)
                         row = [parameter_name, unit, value]
                         data_table.add_row(row)
                 # Add summed (composite) emission values
-                if self.output_config['outputs']['co2_ch4']['include'] and \
-                        self.output_config['outputs']['co2_net']['include'] and \
-                        self.output_config['outputs']['ch4_net']['include']:
+                if (
+                    self.output_config['outputs']['co2_ch4']['include']
+                    and self.output_config['outputs']['co2_net']['include']
+                    and self.output_config['outputs']['ch4_net']['include']
+                ):
                     try:
-                        value = Quantity(data['co2_net'] + data['ch4_net'],
-                                         options=round_options)
-                        unit = NoEscape(
-                            self.output_config[
-                                'outputs']['co2_ch4']['unit_latex'])
-                        row = [NoEscape('CO$_2$+CH$_4$ net emissions'),
-                               unit, value]
+                        value = Quantity(data['co2_net'] + data['ch4_net'], options=round_options)
+                        unit = NoEscape(self.output_config['outputs']['co2_ch4']['unit_latex'])
+                        row = [NoEscape('CO$_2$+CH$_4$ net emissions'), unit, value]
                         data_table.add_hline()
                         data_table.add_row(row)
                     except KeyError:
@@ -475,19 +428,16 @@ class LatexWriter(Writer):
                         # CO2 net or CH4 net are not included in the results
                         pass
 
-                if self.output_config['outputs']['co2_ch4_n2o']['include'] and \
-                        self.output_config['outputs']['co2_net']['include'] and \
-                        self.output_config['outputs']['ch4_net']['include'] and \
-                        self.output_config['outputs']['n2o_mean']['include']:
+                if (
+                    self.output_config['outputs']['co2_ch4_n2o']['include']
+                    and self.output_config['outputs']['co2_net']['include']
+                    and self.output_config['outputs']['ch4_net']['include']
+                    and self.output_config['outputs']['n2o_mean']['include']
+                ):
                     try:
-                        value = Quantity(data['co2_net'] + data['ch4_net'] +
-                                         data['n2o_mean'],
-                                         options=round_options)
-                        unit = NoEscape(
-                            self.output_config[
-                                'outputs']['co2_ch4_n2o']['unit_latex'])
-                        row = [NoEscape('CO$_2$+CH$_4$+N$_2$O net emissions'),
-                               unit, value]
+                        value = Quantity(data['co2_net'] + data['ch4_net'] + data['n2o_mean'], options=round_options)
+                        unit = NoEscape(self.output_config['outputs']['co2_ch4_n2o']['unit_latex'])
+                        row = [NoEscape('CO$_2$+CH$_4$+N$_2$O net emissions'), unit, value]
                         data_table.add_hline()
                         data_table.add_row(row)
                     except KeyError:
@@ -496,14 +446,12 @@ class LatexWriter(Writer):
                         pass
 
     def add_inputs_table(self, output_name: str) -> None:
-        """ Add information with model inputs (for each reservoir) """
+        """Add information with model inputs (for each reservoir)"""
         number_precision = 4
-        round_options = {'round-precision': number_precision,
-                         'round-mode': 'figures'}
+        round_options = {'round-precision': number_precision, 'round-mode': 'figures'}
         column_names = ["Input Name", "Unit", "Value(s)"]
         table_format = "X[l] X[c] X[l]"
-        input_names = ['monthly_temps', 'biogenic_factors', 'year_profile',
-                       'catchment_inputs', 'reservoir_inputs', 'gasses']
+        input_names = ['monthly_temps', 'biogenic_factors', 'year_profile', 'catchment_inputs', 'reservoir_inputs', 'gasses']
         # Get inputs and input config
         input_data = self.inputs.inputs[output_name].data
         included_inputs = []
@@ -516,41 +464,33 @@ class LatexWriter(Writer):
         # If there are inputs to be added to the table, proceed with
         # constructing the table
         with self.document.create(Center()) as centered:
-            with centered.create(Tabu(table_format, booktabs=True,
-                                      row_height=1.0)) as data_table:
+            with centered.create(Tabu(table_format, booktabs=True, row_height=1.0)) as data_table:
                 data_table.add_row(column_names, mapper=[bold])
                 data_table.add_hline()
                 # Add stuff to the table if they're to be included
                 printout = False
                 if "monthly_temps" in included_inputs:
                     name = self.input_config['monthly_temps']['name']
-                    unit = NoEscape(
-                        self.input_config['monthly_temps']['unit_latex'])
+                    unit = NoEscape(self.input_config['monthly_temps']['unit_latex'])
                     input_value = input_data["monthly_temps"]
-                    input_value = ', '.join(
-                        [str(item) for item in input_value])
+                    input_value = ', '.join([str(item) for item in input_value])
                     row = [name, unit, input_value]
                     data_table.add_row(row)
                     printout = True
                 if "year_profile" in included_inputs:
                     name = self.input_config['year_profile']['name']
-                    unit = NoEscape(
-                        self.input_config['year_profile']['unit_latex'])
+                    unit = NoEscape(self.input_config['year_profile']['unit_latex'])
                     input_value = input_data["year_vector"]
-                    input_value = ', '.join(
-                        [str(item) for item in input_value])
+                    input_value = ', '.join([str(item) for item in input_value])
                     row = [name, unit, input_value]
                     data_table.add_row(row)
                     printout = True
                 if "gasses" in included_inputs:
-                    gas_name_latex = {'co2': 'CO$_2$', 'ch4': 'CH$_4$',
-                                      'n2o': 'N$_2$O'}
+                    gas_name_latex = {'co2': 'CO$_2$', 'ch4': 'CH$_4$', 'n2o': 'N$_2$O'}
                     name = self.input_config['gasses']['name']
-                    unit = NoEscape(
-                        self.input_config['gasses']['unit_latex'])
+                    unit = NoEscape(self.input_config['gasses']['unit_latex'])
                     input_value = input_data["gasses"]
-                    gases_latex = ', '.join(
-                        [gas_name_latex[gas] for gas in input_value])
+                    gases_latex = ', '.join([gas_name_latex[gas] for gas in input_value])
                     row = [name, unit, NoEscape(gases_latex)]
                     data_table.add_row(row)
                     printout = True
@@ -563,23 +503,21 @@ class LatexWriter(Writer):
                         "climate": "Climate",
                         "soil_type": "Soil Type",
                         "treatment_factor": "Treatment Factor",
-                        "landuse_intensity": "Landuse Intensity"}
+                        "landuse_intensity": "Landuse Intensity",
+                    }
                     row_name = self.input_config['biogenic_factors']['name']
-                    data_table.add_row(
-                        (MultiColumn(3, align='c', data=row_name),))
+                    data_table.add_row((MultiColumn(3, align='c', data=row_name),))
                     data_table.add_hline()
                     # Check if biogenic factors are of BiogenicFactors type
                     # instead of a dictionary - the data is a dictionary in
                     # text input files but then is converted to BiogenicFactors
                     # type
-                    biogenic_factors = input_data['catchment'][
-                        'biogenic_factors']
+                    biogenic_factors = input_data['catchment']['biogenic_factors']
                     if not isinstance(biogenic_factors, dict):
                         try:
                             biogenic_factors = biogenic_factors.todict()
                         except AttributeError:
-                            log.error('Variable biogenic factors cannot be ' +
-                                      'converted to a dictionary')
+                            log.error('Variable biogenic factors cannot be ' + 'converted to a dictionary')
 
                     for input_name, input_value in biogenic_factors.items():
                         name = factor_names[input_name]
@@ -591,25 +529,20 @@ class LatexWriter(Writer):
                 # Add catchment inputs
                 if 'catchment_inputs' in included_inputs:
                     row_name = self.input_config['catchment_inputs']['name']
-                    data_table.add_row(
-                        (MultiColumn(3, align='c', data=row_name),))
+                    data_table.add_row((MultiColumn(3, align='c', data=row_name),))
                     data_table.add_hline()
                     # Get input data
-                    for input_name, input_value in \
-                            input_data['catchment'].items():
+                    for input_name, input_value in input_data['catchment'].items():
                         if input_name == 'biogenic_factors':
                             break
                         # Get input name and unit from config
-                        conf_input = self.input_config[
-                            'catchment_inputs']['var_dict'][input_name]
+                        conf_input = self.input_config['catchment_inputs']['var_dict'][input_name]
                         name = conf_input['name']
                         unit = NoEscape(conf_input['unit_latex'])
                         if not isinstance(input_value, Iterable):
-                            input_value = Quantity(input_value,
-                                                   options=round_options)
+                            input_value = Quantity(input_value, options=round_options)
                         else:
-                            input_value = ', '.join(
-                                [str(item) for item in input_value])
+                            input_value = ', '.join([str(item) for item in input_value])
                         row = [name, unit, input_value]
                         data_table.add_row(row)
                     data_table.add_hline()
@@ -617,29 +550,24 @@ class LatexWriter(Writer):
                 # Add reservoir inputs
                 if 'reservoir_inputs' in included_inputs:
                     row_name = self.input_config['reservoir_inputs']['name']
-                    data_table.add_row(
-                        (MultiColumn(3, align='c', data=row_name),))
+                    data_table.add_row((MultiColumn(3, align='c', data=row_name),))
                     data_table.add_hline()
                     # Get input data
-                    for input_name, input_value in \
-                            input_data['reservoir'].items():
+                    for input_name, input_value in input_data['reservoir'].items():
                         # Get input name and unit from config
-                        conf_input = self.input_config[
-                            'reservoir_inputs']['var_dict'][input_name]
+                        conf_input = self.input_config['reservoir_inputs']['var_dict'][input_name]
                         name = conf_input['name']
                         unit = NoEscape(conf_input['unit_latex'])
                         if not isinstance(input_value, Iterable):
-                            input_value = Quantity(input_value,
-                                                   options=round_options)
+                            input_value = Quantity(input_value, options=round_options)
                         else:
-                            input_value = ', '.join(
-                                [str(item) for item in input_value])
+                            input_value = ', '.join([str(item) for item in input_value])
                         row = [name, unit, input_value]
                         data_table.add_row(row)
         return None
 
     def add_header(self) -> None:
-        """ Adds a header to latex document source code """
+        """Adds a header to latex document source code"""
         header = PageStyle("header")
         # Create center header
         with header.create(Head("C")):
@@ -651,7 +579,7 @@ class LatexWriter(Writer):
         self.document.change_document_style("header")
 
     def add_title_section(self, title: str, author: str) -> None:
-        """ Writes title to latex document source code """
+        """Writes title to latex document source code"""
         self.document.preamble.append(Command('title', title))
         self.document.preamble.append(Command('author', author))
         self.document.preamble.append(Command('date', NoEscape(r'\today')))
@@ -659,29 +587,28 @@ class LatexWriter(Writer):
 
     def add_parameters_section(self) -> None:
         """
-            Writes model parameter information to latex document source code
+        Writes model parameter information to latex document source code
         """
         with self.document.create(Section('Global parameters')):
             self.add_parameters()
         self.document.append(NoEscape(r'\pagebreak'))
 
     def add_inputs_subsection(self, reservoir_name: str) -> None:
-        """ Writes inputs information to latex document source code """
+        """Writes inputs information to latex document source code"""
         # Add inputs section to the document
         with self.document.create(Subsection('Inputs')):
             self.add_inputs_table(output_name=reservoir_name)
 
     def add_outputs_subsection(self, reservoir_name: str) -> None:
-        """ Writes outputs information to latex document source code """
+        """Writes outputs information to latex document source code"""
         plot_fraction = 0.9
         # Add inputs section to the document
         with self.document.create(Subsection('Outputs')):
             self.add_outputs_table(output_name=reservoir_name)
-            self.add_plots(output_name=reservoir_name,
-                           plot_fraction=plot_fraction)
+            self.add_plots(output_name=reservoir_name, plot_fraction=plot_fraction)
 
     def write(self) -> None:
-        """ Writes output data (all reservoir) to a tex and pdf files """
+        """Writes output data (all reservoir) to a tex and pdf files"""
         if not bool(self.outputs):
             return None
         self.add_header()
@@ -706,8 +633,9 @@ class LatexWriter(Writer):
 
 @dataclass
 class Presenter:
-    """ Reads and processes results of GHG emission calculations and outputs
-        them in different formats """
+    """Reads and processes results of GHG emission calculations and outputs
+    them in different formats"""
+
     inputs: Inputs
     outputs: Dict
     writers: List[Writer] = field(default=None)
@@ -716,14 +644,14 @@ class Presenter:
 
     @classmethod
     def fromfiles(cls, input_file: str, output_file: str, **kwargs):
-        """ Load outputs dictionary from json file """
+        """Load outputs dictionary from json file"""
         inputs = Inputs.fromfile(input_file)
         with open(output_file) as json_file:
             output_dict = json.load(json_file)
         return cls(inputs=inputs, outputs=output_dict, **kwargs)
 
     def __post_init__(self):
-        """ Load configuration dictionaries from provided yaml files """
+        """Load configuration dictionaries from provided yaml files"""
         with open(INPUT_CONFIG_PATH) as file:
             self.input_config = yaml.load(file, Loader=yaml.FullLoader)
         with open(OUTPUT_CONFIG_PATH) as file:
@@ -733,22 +661,25 @@ class Presenter:
         self.config_ini = read_config(CONFIG_INI_PATH)
 
     def add_writer(self, writer: Type[Writer], output_file: str) -> None:
-        """ Insantiates writer object and appends it to self.writers """
+        """Insantiates writer object and appends it to self.writers"""
         if self.writers is None:
             self.writers = []
-        self.writers.append(writer(
-            output_file_path=output_file,
-            outputs=self.outputs,
-            output_config=self.output_config,
-            input_config=self.input_config,
-            parameter_config=self.parameter_config,
-            config_ini=self.config_ini,
-            inputs=self.inputs,
-            author=self.author,
-            title=self.title))
+        self.writers.append(
+            writer(
+                output_file_path=output_file,
+                outputs=self.outputs,
+                output_config=self.output_config,
+                input_config=self.input_config,
+                parameter_config=self.parameter_config,
+                config_ini=self.config_ini,
+                inputs=self.inputs,
+                author=self.author,
+                title=self.title,
+            )
+        )
 
     def output(self) -> None:
-        """ Present GHG emission calculation results using writers """
+        """Present GHG emission calculation results using writers"""
         if self.writers is None:
             log.info("No writers specified. Results could not be output.")
             return None

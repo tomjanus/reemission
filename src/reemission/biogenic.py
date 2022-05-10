@@ -2,14 +2,14 @@
     in the determination of the trophic status of the the reservoir """
 from dataclasses import dataclass
 from typing import Type, Dict
-from reemission.constants import (Biome, Climate, SoilType, TreatmentFactor,
-                                  LanduseIntensity)
+from reemission.constants import Biome, Climate, SoilType, TreatmentFactor, LanduseIntensity
 
 
 @dataclass
 class BiogenicFactors:
-    """ Container class for parameters characterising catchment's properties
-        having influence on the reservoir's trophic status """
+    """Container class for parameters characterising catchment's properties
+    having influence on the reservoir's trophic status"""
+
     biome: Type[Biome]
     climate: Type[Climate]
     soil_type: Type[SoilType]
@@ -18,17 +18,17 @@ class BiogenicFactors:
 
     @classmethod
     def fromdict(cls, data_dict: Dict):
-        """ Initialize class from dictionary """
-        return cls(biome=Biome[data_dict['biome']],
-                   climate=Climate[data_dict['climate']],
-                   soil_type=SoilType[data_dict['soil_type']],
-                   treatment_factor=TreatmentFactor[
-                       data_dict['treatment_factor']],
-                   landuse_intensity=LanduseIntensity[
-                       data_dict['landuse_intensity']])
+        """Initialize class from dictionary"""
+        return cls(
+            biome=Biome[data_dict['biome']],
+            climate=Climate[data_dict['climate']],
+            soil_type=SoilType[data_dict['soil_type']],
+            treatment_factor=TreatmentFactor[data_dict['treatment_factor']],
+            landuse_intensity=LanduseIntensity[data_dict['landuse_intensity']],
+        )
 
     def todict(self) -> Dict:
-        """ Convert the class to a dictionary representation """
+        """Convert the class to a dictionary representation"""
         biogenic_factors = {}
         biogenic_factors['biome'] = self.biome.name
         biogenic_factors['climate'] = self.climate.name

@@ -11,7 +11,8 @@ CH4_GWP100 = 34  # Global Warming Potential of CH4 (28–36) over 100 years
 
 @unique
 class Climate(Enum):
-    """ Enumeration class with climate types """
+    """Enumeration class with climate types"""
+
     BOREAL = "Boreal"
     SUBTROPICAL = "Subtropical"
     TEMPERATE = "Temperate"
@@ -20,7 +21,8 @@ class Climate(Enum):
 
 @unique
 class Biome(Enum):
-    """ Enumeration class with biome types """
+    """Enumeration class with biome types"""
+
     DESERTS = 1
     MEDFORESTS = 2
     MONTANEGRASSLANDS = 3
@@ -35,7 +37,8 @@ class Biome(Enum):
 
 @unique
 class Landuse(Enum):
-    """ Enumeration class with landuse types """
+    """Enumeration class with landuse types"""
+
     BARE = "bare"
     SNOW_ICE = "snow_ice"
     URBAN = "urban"
@@ -48,22 +51,25 @@ class Landuse(Enum):
 
 @unique
 class LanduseIntensity(Enum):
-    """ Enumeration class for landuse intensities for calculating
-        land cover export coefficients in kg P ha-1 yr-1 """
+    """Enumeration class for landuse intensities for calculating
+    land cover export coefficients in kg P ha-1 yr-1"""
+
     LOW = "low_intensity"
     HIGH = "high_intensity"
 
 
 @unique
 class SoilType(Enum):
-    """ Enumeration class with soil types """
+    """Enumeration class with soil types"""
+
     MINERAL = "mineral"
     ORGANIC = "organic"
 
 
 @unique
 class TreatmentFactor(Enum):
-    """ Enumeration type with wastewater treatment classifiations """
+    """Enumeration type with wastewater treatment classifiations"""
+
     NONE = "none"
     PRIMARY = "primary"
     SECONDARY = "secondary"
