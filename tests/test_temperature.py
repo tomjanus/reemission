@@ -1,7 +1,6 @@
 """ Tests for the Emission classes """
 import unittest
 from reemission.temperature import MonthlyTemperature
-from reemission.reservoir import Reservoir
 
 
 class TestTemperature(unittest.TestCase):

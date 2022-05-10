@@ -22,10 +22,10 @@ class BiogenicFactors:
         return cls(biome=Biome[data_dict['biome']],
                    climate=Climate[data_dict['climate']],
                    soil_type=SoilType[data_dict['soil_type']],
-                   treatment_factor=
-                   TreatmentFactor[data_dict['treatment_factor']],
-                   landuse_intensity=
-                   LanduseIntensity[data_dict['landuse_intensity']])
+                   treatment_factor=TreatmentFactor[
+                       data_dict['treatment_factor']],
+                   landuse_intensity=LanduseIntensity[
+                       data_dict['landuse_intensity']])
 
     def todict(self) -> Dict:
         """ Convert the class to a dictionary representation """
