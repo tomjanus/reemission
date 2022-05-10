@@ -1,7 +1,6 @@
-
+""" Tests for command line interface """
 from click.testing import CliRunner
-
-from reemission.cli import main
+from reemission.cli.cli import main
 
 
 def test_main():
