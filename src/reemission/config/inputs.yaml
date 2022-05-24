@@ -89,7 +89,7 @@ reservoir_inputs:
     soil_carbon:
       name: "Soil carbon in inundated area"
       unit: "kg/m2"
-      unit_latex: "km m$^{-2}$"
+      unit_latex: "kg m$^{-2}$"
 
 print_long_descriptions: False
 ...
