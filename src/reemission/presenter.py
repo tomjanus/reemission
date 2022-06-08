@@ -217,6 +217,7 @@ class JSONWriter(Writer):
             self.add_outputs(reservoir_name=reservoir_name)
         with open(self.output_file_path, 'w') as file_pointer:
             json.dump(self.json_dict, file_pointer, indent=4)
+        log.info("Created a json file with outputs.")
         return None
 
 
