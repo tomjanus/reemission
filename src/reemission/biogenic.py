@@ -1,8 +1,9 @@
 """ Module containing a dataclass with categorical descriptors playing part
     in the determination of the trophic status of the the reservoir """
 from dataclasses import dataclass
-from typing import Type, Dict
-from reemission.constants import Biome, Climate, SoilType, TreatmentFactor, LanduseIntensity
+from typing import Dict
+from reemission.constants import (
+    Biome, Climate, SoilType, TreatmentFactor, LanduseIntensity)
 
 
 @dataclass
@@ -10,11 +11,11 @@ class BiogenicFactors:
     """Container class for parameters characterising catchment's properties
     having influence on the reservoir's trophic status"""
 
-    biome: Type[Biome]
-    climate: Type[Climate]
-    soil_type: Type[SoilType]
-    treatment_factor: Type[TreatmentFactor]
-    landuse_intensity: Type[LanduseIntensity]
+    biome: Biome
+    climate: Climate
+    soil_type: SoilType
+    treatment_factor: TreatmentFactor
+    landuse_intensity: LanduseIntensity
 
     @classmethod
     def fromdict(cls, data_dict: Dict):
