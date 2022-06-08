@@ -1,0 +1,1294 @@
+{
+    "Sedawgyi": {
+        "monthly_temps": [
+            19,
+            22,
+            26,
+            30,
+            30,
+            29,
+            28,
+            28,
+            28,
+            27,
+            24,
+            20
+        ],
+        "year_vector": [
+            1,
+            5,
+            10,
+            20,
+            30,
+            40,
+            50,
+            65,
+            80,
+            100
+        ],
+        "gasses": [
+            "co2",
+            "ch4",
+            "n2o"
+        ],
+        "catchment": {
+            "runoff": 1262,
+            "area": 3509.228,
+            "population": 226517,
+            "area_fractions": [
+                0.04,
+                0.337,
+                0.611,
+                0.001,
+                0.002,
+                0,
+                0.01,
+                0
+            ],
+            "slope": 30,
+            "precip": 1750,
+            "etransp": 1215,
+            "soil_wetness": 270,
+            "biogenic_factors": {
+                "biome": "TROPICALMOISTBROADLEAF",
+                "climate": "TEMPERATE",
+                "soil_type": "MINERAL",
+                "treatment_factor": "NONE",
+                "landuse_intensity": "LOW"
+            }
+        },
+        "reservoir": {
+            "volume": 111087440.042,
+            "area": 35.095,
+            "max_depth": 38,
+            "mean_depth": 3,
+            "area_fractions": [
+                0,
+                0,
+                0,
+                0.745,
+                0.005,
+                0.039,
+                0.129,
+                0.082
+            ],
+            "soil_carbon": 0.561
+        }
+    },
+    "Myittha": {
+        "monthly_temps": [
+            19,
+            22,
+            26,
+            29,
+            29,
+            27,
+            27,
+            27,
+            27,
+            25,
+            22,
+            19
+        ],
+        "year_vector": [
+            1,
+            5,
+            10,
+            20,
+            30,
+            40,
+            50,
+            65,
+            80,
+            100
+        ],
+        "gasses": [
+            "co2",
+            "ch4",
+            "n2o"
+        ],
+        "catchment": {
+            "runoff": 976,
+            "area": 1896.343,
+            "population": 19614,
+            "area_fractions": [
+                0.009,
+                0.762,
+                0.227,
+                0.002,
+                0.0,
+                0,
+                0.0,
+                0
+            ],
+            "slope": 43,
+            "precip": 1797,
+            "etransp": 1189,
+            "soil_wetness": 166,
+            "biogenic_factors": {
+                "biome": "TROPICALMOISTBROADLEAF",
+                "climate": "TEMPERATE",
+                "soil_type": "MINERAL",
+                "treatment_factor": "NONE",
+                "landuse_intensity": "LOW"
+            }
+        },
+        "reservoir": {
+            "volume": 1719443364.323,
+            "area": 37.724,
+            "max_depth": 112,
+            "mean_depth": 46,
+            "area_fractions": [
+                0,
+                0,
+                0,
+                0.0,
+                0.0,
+                0.343,
+                0.291,
+                0.366
+            ],
+            "soil_carbon": 0.457
+        }
+    },
+    "Myogyi": {
+        "monthly_temps": [
+            21,
+            23,
+            27,
+            30,
+            30,
+            29,
+            28,
+            28,
+            28,
+            27,
+            24,
+            21
+        ],
+        "year_vector": [
+            1,
+            5,
+            10,
+            20,
+            30,
+            40,
+            50,
+            65,
+            80,
+            100
+        ],
+        "gasses": [
+            "co2",
+            "ch4",
+            "n2o"
+        ],
+        "catchment": {
+            "runoff": 880,
+            "area": 3873.227,
+            "population": 183182,
+            "area_fractions": [
+                0.198,
+                0.311,
+                0.482,
+                0.001,
+                0.0,
+                0,
+                0.009,
+                0
+            ],
+            "slope": 27,
+            "precip": 1780,
+            "etransp": 1243,
+            "soil_wetness": 218,
+            "biogenic_factors": {
+                "biome": "TROPICALMOISTBROADLEAF",
+                "climate": "TEMPERATE",
+                "soil_type": "MINERAL",
+                "treatment_factor": "NONE",
+                "landuse_intensity": "LOW"
+            }
+        },
+        "reservoir": {
+            "volume": 275013495.651,
+            "area": 10.807,
+            "max_depth": 59,
+            "mean_depth": 25,
+            "area_fractions": [
+                0,
+                0,
+                0,
+                0.0,
+                0.0,
+                0.771,
+                0.119,
+                0.11
+            ],
+            "soil_carbon": 0.488
+        }
+    },
+    "Phyu Chaung": {
+        "monthly_temps": [
+            21,
+            24,
+            27,
+            30,
+            29,
+            27,
+            26,
+            26,
+            27,
+            27,
+            25,
+            22
+        ],
+        "year_vector": [
+            1,
+            5,
+            10,
+            20,
+            30,
+            40,
+            50,
+            65,
+            80,
+            100
+        ],
+        "gasses": [
+            "co2",
+            "ch4",
+            "n2o"
+        ],
+        "catchment": {
+            "runoff": 1027,
+            "area": 1048.397,
+            "population": 111494,
+            "area_fractions": [
+                0.005,
+                0.577,
+                0.392,
+                0.026,
+                0.0,
+                0,
+                0.0,
+                0
+            ],
+            "slope": 19,
+            "precip": 1694,
+            "etransp": 1341,
+            "soil_wetness": 355,
+            "biogenic_factors": {
+                "biome": "TROPICALMOISTBROADLEAF",
+                "climate": "TROPICAL",
+                "soil_type": "MINERAL",
+                "treatment_factor": "NONE",
+                "landuse_intensity": "LOW"
+            }
+        },
+        "reservoir": {
+            "volume": 777679966.975,
+            "area": 48.718,
+            "max_depth": 94,
+            "mean_depth": 16,
+            "area_fractions": [
+                0,
+                0,
+                0,
+                0.0,
+                0.485,
+                0.048,
+                0.129,
+                0.338
+            ],
+            "soil_carbon": 0.51
+        }
+    },
+    "Thauk Ye Khat 2": {
+        "monthly_temps": [
+            22,
+            24,
+            27,
+            30,
+            29,
+            27,
+            27,
+            26,
+            27,
+            27,
+            25,
+            22
+        ],
+        "year_vector": [
+            1,
+            5,
+            10,
+            20,
+            30,
+            40,
+            50,
+            65,
+            80,
+            100
+        ],
+        "gasses": [
+            "co2",
+            "ch4",
+            "n2o"
+        ],
+        "catchment": {
+            "runoff": 1197,
+            "area": 2160.344,
+            "population": 57003,
+            "area_fractions": [
+                0.005,
+                0.554,
+                0.436,
+                0.004,
+                0.0,
+                0,
+                0.0,
+                0
+            ],
+            "slope": 37,
+            "precip": 1463,
+            "etransp": 1325,
+            "soil_wetness": 343,
+            "biogenic_factors": {
+                "biome": "TROPICALMOISTBROADLEAF",
+                "climate": "TROPICAL",
+                "soil_type": "MINERAL",
+                "treatment_factor": "NONE",
+                "landuse_intensity": "LOW"
+            }
+        },
+        "reservoir": {
+            "volume": 691420053.199,
+            "area": 19.313,
+            "max_depth": 100,
+            "mean_depth": 36,
+            "area_fractions": [
+                0,
+                0,
+                0,
+                0.0,
+                0.306,
+                0.365,
+                0.11,
+                0.219
+            ],
+            "soil_carbon": 0.547
+        }
+    },
+    "Zaungtu": {
+        "monthly_temps": [
+            23,
+            24,
+            28,
+            30,
+            29,
+            27,
+            27,
+            27,
+            27,
+            27,
+            26,
+            23
+        ],
+        "year_vector": [
+            1,
+            5,
+            10,
+            20,
+            30,
+            40,
+            50,
+            65,
+            80,
+            100
+        ],
+        "gasses": [
+            "co2",
+            "ch4",
+            "n2o"
+        ],
+        "catchment": {
+            "runoff": 1424,
+            "area": 1098.103,
+            "population": 149622,
+            "area_fractions": [
+                0.0,
+                0.795,
+                0.192,
+                0.0,
+                0.0,
+                0,
+                0.012,
+                0
+            ],
+            "slope": 17,
+            "precip": 2141,
+            "etransp": 1329,
+            "soil_wetness": 377,
+            "biogenic_factors": {
+                "biome": "TROPICALMOISTBROADLEAF",
+                "climate": "TROPICAL",
+                "soil_type": "MINERAL",
+                "treatment_factor": "NONE",
+                "landuse_intensity": "LOW"
+            }
+        },
+        "reservoir": {
+            "volume": 58728564.009,
+            "area": 8.915,
+            "max_depth": 35,
+            "mean_depth": 7,
+            "area_fractions": [
+                0,
+                0,
+                0,
+                0.784,
+                0.0,
+                0.01,
+                0.137,
+                0.06899999999999999
+            ],
+            "soil_carbon": 0.59
+        }
+    },
+    "Shwegyin": {
+        "monthly_temps": [
+            23,
+            25,
+            28,
+            30,
+            30,
+            27,
+            27,
+            27,
+            27,
+            28,
+            26,
+            24
+        ],
+        "year_vector": [
+            1,
+            5,
+            10,
+            20,
+            30,
+            40,
+            50,
+            65,
+            80,
+            100
+        ],
+        "gasses": [
+            "co2",
+            "ch4",
+            "n2o"
+        ],
+        "catchment": {
+            "runoff": 2122,
+            "area": 874.105,
+            "population": 39742,
+            "area_fractions": [
+                0.023,
+                0.528,
+                0.392,
+                0.056,
+                0.0,
+                0,
+                0.0,
+                0
+            ],
+            "slope": 31,
+            "precip": 2416,
+            "etransp": 1320,
+            "soil_wetness": 501,
+            "biogenic_factors": {
+                "biome": "TROPICALMOISTBROADLEAF",
+                "climate": "TROPICAL",
+                "soil_type": "MINERAL",
+                "treatment_factor": "NONE",
+                "landuse_intensity": "LOW"
+            }
+        },
+        "reservoir": {
+            "volume": 2021011322.696,
+            "area": 90.522,
+            "max_depth": 63,
+            "mean_depth": 22,
+            "area_fractions": [
+                0,
+                0,
+                0,
+                0.0,
+                0.478,
+                0.203,
+                0.097,
+                0.222
+            ],
+            "soil_carbon": 0.615
+        }
+    },
+    "Shweli 1": {
+        "monthly_temps": [
+            14,
+            16,
+            19,
+            23,
+            24,
+            25,
+            24,
+            24,
+            24,
+            22,
+            19,
+            15
+        ],
+        "year_vector": [
+            1,
+            5,
+            10,
+            20,
+            30,
+            40,
+            50,
+            65,
+            80,
+            100
+        ],
+        "gasses": [
+            "co2",
+            "ch4",
+            "n2o"
+        ],
+        "catchment": {
+            "runoff": 1115,
+            "area": 12582.613,
+            "population": 1587658,
+            "area_fractions": [
+                0.147,
+                0.392,
+                0.45,
+                0.002,
+                0.007,
+                0,
+                0.002,
+                0
+            ],
+            "slope": 31,
+            "precip": 1498,
+            "etransp": 1123,
+            "soil_wetness": 144,
+            "biogenic_factors": {
+                "biome": "TROPICALMOISTBROADLEAF",
+                "climate": "TEMPERATE",
+                "soil_type": "MINERAL",
+                "treatment_factor": "NONE",
+                "landuse_intensity": "LOW"
+            }
+        },
+        "reservoir": {
+            "volume": 18318729.212,
+            "area": 1.358,
+            "max_depth": 38,
+            "mean_depth": 13,
+            "area_fractions": [
+                0,
+                0,
+                0,
+                0.0,
+                0.0,
+                0.5,
+                0.357,
+                0.143
+            ],
+            "soil_carbon": 0.624
+        }
+    },
+    "Paung Laung (lower)": {
+        "monthly_temps": [
+            21,
+            24,
+            27,
+            30,
+            29,
+            27,
+            27,
+            27,
+            27,
+            27,
+            25,
+            22
+        ],
+        "year_vector": [
+            1,
+            5,
+            10,
+            20,
+            30,
+            40,
+            50,
+            65,
+            80,
+            100
+        ],
+        "gasses": [
+            "co2",
+            "ch4",
+            "n2o"
+        ],
+        "catchment": {
+            "runoff": 923,
+            "area": 4577.466,
+            "population": 291858,
+            "area_fractions": [
+                0.019,
+                0.4,
+                0.574,
+                0.007,
+                0.0,
+                0,
+                0.0,
+                0
+            ],
+            "slope": 38,
+            "precip": 1265,
+            "etransp": 1307,
+            "soil_wetness": 194,
+            "biogenic_factors": {
+                "biome": "TROPICALMOISTBROADLEAF",
+                "climate": "TROPICAL",
+                "soil_type": "MINERAL",
+                "treatment_factor": "NONE",
+                "landuse_intensity": "LOW"
+            }
+        },
+        "reservoir": {
+            "volume": 728635818.459,
+            "area": 16.459,
+            "max_depth": 118,
+            "mean_depth": 44,
+            "area_fractions": [
+                0,
+                0,
+                0,
+                0.0,
+                0.241,
+                0.257,
+                0.187,
+                0.316
+            ],
+            "soil_carbon": 0.58
+        }
+    },
+    "Kabaung": {
+        "monthly_temps": [
+            22,
+            24,
+            27,
+            30,
+            29,
+            27,
+            27,
+            26,
+            27,
+            27,
+            25,
+            22
+        ],
+        "year_vector": [
+            1,
+            5,
+            10,
+            20,
+            30,
+            40,
+            50,
+            65,
+            80,
+            100
+        ],
+        "gasses": [
+            "co2",
+            "ch4",
+            "n2o"
+        ],
+        "catchment": {
+            "runoff": 828,
+            "area": 1182.596,
+            "population": 147601,
+            "area_fractions": [
+                0.001,
+                0.772,
+                0.198,
+                0.029,
+                0.0,
+                0,
+                0.0,
+                0
+            ],
+            "slope": 19,
+            "precip": 1492,
+            "etransp": 1346,
+            "soil_wetness": 323,
+            "biogenic_factors": {
+                "biome": "TROPICALMOISTBROADLEAF",
+                "climate": "TROPICAL",
+                "soil_type": "MINERAL",
+                "treatment_factor": "NONE",
+                "landuse_intensity": "LOW"
+            }
+        },
+        "reservoir": {
+            "volume": 894946600.357,
+            "area": 52.835,
+            "max_depth": 56,
+            "mean_depth": 17,
+            "area_fractions": [
+                0,
+                0,
+                0,
+                0.0,
+                0.502,
+                0.012,
+                0.003,
+                0.483
+            ],
+            "soil_carbon": 0.503
+        }
+    },
+    "Kun Chaung": {
+        "monthly_temps": [
+            22,
+            24,
+            27,
+            30,
+            29,
+            27,
+            26,
+            26,
+            27,
+            27,
+            25,
+            22
+        ],
+        "year_vector": [
+            1,
+            5,
+            10,
+            20,
+            30,
+            40,
+            50,
+            65,
+            80,
+            100
+        ],
+        "gasses": [
+            "co2",
+            "ch4",
+            "n2o"
+        ],
+        "catchment": {
+            "runoff": 1309,
+            "area": 872.461,
+            "population": 86804,
+            "area_fractions": [
+                0.02,
+                0.594,
+                0.337,
+                0.049,
+                0.0,
+                0,
+                0.0,
+                0
+            ],
+            "slope": 18,
+            "precip": 1826,
+            "etransp": 1337,
+            "soil_wetness": 366,
+            "biogenic_factors": {
+                "biome": "TROPICALMOISTBROADLEAF",
+                "climate": "TROPICAL",
+                "soil_type": "MINERAL",
+                "treatment_factor": "NONE",
+                "landuse_intensity": "LOW"
+            }
+        },
+        "reservoir": {
+            "volume": 945075024.162,
+            "area": 59.847,
+            "max_depth": 54,
+            "mean_depth": 16,
+            "area_fractions": [
+                0,
+                0,
+                0,
+                0.0,
+                0.605,
+                0.193,
+                0.126,
+                0.076
+            ],
+            "soil_carbon": 0.496
+        }
+    },
+    "Yeywa": {
+        "monthly_temps": [
+            19,
+            22,
+            26,
+            30,
+            29,
+            28,
+            28,
+            28,
+            27,
+            26,
+            23,
+            20
+        ],
+        "year_vector": [
+            1,
+            5,
+            10,
+            20,
+            30,
+            40,
+            50,
+            65,
+            80,
+            100
+        ],
+        "gasses": [
+            "co2",
+            "ch4",
+            "n2o"
+        ],
+        "catchment": {
+            "runoff": 692,
+            "area": 28711.065,
+            "population": 1476699,
+            "area_fractions": [
+                0.129,
+                0.236,
+                0.633,
+                0.001,
+                0.001,
+                0,
+                0.0,
+                0
+            ],
+            "slope": 23,
+            "precip": 1569,
+            "etransp": 1233,
+            "soil_wetness": 203,
+            "biogenic_factors": {
+                "biome": "TROPICALMOISTBROADLEAF",
+                "climate": "TEMPERATE",
+                "soil_type": "MINERAL",
+                "treatment_factor": "NONE",
+                "landuse_intensity": "LOW"
+            }
+        },
+        "reservoir": {
+            "volume": 2831076455.481,
+            "area": 63.775,
+            "max_depth": 125,
+            "mean_depth": 44,
+            "area_fractions": [
+                0,
+                0,
+                0,
+                0.058,
+                0.186,
+                0.377,
+                0.124,
+                0.254
+            ],
+            "soil_carbon": 0.568
+        }
+    },
+    "Thapanzeik": {
+        "monthly_temps": [
+            19,
+            22,
+            25,
+            29,
+            29,
+            29,
+            28,
+            28,
+            28,
+            27,
+            24,
+            20
+        ],
+        "year_vector": [
+            1,
+            5,
+            10,
+            20,
+            30,
+            40,
+            50,
+            65,
+            80,
+            100
+        ],
+        "gasses": [
+            "co2",
+            "ch4",
+            "n2o"
+        ],
+        "catchment": {
+            "runoff": 632,
+            "area": 9293.083,
+            "population": 446997,
+            "area_fractions": [
+                0.304,
+                0.273,
+                0.376,
+                0.0,
+                0.0,
+                0,
+                0.047,
+                0
+            ],
+            "slope": 12,
+            "precip": 1601,
+            "etransp": 1237,
+            "soil_wetness": 202,
+            "biogenic_factors": {
+                "biome": "TROPICALMOISTBROADLEAF",
+                "climate": "TROPICAL",
+                "soil_type": "MINERAL",
+                "treatment_factor": "NONE",
+                "landuse_intensity": "LOW"
+            }
+        },
+        "reservoir": {
+            "volume": 3179905334.79,
+            "area": 365.141,
+            "max_depth": 43,
+            "mean_depth": 9,
+            "area_fractions": [
+                0,
+                0,
+                0,
+                0.899,
+                0.0,
+                0.078,
+                0.022,
+                0.001
+            ],
+            "soil_carbon": 0.432
+        }
+    },
+    "Kyee Ohn Kyee Wa": {
+        "monthly_temps": [
+            21,
+            23,
+            28,
+            31,
+            30,
+            28,
+            28,
+            28,
+            28,
+            27,
+            24,
+            21
+        ],
+        "year_vector": [
+            1,
+            5,
+            10,
+            20,
+            30,
+            40,
+            50,
+            65,
+            80,
+            100
+        ],
+        "gasses": [
+            "co2",
+            "ch4",
+            "n2o"
+        ],
+        "catchment": {
+            "runoff": 1089,
+            "area": 5152.946,
+            "population": 72627,
+            "area_fractions": [
+                0.032,
+                0.677,
+                0.287,
+                0.002,
+                0.0,
+                0,
+                0.001,
+                0
+            ],
+            "slope": 38,
+            "precip": 1861,
+            "etransp": 1237,
+            "soil_wetness": 145,
+            "biogenic_factors": {
+                "biome": "TROPICALMOISTBROADLEAF",
+                "climate": "TEMPERATE",
+                "soil_type": "MINERAL",
+                "treatment_factor": "NONE",
+                "landuse_intensity": "LOW"
+            }
+        },
+        "reservoir": {
+            "volume": 376329138.564,
+            "area": 34.279,
+            "max_depth": 47,
+            "mean_depth": 11,
+            "area_fractions": [
+                0,
+                0,
+                0,
+                0.0,
+                0.098,
+                0.818,
+                0.047,
+                0.037
+            ],
+            "soil_carbon": 0.488
+        }
+    },
+    "Mone Chaung": {
+        "monthly_temps": [
+            20,
+            23,
+            27,
+            30,
+            30,
+            28,
+            28,
+            27,
+            27,
+            27,
+            24,
+            21
+        ],
+        "year_vector": [
+            1,
+            5,
+            10,
+            20,
+            30,
+            40,
+            50,
+            65,
+            80,
+            100
+        ],
+        "gasses": [
+            "co2",
+            "ch4",
+            "n2o"
+        ],
+        "catchment": {
+            "runoff": 1269,
+            "area": 3970.656,
+            "population": 48924,
+            "area_fractions": [
+                0.019,
+                0.663,
+                0.314,
+                0.002,
+                0.0,
+                0,
+                0.002,
+                0
+            ],
+            "slope": 40,
+            "precip": 1942,
+            "etransp": 1217,
+            "soil_wetness": 154,
+            "biogenic_factors": {
+                "biome": "TROPICALMOISTBROADLEAF",
+                "climate": "TEMPERATE",
+                "soil_type": "MINERAL",
+                "treatment_factor": "NONE",
+                "landuse_intensity": "LOW"
+            }
+        },
+        "reservoir": {
+            "volume": 978113502.197,
+            "area": 47.886,
+            "max_depth": 60,
+            "mean_depth": 20,
+            "area_fractions": [
+                0,
+                0,
+                0,
+                0.152,
+                0.073,
+                0.154,
+                0.573,
+                0.049
+            ],
+            "soil_carbon": 0.509
+        }
+    },
+    "Kinda": {
+        "monthly_temps": [
+            21,
+            23,
+            27,
+            30,
+            29,
+            28,
+            28,
+            27,
+            27,
+            27,
+            24,
+            21
+        ],
+        "year_vector": [
+            1,
+            5,
+            10,
+            20,
+            30,
+            40,
+            50,
+            65,
+            80,
+            100
+        ],
+        "gasses": [
+            "co2",
+            "ch4",
+            "n2o"
+        ],
+        "catchment": {
+            "runoff": 275,
+            "area": 2293.785,
+            "population": 160256,
+            "area_fractions": [
+                0.116,
+                0.254,
+                0.614,
+                0.0,
+                0.0,
+                0,
+                0.014,
+                0
+            ],
+            "slope": 27,
+            "precip": 1407,
+            "etransp": 1286,
+            "soil_wetness": 140,
+            "biogenic_factors": {
+                "biome": "TROPICALMOISTBROADLEAF",
+                "climate": "TEMPERATE",
+                "soil_type": "MINERAL",
+                "treatment_factor": "NONE",
+                "landuse_intensity": "LOW"
+            }
+        },
+        "reservoir": {
+            "volume": 710018027.288,
+            "area": 38.053,
+            "max_depth": 63,
+            "mean_depth": 19,
+            "area_fractions": [
+                0,
+                0,
+                0,
+                0.798,
+                0.004,
+                0.009,
+                0.08,
+                0.108
+            ],
+            "soil_carbon": 0.516
+        }
+    },
+    "Zawgyi II": {
+        "monthly_temps": [
+            17,
+            19,
+            23,
+            27,
+            26,
+            26,
+            25,
+            25,
+            25,
+            24,
+            21,
+            18
+        ],
+        "year_vector": [
+            1,
+            5,
+            10,
+            20,
+            30,
+            40,
+            50,
+            65,
+            80,
+            100
+        ],
+        "gasses": [
+            "co2",
+            "ch4",
+            "n2o"
+        ],
+        "catchment": {
+            "runoff": 1023,
+            "area": 2087.179,
+            "population": 128824,
+            "area_fractions": [
+                0.351,
+                0.146,
+                0.485,
+                0.001,
+                0.0,
+                0,
+                0.016,
+                0
+            ],
+            "slope": 17,
+            "precip": 1926,
+            "etransp": 1234,
+            "soil_wetness": 225,
+            "biogenic_factors": {
+                "biome": "TROPICALMOISTBROADLEAF",
+                "climate": "TEMPERATE",
+                "soil_type": "MINERAL",
+                "treatment_factor": "NONE",
+                "landuse_intensity": "LOW"
+            }
+        },
+        "reservoir": {
+            "volume": 95900428.891,
+            "area": 30.954,
+            "max_depth": 31,
+            "mean_depth": 3,
+            "area_fractions": [
+                0,
+                0,
+                0,
+                0.903,
+                0.014,
+                0.017,
+                0.064,
+                0.003
+            ],
+            "soil_carbon": 0.526
+        }
+    }
+}
