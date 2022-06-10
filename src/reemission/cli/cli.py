@@ -17,6 +17,7 @@ Why does this file exist, and why not put this in __main__?
 """
 import click
 import logging
+import pathlib
 import pyfiglet
 import reemission
 import reemission.presenter
@@ -24,10 +25,12 @@ from reemission.utils import add_version, load_packaged_data
 from reemission.model import EmissionModel
 from reemission.input import Inputs
 
+
 # Update this section if new writers are added to the package
-writers_dict = {
-    'latex': reemission.presenter.LatexWriter,
-    'json': reemission.presenter.JSONWriter
+ext_writer_dict = {
+    '.json': reemission.presenter.JSONWriter,
+    '.tex': reemission.presenter.LatexWriter,
+    '.pdf': reemission.presenter.LatexWriter
 }
 
 # Set up module logger
@@ -56,29 +59,24 @@ See the full documentation at : https://reemisison.readthedocs.io/en/latest/.
 
 @click.command()
 @click.argument("input-file", nargs=1, type=click.Path(exists=True))
-@click.option("-w", "--writers", type=str, multiple=True, default=None,
-              help="output file categories definied by RE-Emission.")
 @click.option("-o", "--output-files", type=click.Path(), multiple=True,
               default=None,
               help="files the outputs are written to.")
 @click.option("-c", "--output-config", type=click.Path(exists=True),
               default=None,
               help="RE-Emission output configuration file.")
-def calculate(input_file, writers, output_files, output_config):
+def calculate(input_file, output_files, output_config):
     """
     Calculates emissions based on the data in the JSON INPUT_FILE.
     Saves the results to output file(s) defined in option '--output-files'.
-    The types of output files are defined in option '--writers'.
-    Currently, two writers are available: 'json' and 'latex'.
-    'latex' writer saves output to a '.pdf' file whilst additionally writing
-    an intermediate '.tex' source file.
+    Two types of output files are available: '.json' and 'tex/pdf'.
+    'pdf' files are written using latex intermediary. Latex source files are
+    saved alongside 'pdf' files.
 
     \f
     input_file: JSON file with information about catchment and reservoir
         related inputs.
-    writers: categories out output files written by RE-Emission. Currently
-        supports `latex` and `json`.
-    output_files: paths of outputs files: one per writer in the same order.
+    output_files: paths of outputs files.
     output_config: YAML output configuration file.
     """
     click.echo("Loading inputs...\n")
@@ -90,7 +88,6 @@ def calculate(input_file, writers, output_files, output_config):
     # Format all file names by converting to unicode
     input_file_str = f"{click.format_filename(input_file)}"
     output_config_str = f"{click.format_filename(output_config)}"
-    writers_str = ', '.join(writers)
     output_files_unicode = [
         f"{click.format_filename(file)}" for file in output_files]
     output_files_str = ', '.join(output_files_unicode)
@@ -99,7 +96,6 @@ def calculate(input_file, writers, output_files, output_config):
         "About to run the program with the following inputs:\n",
         f"Input JSON file: {input_file_str}\n",
         f"Output config file: {output_config_str}\n",
-        f"Writers: {writers_str}\n",
         f"Output files: {output_files_str}\n"]
     click.echo("".join(msgs))
     click.echo('Continue? [yn] ', nl=False)
@@ -119,25 +115,25 @@ def calculate(input_file, writers, output_files, output_config):
     click.echo(click.style(
         "Calculation finished", blink=False, bg='green', fg='white'))
 
-    if writers is not None:
-        _writers = []
-        for writer in writers:
-            popped_writer = writers_dict.pop(writer.lower(), None)
-            if popped_writer:
-                _writers.append(popped_writer)
+    writers = []
+    for file in output_files:
+        file_ext = pathlib.Path(file).suffix.lower()
+        popped_writer = ext_writer_dict.pop(file_ext, None)
+        if popped_writer is None:
+            log.warning(
+                "Unable to save file %s. Unrecognized extension." % file)
+        else:
+            writers.append(popped_writer)
 
-    if len(_writers) == len(output_files):
+    if writers:
         click.echo(click.style(
             "Writing outputs...", blink=True, bg='blue', fg='white'))
         model.add_presenter(
-            writers=_writers,
+            writers=writers,
             output_files=output_files)
         model.save_results()
         click.echo(click.style(
             "Outputs written to files.", blink=False, bg='green', fg='white'))
-    else:
-        log.warning('Lengths of writers and output files are not equal. ' +
-                    'Results could not be saved.')
 
 
 main.add_command(calculate)
