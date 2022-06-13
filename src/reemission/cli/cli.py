@@ -30,7 +30,9 @@ from reemission.input import Inputs
 ext_writer_dict = {
     '.json': reemission.presenter.JSONWriter,
     '.tex': reemission.presenter.LatexWriter,
-    '.pdf': reemission.presenter.LatexWriter
+    '.pdf': reemission.presenter.LatexWriter,
+    '.xls': reemission.presenter.ExcelWriter,
+    '.xlsx': reemission.presenter.ExcelWriter
 }
 
 # Set up module logger
