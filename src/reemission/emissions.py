@@ -4,7 +4,7 @@ import os
 import math
 from dataclasses import dataclass
 from types import SimpleNamespace
-from typing import List, Tuple, Optional, Type
+from typing import List, Tuple, Optional, Type, ClassVar
 from abc import ABC, abstractmethod
 import numpy as np
 from reemission.utils import read_config, read_table
@@ -12,6 +12,7 @@ from reemission.constants import Landuse, N_MOLAR, P_MOLAR, O_MOLAR
 from reemission.catchment import Catchment
 from reemission.reservoir import Reservoir
 from reemission.temperature import MonthlyTemperature
+from reemission.exceptions import WrongN2OModelError
 
 # Get relative imports to data
 MODULE_DIR = os.path.dirname(__file__)
@@ -28,7 +29,8 @@ class Emission(ABC):
     preinund_area: float
     config: dict
 
-    def __init__(self, catchment, reservoir, preinund_area=None, config_file=INI_FILE):
+    def __init__(self, catchment, reservoir, preinund_area=None,
+                 config_file=INI_FILE):
         self.catchment = catchment
         self.reservoir = reservoir  # in km2
         self.config = read_config(config_file)
@@ -58,9 +60,11 @@ class CarbonDioxideEmission(Emission):
     par: Type[SimpleNamespace]
     pre_impoundment_table: dict
 
-    def __init__(self, catchment, reservoir, eff_temp, preinund_area=None, p_calc_method='g-res', config_file=INI_FILE):
+    def __init__(self, catchment, reservoir, eff_temp, preinund_area=None,
+                 p_calc_method='g-res', config_file=INI_FILE):
 
-        super().__init__(catchment=catchment, reservoir=reservoir, config_file=config_file, preinund_area=preinund_area)
+        super().__init__(catchment=catchment, reservoir=reservoir,
+                         config_file=config_file, preinund_area=preinund_area)
 
         # Initialise input data specific to carbon dioxide emissions
         self.eff_temp = eff_temp  # EFF temp CO2
@@ -69,12 +73,17 @@ class CarbonDioxideEmission(Emission):
             print('P calculation method %s unknown. ' % p_calc_method + ' Initializing with default g-res method')
         self.p_calc_method = p_calc_method
         # Read the tables
-        self.par = self._initialize_params_from_config(['c_1', 'age', 'temp', 'resArea', 'soilC', 'ResTP', 'calc', 'conv_coeff'])
-        self.pre_impoundment_table = read_table(os.path.join(TABLES, 'Carbon_Dioxide', 'pre-impoundment.yaml'))
+        self.par = self._initialize_params_from_config(
+            ['c_1', 'age', 'temp', 'resArea', 'soilC', 'ResTP', 'calc',
+             'conv_coeff'])
+        self.pre_impoundment_table = read_table(
+            os.path.join(TABLES, 'Carbon_Dioxide', 'pre-impoundment.yaml'))
 
-    def _initialize_params_from_config(self, list_of_constants: list) -> SimpleNamespace:
+    def _initialize_params_from_config(
+            self, list_of_constants: list) -> SimpleNamespace:
         """Read constants (parameters) from config file"""
-        const_dict = {name: self.config.getfloat('CARBON_DIOXIDE', name) for name in list_of_constants}
+        const_dict = {name: self.config.getfloat('CARBON_DIOXIDE', name) for
+                      name in list_of_constants}
         return SimpleNamespace(**const_dict)
 
     def flux(self, year: int) -> float:
@@ -108,10 +117,14 @@ class CarbonDioxideEmission(Emission):
     @property
     def reservoir_tp(self) -> float:
         """Return reservoir total phosphorus concentration"""
-        reservoir_tp = self.reservoir.reservoir_tp(inflow_conc=self.catchment.median_inflow_p(method=self.p_calc_method))
+        reservoir_tp = self.reservoir.reservoir_tp(
+            inflow_conc=self.catchment.median_inflow_p(
+                method=self.p_calc_method))
         return reservoir_tp
 
-    def _flux_profile(self, years: Tuple[int] = (1, 5, 10, 20, 30, 40, 50, 100)) -> Optional[list]:
+    def _flux_profile(
+            self,
+            years: Tuple[int, ...] = (1, 5, 10, 20, 30, 40, 50, 100)) -> Optional[list]:
         """Calculate CO2 fluxes for a list of years given as an argument"""
 
         if len(years) == 1:
@@ -167,7 +180,8 @@ class CarbonDioxideEmission(Emission):
         # Total emission in g CO2eq m-2 yr-1
         return tot_emission / self.reservoir.area
 
-    def profile(self, years: Tuple[int] = (1, 5, 10, 20, 30, 40, 50, 100)) -> List[float]:
+    def profile(self,
+                years: Tuple[int] = (1, 5, 10, 20, 30, 40, 50, 100)) -> List[float]:
         """Calculate CO2 emissions for a list of years given as an argument
         Flux at year x age - pre-impoundment emissions - non-anthropogenic
         emissions, unit: g CO2eq m-2 yr-1"""
@@ -192,11 +206,17 @@ class MethaneEmission(Emission):
     monthly_temp: Type[MonthlyTemperature]
     mean_ir: float  # mean InfraRed Radiation in kwh-1d-1
 
-    def __init__(self, catchment, reservoir, monthly_temp, mean_ir, preinund_area=None, config_file=INI_FILE):
+    def __init__(self, catchment, reservoir, monthly_temp, mean_ir,
+                 preinund_area=None, config_file=INI_FILE):
         self.monthly_temp = monthly_temp
         self.mean_ir = mean_ir
-        self.pre_impoundment_table = read_table(os.path.join(TABLES, 'Methane', 'pre-impoundment.yaml'))
-        super().__init__(catchment=catchment, reservoir=reservoir, config_file=config_file, preinund_area=preinund_area)
+        self.pre_impoundment_table = read_table(
+            os.path.join(TABLES, 'Methane', 'pre-impoundment.yaml'))
+        super().__init__(
+            catchment=catchment,
+            reservoir=reservoir,
+            config_file=config_file,
+            preinund_area=preinund_area)
         # List of parameters required for CH4 emission calculations
         par_list = [
             'int_diff',
@@ -216,9 +236,12 @@ class MethaneEmission(Emission):
         # Read the parameters from config
         self.par = self._initialize_params_from_config(par_list)
 
-    def _initialize_params_from_config(self, list_of_constants: list) -> SimpleNamespace:
+    def _initialize_params_from_config(
+            self, list_of_constants: list) -> SimpleNamespace:
         """Read constants (parameters) from config file"""
-        const_dict = {name: self.config.getfloat('METHANE', name) for name in list_of_constants}
+        const_dict = {
+            name: self.config.getfloat('METHANE', name)
+            for name in list_of_constants}
         return SimpleNamespace(**const_dict)
 
     @staticmethod
@@ -232,7 +255,8 @@ class MethaneEmission(Emission):
         """Calculate q-bathymetric shape"""
         return max_depth / mean_depth - 1.0
 
-    def thermocline_depth(self, wind_speed: float, wind_height: float = 50) -> float:
+    def thermocline_depth(self, wind_speed: float,
+                          wind_height: float = 50) -> float:
         """Calculate thermocline depth required for the calculation of CH4
         degassing. Assumes that the surface water temperature is equal to
         the mean monthly air temperature from 4 warmest months in the year
@@ -248,8 +272,10 @@ class MethaneEmission(Emission):
         # Calculate CD coefficient
         cd_coeff = 0.001 if wind_speed < 5.0 else 0.000015
         # Calculate air density (units?)
-        air_density = 101325.0 / (287.05 * (self.monthly_temp.mean_warmest(number_of_months=4) + 273.15))
-        wind_at_10m = wind_speed / (1 - 10 / 4 * math.log10(10.0 / wind_height) * math.sqrt(cd_coeff))
+        air_density = 101325.0 / (287.05 * (
+            self.monthly_temp.mean_warmest(number_of_months=4) + 273.15))
+        wind_at_10m = wind_speed / (
+            1 - 10 / 4 * math.log10(10.0 / wind_height) * math.sqrt(cd_coeff))
         if self.monthly_temp.coldest > 1.4:
             hypolimnion_temp = (0.6565 * self.monthly_temp.coldest) + 10.7
         else:
@@ -269,9 +295,12 @@ class MethaneEmission(Emission):
         Ebullition fluxes are not time-dependent, hence no emission profile
         is calculated"""
         # Bathymetric shape (-)
-        q_bath_shape = self.q_bath_shape(max_depth=self.reservoir.max_depth, mean_depth=self.reservoir.mean_depth)
+        q_bath_shape = self.q_bath_shape(
+            max_depth=self.reservoir.max_depth,
+            mean_depth=self.reservoir.mean_depth)
         # Percentage of surface area that is littoral (near the shore)
-        littoral_perc = self.litoral_area_frac(max_depth=self.reservoir.max_depth, q_bath_shape=q_bath_shape)
+        littoral_perc = self.litoral_area_frac(
+            max_depth=self.reservoir.max_depth, q_bath_shape=q_bath_shape)
 
         # Calculate CH4 emission in mg CH4-C m-2 d-1
         emission_in_ch4 = 10 ** (
@@ -296,9 +325,13 @@ class MethaneEmission(Emission):
         # Calculate effective annual temperature for CH4
         eff_temp = self.monthly_temp.eff_temp(coeff=0.052)
         # Bathymetric shape (-)
-        q_bath_shape = self.q_bath_shape(max_depth=self.reservoir.max_depth, mean_depth=self.reservoir.mean_depth)
+        q_bath_shape = self.q_bath_shape(
+            max_depth=self.reservoir.max_depth,
+            mean_depth=self.reservoir.mean_depth)
         # Percentage of surface area that is littoral (near the shore)
-        littoral_perc = self.litoral_area_frac(max_depth=self.reservoir.max_depth, q_bath_shape=q_bath_shape)
+        littoral_perc = self.litoral_area_frac(
+            max_depth=self.reservoir.max_depth,
+            q_bath_shape=q_bath_shape)
         # Calculate CH4 emission in g CO2eq m-2 yr-1 spread over the target
         # number of years provided as argument
         aux_var_1 = self.par.littoral_diff * math.log10(littoral_perc / 100.0)
@@ -309,14 +342,19 @@ class MethaneEmission(Emission):
         emission = self.par.conv_coeff / aux_var_2 * ((1 - 10**aux_var_3) * 10 ** (self.par.int_diff + aux_var_1 + aux_var_4))
         return emission
 
-    def diff_profile(self, years: Tuple[int] = (1, 5, 10, 20, 30, 40, 50, 100)) -> List[float]:
+    def diff_profile(
+            self,
+            years: Tuple[int] = (1, 5, 10, 20, 30, 40, 50, 100)) -> List[float]:
         """Calculate CH4 emission profile for a vector of years"""
         # Calculate effective annual temperature for CH4
         eff_temp = self.monthly_temp.eff_temp(coeff=0.052)
         # Bathymetric shape (-)
-        q_bath_shape = self.q_bath_shape(max_depth=self.reservoir.max_depth, mean_depth=self.reservoir.mean_depth)
+        q_bath_shape = self.q_bath_shape(
+            max_depth=self.reservoir.max_depth,
+            mean_depth=self.reservoir.mean_depth)
         # Percentage of surface area that is littoral (near the shore)
-        littoral_perc = self.litoral_area_frac(max_depth=self.reservoir.max_depth, q_bath_shape=q_bath_shape)
+        littoral_perc = self.litoral_area_frac(
+            max_depth=self.reservoir.max_depth, q_bath_shape=q_bath_shape)
 
         def diff_emission(year: float) -> float:
             """Calculate emission in g CO2eq m-2 yr-1 for a given year"""
@@ -372,7 +410,9 @@ class MethaneEmission(Emission):
         )
         return emission
 
-    def deg_profile(self, years: Tuple[int] = (1, 5, 10, 20, 30, 40, 50, 100)) -> List[float]:
+    def deg_profile(
+            self,
+            years: Tuple[int] = (1, 5, 10, 20, 30, 40, 50, 100)) -> List[float]:
         """Calculate degassing profile for a for a vector of years"""
         init_flux = self._init_degassing_flux()
         return [init_flux * math.exp(-0.033 * year) for year in years]
@@ -390,7 +430,8 @@ class MethaneEmission(Emission):
         for landuse, fraction in zip(_list_of_landuses, self.reservoir.area_fractions):
             # Area in ha allocated to each landuse
             area_landuse = 100 * self.reservoir.area * fraction
-            coeff = self.pre_impoundment_table.get(climate.value, {}).get(soil_type.value, {}).get(landuse.value, 0)
+            coeff = self.pre_impoundment_table.get(
+                climate.value, {}).get(soil_type.value, {}).get(landuse.value, 0)
             # Create a list of emissions per area fraction, in kg CH4 yr-1
             emissions.append(area_landuse * coeff)
         # Total emission in g CO2eq m-2 yr-1
@@ -407,13 +448,16 @@ class MethaneEmission(Emission):
         )
         return factor
 
-    def profile(self, years: Tuple[int] = (1, 5, 10, 20, 30, 40, 50, 100)) -> List[float]:
+    def profile(
+            self,
+            years: Tuple[int] = (1, 5, 10, 20, 30, 40, 50, 100)) -> List[float]:
         """Return emission profile of CH4 in g CO2eq m-2 yr-1"""
         diff_profile = self.diff_profile(years=years)
         ebull_profile = self.ebull_profile(years=years)
         deg_profile = self.deg_profile(years=years)
         pre_impound_profile = [-self.pre_impoundment() for _ in years]
-        tot_prof = np.array([diff_profile, ebull_profile, deg_profile, pre_impound_profile])
+        tot_prof = np.array(
+            [diff_profile, ebull_profile, deg_profile, pre_impound_profile])
         return list(np.sum(tot_prof, axis=0))
 
 
@@ -422,22 +466,30 @@ class NitrousOxideEmission(Emission):
     """Class for calculating NO2 emissions from reservoirs. Provides option to
     calculate the emission using two alternative methods (models)"""
 
+    available_models: ClassVar[Tuple[str, ...]] = ('model 1', 'model 2')
     model: str
 
-    def __init__(self, catchment, reservoir, preinund_area=None, config_file=INI_FILE, model='model 1'):
-        if model not in ('model 1', 'model 2'):
-            print('Model %s unknown. ' % model + 'Initializing with default model 1')
+    def __init__(self, catchment, reservoir, preinund_area=None,
+                 config_file=INI_FILE, model='model 1'):
+        if model not in self.available_models:
+            print('Model %s unknown. ' % model +
+                  'Initializing with default model 1')
             model = 'model 1'
         self.model = model
-        super().__init__(catchment=catchment, reservoir=reservoir, config_file=config_file, preinund_area=preinund_area)
+        super().__init__(catchment=catchment, reservoir=reservoir,
+                         config_file=config_file, preinund_area=preinund_area)
         # List of parameters required for CH4 emission calculations
         par_list = ['nitrous_gwp100']
         # Read the parameters from config
         self.par = self._initialize_params_from_config(par_list)
 
-    def _initialize_params_from_config(self, list_of_constants: list) -> SimpleNamespace:
+    def _initialize_params_from_config(
+            self,
+            list_of_constants: list) -> SimpleNamespace:
         """Read constants (parameters) from config file"""
-        const_dict = {name: self.config.getfloat('NITROUS_OXIDE', name) for name in list_of_constants}
+        const_dict = {
+            name: self.config.getfloat('NITROUS_OXIDE', name) for
+            name in list_of_constants}
         return SimpleNamespace(**const_dict)
 
     def total_to_unit(self, emission: float) -> float:
@@ -470,28 +522,35 @@ class NitrousOxideEmission(Emission):
         """
         tp_load_annual = self.catchment.phosphorus_load()  # kg P / yr
         tn_load_annual = self.catchment.nitrogen_load()  # kg N / yr
-        mu_coeff = max(0, math.erf((self.reservoir.residence_time - 0.028) / 0.04))
+        mu_coeff = max(
+            0, math.erf((self.reservoir.residence_time - 0.028) / 0.04))
         #  molar ratio of inflow TP and TN loads (-)
         tn_tp_ratio = (tn_load_annual / N_MOLAR) / (tp_load_annual / P_MOLAR)
-        tn_fix_percent = (37.2 / (1 + math.exp(0.5 * tn_tp_ratio - 6.877))) * mu_coeff
+        tn_fix_percent = (
+            37.2 / (1 + math.exp(0.5 * tn_tp_ratio - 6.877))) * mu_coeff
         # Calculate total internal N fixation in kg/yr
         return 0.01 * tn_fix_percent * tn_load_annual
 
-    def factor(self, number_of_years: int = 666, mean: bool = False, model: Optional[str] = None) -> float:
+    def factor(self, number_of_years: int = 666, mean: bool = False,
+               model: Optional[str] = None) -> float:
         """Return N2O emission in gCO2eq/m2/yr. N2O emissions are not
         calculated over a defined time horizon as e.g. CO2. Thus,
         the time horizon for N2O is given the number of the beast"""
         if not model:
             model = self.model
+        if model not in self.available_models:
+            raise WrongN2OModelError(permitted_models=self.available_models)
         if mean:
-            return 0.5 * (self._n2o_emission_m1_co2() + self._n2o_emission_m2_co2())
+            return 0.5 * (self._n2o_emission_m1_co2() +
+                          self._n2o_emission_m2_co2())
         if model == "model 1":
             return self._n2o_emission_m1_co2()
         if model == "model 2":
             return self._n2o_emission_m2_co2()
-        return None
 
-    def profile(self, years: Tuple[int] = (1, 5, 10, 20, 30, 40, 50, 100)) -> List[float]:
+    def profile(
+            self,
+            years: Tuple[int] = (1, 5, 10, 20, 30, 40, 50, 100)) -> List[float]:
         """Return N2O emission profile for the years defined in parameer
         years. Only done for the purpose of keeping consistency with other
         emissions, since N2O does not have an emission profile. Thus,
@@ -502,16 +561,19 @@ class NitrousOxideEmission(Emission):
     def _n2o_emission_m1_co2(self) -> float:
         """Calculate N2O emission in gCO2eq m-2 yr-1 according to model 1"""
         # 1. Calculate total N2O emission (kgN yr-1)
-        total_n2o_emission = self._n2o_denitrification_m1() + self._n2o_nitrification_m1()
+        total_n2o_emission = self._n2o_denitrification_m1() + \
+            self._n2o_nitrification_m1()
         # 2. Calculate unit total N2O emission in mmolN/m^2/yr
         unit_n2o_emission = self.total_to_unit(total_n2o_emission)
         # 3. Calculate emission in gCO2eq/m2/yr
-        total_n2o = N_MOLAR * (1 + O_MOLAR / (2 * N_MOLAR)) * self.par.nitrous_gwp100 * unit_n2o_emission * 10 ** (-3)
+        total_n2o = N_MOLAR * (1 + O_MOLAR / (2 * N_MOLAR)) * \
+            self.par.nitrous_gwp100 * unit_n2o_emission * 10**(-3)
         return total_n2o
 
     def _n2o_emission_m2_co2(self) -> float:
         """Calculate N2O emission in gCO2eq m-2 yr-1 according to model 2"""
-        total_n2o = N_MOLAR * (1 + O_MOLAR / (2 * N_MOLAR)) * self.par.nitrous_gwp100 * self._unit_n2o_emission_m2() * 10 ** (-3)
+        total_n2o = N_MOLAR * (1 + O_MOLAR / (2 * N_MOLAR)) * \
+            self.par.nitrous_gwp100 * self._unit_n2o_emission_m2() * 10**(-3)
         return total_n2o
 
     def _n2o_denitrification_m1(self) -> float:
@@ -521,8 +583,8 @@ class NitrousOxideEmission(Emission):
             [0.3833 * erf(0.4723 * residence time(yrs))]
         """
         n2o_emission_den = (
-            0.009 * (self.catchment.nitrogen_load() + self.tn_fixation_load()) * (0.3833 * math.erf(0.4723 * self.reservoir.residence_time))
-        )
+            0.009 * (self.catchment.nitrogen_load() + self.tn_fixation_load())
+            * (0.3833 * math.erf(0.4723 * self.reservoir.residence_time)))
         return n2o_emission_den
 
     def _n2o_nitrification_m1(self) -> float:
@@ -532,8 +594,8 @@ class NitrousOxideEmission(Emission):
             [0.5144 * erf(0.3692 * water residence time(yrs))]
         """
         n2o_emission_nitr = (
-            0.009 * (self.catchment.nitrogen_load() + self.tn_fixation_load()) * (0.5144 * math.erf(0.3692 * self.reservoir.residence_time))
-        )
+            0.009 * (self.catchment.nitrogen_load() + self.tn_fixation_load())
+            * (0.5144 * math.erf(0.3692 * self.reservoir.residence_time)))
         return n2o_emission_nitr
 
     def _n2o_emission_m2_n(self) -> float:
@@ -549,7 +611,8 @@ class NitrousOxideEmission(Emission):
         N2O produced by denitrification, which increases as a function of
         water residence time.
         """
-        n2o_emission = self.catchment.nitrogen_load() * (0.002277 * math.erf(1.63 * self.reservoir.residence_time))
+        n2o_emission = self.catchment.nitrogen_load() * (
+            0.002277 * math.erf(1.63 * self.reservoir.residence_time))
         return n2o_emission
 
     def _unit_n2o_emission_m2(self) -> float:
@@ -561,7 +624,9 @@ class NitrousOxideEmission(Emission):
         Model 2
         """
         # Calculate unit N2O emission from denitfication in mmol N m-2 yr-1
-        unit_n2o_denitrification = 0.7789 * math.exp(-((self.reservoir.residence_time + 1.366) / 2.751)) ** 2 * self._unit_n2o_emission_m2()
+        unit_n2o_denitrification = 0.7789 * math.exp(
+            -((self.reservoir.residence_time + 1.366) / 2.751)) ** 2 * \
+            self._unit_n2o_emission_m2()
         # Return N2O emission in kgN/yr
         return self.unit_to_total(unit_n2o_denitrification)
 
@@ -569,7 +634,8 @@ class NitrousOxideEmission(Emission):
         """Calculate N2O emission from nitrification in kgN/yr using
         Model 2
         """
-        unit_n2o_nitrification = self._unit_n2o_emission_m2() - self.total_to_unit(self._n2o_denitrification_m2())
+        unit_n2o_nitrification = self._unit_n2o_emission_m2() - \
+            self.total_to_unit(self._n2o_denitrification_m2())
         # Return N2O emission in kgN/yr
         return self.unit_to_total(unit_n2o_nitrification)
 
@@ -578,9 +644,11 @@ class NitrousOxideEmission(Emission):
     def nitrogen_downstream_load(self) -> float:
         """Calculate downstream TN load in kg N yr-1"""
         # 1. Calculate TN burial as a factor of input TN
-        tn_burial_factor = 0.51 * math.erf(0.4723 * self.reservoir.residence_time)
+        tn_burial_factor = 0.51 * math.erf(
+            0.4723 * self.reservoir.residence_time)
         # 2. Calculate TN denitrification as a factor of input TN
-        tn_denitr_factor = 0.3833 * math.erf(0.4723 * self.reservoir.residence_time)
+        tn_denitr_factor = 0.3833 * math.erf(
+            0.4723 * self.reservoir.residence_time)
         # 3. Calculate TN loading (catchment + fixation) in kg N yr-1
         tn_loading = self.catchment.nitrogen_load() + self.tn_fixation_load()
         # 4. Calculate TN burial in kg N yr-1
@@ -593,4 +661,5 @@ class NitrousOxideEmission(Emission):
 
     def nitrogen_downstream_conc(self) -> float:
         """Calculate downstream TN concentration in mg / L"""
-        return 1e02 * self.nitrogen_downstream_load() / (self.catchment.area * self.catchment.runoff)
+        return 1e02 * self.nitrogen_downstream_load() / (
+            self.catchment.area * self.catchment.runoff)

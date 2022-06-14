@@ -37,3 +37,6 @@ class BiogenicFactors:
         biogenic_factors['treatment_factor'] = self.treatment_factor.name
         biogenic_factors['landuse_intensity'] = self.landuse_intensity.name
         return biogenic_factors
+
+    def __repr__(self):
+        return f'Biogenic factors: {self.todict()}'

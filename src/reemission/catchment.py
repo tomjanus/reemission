@@ -76,7 +76,8 @@ class Catchment:
         Follows the methodology applied in g-res tool:
         https://g-res.hydropower.org/."""
         treatment_factor = self.biogenic_factors.treatment_factor
-        load = 0.002 * 365.25 * self.population * p_loads_pop[treatment_factor.value]
+        load = 0.002 * 365.25 * self.population * \
+            p_loads_pop[treatment_factor.value]
         return load
 
     def phosphorus_load_land_gres(self) -> float:
@@ -102,10 +103,13 @@ class Catchment:
             elif fun_name == 'fun_exp2':
                 reg_coeffs = (0.914, 0.014)
             else:
-                log.error('Regression function %s unknown. Returning zero.', fun_name)
+                log.error(
+                    'Regression function %s unknown. Returning zero.', fun_name)
                 return 0.0
             try:
-                p_export_coeff = 0.01 * 10 ** (reg_coeffs[0] - reg_coeffs[1] * math.log10(self._landuse_area(area_fraction)))
+                p_export_coeff = 0.01 * 10 ** (
+                    reg_coeffs[0] - reg_coeffs[1] * math.log10(
+                        self._landuse_area(area_fraction)))
             except ValueError:
                 p_export_coeff = 0.0
             return p_export_coeff

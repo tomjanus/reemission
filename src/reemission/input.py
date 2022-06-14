@@ -29,7 +29,8 @@ class Input:
     def catchment_data(self) -> Dict:
         """Retrieve input data for catchment-scale process calculations"""
         catchment_dict = self.data.get('catchment')
-        catchment_dict["biogenic_factors"] = BiogenicFactors.fromdict(catchment_dict["biogenic_factors"])
+        catchment_dict["biogenic_factors"] = BiogenicFactors.fromdict(
+            catchment_dict["biogenic_factors"])
         return catchment_dict
 
     @property
@@ -55,7 +56,8 @@ class Input:
             output_dict = json.load(json_file)
             data = output_dict.get(reservoir_name)
             if data is None:
-                log.error("Reservoir '%s' not found. Returning empty class", reservoir_name)
+                log.error("Reservoir '%s' not found. Returning empty class",
+                          reservoir_name)
         return cls(name=reservoir_name, data=data)
 
 
@@ -79,12 +81,13 @@ class Inputs:
     def fromfile(cls, file: str):
         """Load inputs dictionary from json file"""
         inputs = {}
-        with open(file) as json_file:
+        with open(file, encoding='utf-8') as json_file:
             output_dict = json.load(json_file)
             for reservoir_name, input_data in output_dict.items():
                 new_input = Input(name=reservoir_name, data=input_data)
                 if reservoir_name not in inputs:
                     inputs[reservoir_name] = new_input
                 else:
-                    log.info("Key %s already in the inputs. Skipping", reservoir_name)
+                    log.info("Key %s already in the inputs. Skipping",
+                             reservoir_name)
         return cls(inputs=inputs)
