@@ -3,7 +3,7 @@ import os
 from typing import Optional
 import unittest
 import json
-from reemission.presenter import Presenter, LatexWriter
+from reemission.presenter import Presenter, LatexWriter, ExcelWriter
 from reemission.input import Inputs
 
 module_dir = os.path.dirname(__file__)
@@ -13,6 +13,8 @@ output_json_file = os.path.abspath(
     os.path.join(module_dir, 'test_data', 'outputs.json'))
 output_tex_file = os.path.abspath(
     os.path.join(module_dir, 'test_data', 'output.tex'))
+output_xls_file = os.path.abspath(
+    os.path.join(module_dir, 'test_data', 'output.xlsx'))
 
 
 class TestPresenter(unittest.TestCase):
@@ -25,7 +27,7 @@ class TestPresenter(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.inputs = Inputs.fromfile(cls.input_file_path)
-        with open(cls.output_file_path, "r") as json_file:
+        with open(cls.output_file_path, "r", encoding="utf-8") as json_file:
             cls.outputs = json.load(json_file)
 
     @classmethod
@@ -55,6 +57,15 @@ class TestPresenter(unittest.TestCase):
         pres_latex.add_writer(writer=LatexWriter,
                               output_file=output_tex_file)
         pres_latex.output()
+
+    def test_excel(self):
+        """ Test writing output data to .xlsx using Pandas """
+        pres_xls = Presenter(inputs=self.inputs, outputs=self.outputs,
+                             author="Gallus Anonymus",
+                             title="HEET Test Results")
+        pres_xls.add_writer(writer=ExcelWriter,
+                            output_file=output_xls_file)
+        pres_xls.output()
 
 
 if __name__ == '__main__':
