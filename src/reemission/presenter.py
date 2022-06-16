@@ -99,8 +99,8 @@ class Writer(ABC):
             var_name: str,
             var_vector: Sequence) -> Iterator[Tuple[str, Any]]:
         """ """
-        for iter, var in enumerate(var_vector):
-            yield '_'.join([var_name, str(iter)]), var
+        for iter_var, var in enumerate(var_vector):
+            yield '_'.join([var_name, str(iter_var)]), var
 
     @staticmethod
     def write_par_to_dict(input_name: str, parameter, par_dict: Dict,
@@ -179,13 +179,26 @@ class ExcelWriter(Writer):
             # Get input data
             for input_name, input_value in input_data['catchment'].items():
                 if input_name == 'biogenic_factors':
+                    # Iterate through biogenic facors
+                    # TODO: Fix this piece of code to work with the Biogenic object data
+                    # Currently switched off as it produces errors
                     break
-                input_dict = self.write_par_to_dict(
-                    input_name='_'.join(['catch', input_name]),
-                    parameter=input_value,
-                    par_dict=input_dict,
-                    reservoir_name=reservoir_name,
-                    precision=EXCEL_NUMBER_DECIMALS)
+                    for factor_name, factor_value in input_data['catchment'][input_name].items():
+                        print(factor_name, factor_value)
+                        log.info(factor_name)
+                        input_dict = self.write_par_to_dict(
+                            input_name=factor_name,
+                            parameter=factor_value,
+                            par_dict=input_dict,
+                            reservoir_name=reservoir_name,
+                            precision=EXCEL_NUMBER_DECIMALS)
+                else:
+                    input_dict = self.write_par_to_dict(
+                        input_name='_'.join(['catch', input_name]),
+                        parameter=input_value,
+                        par_dict=input_dict,
+                        reservoir_name=reservoir_name,
+                        precision=EXCEL_NUMBER_DECIMALS)
 
         # Add reservoir inputs
         if 'reservoir_inputs' in included_inputs:
@@ -592,7 +605,8 @@ class LatexWriter(Writer):
     def add_outputs_table(self, output_name: str) -> None:
         """Adds outputs table to latex source code"""
         number_precision = 4
-        round_options = {'round-precision': number_precision, 'round-mode': 'figures'}
+        round_options = {'round-precision': number_precision,
+                        'round-mode': 'figures'}
         column_names = ["Name", "Unit", "Value"]
         table_format = "p{10cm} X[c] X[l]"
         data = self.outputs[output_name]
