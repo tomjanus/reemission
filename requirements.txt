@@ -11,3 +11,4 @@ pyyaml
 quantities
 pyfiglet
 openpyxl
+gdown
