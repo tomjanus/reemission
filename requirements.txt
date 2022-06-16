@@ -12,3 +12,4 @@ quantities
 pyfiglet
 openpyxl
 gdown
+PyYAML
