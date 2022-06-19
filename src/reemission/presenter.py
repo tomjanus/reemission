@@ -850,15 +850,19 @@ class LatexWriter(Writer):
             with self.document.create(Section(reservoir_name)):
                 self.add_inputs_subsection(reservoir_name=reservoir_name)
                 self.add_outputs_subsection(reservoir_name=reservoir_name)
-        # Generate a Tex Source file
-        self.document.generate_tex()
-        log.info("Created a LaTeX document with outputs.")
-        # Generate a PDF (requires a LaTeX compiler present in the system)
-        try:
-            self.document.generate_pdf(clean_tex=False)
-        except CompilerError:
-            log.error("LaTeX compiler not found. PDF could not be created.")
-
+        if reemission.utils.is_latex_installed():
+            # Generate a Tex Source file
+            self.document.generate_tex()
+            log.info("Created a LaTeX document with outputs.")
+            # Generate a PDF (requires a LaTeX compiler present in the system)
+            try:
+                self.document.generate_pdf(clean_tex=False)
+            except CompilerError:
+                log.error("LaTeX compiler not found. PDF could not be created.")
+        else:
+            log.error(
+                "LaTeX cannot be found in your environment." +
+                "'.tex' and '.pdf' files could not be created.")
         return None
 
 

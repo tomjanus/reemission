@@ -1,6 +1,7 @@
 """ Utility functions for multiple modules """
 import sys
 import configparser
+import subprocess
 from packaging import version
 from pathlib import Path, PosixPath
 from typing import Optional
@@ -82,6 +83,19 @@ def find_enum_index(
         if item == to_find:
             return index
     return None
+
+
+def is_latex_installed() -> bool:
+    """Check if latex is available as a command"""
+    try:
+        subprocess.check_call(["latex"])
+        return True
+    except FileNotFoundError:
+        return False
+    except subprocess.CalledProcessError:
+        # Return True in case latex is installe but returns
+        # a non-zero status.
+        return True
 
 
 def add_version(fun):
