@@ -1,6 +1,7 @@
 """ Module providing data and calculations relating to catchments """
 import os
 import logging
+import pathlib
 import math
 from dataclasses import dataclass
 from typing import Dict, List, ClassVar
@@ -15,13 +16,13 @@ MODULE_DIR = os.path.dirname(__file__)
 TABLES = os.path.abspath(os.path.join(MODULE_DIR, 'parameters'))
 # Provide tables as module variables
 tn_coeff_table: ClassVar[Dict] = read_table(
-    os.path.join(TABLES, 'McDowell', 'landscape_TN_export.yaml'))
+    pathlib.Path(TABLES, 'McDowell', 'landscape_TN_export.yaml'))
 tp_coeff_table: ClassVar[Dict] = read_table(
-    os.path.join(TABLES, 'McDowell', 'landscape_TP_export.yaml'))
+    pathlib.Path(TABLES, 'McDowell', 'landscape_TP_export.yaml'))
 p_loads_pop: ClassVar[Dict] = read_table(
-    os.path.join(TABLES, 'phosphorus_loads.yaml'))
+    pathlib.Path(TABLES, 'phosphorus_loads.yaml'))
 p_exports: ClassVar[Dict] = read_table(
-    os.path.join(TABLES, 'phosphorus_exports.yaml'))
+    pathlib.Path(TABLES, 'phosphorus_exports.yaml'))
 # Margin for error by which the sum of landuse fractions can differ from 1.0
 EPS = 0.01
 

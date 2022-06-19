@@ -5,6 +5,7 @@ from typing import Type, Dict, Tuple, Union, Optional, List
 import logging
 from itertools import chain
 import yaml
+import reemission.utils
 from reemission.input import Inputs
 from reemission.temperature import MonthlyTemperature
 from reemission.catchment import Catchment
@@ -36,8 +37,9 @@ class EmissionModel:
     def __post_init__(self):
         self.outputs = {}
         if isinstance(self.config, str):
-            with open(self.config, encoding='utf-8') as file:
-                self.config = yaml.load(file, Loader=yaml.FullLoader)
+            #with open(self.config, encoding='utf-8') as file_handle:
+            #    self.config = yaml.load(file_handle, Loader=yaml.FullLoader)
+            self.config = reemission.utils.load_yaml(self.config)
 
     @staticmethod
     def create_exec_dictionary(
