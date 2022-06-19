@@ -31,7 +31,7 @@ from pylatex import (
     Command,
     MultiColumn,
 )
-from reemission.utils import read_config
+import reemission.utils
 from reemission.input import Inputs
 
 # Set up module logger
@@ -883,13 +883,10 @@ class Presenter:
 
     def __post_init__(self):
         """Load configuration dictionaries from provided yaml files"""
-        with open(INPUT_CONFIG_PATH, encoding='utf-8') as file:
-            self.input_config = yaml.load(file, Loader=yaml.FullLoader)
-        with open(OUTPUT_CONFIG_PATH, encoding='utf-8') as file:
-            self.output_config = yaml.load(file, Loader=yaml.FullLoader)
-        with open(PARAMETER_CONFIG_PATH, encoding='utf-8') as file:
-            self.parameter_config = yaml.load(file, Loader=yaml.FullLoader)
-        self.config_ini = read_config(CONFIG_INI_PATH)
+        self.input_config = reemission.utils.load_yaml(INPUT_CONFIG_PATH)
+        self.output_config = reemission.utils.load_yaml(OUTPUT_CONFIG_PATH)
+        self.parameter_config = reemission.utils.load_yaml(PARAMETER_CONFIG_PATH)
+        self.config_ini = reemission.utils.read_config(CONFIG_INI_PATH)
 
     def add_writer(self, writer: Type[Writer], output_file: str) -> None:
         """Insantiates writer object and appends it to self.writers"""
