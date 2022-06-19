@@ -842,15 +842,15 @@ class LatexWriter(Writer):
         """Writes output data (all reservoir) to a tex and pdf files"""
         if not bool(self.outputs):
             return None
-        self.add_header()
-        self.add_title_section(title=self.title, author=self.author)
-        self.add_parameters_section()
-        # Iterate through all reservoirs in outputs and write to tex
-        for reservoir_name in self.outputs:
-            with self.document.create(Section(reservoir_name)):
-                self.add_inputs_subsection(reservoir_name=reservoir_name)
-                self.add_outputs_subsection(reservoir_name=reservoir_name)
         if reemission.utils.is_latex_installed():
+            self.add_header()
+            self.add_title_section(title=self.title, author=self.author)
+            self.add_parameters_section()
+            # Iterate through all reservoirs in outputs and write to tex
+            for reservoir_name in self.outputs:
+                with self.document.create(Section(reservoir_name)):
+                    self.add_inputs_subsection(reservoir_name=reservoir_name)
+                    self.add_outputs_subsection(reservoir_name=reservoir_name)
             # Generate a Tex Source file
             self.document.generate_tex()
             log.info("Created a LaTeX document with outputs.")
@@ -858,7 +858,9 @@ class LatexWriter(Writer):
             try:
                 self.document.generate_pdf(clean_tex=False)
             except CompilerError:
-                log.error("LaTeX compiler not found. PDF could not be created.")
+                log.error(
+                    "LaTeX compiler not found or returned an error. " +
+                    "PDF could not be created.")
         else:
             log.error(
                 "LaTeX cannot be found in your environment." +
