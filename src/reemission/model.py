@@ -155,7 +155,7 @@ class EmissionModel:
                 em_co2 = CarbonDioxideEmission(
                     catchment=catchment,
                     reservoir=reservoir,
-                    eff_temp=monthly_temp.eff_temp(),
+                    eff_temp=monthly_temp.eff_temp(gas='co2'),
                     p_calc_method=p_calc_method
                 )
             if "ch4" in model_input.data['gasses']:

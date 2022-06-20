@@ -1,10 +1,17 @@
-""" Module containing classes for the calculation of GHG emissions
-    resulting from inundation """
+"""Classes for calculating GHG emissions from reservoirs.
+
+Contains:
+    Emission base class from which all other emission classes are derived.
+    CarbonDioxideEmission for calculating C2 emissions.
+    MethaneEmission for calculating CH4 emissions.
+    NitrousOxideEmission for calculating N2O emissions.
+"""
 import os
 import math
+import configparser
 from dataclasses import dataclass
 from types import SimpleNamespace
-from typing import List, Tuple, Optional, Type, ClassVar
+from typing import List, Tuple, Optional, ClassVar
 from abc import ABC, abstractmethod
 import numpy as np
 from reemission.utils import read_config, read_table
@@ -22,42 +29,64 @@ TABLES = os.path.abspath(os.path.join(MODULE_DIR, 'parameters'))
 
 @dataclass
 class Emission(ABC):
-    """Abstract emission class that acts as a base class for all emissions"""
+    """Abstract base class for all emissions.
 
-    catchment: Type[Catchment]
-    reservoir: Type[Reservoir]
+    Attributes:
+        catchment: Catchment object with catchment data and methods.
+        reservoir: Reservoir object with reservoir data and methods.
+        preinund_area: Pre-inundation area of a reservoir, [ha].
+        config: ConfigParser object of `.ini` file with equation constants.
+
+    Notes:
+        Define two generic methods that must be used in all emission subclasses:
+        - `profile` for calculating emission decay over a set of years.
+        - `factor` for calculating total emission over a life-span.
+    """
+    catchment: Catchment
+    reservoir: Reservoir
     preinund_area: float
-    config: dict
+    config: configparser.ConfigParser
 
     def __init__(self, catchment, reservoir, preinund_area=None,
                  config_file=INI_FILE):
         self.catchment = catchment
-        self.reservoir = reservoir  # in km2
+        self.reservoir = reservoir
         self.config = read_config(config_file)
         if preinund_area is None:
             self.preinund_area = self._calculate_pre_inund_area()
 
     def _calculate_pre_inund_area(self) -> float:
-        """Calculate pre inundatation area of a waterbody based on
-        the catchment area, using regression"""
+        r"""
+        Calculate pre inundatation area of a waterbody based on
+        the catchment area, using regression.
+
+        .. math::
+            :nowrap:
+            \begin{equation}
+                A_{pre} = 2.125 \, 5.9 \, 10^{-3} \, \left(0.01 * A_{catchment}\right)^{0.32}
+            \end{equation}
+        where:
+            :math: A_{pre}: pre-inundation area, [ha]
+            :math: A_{catchment}: catchment area, [ha]
+        """
         return 2.125 * 5.9 * 10 ** (-3) * (0.01 * self.catchment.area) ** 0.32
 
     @abstractmethod
     def profile(self, years: Tuple[int]) -> List[float]:
-        """Abstract method for calculating an emission profile"""
+        """Abstract method for calculating emission profile."""
 
     @abstractmethod
     def factor(self, number_of_years: int) -> float:
-        """Abstract method for calculating total emission (factor)"""
+        """Abstract method for calculating total emission (factor)."""
 
 
 @dataclass
 class CarbonDioxideEmission(Emission):
-    """Class for calculating CO2 emissions from reservoirs"""
+    """Class for calculating CO2 emissions."""
 
     eff_temp: float
     p_calc_method: str
-    par: Type[SimpleNamespace]
+    par: SimpleNamespace
     pre_impoundment_table: dict
 
     def __init__(self, catchment, reservoir, eff_temp, preinund_area=None,
@@ -65,7 +94,6 @@ class CarbonDioxideEmission(Emission):
 
         super().__init__(catchment=catchment, reservoir=reservoir,
                          config_file=config_file, preinund_area=preinund_area)
-
         # Initialise input data specific to carbon dioxide emissions
         self.eff_temp = eff_temp  # EFF temp CO2
         if p_calc_method not in ('g-res', 'mcdowell'):
@@ -203,7 +231,7 @@ class CarbonDioxideEmission(Emission):
 class MethaneEmission(Emission):
     """Class for calculating methane emissions from reservoirs"""
 
-    monthly_temp: Type[MonthlyTemperature]
+    monthly_temp: MonthlyTemperature
     mean_ir: float  # mean InfraRed Radiation in kwh-1d-1
 
     def __init__(self, catchment, reservoir, monthly_temp, mean_ir,
@@ -323,7 +351,7 @@ class MethaneEmission(Emission):
         g CO2eq m-2 yr-1 is integrated over a target number of years.
         The default time horizon is 100 years."""
         # Calculate effective annual temperature for CH4
-        eff_temp = self.monthly_temp.eff_temp(coeff=0.052)
+        eff_temp = self.monthly_temp.eff_temp(gas='ch4')
         # Bathymetric shape (-)
         q_bath_shape = self.q_bath_shape(
             max_depth=self.reservoir.max_depth,
@@ -347,7 +375,7 @@ class MethaneEmission(Emission):
             years: Tuple[int] = (1, 5, 10, 20, 30, 40, 50, 100)) -> List[float]:
         """Calculate CH4 emission profile for a vector of years"""
         # Calculate effective annual temperature for CH4
-        eff_temp = self.monthly_temp.eff_temp(coeff=0.052)
+        eff_temp = self.monthly_temp.eff_temp(gas='ch4')
         # Bathymetric shape (-)
         q_bath_shape = self.q_bath_shape(
             max_depth=self.reservoir.max_depth,
