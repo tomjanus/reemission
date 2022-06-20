@@ -1,5 +1,8 @@
 ---
-# Pre impoundment emissions – via landcover of inundated area – soil type EFs  [t CO2eq/ha/yr]
+# Pre impoundment CO2 emission factors (tCO2-C/ha/yr) for land cover
+# categories of inundated area – IHA land use categories.
+
+# Water bodies: n/a.
 Boreal:
   mineral:
     bare: 0.0
@@ -12,8 +15,8 @@ Boreal:
     bare: 2.8
     crops: 7.9
     forest: 0.6
-    shrubs: 0.0
-    urban: 0.0
+    shrubs: 5.7
+    urban: 6.4
     wetlands: -0.5
 Subtropical:
   mineral:
@@ -35,8 +38,8 @@ Temperate:
     bare: 0.0
     crops: 0.0
     forest: -0.9
-    shrubs: 5.0
-    urban: 6.4
+    shrubs: 0.0
+    urban: 0.0
     wetlands: 0.0
   organic:
     bare: 2.8

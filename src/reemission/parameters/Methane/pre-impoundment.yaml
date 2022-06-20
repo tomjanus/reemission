@@ -1,5 +1,9 @@
 ---
-# Pre impoundment emissions – via landcover of inundated rea – soil type EFs -  kg CH4/ha/yr
+# Pre impoundment CH4 emission factors (kgCH4/ha/yr) for land cover
+# categories of inundated area – IHA land use categories.
+
+# Water bodies: Calculate following: Rasilo et al. 2015, Vachon and Prairie
+# 2013.
 Boreal:
   mineral:
     bare: 0.0

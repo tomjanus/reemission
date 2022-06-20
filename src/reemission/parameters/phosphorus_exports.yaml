@@ -1,5 +1,8 @@
 ---
-# Land cover Phosphorus export coefficients (kg P ha-1 yr-1)
+# Land cover Phosphorus export coefficients
+# Phosphorus load factors for the land cover categories at low and
+# high land use intensities (kgP/ha/yr).
+# Prairie and Kalff (1986)
 bare:
   low_intensity: 0.31
   high_intensity: 0.31
