@@ -3,7 +3,7 @@ import os
 from reemission.model import EmissionModel
 from reemission.input import Inputs
 from reemission.presenter import LatexWriter, JSONWriter
-from reemission.utils import load_packaged_data
+from reemission.utils import get_package_file
 # TODO: move this to tests and change paths
 
 
@@ -12,7 +12,7 @@ def test_emissions():
     dummy reservoir, catchment and emission input data in json format"""
     input_data = Inputs.fromfile(os.path.join(
         '/home/lepton/Dropbox (The University of Manchester)/git_projects/reemission/tests/test_data/inputs.json'))
-    output_config = load_packaged_data('config', 'outputs.yaml')
+    output_config = get_package_file('config', 'outputs.yaml')
     model = EmissionModel(inputs=input_data, config=output_config.as_posix())
     model.calculate()
     model.add_presenter(

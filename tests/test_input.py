@@ -3,13 +3,13 @@ import os
 import unittest
 from types import SimpleNamespace
 from reemission.input import Input, Inputs
-from reemission.utils import read_table, load_packaged_data
+from reemission.utils import read_table, get_package_file
 
 module_dir = os.path.dirname(__file__)
 json_input_file = os.path.abspath(
     os.path.join(module_dir, 'test_data', 'inputs.json'))
 landscape_TP_export_table = \
-    load_packaged_data()/"parameters"/"McDowell"/"landscape_TP_export.yaml"
+    get_package_file()/"parameters"/"McDowell"/"landscape_TP_export.yaml"
 
 
 class TestInput(unittest.TestCase):

@@ -21,7 +21,7 @@ import pathlib
 import pyfiglet
 import reemission
 import reemission.presenter
-from reemission.utils import add_version, load_packaged_data
+from reemission.utils import add_version, get_package_file
 from reemission.model import EmissionModel
 from reemission.input import Inputs
 
@@ -85,7 +85,7 @@ def calculate(input_file, output_files, output_config):
     input_data = Inputs.fromfile(input_file)
     # Use the default config file if not provided as an argument
     if not output_config:
-        output_config = load_packaged_data('config', 'outputs.yaml')
+        output_config = get_package_file('config', 'outputs.yaml')
     model = EmissionModel(inputs=input_data, config=output_config.as_posix())
     # Format all file names by converting to unicode
     input_file_str = f"{click.format_filename(input_file)}"

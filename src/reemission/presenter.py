@@ -5,6 +5,7 @@ from collections.abc import Iterable
 from dataclasses import dataclass, field
 from typing import Dict, Tuple, List, Type, Union, Sequence, Iterator, Any
 from abc import ABC, abstractmethod
+import pathlib
 import configparser
 import os
 import logging
@@ -56,10 +57,10 @@ ANNOTATION_FONTSIZE = 10
 # Get the file paths
 MODULE_DIR = os.path.dirname(__file__)
 CONFIG_DIR = os.path.abspath(os.path.join(MODULE_DIR, 'config'))
-INPUT_CONFIG_PATH = os.path.join(CONFIG_DIR, 'inputs.yaml')
-OUTPUT_CONFIG_PATH = os.path.join(CONFIG_DIR, 'outputs.yaml')
-PARAMETER_CONFIG_PATH = os.path.join(CONFIG_DIR, 'parameters.yaml')
-CONFIG_INI_PATH = os.path.join(CONFIG_DIR, 'config.ini')
+INPUT_CONFIG_PATH = pathlib.Path(CONFIG_DIR, 'inputs.yaml')
+OUTPUT_CONFIG_PATH = pathlib.Path(CONFIG_DIR, 'outputs.yaml')
+PARAMETER_CONFIG_PATH = pathlib.Path(CONFIG_DIR, 'parameters.yaml')
+CONFIG_INI_PATH = pathlib.Path(CONFIG_DIR, 'config.ini')
 
 # JSONWriter parameters
 JSON_NUMBER_DECIMALS = 2

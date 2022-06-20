@@ -2,7 +2,7 @@
 
 Contains:
     Emission base class from which all other emission classes are derived.
-    CarbonDioxideEmission for calculating C2 emissions.
+    CarbonDioxideEmission for calculating CO2 emissions.
     MethaneEmission for calculating CH4 emissions.
     NitrousOxideEmission for calculating N2O emissions.
 """
