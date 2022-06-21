@@ -32,8 +32,7 @@ class GasNotRecognizedException(Exception):
             permitted_gases: Tuple[str, ...],
             message: str = "Gas not recognized."):
         self.permitted_gases = permitted_gases
-        self.message = message + \
-            f"Permitted gases: {self.permitted_gases}"
+        self.message = message + f"Permitted gases: {self.permitted_gases}"
         super().__init__(self.message)
 
 
@@ -49,7 +48,7 @@ class WrongAreaFractionsException(Exception):
             self,
             number_of_fractions: int,
             number_of_landuses: int):
-        self.message = f"Number of area fractions: {number_of_fractions} " +
+        self.message = f"Number of area fractions: {number_of_fractions} " + \
             f"not equal to the number of land uses: {number_of_landuses}."
         super().__init__(self.message)
 
@@ -62,6 +61,6 @@ class WrongSumOfAreasException(Exception):
         accuracy: acceptable error in the sum of area fractions.
     """
     def __init__(self, fractions: list, accuracy: float):
-        self.message = f"Fractions sum up to: {sum(fractions)} " +
+        self.message = f"Fractions sum up to: {sum(fractions)} " + \
             f"and are not within 1 +/-: {accuracy}."
         super().__init__(self.message)

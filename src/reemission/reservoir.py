@@ -110,13 +110,15 @@ class Reservoir:
                     'Using the Larsen and Mercier model', method)
         return self.retention_coeff_larsen
 
-    def reservoir_tp(self, inflow_conc: float) -> float:
+    def reservoir_tp(self, inflow_conc: float,
+                     method: str = 'larsen') -> float:
         """Calculate reservoir TP concentration in micrograms/L.
 
         Args:
             inflow_conc: TP concentration in the inflow, micrograms/L.
+            method: retention coefficient esimation method.
         """
-        return inflow_conc * (1.0 - self.retention_coeff)
+        return inflow_conc * (1.0 - self.retention_coeff(method=method))
 
     def trophic_status(self, inflow_conc: float) -> Enum:
         """Return reservoirs trophic status depending on the influent

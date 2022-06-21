@@ -99,7 +99,7 @@ def find_enum_index(enum: EnumMeta, to_find: Enum) -> Optional[int]:
     Args:
         enum: enum object in which the item to find is stored.
         to_find: key in the enum object.
-        
+
     Returns:
         Index of the item to find if the item exists in enum.
         Otherwise, returns None.

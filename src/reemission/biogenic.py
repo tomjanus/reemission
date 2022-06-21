@@ -1,5 +1,5 @@
-""" Module containing a dataclass with categorical descriptors playing part
-    in the determination of the trophic status of the the reservoir """
+"""Categorical descriptors for determination of the trophic status of the the
+reservoir."""
 from dataclasses import dataclass
 from typing import Dict
 from reemission.constants import (
@@ -8,8 +8,7 @@ from reemission.constants import (
 
 @dataclass
 class BiogenicFactors:
-    """Container class for parameters characterising catchment's properties
-    having influence on the reservoir's trophic status"""
+    """Catchment's properties impacting the reservoir's trophic status."""
 
     biome: Biome
     climate: Climate
@@ -19,7 +18,7 @@ class BiogenicFactors:
 
     @classmethod
     def fromdict(cls, data_dict: Dict):
-        """Initialize class from dictionary"""
+        """Initialize class from dictionary."""
         return cls(
             biome=Biome[data_dict['biome']],
             climate=Climate[data_dict['climate']],
@@ -29,7 +28,7 @@ class BiogenicFactors:
         )
 
     def todict(self) -> Dict:
-        """Convert the class to a dictionary representation"""
+        """Convert the class to its dictionary representation"""
         biogenic_factors = {}
         biogenic_factors['biome'] = self.biome.name
         biogenic_factors['climate'] = self.climate.name
