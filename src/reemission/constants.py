@@ -24,7 +24,7 @@ CH4_GWP20 = 86  # Global Warming Potential of CH4 over 20 years
 
 @unique
 class Climate(Enum):
-    """Enumeration class with climate types"""
+    """Climate types."""
     BOREAL = "Boreal"
     SUBTROPICAL = "Subtropical"
     TEMPERATE = "Temperate"
@@ -33,7 +33,7 @@ class Climate(Enum):
 
 @unique
 class Biome(Enum):
-    """Enumeration class with biome types"""
+    """Biome types."""
     DESERTS = 1
     MEDFORESTS = 2
     MONTANEGRASSLANDS = 3
@@ -48,7 +48,7 @@ class Biome(Enum):
 
 @unique
 class Landuse(Enum):
-    """Enumeration class with landuse types"""
+    """Landuse types."""
     BARE = "bare"
     SNOW_ICE = "snow_ice"
     URBAN = "urban"
@@ -61,23 +61,32 @@ class Landuse(Enum):
 
 @unique
 class LanduseIntensity(Enum):
-    """Enumeration class for landuse intensities for calculating
-    land cover export coefficients in kg P ha-1 yr-1"""
+    """Landuse intensities for calculating land cover export coefficients
+    in kgP/ha/yr."""
     LOW = "low_intensity"
     HIGH = "high_intensity"
 
 
 @unique
 class SoilType(Enum):
-    """Enumeration class with soil types"""
+    """Soil types."""
     MINERAL = "mineral"
     ORGANIC = "organic"
 
 
 @unique
 class TreatmentFactor(Enum):
-    """Enumeration type with wastewater treatment classifiations"""
+    """Wastewater treatment classifiations."""
     NONE = "none"
     PRIMARY = "primary"
     SECONDARY = "secondary"
     TERTIARY = "tertiary"
+
+
+@unique
+class TrophicStatus(Enum):
+    """Reservoir/Lake trophic status classifications."""
+    OLIGOTROPHIC = "oligotrophic"
+    MESOTROPHIC = "mesotrophic"
+    EUTROPHIC = "eutrophic"
+    HYPER_EUTROPHIC = "hyper-eutrophic"
