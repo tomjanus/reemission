@@ -35,3 +35,33 @@ class GasNotRecognizedException(Exception):
         self.message = message + \
             f"Permitted gases: {self.permitted_gases}"
         super().__init__(self.message)
+
+
+class WrongAreaFractionsException(Exception):
+    """Exception raised if the number of area fractions does not match
+    the number of land uses.
+
+    Attributes:
+        number_of_fractions: number of area fractions in a list
+        number_of_landuses: number of pre-define land uses.
+    """
+    def __init__(
+            self,
+            number_of_fractions: int,
+            number_of_landuses: int):
+        self.message = f"Number of area fractions: {number_of_fractions} " +
+            f"not equal to the number of land uses: {number_of_landuses}."
+        super().__init__(self.message)
+
+
+class WrongSumOfAreasException(Exception):
+    """Exception raised if area fractions in a supplied list do not sum to 1.
+
+    Attributes:
+        fractions: list of area fractions
+        accuracy: acceptable error in the sum of area fractions.
+    """
+    def __init__(self, fractions: list, accuracy: float):
+        self.message = f"Fractions sum up to: {sum(fractions)} " +
+            f"and are not within 1 +/-: {accuracy}."
+        super().__init__(self.message)

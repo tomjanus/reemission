@@ -71,7 +71,8 @@ class MonthlyTemperature:
             GasNotRecognizedException: An error raised when gas is not listed
                 in recognized gas types.
 
-        Used for estimating CO2 and CH4 diffusion.
+        Note:
+            Used for estimating CO2 and CH4 diffusion.
         """
         if gas == 'co2':
             corr_coeff = self._temp_corr_coeff_co2()
@@ -88,8 +89,8 @@ class MonthlyTemperature:
         return min(self.temp_profile)
 
     def mean_warmest(self, number_of_months: int = 4) -> float:
-        """Returns the mean temperature of the warmest n months in temperature
-        profile.
+        """Returns the mean temperature of the warmest n months in a yearly
+        12x1 temperature profile.
 
         By default the function calculates the mean of 4 warmest months.
 
