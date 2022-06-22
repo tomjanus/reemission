@@ -25,14 +25,12 @@ class Input:
         data: emission data dictionary.
     """
     name: str
-    data: Optional[Dict]
+    data: Dict
 
     @property
     def reservoir_data(self) -> Optional[Dict]:
         """Retrieve input data for reservoir-scale process calculations."""
-        if self.data:
-            return self.data['reservoir']
-        return None
+        return self.data.get('reservoir')
 
     @property
     def catchment_data(self) -> Optional[Dict]:
@@ -47,9 +45,7 @@ class Input:
     @property
     def gasses(self) -> Optional[List[str]]:
         """Retrieve a list of emission factors/gases to be calculated."""
-        if self.data:
-            return self.data['gasses']
-        return None
+        return self.data.get('gasses')
 
     @property
     def year_vector(self) -> Optional[Tuple[float, ...]]:
@@ -62,9 +58,7 @@ class Input:
     @property
     def monthly_temps(self) -> Optional[List[float]]:
         """Retrieve a vecor of monthly average temperatures."""
-        if self.data:
-            return self.data['monthly_temps']
-        return None
+        return self.data.get('monthly_temps')
 
     @classmethod
     def fromfile(cls: Type[InputType], file: str,
@@ -81,6 +75,7 @@ class Input:
             if data is None:
                 log.error("Reservoir '%s' not found. Returning empty class",
                           reservoir_name)
+                return cls(name=reservoir_name, data={})
         return cls(name=reservoir_name, data=data)
 
 

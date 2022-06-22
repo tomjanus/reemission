@@ -1,10 +1,9 @@
-""" Module with simulation/calculation facilities for calculating GHG
-    emissions for man-made reservoirs """
+"""Simulation/calculation wrapper for GHG emission models."""
 from dataclasses import dataclass, field
 from typing import Type, Dict, Tuple, Union, Optional, List
+import pathlib
 import logging
 from itertools import chain
-import yaml
 import reemission.utils
 from reemission.input import Inputs
 from reemission.temperature import MonthlyTemperature
@@ -18,7 +17,7 @@ from reemission.presenter import Presenter, Writer
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
-# TODO: potential problems in Python <= 3.6 because dicts are not ordered
+#  TODO: potential problems in Python <= 3.6 because dicts are not ordered
 #       pay attention
 TRUTHS = [True, 'true', 'True', 'yes', 'on']
 FALSES = [False, 'false', 'False', 'no', 'off', 'null']
@@ -26,19 +25,25 @@ FALSES = [False, 'false', 'False', 'no', 'off', 'null']
 
 @dataclass
 class EmissionModel:
-    """Calculates emissions for a set of data provided in a dictionary
-    format"""
+    """Calculates emissions for a reservoir or a numver of reservoirs.
+
+    Atrributes:
+        inputs: Inputs object with input data.
+        outputs: outputs in a dictionary structure.
+        config: dictionary with configuration data.
+        presenter: Presenter object for presenting input and output data
+            in various formats.
+    """
 
     inputs: Inputs
+    config: Union[Dict, pathlib.Path, str]
     outputs: Dict = field(init=False)
-    config: Union[Dict, str]
-    presenter: Optional[Type[Presenter]] = None
+    presenter: Optional[Presenter] = field(default=None)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
+        """Initialize outputs dict an load config file if config is a path."""
         self.outputs = {}
-        if isinstance(self.config, str):
-            #with open(self.config, encoding='utf-8') as file_handle:
-            #    self.config = yaml.load(file_handle, Loader=yaml.FullLoader)
+        if isinstance(self.config, (pathlib.Path, str)):
             self.config = reemission.utils.load_yaml(self.config)
 
     @staticmethod
@@ -48,8 +53,10 @@ class EmissionModel:
         n2o_em: Union[NitrousOxideEmission, None],
         years: Tuple[int, ...] = (1, 5, 10, 20, 30, 40, 50, 100),
     ) -> Dict:
-        """Create a dictionary with function references and arguments for
-        calculating gas emissions"""
+        """
+        Create a dictionary with function references and arguments for
+        calculating gas emissions.
+        """
         co2_exec, ch4_exec, n2o_exec = {}, {}, {}
         if co2_em:
             co2_exec = {
@@ -103,7 +110,7 @@ class EmissionModel:
 
     @property
     def get_inputs(self):
-        """Returns the Inputs object"""
+        """Returns the Inputs object."""
         return self.inputs
 
     def add_presenter(
@@ -147,8 +154,6 @@ class EmissionModel:
             catchment = Catchment(**model_input.catchment_data)
             reservoir = Reservoir(**model_input.data['reservoir'],
                                   inflow_rate=catchment.discharge)
-            # Instantiate emission objects for every gas to be computed
-            em_co2, em_n2o, em_ch4 = None, None, None
 
             # Calculate gas emissions
             if "co2" in model_input.data['gasses']:
@@ -156,19 +161,24 @@ class EmissionModel:
                     catchment=catchment,
                     reservoir=reservoir,
                     eff_temp=monthly_temp.eff_temp(gas='co2'),
-                    p_calc_method=p_calc_method
-                )
+                    p_calc_method=p_calc_method)
+            else:
+                em_co2 = None
             if "ch4" in model_input.data['gasses']:
                 em_ch4 = MethaneEmission(
                     catchment=catchment,
                     reservoir=reservoir,
                     monthly_temp=monthly_temp,
                     mean_ir=4.46)
+            else:
+                em_ch4 = None
             if "n2o" in model_input.data['gasses']:
                 em_n2o = NitrousOxideEmission(
                     catchment=catchment,
                     reservoir=reservoir,
                     model=n2o_model)
+            else:
+                em_n2o = None
 
             exec_dict = self.create_exec_dictionary(
                 co2_em=em_co2,
@@ -180,7 +190,8 @@ class EmissionModel:
             # Iterate through all emission components and record those that
             # are marked for outputting
             for emission, em_config in self.config['outputs'].items():
-                if emission in exec_dict.keys() and em_config['include'] in TRUTHS:
+                if emission in exec_dict.keys() and \
+                        em_config['include'] in TRUTHS:
                     output[emission] = exec_dict[emission]['ref'](
                         **exec_dict[emission]['args'])
             self.outputs[model_input.name] = output

@@ -515,14 +515,24 @@ class LatexWriter(Writer):
         emission_unit = self.output_config['outputs'][
             emission_var[emission]]['unit_latex']
         y_label = "Emission, " + emission_unit
+
         # Get the x and y data
-        y_data = data[emission_var[emission]]
-        x_data = self.inputs.inputs[output_name].data["year_vector"]
+        try:
+            y_data = data[emission_var[emission]]
+            x_data = self.inputs.inputs[output_name].data["year_vector"]
+        except KeyError:
+            y_data = None
+            x_data = None
+
+        # Escape the function if data not found
+        if x_data is None or y_data is None:
+            return None
+
         # Format plot
         axis.plot(x_data, y_data, '-', color='k',
                   linewidth=plot_options['linewidth'])
         axis.plot(x_data, y_data, marker='o', color='r')
-        axis.set_ylabel(y_label, fontsize=plot_options['label_fontsie'],
+        axis.set_ylabel(y_label, fontsize=plot_options['label_fontsize'],
                         labelpad=plot_options['labelpad'])
         axis.set_xlabel('Time, years', fontsize=plot_options['label_fontsize'],
                         labelpad=plot_options['labelpad'])
@@ -583,7 +593,7 @@ class LatexWriter(Writer):
         axis.set_ylabel("Gas", fontsize=plot_options['label_fontsize'])
         axis.set_title("Total annual gas emissions, {}".format(output_name),
                        fontsize=plot_options['title_fontsize'],
-                       pad=plot_options['title_pad'])
+                       pad=plot_options['titlepad'])
         # Make the (visible) axes thicker
         for axis_pos in ['bottom', 'left']:
             axis.spines[axis_pos].set_linewidth(plot_options['axiswidth'])
