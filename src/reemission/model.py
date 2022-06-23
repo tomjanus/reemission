@@ -56,6 +56,13 @@ class EmissionModel:
         """
         Create a dictionary with function references and arguments for
         calculating gas emissions.
+
+        Args:
+            co2_em: emissions.CarbonDioxideEmission object.
+            ch4_em: emissions.MethaneEmission object.
+            n2o_em: emissions.NitrousOxideEmission object.
+            years: vector of years for which the emission profiles are
+                calculated.
         """
         co2_exec, ch4_exec, n2o_exec = {}, {}, {}
         if co2_em:
@@ -117,7 +124,14 @@ class EmissionModel:
             self, writers: List[Type[Writer]], output_files: List[str],
             author="Anonymus", title="HEET Results") -> None:
         """Instantiates a presenter class to the emission model for data
-        output formatting"""
+        output formatting.
+
+        Args:
+            writers: List of presenter.Writer objects
+            output_files: Paths to output files, one per writer.
+            author: Author name.
+            title: Outputs name.
+        """
         self.presenter = Presenter(
             inputs=self.inputs, outputs=self.outputs,
             author=author, title=title)
@@ -131,29 +145,59 @@ class EmissionModel:
         return None
 
     def save_results(self) -> None:
-        """Save results using presenters defined in the presenters list"""
+        """Save results using presenters defined in the presenters list."""
         if not bool(self.outputs):
             log.error(
                 "Output dictionary empty. Run calculations first and " +
                 " try again.")
             return None
-        try:
+        if self.presenter is not None:
             self.presenter.output()
-        except AttributeError:
+            return None
+        else:
             log.error("Presenter not defined.")
             return None
         return None
 
     def calculate(self, p_calc_method='g-res', n2o_model='model 1') -> None:
-        """Calculate emissions for a number of variables defined in config"""
+        """Calculate emissions for a number of variables defined in config.
+
+        Args:
+            p_calc_method: Phosphorus loading calculation method.
+                Options: 'g-res' or 'mcdowell'.
+            n2o_model: total N2O emission calculation method.
+                Options: 'model 1', 'model 2'
+        """
+        # Check the calculation options given in input arguments.
+        avail_p_calc_methods = ('g-res', 'mcdowell')
+        avail_n2o_models = ('model 1', 'model 2')
+        if p_calc_method not in avail_p_calc_methods:
+            log.warning(
+                "Invalid P calculation method. Expected: %s. " +
+                "Using default g-res method.",
+                ', '.join(avail_p_calc_methods))
+            p_calc_method = 'g-res'
+        if n2o_model not in avail_n2o_models:
+            log.warning(
+                "Invalid total N2O emission model. Expected: %s. " +
+                "Using default model 1.",
+                ', '.join(avail_n2o_models))
+            n2o_model = 'model 1'
+
         # Iterate through each set of inputs and output results in a dict
         for _, model_input in self.inputs.inputs.items():
             monthly_temp = MonthlyTemperature(
                 model_input.data['monthly_temps'])
             # Instantiate Catchment and Reservoir objects
-            catchment = Catchment(**model_input.catchment_data)
-            reservoir = Reservoir(**model_input.data['reservoir'],
-                                  inflow_rate=catchment.discharge)
+            catchment_data = model_input.catchment_data
+            reservoir_data = model_input.reservoir_data
+            if catchment_data is not None and reservoir_data is not None:
+                catchment = Catchment(**catchment_data)
+                reservoir = Reservoir(**reservoir_data,
+                                      inflow_rate=catchment.discharge)
+            else:
+                log.warning("Catchment or Reservoir data absent.")
+                return None
 
             # Calculate gas emissions
             if "co2" in model_input.data['gasses']:
@@ -172,6 +216,7 @@ class EmissionModel:
                     mean_ir=4.46)
             else:
                 em_ch4 = None
+
             if "n2o" in model_input.data['gasses']:
                 em_n2o = NitrousOxideEmission(
                     catchment=catchment,
@@ -189,9 +234,13 @@ class EmissionModel:
             output = {}
             # Iterate through all emission components and record those that
             # are marked for outputting
-            for emission, em_config in self.config['outputs'].items():
-                if emission in exec_dict.keys() and \
-                        em_config['include'] in TRUTHS:
-                    output[emission] = exec_dict[emission]['ref'](
-                        **exec_dict[emission]['args'])
-            self.outputs[model_input.name] = output
+            if isinstance(self.config, dict):
+                for emission, em_config in self.config['outputs'].items():
+                    if emission in exec_dict.keys() and \
+                            em_config['include'] in TRUTHS:
+                        output[emission] = exec_dict[emission]['ref'](
+                            **exec_dict[emission]['args'])
+                self.outputs[model_input.name] = output
+            else:
+                log.warning("Output/Input configuration file not instantiated.")
+        return None
