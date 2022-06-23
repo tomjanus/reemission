@@ -35,7 +35,7 @@ class MonthlyTemperature:
 
     def _temp_corr_coeff_co2(self) -> List[float]:
         """Calculate temperature correction coefficient for CO2 for each
-        month.
+        month. Eq. A.13. in Praire2021.
 
         Returns:
             A list of temperature correction coefficients in deg C.
@@ -49,7 +49,7 @@ class MonthlyTemperature:
 
     def _temp_corr_coeff_ch4(self) -> List[float]:
         """Calculate temperature correction coefficient for CH4 for each
-        month.
+        month. Eq. A.12. in Praire2021.
 
         Returns:
             A list of temperature correction coefficients in deg C.
@@ -63,6 +63,7 @@ class MonthlyTemperature:
 
     def eff_temp(self, gas: str) -> float:
         """Calculates effective annual temperature in deg C.
+        Eqs. A.14. an A.15. in Praire2021.
 
         Args:
             gas: type of gas; currently available gasses are 'co2' and 'ch4'

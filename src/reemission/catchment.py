@@ -4,7 +4,7 @@ import logging
 import pathlib
 import math
 from dataclasses import dataclass
-from typing import Dict, List, ClassVar
+from typing import Dict, List, Optional
 from reemission.utils import read_table, find_enum_index
 from reemission.biogenic import BiogenicFactors
 from reemission.constants import Landuse
@@ -15,13 +15,13 @@ log = logging.getLogger(__name__)
 MODULE_DIR = os.path.dirname(__file__)
 TABLES = os.path.abspath(os.path.join(MODULE_DIR, 'parameters'))
 # Provide tables as module variables
-tn_coeff_table: ClassVar[Dict] = read_table(
+tn_coeff_table: Optional[Dict] = read_table(
     pathlib.Path(TABLES, 'McDowell', 'landscape_TN_export.yaml'))
-tp_coeff_table: ClassVar[Dict] = read_table(
+tp_coeff_table: Optional[Dict] = read_table(
     pathlib.Path(TABLES, 'McDowell', 'landscape_TP_export.yaml'))
-p_loads_pop: ClassVar[Dict] = read_table(
+p_loads_pop: Optional[Dict] = read_table(
     pathlib.Path(TABLES, 'phosphorus_loads.yaml'))
-p_exports: ClassVar[Dict] = read_table(
+p_exports: Optional[Dict] = read_table(
     pathlib.Path(TABLES, 'phosphorus_exports.yaml'))
 # Margin for error by which the sum of landuse fractions can differ from 1.0
 EPS = 0.01
@@ -29,7 +29,11 @@ EPS = 0.01
 
 @dataclass
 class Catchment:
-    """Class representing a generic catchment"""
+    """Class representing a generic catchment.
+
+    Attrributes:
+
+    """
 
     area: float  # Catchment area. ha
     runoff: float  # Mean annual runoff, mm/year
@@ -62,7 +66,7 @@ class Catchment:
             self.area_fractions = [0] * len(Landuse)
 
     def _landuse_area(self, landuse_fraction):
-        """Return landuse area from catchment area and landuse fraction"""
+        """Return landuse area from catchment area and landuse fraction."""
         return self.area * landuse_fraction
 
     @property
@@ -96,7 +100,7 @@ class Catchment:
         # constant
         def fun_exp(area_fraction: float, fun_name: str) -> float:
             """Regression vs area fraction for P export from crops and
-            forest"""
+            forest."""
             # TODO: Explain what are these two exponential functions and how
             #       to choose between them
             if fun_name == 'fun_exp1':
@@ -105,17 +109,21 @@ class Catchment:
                 reg_coeffs = (0.914, 0.014)
             else:
                 log.error(
-                    'Regression function %s unknown. Returning zero.', fun_name)
+                    'Regression function %s unknown. Returning zero.',
+                    fun_name)
                 return 0.0
             try:
-                p_export_coeff = 0.01 * 10 ** (
+                # Initially the eq. contained a coefficient 0.1.
+                # i.e. 0.1 * 10 ** (... ). Now removed to match the eq. in
+                # g-Res technical reference.
+                p_export_coeff = 10 ** (
                     reg_coeffs[0] - reg_coeffs[1] * math.log10(
                         self._landuse_area(area_fraction)))
             except ValueError:
                 p_export_coeff = 0.0
             return p_export_coeff
 
-        load = 0
+        load = 0.0
         for landuse, area_fraction in zip(landuse_names, self.area_fractions):
             # iterate and calculate the total phosphorus load
             coefficient = p_exports[landuse][intensity.value]
