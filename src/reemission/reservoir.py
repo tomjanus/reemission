@@ -1,9 +1,10 @@
 """Reservoir calculations."""
 import logging
 import math
+import inspect
 from enum import Enum
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List, Optional, TypeVar, Type
 from reemission.temperature import MonthlyTemperature
 from reemission.auxiliary import (
     water_density, cd_factor, scale_windspeed, air_density)
@@ -16,6 +17,8 @@ from reemission.exceptions import (
 log = logging.getLogger(__name__)
 # Margin for error by which the sum of landuse fractions can differ from 1.0
 EPS = 0.01
+
+ReservoirType = TypeVar('ReservoirType', bound='Reservoir')
 
 
 @dataclass
@@ -31,10 +34,18 @@ class Reservoir:
         soil_carbon: Mass of C in inundated area, kg/m2
         area_fractions: List of fractions of inundated area allocated
             to specific landuse types given in Landue Enum type, -
+        mean_radiance: Mean monthly horizontal radiance in a year, kWh/m2/d
+        mean_radiance_may_sept: Mean monthly horizontal radiance between May
+            and September, kWh/m2/d
+        mean_radiance_nov_mar: Mean monthly horizontal radiance between
+            November and March, kWh/m2/d
+        mean_monthly_windspeed: Mean monthly wind speed in a year, m/s
+        water_intake_depth: Water intake depth below surface, m
 
     Notes:
         Sum of area fractions should be equal 1 +/- EPS
         reservoir volume in G-Res is given in km3
+        Water intake depth is used for estimating CH4 emissions via degassing.
     """
     volume: float
     max_depth: float
@@ -43,6 +54,11 @@ class Reservoir:
     area: float
     soil_carbon: float
     area_fractions: List[float]
+    mean_radiance: float
+    mean_radiance_may_sept: float
+    mean_radiance_nov_mar: float
+    mean_monthly_windspeed: float
+    water_intake_depth: float
 
     def __post_init__(self):
         """Check if the provided list of landuse fractions has the same
@@ -66,6 +82,15 @@ class Reservoir:
             raise WrongSumOfAreasException(
                 fractions=self.area_fractions,
                 accuracy=EPS) from err
+
+    @classmethod
+    def from_dict(cls: Type[ReservoirType], parameters: dict,
+                  **kwargs) -> ReservoirType:
+        """Initializes the class from a dictionary. Skips keys that are not
+        featured as class's attribiutes."""
+        return cls(**{
+            k: v for k, v in parameters.items()
+            if k in inspect.signature(cls).parameters}, **kwargs)
 
     @property
     def residence_time(self) -> float:

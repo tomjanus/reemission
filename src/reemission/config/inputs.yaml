@@ -35,8 +35,8 @@ catchment_inputs:
       unit_latex: "mm/year"
     area:
       name: "Catchment area"
-      unit: "ha"
-      unit_latex: "ha"
+      unit: "km2"
+      unit_latex: "km$^2$"
     population:
       name: "Population"
       unit: "capita"
@@ -88,8 +88,28 @@ reservoir_inputs:
       unit_latex: "-"
     soil_carbon:
       name: "Soil carbon in inundated area"
-      unit: "kg/m2"
-      unit_latex: "kg m$^{-2}$"
+      unit: "kgC/m2"
+      unit_latex: "kgC m$^{-2}$"
+    mean_radiance:
+      name: "Mean monthly horizontal radiance"
+      unit: "kWh/m2/d"
+      unit_latex: "kWh m$^{-2}$ d$^{-1}$"
+    mean_radiance_may_sept:
+      name: "Mean monthly horizontal radiance: May - Sept"
+      unit: "kWh/m2/d"
+      unit_latex: "kWh m$^{-2}$ d$^{-1}$"
+    mean_radiance_nov_mar:
+      name: "Mean monthly horizontal radiance: Nov - Mar"
+      unit: "kWh/m2/d"
+      unit_latex: "kWh m$^{-2}$ d$^{-1}$"
+    mean_monthly_windspeed:
+      name: "Mean monthly wind speed"
+      unit: "m/s"
+      unit_latex: "m s$^{-1}$"
+    water_intake_depth:
+      name: "Water intake depth below surface"
+      unit: "m"
+      unit_latex: "m"
 
 print_long_descriptions: False
 ...

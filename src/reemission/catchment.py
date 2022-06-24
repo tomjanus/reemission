@@ -1,10 +1,11 @@
-""" Module providing data and calculations relating to catchments """
+"""Catchment-related processes."""
 import os
+import inspect
 import logging
 import pathlib
 import math
 from dataclasses import dataclass
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, TypeVar, Type
 from reemission.utils import read_table, find_enum_index
 from reemission.biogenic import BiogenicFactors
 from reemission.constants import Landuse
@@ -23,8 +24,18 @@ p_loads_pop: Optional[Dict] = read_table(
     pathlib.Path(TABLES, 'phosphorus_loads.yaml'))
 p_exports: Optional[Dict] = read_table(
     pathlib.Path(TABLES, 'phosphorus_exports.yaml'))
+# Check if any of the tables have not be initialized. If so, return error.
+tables = [tn_coeff_table, tp_coeff_table, p_loads_pop, p_exports]
+table_names = ['tn_coeff_table', 'tp_coeff_table', 'p_loads_pop', 'p_exports']
+null_tables = [table_name for table, table_name in zip(tables, table_names)
+               if table is None]
+if null_tables:
+    raise ValueError("Some tables could not be found.")
+
 # Margin for error by which the sum of landuse fractions can differ from 1.0
 EPS = 0.01
+
+CatchmentType = TypeVar('CatchmentType', bound='Catchment')
 
 
 @dataclass
@@ -32,24 +43,34 @@ class Catchment:
     """Class representing a generic catchment.
 
     Attrributes:
-
+        area: Catchment area, km2
+        runoff: Mean annual runoff, mm/year
+        population: Population in the catchment, capita
+        slope: Catchment mean slope, %
+        precip: Mean annual precipitation, mm/year
+        etransp: Mean annual evapotranspiration, mm/year
+        soil_wetness: Soil wetness in mm over profile
+        area_fractions: List of fractions of land representing different
+            land uses.
+        biogenic_factors: biogenic.BiogenicFactor object with categorical
+            descriptors used in the determination of the trophic status of the
+            reservoir.
     """
 
-    area: float  # Catchment area. ha
-    runoff: float  # Mean annual runoff, mm/year
-    population: int  # Population, capita
-    slope: float  # Catchment mean slope, %
-    precip: float  # Mean annual precipitation, mm/year
-    etransp: float  # Mean annual evapotranspiration, mm/year
-    soil_wetness: float  # Soil wetness in mm over profile
-    area_fractions: List[float]  # Fractions of catchment area allocated, -
-    biogenic_factors: BiogenicFactors  # categorical descriptors playing part
-    # in the determination of the trophic status of the the reservoir
+    area: float
+    runoff: float
+    population: int
+    slope: float
+    precip: float
+    etransp: float
+    soil_wetness: float
+    area_fractions: List[float]
+    biogenic_factors: BiogenicFactors
 
     def __post_init__(self):
         """Check if the provided list of landuse fractions has the same
         length as the list of landuses. If False, set area_fractions to
-        None
+        None.
         """
         try:
             assert len(self.area_fractions) == len(Landuse)
@@ -65,15 +86,39 @@ class Catchment:
             log.error('Setting fractions to a vector of all zeros.')
             self.area_fractions = [0] * len(Landuse)
 
-    def _landuse_area(self, landuse_fraction):
-        """Return landuse area from catchment area and landuse fraction."""
+    @classmethod
+    def from_dict(cls: Type[CatchmentType], parameters: dict,
+                  **kwargs) -> CatchmentType:
+        """Initializes the class from a dictionary. Skips keys that are not
+        featured as class's attribiutes."""
+        return cls(**{
+            k: v for k, v in parameters.items()
+            if k in inspect.signature(cls).parameters}, **kwargs)
+
+    @property
+    def population_density(self) -> float:
+        """Derive population density from catchment population and catchment
+        area. (capita/km2). From Eq. A.25. in Praire2021.
+        """
+        return self.population/self.area
+
+    def _landuse_area(self, landuse_fraction: float) -> float:
+        """Return landuse area in km2 from catchment area and the landuse
+        fraction.
+        """
         return self.area * landuse_fraction
 
     @property
     def discharge(self) -> float:
-        """Calculate mean annual discharge in m3/year from runoff in mmm/year
-        and area in ha"""
-        return 10.0 * self.runoff * self.area
+        """Calculate mean annual discharge in m3/year from runoff in mm/year
+        and area in km2."""
+        return 1_000 * self.runoff * self.area
+
+    def river_area_before_impoundment(self, river_length: float) -> float:
+        """Estimates river area from river length (in km) and catchment area
+        (in km2). Eq.A.28. in Praire2021.
+        """
+        return 5.6 * 1E-6 * river_length * self.area**(0.32)
 
     def phosphorus_load_pop_gres(self) -> float:
         """Return phosphorus load in kg P yr-1 from human activity from the
@@ -139,7 +184,7 @@ class Catchment:
 
     def phosphorus_load_mcdowell(self):
         """Calculate annual discharge of P from catchment to the reservoir
-        in kg P yr-1 using McDowell regression"""
+        in kg P yr-1 using McDowell regression."""
         inflow_p = self._inflow_p_mcdowell()  # micrograms/L
         # discharge is given in m3/year
         return 1e-6 * inflow_p * self.discharge
@@ -240,12 +285,12 @@ class Catchment:
 
     def nitrogen_load(self) -> float:
         """Calculate total nitrogen (TN) load in kg N yr-1 entering the
-        reservoir with catchment runoff"""
+        reservoir with catchment runoff."""
         inflow_n = self.median_inflow_n()
-        return 1e-5 * self.area * self.runoff * inflow_n
+        return 1e-3 * self.area * self.runoff * inflow_n
 
     def phosphorus_load(self) -> float:
         """Calculate total phosphorus (TP) load in kg P yr-1 entering the
-        reservoir with catchment runoff"""
+        reservoir with catchment runoff."""
         inflow_p = self.median_inflow_p()
-        return 1e-5 * self.area * self.runoff * inflow_p
+        return 1e-3 * self.area * self.runoff * inflow_p

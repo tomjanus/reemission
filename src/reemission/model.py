@@ -192,9 +192,11 @@ class EmissionModel:
             catchment_data = model_input.catchment_data
             reservoir_data = model_input.reservoir_data
             if catchment_data is not None and reservoir_data is not None:
-                catchment = Catchment(**catchment_data)
-                reservoir = Reservoir(**reservoir_data,
-                                      inflow_rate=catchment.discharge)
+                catchment = Catchment.from_dict(
+                    parameters=catchment_data)
+                reservoir = Reservoir.from_dict(
+                    parameters=reservoir_data,
+                    inflow_rate=catchment.discharge)
             else:
                 log.warning("Catchment or Reservoir data absent.")
                 return None
