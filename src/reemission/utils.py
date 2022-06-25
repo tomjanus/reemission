@@ -92,7 +92,7 @@ def read_table(file_path: pathlib.Path) -> Optional[dict]:
         stream.close()
 
 
-def find_enum_index(enum: EnumMeta, to_find: Enum) -> Optional[int]:
+def find_enum_index(enum: EnumMeta, to_find: Enum) -> int:
     """ Finds index of an item in an Enum class corresponding to an item
     given in to_find.
 
@@ -103,12 +103,15 @@ def find_enum_index(enum: EnumMeta, to_find: Enum) -> Optional[int]:
     Returns:
         Index of the item to find if the item exists in enum.
         Otherwise, returns None.
+
+    Raises:
+        KeyError if index could not be found.
     """
     item: str
     for index, item in enumerate(enum):
         if item == to_find:
             return index
-    return None
+    raise KeyError(f"Index {to_find} not found.")
 
 
 def is_latex_installed() -> bool:

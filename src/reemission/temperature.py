@@ -102,3 +102,8 @@ class MonthlyTemperature:
         sorted_temp_profile.sort(reverse=True)
         return sum(sorted_temp_profile[:number_of_months]) / \
             len(sorted_temp_profile[:number_of_months])
+
+    def number_months_above(self, threshold: float) -> int:
+        """Returns number of months for which the temperature is above
+        threshold temperature."""
+        return len([i for i in self.temp_profile if i > threshold])

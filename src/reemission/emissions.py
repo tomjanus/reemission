@@ -283,7 +283,7 @@ class MethaneEmission(Emission):
     def __init__(self, catchment, reservoir, monthly_temp, mean_ir,
                  preinund_area=None, config_file=INI_FILE):
         self.monthly_temp = monthly_temp
-        self.mean_ir = mean_ir
+        self.mean_ir = reservoir.global_radiance()
         self.pre_impoundment_table = read_table(
             os.path.join(TABLES, 'Methane', 'pre-impoundment.yaml'))
         super().__init__(
@@ -309,7 +309,7 @@ class MethaneEmission(Emission):
         return SimpleNamespace(**const_dict)
 
     def ebullition(self) -> float:
-        r"""Calculate CH4 emission in mg CO2eq m-2 yr-1 through ebullition
+        r"""Calculate CH4 emission in g CO2eq m-2 yr-1 through ebullition
         (bubbling) using G-Res CH4 Bubbling Emissions equation.
         Assumes life-span of 100 years. Eq. 5 in Praire2021.
 
@@ -318,17 +318,18 @@ class MethaneEmission(Emission):
             \begin{eqnarray}
             q_{CH_4, bubbling} & = & \\
             & & 10^\left( k_1^{ebull} + k_2^{ebull} \, \log_{10} (f_{littoral}/100) + k_3^{ebull} \, irr_{mean} \right) \\
-            & & \times 365 \, (16/12) \, gwp_{ch4,100}
+            & & \times 365/1000 \, (16/12) \, gwp_{ch4,100}
             \end{eqnarray}
             where:
             \begin{itemize}:
-                \item $q_{CH_4, bubbling}$ is CH$_4$ emission via bubbling, (mg CO$_{2eq}$ m$^{-2}$ yr$^{-1}$)
+                \item $q_{CH_4, bubbling}$ is CH$_4$ emission via bubbling, (g CO$_{2eq}$ m$^{-2}$ yr$^{-1}$)
                 \item $f_{littoral} is a littoral fraction, (\%)
                 \item $k_1^{ebull}$, $k_2^{ebull}$, and $k_3^{ebull}$ are regression coefficients.
                 \item $gwp_{ch4,100}$ is methane's Global Warming Potential over a 100 year period.
                 \item 16/12 is a molecular weight ratio between CH4 and C.
                 \item $irr_{mean}$ is reservoir's cumulative mean horizontal radiance in kWh/m2/d.
             \en{itemize}
+            The value is divided by 1000 in order to convert from mg CO2eq to g CO3eq.
 
         Notes:
             Ebullition fluxes are not time-dependent, hence no emission profile
@@ -347,7 +348,7 @@ class MethaneEmission(Emission):
             + self.par.k3_ebull * self.mean_ir)
         # Convert CH4 emission from mg CH4-C m-2 d-1 to mg CO2eq m-2 yr-1
         emission_in_co2 = emission_in_ch4 * 365 * self.par.weight_CH4 / \
-            self.par.weight_C * self.par.ch4_gwp100
+            self.par.weight_C * self.par.ch4_gwp100 / 1000
         return emission_in_co2
 
     def ebull_profile(

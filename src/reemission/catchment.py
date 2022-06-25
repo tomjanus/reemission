@@ -9,6 +9,7 @@ from typing import Dict, List, Optional, TypeVar, Type
 from reemission.utils import read_table, find_enum_index
 from reemission.biogenic import BiogenicFactors
 from reemission.constants import Landuse
+from reemission.exceptions import TableNotReadException
 
 # Set up module logger
 log = logging.getLogger(__name__)
@@ -30,8 +31,9 @@ table_names = ['tn_coeff_table', 'tp_coeff_table', 'p_loads_pop', 'p_exports']
 null_tables = [table_name for table, table_name in zip(tables, table_names)
                if table is None]
 if null_tables:
-    raise ValueError("Some tables could not be found.")
+    raise TableNotReadException(table=null_tables)
 
+assert p_exports is not None
 # Margin for error by which the sum of landuse fractions can differ from 1.0
 EPS = 0.01
 
@@ -171,6 +173,7 @@ class Catchment:
         load = 0.0
         for landuse, area_fraction in zip(landuse_names, self.area_fractions):
             # iterate and calculate the total phosphorus load
+            assert p_exports is not None
             coefficient = p_exports[landuse][intensity.value]
             if coefficient in ('fun_exp1', 'fun_exp2'):
                 coefficient = fun_exp(area_fraction, coefficient)
@@ -206,6 +209,7 @@ class Catchment:
         crop_index = find_enum_index(enum=Landuse, to_find=Landuse.CROPS)
         crop_percent = 100.0 * self.area_fractions[crop_index]
         # Find coefficients from the McDowell table of regression coefficients
+        assert tp_coeff_table is not None
         intercept = tp_coeff_table['intercept']['coeff']
         olsen_p = tp_coeff_table['olsen_p']['coeff']
         prec_coeff = tp_coeff_table['mean_prec']['coeff']
@@ -259,6 +263,7 @@ class Catchment:
         Contrary to phosphorus, no other method than McDowell is used.
         """
         biome = self.biogenic_factors.biome
+        assert tn_coeff_table is not None
         intercept = tn_coeff_table['intercept']['coeff']
         prec_coeff = tn_coeff_table['mean_prec']['coeff']
         slope_coeff = tn_coeff_table['mean_slope']['coeff']
