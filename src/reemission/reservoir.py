@@ -4,7 +4,7 @@ import math
 import inspect
 from enum import Enum
 from dataclasses import dataclass
-from typing import List, Optional, TypeVar, Type
+from typing import List, Tuple, Optional, TypeVar, Type
 from reemission.temperature import MonthlyTemperature
 from reemission.auxiliary import (
     water_density, cd_factor, scale_windspeed, air_density)
@@ -26,6 +26,9 @@ class Reservoir:
     """Model of a generic reservoir.
 
     Atttributes:
+        coordnates: Reservoir's (latitude, longitude) in deg
+        temperature: MonthlyTemperature object with 12x1 monthly average
+            temperature vector
         volume: Reservoir volume, m3
         max_depth: Maximum reservoir depth, m
         mean_depth: Mean reservoir depth, m
@@ -47,6 +50,8 @@ class Reservoir:
         reservoir volume in G-Res is given in km3
         Water intake depth is used for estimating CH4 emissions via degassing.
     """
+    coordinates: Tuple[float, float]
+    temperature: MonthlyTemperature
     volume: float
     max_depth: float
     mean_depth: float
@@ -82,6 +87,8 @@ class Reservoir:
             raise WrongSumOfAreasException(
                 fractions=self.area_fractions,
                 accuracy=EPS) from err
+        if isinstance(self.coordinates, list):
+            self.coordinates = tuple(self.coordinates)
 
     @classmethod
     def from_dict(cls: Type[ReservoirType], parameters: dict,
@@ -91,6 +98,16 @@ class Reservoir:
         return cls(**{
             k: v for k, v in parameters.items()
             if k in inspect.signature(cls).parameters}, **kwargs)
+
+    @property
+    def latitude(self) -> float:
+        """Obtains latitude from coordinates."""
+        return self.coordinates[0]
+
+    @property
+    def longitude(self) -> float:
+        """Obtains longitude from coordinates."""
+        return self.coordinates[1]
 
     @property
     def residence_time(self) -> float:
@@ -128,6 +145,38 @@ class Reservoir:
     def volume_km3(self) -> float:
         """Return volume in km3. Original value is in m3."""
         return self.volume / 10**9
+
+    def mean_radiance_lat(self) -> float:
+        """Selects representative mean horizontal radiance in (kWh/m2/d)
+        for a reservoir depending on its latitude."""
+        if 40 > self.latitude > -40:
+            radiance = self.mean_radiance
+        if 40 < self.latitude:
+            radiance = self.mean_radiance_may_sept
+        if -40 > self.latitude:
+            radiance = self.mean_radiance_nov_mar
+        return radiance
+
+    def global_radiance(self, period: str = "d") -> float:
+        """Calculates reservoir cumulative global horizontal radiance in
+        (kWh/m2/period) depending on reservoir's latitude.
+        Eq. A.29. from Praire2021.
+
+        Note:
+            Multiplier of 30.4 applied in the version of this equation
+            published in G-Res technical documentation but not in Praire2021.
+            This multiplier converts the unit of radiance from kWh/m2/day to
+            kWh/m2/month. However, this results in very high CH4 emission
+            estimates. Hence, set to 1.0."""
+        number_months_above_0 = self.temperature.number_months_above(
+            threshold=0)
+        if period.lower() in ("d", "day"):
+            multiplier = 1.0
+        if period.lower() in ("m", "month"):
+            multiplier = 30.4
+        else:
+            multiplier = 1.0
+        return self.mean_radiance_lat() * number_months_above_0 * multiplier
 
     def compare_mean_depth(self) -> float:
         """Compares mean depth of the reservoir against the calculated mean
@@ -172,8 +221,7 @@ class Reservoir:
         """
         return 100.0 * (1 - (1 - 3.0 / self.max_depth) ** self.q_bath_shape())
 
-    @staticmethod
-    def bottom_temperature(monthly_temp: MonthlyTemperature) -> float:
+    def bottom_temperature(self) -> float:
         """Calculates bottom (hypolimnion) temperature in the reservoir from
         a 12x1 profile of monthly average air temperatures.
         Equation A.2. in Praire2021.
@@ -183,35 +231,31 @@ class Reservoir:
                 as the coldest mean monthly temperature in the 12x1 temperature
                 profile.
         """
-        if monthly_temp.coldest > 1.4:
-            hypolimnion_temp = (0.6565 * monthly_temp.coldest) + 10.7
+        if self.temperature.coldest > 1.4:
+            hypolimnion_temp = (0.6565 * self.temperature.coldest) + 10.7
         else:
-            hypolimnion_temp = (0.2345 * monthly_temp.coldest) + 10.11
+            hypolimnion_temp = (0.2345 * self.temperature.coldest) + 10.11
         return hypolimnion_temp
 
-    @staticmethod
-    def surface_temperature(monthly_temp: MonthlyTemperature) -> float:
+    def surface_temperature(self) -> float:
         """Calculates surface/epilimnion temperature as the mean temperature of
         the 4 warmest months in a year. Equation A.4. in Praire2021.
         """
-        return monthly_temp.mean_warmest(number_of_months=4)
+        return self.temperature.mean_warmest(number_of_months=4)
 
-    @staticmethod
-    def bottom_density(monthly_temp: MonthlyTemperature) -> float:
+    def bottom_density(self) -> float:
         """Calculates water density at the bottom of the reservoir.
         Equation A.3. in Praire2021.
         """
-        return water_density(temp=Reservoir.bottom_temperature(monthly_temp))
+        return water_density(temp=self.bottom_temperature())
 
-    @staticmethod
-    def surface_density(monthly_temp: MonthlyTemperature) -> float:
+    def surface_density(self) -> float:
         """Calculates water density at the surface of the reservoir.
         Equation A.4. in Praire2021.
         """
-        return water_density(temp=Reservoir.surface_temperature(monthly_temp))
+        return water_density(temp=self.surface_temperature())
 
     def thermocline_depth(self, wind_speed: Optional[float] = None,
-                          monthly_temp: Optional[MonthlyTemperature] = None,
                           wind_height: float = 50) -> float:
         """Calculate thermocline depth required for the calculation of CH4
         degassing.
@@ -232,10 +276,9 @@ class Reservoir:
         Args:
             wind_speed: average annual wind speed at the location of the
                 reservoir, (m/s).
-            monthly_temp: temperature.MonthlyTemperature object.
             wind_height: height at which wind_speed is measured, (m)
         """
-        if wind_speed is None or monthly_temp is None:
+        if wind_speed is None:
             thermocline_depth = 10**(0.185 * math.log10(self.area) + 0.842)
             log.debug("Thermocline depth calculated with model of Hanna.")
         else:
@@ -245,11 +288,12 @@ class Reservoir:
                                           wind_height=wind_height,
                                           new_height=10)
             # Calculate bottom and surface water densities.
-            hypolimnion_density = self.bottom_density(monthly_temp)
-            epilimnion_density = self.surface_density(monthly_temp)
+            hypolimnion_density = self.bottom_density()
+            epilimnion_density = self.surface_density()
             # Find thermocline depth in metres
             aux_var_1 = cd_coeff * air_density(
-                monthly_temp.mean_warmest(number_of_months=4)) * wind_at_10m
+                self.temperature.mean_warmest(number_of_months=4)) * \
+                wind_at_10m
             aux_var_2 = 9.80665 * (hypolimnion_density - epilimnion_density)
             aux_var_3 = math.sqrt(self.area) * 10**6
             thermocline_depth = 2 * math.sqrt(aux_var_1 / aux_var_2) * \
@@ -277,15 +321,14 @@ class Reservoir:
         # return k600 in m/d
         return k600 * 0.24
 
-    @staticmethod
-    def _kh_ch4(monthly_temp: MonthlyTemperature) -> float:
+    def _kh_ch4(self) -> float:
         """Calculate kh coefficient for CH4, Handbook of Physics and Chemistry,
         Lide, 1994. CRC Press, Boca Raton, USA.
         Unit derived through back-calculation: kgCH4/(m3*atm)
         Eq. A.17. in Praire2021.
         """
         # Calculate effective temperature in deg C for methane
-        eff_temp = monthly_temp.eff_temp(gas="ch4")
+        eff_temp = self.temperature.eff_temp(gas="ch4")
         eff_temp_scaled = (eff_temp + 273.15) / 100
         molecular_weight_ch4 = 18.0153
         aux_1 = -115.6477 - 6.1698 * eff_temp_scaled
@@ -294,7 +337,7 @@ class Reservoir:
         kh_ch4 = 1000.0/molecular_weight_ch4 * math.exp(aux_1 + aux_2 + aux_3)
         return kh_ch4
 
-    def _p_ch4(self, monthly_temp: MonthlyTemperature) -> float:
+    def _p_ch4(self) -> float:
         r"""
         Calculate partial pressure of CH4 in microatm (\mu atm)
         Rasillo 2014, https://doi.org/10.1111/gcb.12741
@@ -304,23 +347,23 @@ class Reservoir:
         lakes, and contribution to diffusive C emissions.`
         Eq. A.18. in Praire2021.
         """
-        aux_1 = 1.46 + 0.03 * monthly_temp.eff_temp(gas="ch4")
+        aux_1 = 1.46 + 0.03 * self.temperature.eff_temp(gas="ch4")
         aux_2 = - 0.29 * math.log10(self.area)
         return 10 ** (aux_1 + aux_2)
 
-    def surface_ch4_conc(self, monthly_temp: MonthlyTemperature) -> float:
+    def surface_ch4_conc(self) -> float:
         """Calcualate surface water CH4 concentration in mgCH4/m3 (mu g/L)
         Eq. A.19. in Praire2021.
         """
-        return self._kh_ch4(monthly_temp) * self._p_ch4(monthly_temp)
+        return self._kh_ch4() * self._p_ch4()
 
-    def ch4_emission_factor(self, wind_speed: float, wind_height: float,
-                            monthly_temp: MonthlyTemperature) -> float:
+    def ch4_emission_factor(self, wind_speed: float,
+                            wind_height: float) -> float:
         """Calculate CH4 emission factor the water body, (kg CH4/ha/yr)
         Eq. A.20. in Praire2021.
         """
         ch4_molar = 16  # g/mol
-        em_factor = self.surface_ch4_conc(monthly_temp) * \
+        em_factor = self.surface_ch4_conc() * \
             self._k600_ch4(wind_speed, wind_height) * ch4_molar * 365/100
         # 365 converts from /d to /yr
         # 1/100 converts from 1/km2 to 1/ha

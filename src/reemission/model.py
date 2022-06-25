@@ -196,6 +196,8 @@ class EmissionModel:
                     parameters=catchment_data)
                 reservoir = Reservoir.from_dict(
                     parameters=reservoir_data,
+                    temperature=monthly_temp,
+                    coordinates=model_input.data["coordinates"],
                     inflow_rate=catchment.discharge)
             else:
                 log.warning("Catchment or Reservoir data absent.")
