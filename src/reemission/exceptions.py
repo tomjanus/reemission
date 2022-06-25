@@ -1,5 +1,5 @@
 """Module containing custom exceptions."""
-from typing import Tuple
+from typing import Tuple, Union
 
 
 class WrongN2OModelError(Exception):
@@ -63,4 +63,20 @@ class WrongSumOfAreasException(Exception):
     def __init__(self, fractions: list, accuracy: float):
         self.message = f"Fractions sum up to: {sum(fractions)} " + \
             f"and are not within 1 +/-: {accuracy}."
+        super().__init__(self.message)
+
+
+class TableNotReadException(Exception):
+    """Exception raised if a configuration table not found.
+
+    Atrributes:
+        table: name of the table or list of names of tables that are not found.
+    """
+    def __init__(self, table: Union[str, list]):
+        if isinstance(table, str):
+            self.message = f"Table: {table} not found."
+        elif isinstance(table, list):
+            self.message = f"Tables: {', '.join(table)} not found."
+        else:
+            self.message = ""
         super().__init__(self.message)
