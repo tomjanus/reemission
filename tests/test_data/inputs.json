@@ -33,11 +33,11 @@
             "mean_depth": 13.6,
             "area_fractions": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
             "soil_carbon": 10.228,
-	    "mean_radiance": 666,
-            "mean_radiance_may_sept": 666,
-	    "mean_radiance_nov_mar": 666,
-            "mean_monthly_windspeed": 666,
-	    "water_intake_depth": 666
+	    "mean_radiance": 4.5,
+            "mean_radiance_may_sept": 4.5,
+	    "mean_radiance_nov_mar": 3.2,
+            "mean_monthly_windspeed": 3.8,
+	    "water_intake_depth": 20.0
         }
     },
     "Reservoir 2":
@@ -74,11 +74,11 @@
             "mean_depth": 17.6,
             "area_fractions": [0.0, 0.0, 0.3, 0.0, 0.3, 0.0, 0.0, 0.4],
             "soil_carbon": 30.228,
-	    "mean_radiance": 666,
-            "mean_radiance_may_sept": 666,
-	    "mean_radiance_nov_mar": 666,
-            "mean_monthly_windspeed": 666,
-	    "water_intake_depth": 666
+	    "mean_radiance": 2.5,
+            "mean_radiance_may_sept": 2.0,
+	    "mean_radiance_nov_mar": 1.5,
+            "mean_monthly_windspeed": 2.3,
+	    "water_intake_depth": 32.0
         }
     }
 }
