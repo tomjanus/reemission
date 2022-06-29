@@ -37,6 +37,10 @@ catchment_inputs:
       name: "Catchment area"
       unit: "km2"
       unit_latex: "km$^2$"
+    riv_length:
+      name: "Length of inundated river"
+      unit: "km"
+      unit_latex: "km"
     population:
       name: "Population"
       unit: "capita"
