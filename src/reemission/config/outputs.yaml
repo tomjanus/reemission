@@ -209,7 +209,7 @@ outputs:
     include: True
     name: "Total N2O emission per year"
     gas_name: "N2O"
-    name_latex: "Total CH$_4$ emission per year"
+    name_latex: "Total N$_2$O emission per year"
     gas_name_latex: "N$_2$O"
     unit: "tCO2eq yr-1"
     unit_latex: "tCO$_{2,eq}$ yr$^{-1}$"
@@ -220,7 +220,7 @@ outputs:
     include: True
     name: "Total N2O emission per lifetime"
     gas_name: "N2O"
-    name_latex: "Total CH$_4$ emission per lifetime"
+    name_latex: "Total N$_2$O emission per lifetime"
     gas_name_latex: "N$_2$O"
     unit: "ktCO2eq"
     unit_latex: "ktCO$_{2,eq}$"
