@@ -74,9 +74,9 @@ class TableNotReadException(Exception):
     """
     def __init__(self, table: Union[str, list]):
         if isinstance(table, str):
-            self.message = f"Table: {table} not found."
+            self.message = f"Table: {table} could not be read."
         elif isinstance(table, list):
-            self.message = f"Tables: {', '.join(table)} not found."
+            self.message = f"Tables: {', '.join(table)} could not be read."
         else:
             self.message = ""
         super().__init__(self.message)

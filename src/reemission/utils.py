@@ -8,6 +8,7 @@ from enum import Enum, EnumMeta
 from packaging import version
 import yaml
 import reemission
+from reemission.exceptions import TableNotReadException
 
 
 def load_yaml(file_path: pathlib.Path) -> dict:
@@ -66,7 +67,7 @@ def read_config(file_path: pathlib.Path) -> configparser.ConfigParser:
     return config
 
 
-def read_table(file_path: pathlib.Path) -> Optional[dict]:
+def read_table(file_path: pathlib.Path) -> dict:
     """Reads yaml table from the given YAML file.
 
     Args:
@@ -74,20 +75,18 @@ def read_table(file_path: pathlib.Path) -> Optional[dict]:
     Returns:
         Dictionary representation of the yaml file if the file exists and no
             errors occured while parsing the file.
-        Otherwise, return None.
-
+    Raises:
+        TableNotReadException.
     """
     try:
         stream = open(file_path, "r", encoding="utf-8")
         return yaml.safe_load(stream)
     except FileNotFoundError as exc:
-        print(exc)
         print(f"File in {file_path} not found.")
-        return None
+        raise TableNotReadException(table=file_path.as_posix()) from exc
     except yaml.YAMLError as exc:
-        print(exc)
         print(f"File in {file_path} cannot be parsed.")
-        return None
+        raise TableNotReadException(table=file_path.as_posix()) from exc
     finally:
         stream.close()
 

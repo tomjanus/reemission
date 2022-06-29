@@ -588,7 +588,7 @@ class LatexWriter(Writer):
         plt.yticks(y_pos, bars)
         plt.xticks(fontsize=plot_options['tick_fontsize'])
         plt.yticks(fontsize=plot_options['tick_fontsize'])
-        axis.set_xlabel("Total annual emission, tonnes CO$_2$ yr$^{-1}$",
+        axis.set_xlabel("Total annual emission, tonnes CO$_{2,eq}$ yr$^{-1}$",
                         fontsize=plot_options['label_fontsize'])
         axis.set_ylabel("Gas", fontsize=plot_options['label_fontsize'])
         axis.set_title("Total annual gas emissions, {}".format(output_name),
@@ -602,7 +602,7 @@ class LatexWriter(Writer):
         axis.spines['right'].set_visible(False)
         axis.spines['top'].set_visible(False)
 
-    def add_plots(self, output_name: str, plot_fraction: float = 0.85,
+    def add_plots(self, output_name: str, plot_fraction: float = 0.75,
                   dpi: int = 300) -> None:
         """Checks the number of plots to be produced and plots them in
         subfigures.
@@ -963,7 +963,7 @@ class LatexWriter(Writer):
 
     def add_outputs_subsection(self, reservoir_name: str) -> None:
         """Writes outputs information to latex document source code."""
-        plot_fraction = 0.9
+        plot_fraction = 0.75
         # Add inputs section to the document
         with self.document.create(Subsection('Outputs')):
             self.add_outputs_table(output_name=reservoir_name)
