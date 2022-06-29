@@ -15,9 +15,9 @@ Why does this file exist, and why not put this in __main__?
 
   Also see (1) from http://click.pocoo.org/5/setuptools/#setuptools-integration
 """
-import click
 import logging
 import pathlib
+import click
 import pyfiglet
 import reemission
 import reemission.presenter
@@ -47,7 +47,7 @@ def main(figlet: bool = FIGLET) -> None:
     """------------------------ RE-EMISSION  ------------------------
 
 You are now using the Command line interface of RE-Emission, a Python3
-toolbox for calculating greenhouse gas emissions from man-made reservoirs,
+toolbox for calculating greenhouse gas emissions from reservoirs,
 created at the University of Manchester, UK
 (https://www.manchester.ac.uk).
 
@@ -63,11 +63,18 @@ See the full documentation at : https://reemisison.readthedocs.io/en/latest/.
 @click.argument("input-file", nargs=1, type=click.Path(exists=True))
 @click.option("-o", "--output-files", type=click.Path(), multiple=True,
               default=None,
-              help="files the outputs are written to.")
+              help="Files the outputs are written to.")
 @click.option("-c", "--output-config", type=click.Path(exists=True),
               default=None,
               help="RE-Emission output configuration file.")
-def calculate(input_file, output_files, output_config):
+@click.option("-a", "--author", type=click.STRING, default="",
+              help="Author's name")
+@click.option("-t", "--title", type=click.STRING, default="Results",
+              help="Report/Study title")
+@click.option("-p", "--p-model", type=click.STRING, default="g-res",
+              help="P-calculation method for CO2 emissions: g-res/mcdowell")
+def calculate(input_file, output_files, output_config, author,
+              title, p_model) -> None:
     """
     Calculates emissions based on the data in the JSON INPUT_FILE.
     Saves the results to output file(s) defined in option '--output-files'.
@@ -75,18 +82,26 @@ def calculate(input_file, output_files, output_config):
     'pdf' files are written using latex intermediary. Latex source files are
     saved alongside 'pdf' files.
 
-    \f
+    Args:
     input_file: JSON file with information about catchment and reservoir
         related inputs.
-    output_files: paths of outputs files.
+    output_files: Paths of outputs files.
     output_config: YAML output configuration file.
+    author: Author's name.
+    title: Report/Study title.
+    p_model: P-calculation method for estimation of CO2 emissions.
     """
     click.echo("Loading inputs...\n")
     input_data = Inputs.fromfile(input_file)
     # Use the default config file if not provided as an argument
     if not output_config:
         output_config = get_package_file('config', 'outputs.yaml')
-    model = EmissionModel(inputs=input_data, config=output_config.as_posix())
+    model = EmissionModel(
+        inputs=input_data,
+        config=output_config.as_posix(),
+        author=author,
+        report_title=title,
+        p_model=p_model)
     # Format all file names by converting to unicode
     input_file_str = f"{click.format_filename(input_file)}"
     output_config_str = f"{click.format_filename(output_config)}"
@@ -103,13 +118,13 @@ def calculate(input_file, output_files, output_config):
     click.echo('Continue? [yn] ', nl=False)
     c_input = click.getchar()
     click.echo()
-    if c_input == 'y':
+    if c_input.lower() == 'y':
         click.echo('Ready to calculate.')
-    elif c_input == 'n':
+    elif c_input.lower() == 'n':
         click.echo('Aborting.')
         return
     else:
-        click.echo('Invalid input. Please try again.')
+        click.echo(f'Input `{c_input}` not recognized. Please try again.')
         return
     click.echo(click.style(
         "Calculating...", blink=True, bg='blue', fg='white'))
