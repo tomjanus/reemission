@@ -10,6 +10,7 @@
         {
             "runoff": 1685.5619,
             "area": 78203.0,
+            "riv_length": 9.2,
             "population": 8463,
             "area_fractions": [0.0, 0.0, 0.0, 0.0, 0.0, 0.01092, 0.11996,
                                0.867257],
@@ -51,6 +52,7 @@
         {
             "runoff": 3000,
             "area": 102203.0,
+            "riv_length": 14.2,
             "population": 38463,
             "area_fractions": [0.0, 0.2, 0.0, 0.0, 0.0, 0.01092, 0.11996,
                                0.667257],
@@ -78,7 +80,7 @@
             "mean_radiance_may_sept": 2.0,
 	    "mean_radiance_nov_mar": 1.5,
             "mean_monthly_windspeed": 2.3,
-	    "water_intake_depth": 32.0
+	    "water_intake_depth": 42.0
         }
     }
 }
