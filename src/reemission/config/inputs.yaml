@@ -1,5 +1,11 @@
 ---
 # Inputs to calculate and save for reporting of results
+coordinates:
+  include: True
+  name: "Reservoir coordinates (lat/lon)"
+  long_description: ""
+  unit: "deg"
+  unit_latex: "$^o$"
 monthly_temps:
   include: True
   name: "Monthly Temperatures"

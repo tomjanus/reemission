@@ -66,8 +66,9 @@ CONFIG_INI_PATH = pathlib.Path(CONFIG_DIR, 'config.ini')
 JSON_NUMBER_DECIMALS = 2
 EXCEL_NUMBER_DECIMALS = 3
 
-INPUT_NAMES = ['monthly_temps', 'biogenic_factors', 'year_profile',
-               'catchment_inputs', 'reservoir_inputs', 'gasses']
+INPUT_NAMES = ['coordinates', 'monthly_temps', 'biogenic_factors',
+               'year_profile', 'catchment_inputs', 'reservoir_inputs',
+               'gasses']
 
 FACTOR_NAMES = {
     "biome": "Biome",
@@ -341,7 +342,8 @@ class JSONWriter(Writer):
         if len(included_inputs) < 1:
             return None
         # Mapping between input names and input names in the Input.data dict.
-        config_to_data = {"monthly_temps": "monthly_temps",
+        config_to_data = {"coordinates": "coordinates",
+                          "monthly_temps": "monthly_temps",
                           "year_profile": "year_vector",
                           "gasses": "gasses"}
         for input_name, input_name_mapped in config_to_data.items():
@@ -819,6 +821,16 @@ class LatexWriter(Writer):
                 data_table.add_hline()
                 # Add stuff to the table if they're to be included
                 printout = False
+                if "coordinates" in included_inputs:
+                    name = self.input_config['coordinates']['name']
+                    unit = NoEscape(
+                        self.input_config['coordinates']['unit_latex'])
+                    input_value = input_data["coordinates"]
+                    input_value_str = "LAT: " + str(input_value[0]) + \
+                        ", LON: " + str(input_value[1])
+                    row = [name, unit, input_value_str]
+                    data_table.add_row(row)
+                    printout = True
                 if "monthly_temps" in included_inputs:
                     name = self.input_config['monthly_temps']['name']
                     unit = NoEscape(
