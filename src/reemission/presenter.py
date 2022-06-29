@@ -192,7 +192,8 @@ class ExcelWriter(Writer):
             return None
 
         # Mapping between input names and input names in the Input.data dict.
-        config_to_data = {"monthly_temps": "monthly_temps",
+        config_to_data = {"coordinates": "coordinates",
+                          "monthly_temps": "monthly_temps",
                           "year_profile": "year_vector",
                           "gasses": "gasses"}
 
