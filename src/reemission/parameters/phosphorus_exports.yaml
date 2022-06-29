@@ -19,12 +19,12 @@ wetlands:
   low_intensity: 0.10
   high_intensity: 0.10
 crops:
-  low_intensity: fun_exp1
+  low_intensity: crop_export
   high_intensity: 2.24
 shrubs:
   low_intensity: 0.26
   high_intensity: 42.86
 forest:
-  low_intensity: fun_exp2
+  low_intensity: forest_export
   high_intensity: 0.41
 ...
