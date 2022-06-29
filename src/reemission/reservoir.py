@@ -89,6 +89,8 @@ class Reservoir:
                 accuracy=EPS) from err
         if isinstance(self.coordinates, list):
             self.coordinates = tuple(self.coordinates)
+        # Validate input arguments
+        self.validate_attributes()
 
     @classmethod
     def from_dict(cls: Type[ReservoirType], parameters: dict,
@@ -145,6 +147,14 @@ class Reservoir:
     def volume_km3(self) -> float:
         """Return volume in km3. Original value is in m3."""
         return self.volume / 10**9
+
+    def validate_attributes(self) -> None:
+        """Check object attributes and log and correct, if necessary, the
+        suspicious or invalid data."""
+        if self.water_intake_depth > self.max_depth:
+            log.warning("Water intake depth greater than max depth")
+            log.warning("Setting intake depth to max depth.")
+            self.water_intake_depth = self.max_depth
 
     def mean_radiance_lat(self) -> float:
         """Selects representative mean horizontal radiance in (kWh/m2/d)
@@ -210,6 +220,8 @@ class Reservoir:
     def littoral_area_frac(self) -> float:
         r"""Calculate percentage of reservoir's surface area that is
         littoral, i.e. close to the shore. Eq. A22 in Praire2021.
+        Return:
+            Littoral area fraction in \%
 
         .. math::
             f_{lit} = 100 \left(1-\left(1-3/h_{max}\right)^{s_{q,bath}}\right)
