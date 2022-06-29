@@ -34,17 +34,19 @@ class EmissionModel:
         presenter: Presenter object for presenting input and output data
             in various formats.
     """
-
     inputs: Inputs
     config: Union[Dict, pathlib.Path, str]
     outputs: Dict = field(init=False)
+    author: str = field(default="")
+    report_title: str = field(default="Results")
+    p_model: str = field(default="g-res")
     presenter: Optional[Presenter] = field(default=None)
 
     def __post_init__(self) -> None:
         """Initialize outputs dict an load config file if config is a path."""
         self.outputs = {}
         if isinstance(self.config, (pathlib.Path, str)):
-            self.config = reemission.utils.load_yaml(self.config)
+            self.config = reemission.utils.load_yaml(pathlib.Path(self.config))
 
     @staticmethod
     def create_exec_dictionary(
@@ -68,9 +70,9 @@ class EmissionModel:
         if co2_em:
             co2_exec = {
                 'co2_diffusion': {
-                    'ref': co2_em.gross_total, 'args': {}},
+                    'ref': co2_em.diffusion_flux_int, 'args': {}},
                 'co2_diffusion_nonanthro': {
-                    'ref': co2_em.flux_nonanthro, 'args': {}},
+                    'ref': co2_em.diffusion_flux_nonanthro, 'args': {}},
                 'co2_preimp': {
                     'ref': co2_em.pre_impoundment, 'args': {}},
                 'co2_minus_nonanthro': {
@@ -78,23 +80,36 @@ class EmissionModel:
                 'co2_net': {
                     'ref': co2_em.factor,
                     'args': {'number_of_years': years[-1]}},
+                'co2_total_per_year': {
+                    'ref': co2_em.total_emission_per_year,
+                    'args': {'number_of_years': years[-1]}},
+                'co2_total_lifetime': {
+                    'ref': co2_em.total_lifetime_emission,
+                    'args': {'number_of_years': years[-1]}},
                 'co2_profile': {
                     'ref': co2_em.profile, 'args': {'years': years}},
             }
         if ch4_em:
             ch4_exec = {
                 'ch4_diffusion': {
-                    'ref': ch4_em.diffusion,
-                    'args': {'number_of_years': years[-1]}},
+                    'ref': ch4_em.diffusion_flux_int,
+                    'args': {'time_horizon': years[-1]}},
                 'ch4_ebullition': {
-                    'ref': ch4_em.ebullition, 'args': {}},
+                    'ref': ch4_em.ebullition_flux_int,
+                    'args': {'time_horizon': years[-1]}},
                 'ch4_degassing': {
-                    'ref': ch4_em.degassing,
-                    'args': {'number_of_years': years[-1]}},
+                    'ref': ch4_em.degassing_flux_int,
+                    'args': {'time_horizon': years[-1]}},
                 'ch4_preimp': {
                     'ref': ch4_em.pre_impoundment, 'args': {}},
                 'ch4_net': {
                     'ref': ch4_em.factor,
+                    'args': {'number_of_years': years[-1]}},
+                'ch4_total_per_year': {
+                    'ref': ch4_em.total_emission_per_year,
+                    'args': {'number_of_years': years[-1]}},
+                'ch4_total_lifetime': {
+                    'ref': ch4_em.total_lifetime_emission,
                     'args': {'number_of_years': years[-1]}},
                 'ch4_profile': {
                     'ref': ch4_em.profile, 'args': {'years': years}},
@@ -107,6 +122,12 @@ class EmissionModel:
                     'ref': n2o_em.factor, 'args': {'model': 'model 2'}},
                 'n2o_mean': {
                     'ref': n2o_em.factor, 'args': {'mean': True}},
+                'n2o_total_per_year': {
+                    'ref': n2o_em.total_emission_per_year,
+                    'args': {'number_of_years': years[-1]}},
+                'n2o_total_lifetime': {
+                    'ref': n2o_em.total_lifetime_emission,
+                    'args': {'number_of_years': years[-1]}},
                 'n2o_profile': {
                     'ref': n2o_em.profile, 'args': {'years': years}},
             }
@@ -115,26 +136,19 @@ class EmissionModel:
                 d.items() for d in (co2_exec, ch4_exec, n2o_exec)))
         return exec_dict
 
-    @property
-    def get_inputs(self):
-        """Returns the Inputs object."""
-        return self.inputs
-
     def add_presenter(
-            self, writers: List[Type[Writer]], output_files: List[str],
-            author="Anonymus", title="HEET Results") -> None:
+            self, writers: List[Type[Writer]], output_files: List[str]) \
+            -> None:
         """Instantiates a presenter class to the emission model for data
         output formatting.
 
         Args:
             writers: List of presenter.Writer objects
             output_files: Paths to output files, one per writer.
-            author: Author name.
-            title: Outputs name.
         """
         self.presenter = Presenter(
             inputs=self.inputs, outputs=self.outputs,
-            author=author, title=title)
+            author=self.author, title=self.report_title)
         try:
             assert len(writers) == len(output_files)
         except AssertionError:
@@ -153,21 +167,18 @@ class EmissionModel:
             return None
         if self.presenter is not None:
             self.presenter.output()
-            return None
         else:
             log.error("Presenter not defined.")
-            return None
         return None
 
-    def calculate(self, p_calc_method='g-res', n2o_model='model 1') -> None:
+    def calculate(self, n2o_model='model 1') -> None:
         """Calculate emissions for a number of variables defined in config.
 
         Args:
-            p_calc_method: Phosphorus loading calculation method.
-                Options: 'g-res' or 'mcdowell'.
             n2o_model: total N2O emission calculation method.
                 Options: 'model 1', 'model 2'
         """
+        p_calc_method = self.p_model
         # Check the calculation options given in input arguments.
         avail_p_calc_methods = ('g-res', 'mcdowell')
         avail_n2o_models = ('model 1', 'model 2')
@@ -216,8 +227,7 @@ class EmissionModel:
                 em_ch4 = MethaneEmission(
                     catchment=catchment,
                     reservoir=reservoir,
-                    monthly_temp=monthly_temp,
-                    mean_ir=4.46)
+                    monthly_temp=monthly_temp)
             else:
                 em_ch4 = None
 
@@ -246,5 +256,6 @@ class EmissionModel:
                             **exec_dict[emission]['args'])
                 self.outputs[model_input.name] = output
             else:
-                log.warning("Output/Input configuration file not instantiated.")
+                log.warning(
+                    "Output/Input configuration file not instantiated.")
         return None
