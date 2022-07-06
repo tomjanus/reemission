@@ -151,6 +151,12 @@ class Reservoir:
     def validate_attributes(self) -> None:
         """Check object attributes and log and correct, if necessary, the
         suspicious or invalid data."""
+        if self.water_intake_depth == "null":
+            # If water intake depth value is not given, assume that
+            # the intake is from deep in the reservoir and therefore,
+            # degassing occurs.
+            self.water_intake_depth = self.max_depth
+            print(self.water_intake_depth)
         if self.water_intake_depth > self.max_depth:
             log.warning("Water intake depth greater than max depth")
             log.warning("Setting intake depth to max depth.")
