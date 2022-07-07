@@ -71,6 +71,10 @@ catchment_inputs:
       name: "Soil wetness"
       unit: "mm over profile"
       unit_latex: "mm over profile"
+    mean_olsen:
+      name: "Soil Olsen P content"
+      unit: "kgP/ha"
+      unit_latex: "kgP ha$^{-1}$"
 reservoir_inputs:
   include: True
   name: "Inputs for reservoir-level process calculations"

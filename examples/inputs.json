@@ -18,6 +18,7 @@
             "precip": 2000.0,
             "etransp": 400.0,
             "soil_wetness": 140.0,
+            "mean_olsen": 2.3,
             "biogenic_factors":
             {
                 "biome": "TROPICALMOISTBROADLEAF",
@@ -60,6 +61,7 @@
             "precip": 5000.0,
             "etransp": 200.0,
             "soil_wetness": 100.0,
+            "mean_olsen": 4.2,
             "biogenic_factors":
             {
                 "biome": "MEDFORESTS",

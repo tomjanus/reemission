@@ -156,7 +156,6 @@ class Reservoir:
             # the intake is from deep in the reservoir and therefore,
             # degassing occurs.
             self.water_intake_depth = self.max_depth
-            print(self.water_intake_depth)
         if self.water_intake_depth > self.max_depth:
             log.warning("Water intake depth greater than max depth")
             log.warning("Setting intake depth to max depth.")
