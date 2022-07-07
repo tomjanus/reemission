@@ -182,6 +182,8 @@ class Catchment:
                     'Regression function %s unknown. Returning zero.',
                     fun_name)
                 return 0.0
+            if area_fraction < 1e-6:
+                return 0.0
             try:
                 # Equation gives P export coefficient in kgP/ha/yr
                 # Eq. A.23. and A.24. from Praire2021
@@ -189,6 +191,7 @@ class Catchment:
                     reg_coeffs[0] - math.log10(
                         self.landuse_area(area_fraction)) * reg_coeffs[1])
             except ValueError:
+                log.error(f"Error processing {fun_name}, area fraction {area_fraction}")
                 log.error('Export coefficient could not be calculated. Returning 0.')
                 p_export_coeff = 0.0
             return p_export_coeff
