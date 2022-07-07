@@ -1,5 +1,9 @@
 {
     "Sedawgyi": {
+        "coordinates": [
+            22.3406,
+            96.3278
+        ],
         "monthly_temps": [
             19,
             22,
@@ -34,6 +38,7 @@
         "catchment": {
             "runoff": 1262,
             "area": 3509.228,
+            "riv_length": 18.43,
             "population": 226517,
             "area_fractions": [
                 0.04,
@@ -49,6 +54,7 @@
             "precip": 1750,
             "etransp": 1215,
             "soil_wetness": 270,
+            "mean_olsen": 4.426,
             "biogenic_factors": {
                 "biome": "TROPICALMOISTBROADLEAF",
                 "climate": "TEMPERATE",
@@ -72,10 +78,19 @@
                 0.129,
                 0.082
             ],
-            "soil_carbon": 0.561
+            "soil_carbon": 0.561,
+            "mean_radiance": 4.9,
+            "mean_radiance_may_sept": 4.656,
+            "mean_radiance_nov_mar": 4.992,
+            "mean_monthly_windspeed": 1.07,
+            "water_intake_depth": "null"
         }
     },
     "Myittha": {
+        "coordinates": [
+            22.0004,
+            94.0418
+        ],
         "monthly_temps": [
             19,
             22,
@@ -110,21 +125,23 @@
         "catchment": {
             "runoff": 976,
             "area": 1896.343,
+            "riv_length": 21.17,
             "population": 19614,
             "area_fractions": [
                 0.009,
                 0.762,
                 0.227,
                 0.002,
-                0.0,
                 0,
-                0.0,
+                0,
+                0,
                 0
             ],
             "slope": 43,
             "precip": 1797,
             "etransp": 1189,
             "soil_wetness": 166,
+            "mean_olsen": 5.391,
             "biogenic_factors": {
                 "biome": "TROPICALMOISTBROADLEAF",
                 "climate": "TEMPERATE",
@@ -142,16 +159,25 @@
                 0,
                 0,
                 0,
-                0.0,
-                0.0,
+                0,
+                0,
                 0.343,
                 0.291,
                 0.366
             ],
-            "soil_carbon": 0.457
+            "soil_carbon": 0.457,
+            "mean_radiance": 4.753,
+            "mean_radiance_may_sept": 4.369,
+            "mean_radiance_nov_mar": 4.973,
+            "mean_monthly_windspeed": 1.1,
+            "water_intake_depth": "null"
         }
     },
     "Myogyi": {
+        "coordinates": [
+            21.46045578,
+            96.38305564
+        ],
         "monthly_temps": [
             21,
             23,
@@ -186,13 +212,14 @@
         "catchment": {
             "runoff": 880,
             "area": 3873.227,
+            "riv_length": 13.94,
             "population": 183182,
             "area_fractions": [
                 0.198,
                 0.311,
                 0.482,
                 0.001,
-                0.0,
+                0,
                 0,
                 0.009,
                 0
@@ -201,6 +228,7 @@
             "precip": 1780,
             "etransp": 1243,
             "soil_wetness": 218,
+            "mean_olsen": 6.032,
             "biogenic_factors": {
                 "biome": "TROPICALMOISTBROADLEAF",
                 "climate": "TEMPERATE",
@@ -218,16 +246,25 @@
                 0,
                 0,
                 0,
-                0.0,
-                0.0,
+                0,
+                0,
                 0.771,
                 0.119,
                 0.11
             ],
-            "soil_carbon": 0.488
+            "soil_carbon": 0.488,
+            "mean_radiance": 5.12,
+            "mean_radiance_may_sept": 4.962,
+            "mean_radiance_nov_mar": 5.14,
+            "mean_monthly_windspeed": 1.13,
+            "water_intake_depth": "null"
         }
     },
     "Phyu Chaung": {
+        "coordinates": [
+            18.5086,
+            96.3552
+        ],
         "monthly_temps": [
             21,
             24,
@@ -262,21 +299,23 @@
         "catchment": {
             "runoff": 1027,
             "area": 1048.397,
+            "riv_length": 31.07,
             "population": 111494,
             "area_fractions": [
                 0.005,
                 0.577,
                 0.392,
                 0.026,
-                0.0,
                 0,
-                0.0,
+                0,
+                0,
                 0
             ],
             "slope": 19,
             "precip": 1694,
             "etransp": 1341,
             "soil_wetness": 355,
+            "mean_olsen": 4.882,
             "biogenic_factors": {
                 "biome": "TROPICALMOISTBROADLEAF",
                 "climate": "TROPICAL",
@@ -294,16 +333,25 @@
                 0,
                 0,
                 0,
-                0.0,
+                0,
                 0.485,
                 0.048,
                 0.129,
                 0.338
             ],
-            "soil_carbon": 0.51
+            "soil_carbon": 0.51,
+            "mean_radiance": 5.03,
+            "mean_radiance_may_sept": 4.34,
+            "mean_radiance_nov_mar": 5.458,
+            "mean_monthly_windspeed": 0.99,
+            "water_intake_depth": "null"
         }
     },
     "Thauk Ye Khat 2": {
+        "coordinates": [
+            18.9135,
+            96.6176
+        ],
         "monthly_temps": [
             22,
             24,
@@ -338,21 +386,23 @@
         "catchment": {
             "runoff": 1197,
             "area": 2160.344,
+            "riv_length": 23.39,
             "population": 57003,
             "area_fractions": [
                 0.005,
                 0.554,
                 0.436,
                 0.004,
-                0.0,
                 0,
-                0.0,
+                0,
+                0,
                 0
             ],
             "slope": 37,
             "precip": 1463,
             "etransp": 1325,
             "soil_wetness": 343,
+            "mean_olsen": 7.836,
             "biogenic_factors": {
                 "biome": "TROPICALMOISTBROADLEAF",
                 "climate": "TROPICAL",
@@ -370,16 +420,25 @@
                 0,
                 0,
                 0,
-                0.0,
+                0,
                 0.306,
                 0.365,
                 0.11,
                 0.219
             ],
-            "soil_carbon": 0.547
+            "soil_carbon": 0.547,
+            "mean_radiance": 5.03,
+            "mean_radiance_may_sept": 4.34,
+            "mean_radiance_nov_mar": 5.458,
+            "mean_monthly_windspeed": 1.06,
+            "water_intake_depth": "null"
         }
     },
     "Zaungtu": {
+        "coordinates": [
+            17.7543,
+            96.1998
+        ],
         "monthly_temps": [
             23,
             24,
@@ -414,13 +473,14 @@
         "catchment": {
             "runoff": 1424,
             "area": 1098.103,
+            "riv_length": 9.75,
             "population": 149622,
             "area_fractions": [
-                0.0,
+                0,
                 0.795,
                 0.192,
-                0.0,
-                0.0,
+                0,
+                0,
                 0,
                 0.012,
                 0
@@ -429,6 +489,7 @@
             "precip": 2141,
             "etransp": 1329,
             "soil_wetness": 377,
+            "mean_olsen": 8.914,
             "biogenic_factors": {
                 "biome": "TROPICALMOISTBROADLEAF",
                 "climate": "TROPICAL",
@@ -447,15 +508,24 @@
                 0,
                 0,
                 0.784,
-                0.0,
+                0,
                 0.01,
                 0.137,
                 0.06899999999999999
             ],
-            "soil_carbon": 0.59
+            "soil_carbon": 0.59,
+            "mean_radiance": 4.87,
+            "mean_radiance_may_sept": 3.97,
+            "mean_radiance_nov_mar": 5.462,
+            "mean_monthly_windspeed": 0.88,
+            "water_intake_depth": "null"
         }
     },
     "Shwegyin": {
+        "coordinates": [
+            17.9682,
+            96.9354
+        ],
         "monthly_temps": [
             23,
             25,
@@ -490,21 +560,23 @@
         "catchment": {
             "runoff": 2122,
             "area": 874.105,
+            "riv_length": 30.7,
             "population": 39742,
             "area_fractions": [
                 0.023,
                 0.528,
                 0.392,
                 0.056,
-                0.0,
                 0,
-                0.0,
+                0,
+                0,
                 0
             ],
             "slope": 31,
             "precip": 2416,
             "etransp": 1320,
             "soil_wetness": 501,
+            "mean_olsen": 9.629,
             "biogenic_factors": {
                 "biome": "TROPICALMOISTBROADLEAF",
                 "climate": "TROPICAL",
@@ -522,16 +594,25 @@
                 0,
                 0,
                 0,
-                0.0,
+                0,
                 0.478,
                 0.203,
                 0.097,
                 0.222
             ],
-            "soil_carbon": 0.615
+            "soil_carbon": 0.615,
+            "mean_radiance": 4.94,
+            "mean_radiance_may_sept": 4.16,
+            "mean_radiance_nov_mar": 5.445,
+            "mean_monthly_windspeed": 0.94,
+            "water_intake_depth": "null"
         }
     },
     "Shweli 1": {
+        "coordinates": [
+            23.6971,
+            97.5062
+        ],
         "monthly_temps": [
             14,
             16,
@@ -566,6 +647,7 @@
         "catchment": {
             "runoff": 1115,
             "area": 12582.613,
+            "riv_length": 6.54,
             "population": 1587658,
             "area_fractions": [
                 0.147,
@@ -581,6 +663,7 @@
             "precip": 1498,
             "etransp": 1123,
             "soil_wetness": 144,
+            "mean_olsen": 5.85,
             "biogenic_factors": {
                 "biome": "TROPICALMOISTBROADLEAF",
                 "climate": "TEMPERATE",
@@ -598,16 +681,25 @@
                 0,
                 0,
                 0,
-                0.0,
-                0.0,
+                0,
+                0,
                 0.5,
                 0.357,
                 0.143
             ],
-            "soil_carbon": 0.624
+            "soil_carbon": 0.624,
+            "mean_radiance": 4.66,
+            "mean_radiance_may_sept": 4.328,
+            "mean_radiance_nov_mar": 4.852,
+            "mean_monthly_windspeed": 1.07,
+            "water_intake_depth": "null"
         }
     },
     "Paung Laung (lower)": {
+        "coordinates": [
+            19.7854,
+            96.3345
+        ],
         "monthly_temps": [
             21,
             24,
@@ -642,21 +734,23 @@
         "catchment": {
             "runoff": 923,
             "area": 4577.466,
+            "riv_length": 16.52,
             "population": 291858,
             "area_fractions": [
                 0.019,
                 0.4,
                 0.574,
                 0.007,
-                0.0,
                 0,
-                0.0,
+                0,
+                0,
                 0
             ],
             "slope": 38,
             "precip": 1265,
             "etransp": 1307,
             "soil_wetness": 194,
+            "mean_olsen": 8.362,
             "biogenic_factors": {
                 "biome": "TROPICALMOISTBROADLEAF",
                 "climate": "TROPICAL",
@@ -674,16 +768,25 @@
                 0,
                 0,
                 0,
-                0.0,
+                0,
                 0.241,
                 0.257,
                 0.187,
                 0.316
             ],
-            "soil_carbon": 0.58
+            "soil_carbon": 0.58,
+            "mean_radiance": 5.15,
+            "mean_radiance_may_sept": 4.672,
+            "mean_radiance_nov_mar": 5.426,
+            "mean_monthly_windspeed": 1.11,
+            "water_intake_depth": "null"
         }
     },
     "Kabaung": {
+        "coordinates": [
+            18.8978,
+            96.223
+        ],
         "monthly_temps": [
             22,
             24,
@@ -718,21 +821,23 @@
         "catchment": {
             "runoff": 828,
             "area": 1182.596,
+            "riv_length": 22.31,
             "population": 147601,
             "area_fractions": [
                 0.001,
                 0.772,
                 0.198,
                 0.029,
-                0.0,
                 0,
-                0.0,
+                0,
+                0,
                 0
             ],
             "slope": 19,
             "precip": 1492,
             "etransp": 1346,
             "soil_wetness": 323,
+            "mean_olsen": 5.233,
             "biogenic_factors": {
                 "biome": "TROPICALMOISTBROADLEAF",
                 "climate": "TROPICAL",
@@ -750,16 +855,25 @@
                 0,
                 0,
                 0,
-                0.0,
+                0,
                 0.502,
                 0.012,
                 0.003,
                 0.483
             ],
-            "soil_carbon": 0.503
+            "soil_carbon": 0.503,
+            "mean_radiance": 5.03,
+            "mean_radiance_may_sept": 4.34,
+            "mean_radiance_nov_mar": 5.458,
+            "mean_monthly_windspeed": 1,
+            "water_intake_depth": "null"
         }
     },
     "Kun Chaung": {
+        "coordinates": [
+            18.42254318,
+            96.36845816
+        ],
         "monthly_temps": [
             22,
             24,
@@ -794,21 +908,23 @@
         "catchment": {
             "runoff": 1309,
             "area": 872.461,
+            "riv_length": 24.07,
             "population": 86804,
             "area_fractions": [
                 0.02,
                 0.594,
                 0.337,
                 0.049,
-                0.0,
                 0,
-                0.0,
+                0,
+                0,
                 0
             ],
             "slope": 18,
             "precip": 1826,
             "etransp": 1337,
             "soil_wetness": 366,
+            "mean_olsen": 5.294,
             "biogenic_factors": {
                 "biome": "TROPICALMOISTBROADLEAF",
                 "climate": "TROPICAL",
@@ -826,16 +942,25 @@
                 0,
                 0,
                 0,
-                0.0,
+                0,
                 0.605,
                 0.193,
                 0.126,
                 0.076
             ],
-            "soil_carbon": 0.496
+            "soil_carbon": 0.496,
+            "mean_radiance": 5.03,
+            "mean_radiance_may_sept": 4.34,
+            "mean_radiance_nov_mar": 5.458,
+            "mean_monthly_windspeed": 0.96,
+            "water_intake_depth": "null"
         }
     },
     "Yeywa": {
+        "coordinates": [
+            21.6729,
+            96.4698
+        ],
         "monthly_temps": [
             19,
             22,
@@ -870,6 +995,7 @@
         "catchment": {
             "runoff": 692,
             "area": 28711.065,
+            "riv_length": 80.84,
             "population": 1476699,
             "area_fractions": [
                 0.129,
@@ -878,13 +1004,14 @@
                 0.001,
                 0.001,
                 0,
-                0.0,
+                0,
                 0
             ],
             "slope": 23,
             "precip": 1569,
             "etransp": 1233,
             "soil_wetness": 203,
+            "mean_olsen": 5.353,
             "biogenic_factors": {
                 "biome": "TROPICALMOISTBROADLEAF",
                 "climate": "TEMPERATE",
@@ -908,10 +1035,19 @@
                 0.124,
                 0.254
             ],
-            "soil_carbon": 0.568
+            "soil_carbon": 0.568,
+            "mean_radiance": 5.01,
+            "mean_radiance_may_sept": 4.809,
+            "mean_radiance_nov_mar": 5.066,
+            "mean_monthly_windspeed": 1.14,
+            "water_intake_depth": "null"
         }
     },
     "Thapanzeik": {
+        "coordinates": [
+            23.298,
+            95.3498
+        ],
         "monthly_temps": [
             19,
             22,
@@ -946,13 +1082,14 @@
         "catchment": {
             "runoff": 632,
             "area": 9293.083,
+            "riv_length": 58.93,
             "population": 446997,
             "area_fractions": [
                 0.304,
                 0.273,
                 0.376,
-                0.0,
-                0.0,
+                0,
+                0,
                 0,
                 0.047,
                 0
@@ -961,6 +1098,7 @@
             "precip": 1601,
             "etransp": 1237,
             "soil_wetness": 202,
+            "mean_olsen": 6.729,
             "biogenic_factors": {
                 "biome": "TROPICALMOISTBROADLEAF",
                 "climate": "TROPICAL",
@@ -979,15 +1117,24 @@
                 0,
                 0,
                 0.899,
-                0.0,
+                0,
                 0.078,
                 0.022,
                 0.001
             ],
-            "soil_carbon": 0.432
+            "soil_carbon": 0.432,
+            "mean_radiance": 4.62,
+            "mean_radiance_may_sept": 4.362,
+            "mean_radiance_nov_mar": 4.734,
+            "mean_monthly_windspeed": 0.99,
+            "water_intake_depth": "null"
         }
     },
     "Kyee Ohn Kyee Wa": {
+        "coordinates": [
+            20.3355,
+            94.4188
+        ],
         "monthly_temps": [
             21,
             23,
@@ -1022,13 +1169,14 @@
         "catchment": {
             "runoff": 1089,
             "area": 5152.946,
+            "riv_length": 34.35,
             "population": 72627,
             "area_fractions": [
                 0.032,
                 0.677,
                 0.287,
                 0.002,
-                0.0,
+                0,
                 0,
                 0.001,
                 0
@@ -1037,6 +1185,7 @@
             "precip": 1861,
             "etransp": 1237,
             "soil_wetness": 145,
+            "mean_olsen": 5.336,
             "biogenic_factors": {
                 "biome": "TROPICALMOISTBROADLEAF",
                 "climate": "TEMPERATE",
@@ -1054,16 +1203,25 @@
                 0,
                 0,
                 0,
-                0.0,
+                0,
                 0.098,
                 0.818,
                 0.047,
                 0.037
             ],
-            "soil_carbon": 0.488
+            "soil_carbon": 0.488,
+            "mean_radiance": 4.85,
+            "mean_radiance_may_sept": 4.3,
+            "mean_radiance_nov_mar": 5.188,
+            "mean_monthly_windspeed": 0.99,
+            "water_intake_depth": "null"
         }
     },
     "Mone Chaung": {
+        "coordinates": [
+            20.4741,
+            94.2571
+        ],
         "monthly_temps": [
             20,
             23,
@@ -1098,13 +1256,14 @@
         "catchment": {
             "runoff": 1269,
             "area": 3970.656,
+            "riv_length": 27.02,
             "population": 48924,
             "area_fractions": [
                 0.019,
                 0.663,
                 0.314,
                 0.002,
-                0.0,
+                0,
                 0,
                 0.002,
                 0
@@ -1113,6 +1272,7 @@
             "precip": 1942,
             "etransp": 1217,
             "soil_wetness": 154,
+            "mean_olsen": 5.423,
             "biogenic_factors": {
                 "biome": "TROPICALMOISTBROADLEAF",
                 "climate": "TEMPERATE",
@@ -1136,10 +1296,19 @@
                 0.573,
                 0.049
             ],
-            "soil_carbon": 0.509
+            "soil_carbon": 0.509,
+            "mean_radiance": 4.85,
+            "mean_radiance_may_sept": 4.3,
+            "mean_radiance_nov_mar": 5.188,
+            "mean_monthly_windspeed": 1.02,
+            "water_intake_depth": "null"
         }
     },
     "Kinda": {
+        "coordinates": [
+            21.1596,
+            96.3221
+        ],
         "monthly_temps": [
             21,
             23,
@@ -1174,13 +1343,14 @@
         "catchment": {
             "runoff": 275,
             "area": 2293.785,
+            "riv_length": 21.13,
             "population": 160256,
             "area_fractions": [
                 0.116,
                 0.254,
                 0.614,
-                0.0,
-                0.0,
+                0,
+                0,
                 0,
                 0.014,
                 0
@@ -1189,6 +1359,7 @@
             "precip": 1407,
             "etransp": 1286,
             "soil_wetness": 140,
+            "mean_olsen": 4.985,
             "biogenic_factors": {
                 "biome": "TROPICALMOISTBROADLEAF",
                 "climate": "TEMPERATE",
@@ -1212,10 +1383,19 @@
                 0.08,
                 0.108
             ],
-            "soil_carbon": 0.516
+            "soil_carbon": 0.516,
+            "mean_radiance": 5.12,
+            "mean_radiance_may_sept": 4.962,
+            "mean_radiance_nov_mar": 5.14,
+            "mean_monthly_windspeed": 1.13,
+            "water_intake_depth": "null"
         }
     },
     "Zawgyi II": {
+        "coordinates": [
+            21.5713,
+            96.8688
+        ],
         "monthly_temps": [
             17,
             19,
@@ -1250,13 +1430,14 @@
         "catchment": {
             "runoff": 1023,
             "area": 2087.179,
+            "riv_length": 11.78,
             "population": 128824,
             "area_fractions": [
                 0.351,
                 0.146,
                 0.485,
                 0.001,
-                0.0,
+                0,
                 0,
                 0.016,
                 0
@@ -1265,6 +1446,7 @@
             "precip": 1926,
             "etransp": 1234,
             "soil_wetness": 225,
+            "mean_olsen": 6.614,
             "biogenic_factors": {
                 "biome": "TROPICALMOISTBROADLEAF",
                 "climate": "TEMPERATE",
@@ -1288,7 +1470,12 @@
                 0.064,
                 0.003
             ],
-            "soil_carbon": 0.526
+            "soil_carbon": 0.526,
+            "mean_radiance": 5.12,
+            "mean_radiance_may_sept": 4.962,
+            "mean_radiance_nov_mar": 5.14,
+            "mean_monthly_windspeed": 1.14,
+            "water_intake_depth": "null"
         }
     }
 }
