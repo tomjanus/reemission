@@ -38,7 +38,7 @@
             "mean_radiance_may_sept": 4.5,
 	    "mean_radiance_nov_mar": 3.2,
             "mean_monthly_windspeed": 3.8,
-	    "water_intake_depth": 20.0
+	    "water_intake_depth": "null"
         }
     },
     "Reservoir 2":
