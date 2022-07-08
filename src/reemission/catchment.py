@@ -44,6 +44,7 @@ class Catchment:
         precip: Mean annual precipitation, mm/year
         etransp: Mean annual evapotranspiration, mm/year
         soil_wetness: Soil wetness in mm over profile
+        mean_olsen: Mean P content in soil, kg ha-1
         area_fractions: List of fractions of land representing different
             land uses.
         biogenic_factors: biogenic.BiogenicFactor object with categorical
@@ -59,6 +60,7 @@ class Catchment:
     precip: float
     etransp: float
     soil_wetness: float
+    mean_olsen: float
     area_fractions: List[float]
     biogenic_factors: BiogenicFactors
 
@@ -216,7 +218,7 @@ class Catchment:
         # 1e-6 converts mg/m3 to kg/m3; discharge is given in m3/year
         return 1e-6 * self.inflow_p_conc_mcdowell() * self.discharge
 
-    def inflow_p_conc_mcdowell(self, init_p: float = 5.0, eps=1e-6) -> float:
+    def inflow_p_conc_mcdowell(self) -> float:
         """Calculate influent phosphorus concetration to the reservoir
         in micrograms/L using regression model of McDowell 2020."""
         biome = self.biogenic_factors.biome
@@ -235,13 +237,13 @@ class Catchment:
         bias_corr = tp_coeff_table['corr']
 
         # Define the inner function calculating the final output P conc.
-        def inflow_tp(p_conc) -> float:
+        def inflow_tp() -> float:
             """Calculate inflow TP in [micrograms/L] using McDowell's
             regression coefficients.
             """
             ln_tp = (
                 intercept
-                + olsen_p * p_conc
+                + olsen_p * self.mean_olsen
                 + prec_coeff * self.precip / 12
                 + slope_coeff * self.slope
                 + cropland_coeff * crop_percent
@@ -250,17 +252,7 @@ class Catchment:
             inflow_p = 10**3 * bias_corr * math.exp(ln_tp)
             return inflow_p
 
-        # Define the wrapper function for running find_inflow in a recurrent
-        # manner until convergence
-        def recurrent_tp(tp_concentration: float) -> float:
-            """Calls find_inflow_tp in a recurrent manner until output
-            concentration is equal to input concentration (within set
-            accurracy) eps."""
-            if tp_concentration - inflow_tp(tp_concentration) > eps:
-                return recurrent_tp(inflow_tp(tp_concentration))
-            return inflow_tp(tp_concentration)
-
-        return recurrent_tp(init_p)
+        return inflow_tp()
 
     def inflow_p_conc_gres(self) -> float:
         """Calculate influent phosphorus concentration to the reservoir
