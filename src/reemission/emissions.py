@@ -146,8 +146,8 @@ class CarbonDioxideEmission(Emission):
     par: SimpleNamespace
     pre_impoundment_table: dict
 
-    def __init__(self, catchment, reservoir, eff_temp, preinund_area=None,
-                 p_calc_method='g-res', config_file=INI_FILE):
+    def __init__(self, catchment, reservoir, eff_temp, p_calc_method,
+                 preinund_area=None, config_file=INI_FILE):
         super().__init__(catchment=catchment, reservoir=reservoir,
                          config_file=config_file, preinund_area=preinund_area)
         # Initialise input data specific to carbon dioxide emissions
@@ -173,8 +173,8 @@ class CarbonDioxideEmission(Emission):
     def reservoir_tp(self) -> float:
         """Return reservoir total phosphorus concentration in micrograms/L."""
         return self.reservoir.reservoir_tp(
-            inflow_conc=self.catchment.inflow_p_conc(
-                method=self.p_calc_method))
+            inflow_conc=self.catchment.inflow_p_conc(method=self.p_calc_method),
+            method=self.config['CALCULATIONS']['ret_coeff_method'])
 
     def pre_impoundment(self) -> float:
         """
@@ -186,7 +186,7 @@ class CarbonDioxideEmission(Emission):
         Returns:
             Unit pre-impoundment emission in g CO2eq m-2 yr-1
         """
-        _list_of_landuses = list(Landuse.__dict__['_member_map_'].values())
+        _list_of_landuses = 3 * list(Landuse.__dict__['_member_map_'].values())
         climate = self.catchment.biogenic_factors.climate
         soil_type = self.catchment.biogenic_factors.soil_type
         emissions = []
@@ -240,13 +240,14 @@ class CarbonDioxideEmission(Emission):
         # depending on the number of years for which global warming potential
         # is quantified.
         if time_horizon != 100:
-            log.warning("Currently, the tool supports time horizon of 100 years only.")
+            log.warning(
+                "Currently, the tool supports time horizon of 100 years only.")
             gwp = self.par.co2_gwp100
         else:
             gwp = self.par.co2_gwp100
 
         flux = (
-            gwp * self.par.weight_CO2/self.par.weight_C/1000*365
+            gwp * self.par.weight_CO2/self.par.weight_C/1000*365.25
             * 10.0
             ** (
                 self.par.k1_diff
@@ -372,7 +373,7 @@ class MethaneEmission(Emission):
     def __init__(self, catchment, reservoir, monthly_temp,
                  preinund_area=None, config_file=INI_FILE):
         self.monthly_temp = monthly_temp
-        self.pre_impoundment_table = read_table(
+        self.pre_impoundment_table: dict = read_table(
             os.path.join(TABLES, 'Methane', 'pre-impoundment.yaml'))
         super().__init__(
             catchment=catchment,
@@ -395,6 +396,8 @@ class MethaneEmission(Emission):
         Uses a table of pre-impoundment emissions per land cover category
         and soil type, in kgCH4/ha/yr.
 
+        Adds pre-impoundment emission from water bodies prior to impoundment.
+
         Pre-impoundment emissions are subtracted from the total CH4
         emission, comprised of the sum of degassing, ebullition and
         diffusion emission estimates (as CO2 equivalents).
@@ -402,7 +405,7 @@ class MethaneEmission(Emission):
         Returns:
             Unit pre-impoundment emission in gCO2eq m-2 yr-1
         """
-        _list_of_landuses = list(Landuse.__dict__['_member_map_'].values())
+        _list_of_landuses = 3 * list(Landuse.__dict__['_member_map_'].values())
         climate = self.catchment.biogenic_factors.climate
         soil_type = self.catchment.biogenic_factors.soil_type
         emissions = []
@@ -415,7 +418,15 @@ class MethaneEmission(Emission):
                 soil_type.value, {}).get(landuse.value, 0)
             # Create a list of emissions per area fraction, in kg CH4 yr-1
             emissions.append(area_landuse * coeff)
-        # Total emission in g CO2eq m-2 yr-1. To convert from CH4 to CO2
+        # The below calculation assumes that the windspeed provided as an
+        # Attribute to the reservoir object is at 50m height. Put this in
+        # documentation or allow wind speed at different heights and addd
+        # one more argument which is the windspeed measurement height.
+        emissions.append(
+            self.reservoir.ch4_preemission_factor() * self.reservoir.area *
+            100)
+        # Total emission needs to be in g CO2eq m-2 yr-1.
+        # To convert from CH4 to CO2
         # the unit emission is multiplied by 44/16, i.e. molecular weight
         # of CO2 divided by molecular weight of CH4.
         # To convert to CO2,eq the value is additionally multiplied by
@@ -714,6 +725,12 @@ class MethaneEmission(Emission):
             - self.pre_impoundment())
         return factor
 
+    def emission_factor(self) -> float:
+        """Calculate CH4 Emission Factor for Water Bodies in kg CH4/ha/yr"""
+        em_factor = self.reservoir.ch4_emission_factor(wind_height=50)
+        print(em_factor)
+        return em_factor
+
     def profile(
             self,
             years: Tuple[int, ...] = (1, 5, 10, 20, 30, 40, 50, 100)) \
@@ -745,18 +762,19 @@ class NitrousOxideEmission(Emission):
     Attrributes:
         available_models: tuple of supporte N2O emission models.
         model: selected N2O emission  model.
+        p_export_model: Model for calculating P export from catchments
     """
 
-    available_models: ClassVar[Tuple[str, ...]] = ('model 1', 'model 2')
+    available_models: ClassVar[Tuple[str, ...]] = ('model_1', 'model_2')
     model: str
+    p_export_model: str
 
-    def __init__(self, catchment, reservoir, preinund_area=None,
-                 config_file=INI_FILE, model='model 1'):
+    def __init__(self, catchment, reservoir, model, p_export_model,
+                 preinund_area=None, config_file=INI_FILE):
         if model not in self.available_models:
-            print('Model %s unknown. ' % model +
-                  'Initializing with default model 1')
-            model = 'model 1'
-        self.model = model
+            log.warning('Model %s unknown. ', model)
+            log.info('Initializing with default model 1')
+            model = 'model_1'
         super().__init__(catchment=catchment, reservoir=reservoir,
                          config_file=config_file, preinund_area=preinund_area)
         # List of parameters required for CH4 emission calculations
@@ -764,6 +782,8 @@ class NitrousOxideEmission(Emission):
         # Read the parameters from config
         self.par = self._par_from_config(
             list_of_constants=par_list, section_name='NITROUS_OXIDE')
+        self.model = model
+        self.p_export_model = p_export_model
 
     def _total_to_unit(self, emission: float) -> float:
         """Convert emission from kgN yr-1 to mmolN/m^2/yr."""
@@ -800,7 +820,8 @@ class NitrousOxideEmission(Emission):
         a normal distribution with standard deviation of +/-10% was assumed
         around the predicted total N fixation load values (Akbarzahdeh 2019)
         """
-        tp_load_annual = self.catchment.phosphorus_load()  # kg P / yr
+        tp_load_annual = self.catchment.phosphorus_load(
+            method=self.p_export_model)  # kg P / yr
         tn_load_annual = self.catchment.nitrogen_load()  # kg N / yr
         mu_coeff = max(
             0, math.erf((self.reservoir.residence_time - 0.028) / 0.04))
@@ -824,9 +845,9 @@ class NitrousOxideEmission(Emission):
         if mean:
             output = 0.5 * (self._n2o_emission_m1_co2() +
                             self._n2o_emission_m2_co2())
-        if model == "model 1":
+        if model == "model_1":
             output = self._n2o_emission_m1_co2()
-        if model == "model 2":
+        if model == "model_2":
             output = self._n2o_emission_m2_co2()
         return output
 

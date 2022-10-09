@@ -44,8 +44,9 @@ class MonthlyTemperature:
             Temperatures lower than 4 degC are treated as 4 degC.
         """
         temp_coeff = self.eff_temp_coeffs['co2']
-        return [10**(temp_coeff*temp) if temp >= 4 else
+        corr = [10**(temp_coeff*temp) if temp >= 4 else
                 10**(temp_coeff*4.0) for temp in self.temp_profile]
+        return corr
 
     def _temp_corr_coeff_ch4(self) -> List[float]:
         """Calculate temperature correction coefficient for CH4 for each
@@ -58,8 +59,9 @@ class MonthlyTemperature:
             Temperatures lower than 4 degC are treated as 4 degC.
         """
         temp_coeff = self.eff_temp_coeffs['ch4']
-        return [10**(temp_coeff*temp) if temp >= 4 else
+        corr = [10**(temp_coeff*temp) if temp >= 4 else
                 10**(temp_coeff*4.0) for temp in self.temp_profile]
+        return corr
 
     def eff_temp(self, gas: str) -> float:
         """Calculates effective annual temperature in deg C.

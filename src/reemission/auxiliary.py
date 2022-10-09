@@ -2,6 +2,7 @@
 
 The functions are not related to any classes or file/data management.
 """
+from typing import Optional, Any, List
 import math
 
 
@@ -31,7 +32,7 @@ def cd_factor(wind_speed: float) -> float:
     Args:
         wind_speed: reservoir mean wind speed, m/s.
     """
-    return 0.001 if wind_speed < 5.0 else 0.000015
+    return 1.3E-3 if wind_speed < 5.0 else 1.5E-5
 
 
 def scale_windspeed(wind_speed: float, wind_height: float,
@@ -52,3 +53,17 @@ def scale_windspeed(wind_speed: float, wind_height: float,
     """
     return wind_speed / (1 - math.sqrt(cd_factor(wind_speed))/0.4 *
                          math.log10(new_height / wind_height))
+
+
+def rollout_nested_list(
+        nested_list: List[Any],
+        out_list: Optional[List] = None) -> List[Any]:
+    if out_list is None:
+        out_list = []
+    while nested_list:
+        item = nested_list.pop(0)
+        if not isinstance(item, List):
+            out_list.append(item)
+        else:
+            rollout_nested_list(item, out_list)
+    return out_list

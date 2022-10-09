@@ -1,4 +1,6 @@
 """Simulation/calculation wrapper for GHG emission models."""
+import os
+import configparser
 from dataclasses import dataclass, field
 from typing import Type, Dict, Tuple, Union, Optional, List
 import pathlib
@@ -17,6 +19,16 @@ from reemission.presenter import Presenter, Writer
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
+# Get relative imports to data
+MODULE_DIR: str = os.path.dirname(__file__)
+INI_FILE: str = os.path.abspath(
+    os.path.join(MODULE_DIR, 'config', 'config.ini'))
+# Derive default calculation options from config
+config: configparser.ConfigParser = reemission.utils.read_config(INI_FILE)
+ret_coeff_method = config.get("CALCULATIONS", "ret_coeff_method")
+p_export_cal = config.get("CALCULATIONS", "p_export_cal")
+nitrous_oxide_model = config.get("CALCULATIONS", "nitrous_oxide_model")
+
 #  TODO: potential problems in Python <= 3.6 because dicts are not ordered
 #       pay attention
 TRUTHS = [True, 'true', 'True', 'yes', 'on']
@@ -29,8 +41,13 @@ class EmissionModel:
 
     Atrributes:
         inputs: Inputs object with input data.
-        outputs: outputs in a dictionary structure.
         config: dictionary with configuration data.
+        outputs: Emission calculation outputs in a dictionary structure.
+        author: Author's name
+        report_title: Title of output report / GHG emission estimation study
+        ret_coeff: Reservoir retention coefficient calculation model
+        p_model: P export calculation method
+        n2o_model: Nitroux Oxide calculation method
         presenter: Presenter object for presenting input and output data
             in various formats.
     """
@@ -39,14 +56,17 @@ class EmissionModel:
     outputs: Dict = field(init=False)
     author: str = field(default="")
     report_title: str = field(default="Results")
-    p_model: str = field(default="g-res")
+    ret_coeff: str = field(default=ret_coeff_method)
+    p_model: str = field(default=p_export_cal)
+    n2o_model: str = field(default=nitrous_oxide_model)
     presenter: Optional[Presenter] = field(default=None)
 
     def __post_init__(self) -> None:
         """Initialize outputs dict an load config file if config is a path."""
         self.outputs = {}
         if isinstance(self.config, (pathlib.Path, str)):
-            self.config = reemission.utils.load_yaml(pathlib.Path(self.config))
+            self.config: dict = \
+                reemission.utils.load_yaml(pathlib.Path(self.config))
 
     @staticmethod
     def create_exec_dictionary(
@@ -117,9 +137,9 @@ class EmissionModel:
         if n2o_em:
             n2o_exec = {
                 'n2o_methodA': {
-                    'ref': n2o_em.factor, 'args': {'model': 'model 1'}},
+                    'ref': n2o_em.factor, 'args': {'model': 'model_1'}},
                 'n2o_methodB': {
-                    'ref': n2o_em.factor, 'args': {'model': 'model 2'}},
+                    'ref': n2o_em.factor, 'args': {'model': 'model_2'}},
                 'n2o_mean': {
                     'ref': n2o_em.factor, 'args': {'mean': True}},
                 'n2o_total_per_year': {
@@ -171,29 +191,23 @@ class EmissionModel:
             log.error("Presenter not defined.")
         return None
 
-    def calculate(self, n2o_model='model 1') -> None:
-        """Calculate emissions for a number of variables defined in config.
-
-        Args:
-            n2o_model: total N2O emission calculation method.
-                Options: 'model 1', 'model 2'
-        """
-        p_calc_method = self.p_model
+    def calculate(self) -> None:
+        """Calculate emissions for a number of variables defined in config."""
         # Check the calculation options given in input arguments.
         avail_p_calc_methods = ('g-res', 'mcdowell')
-        avail_n2o_models = ('model 1', 'model 2')
-        if p_calc_method not in avail_p_calc_methods:
+        avail_n2o_models = ('model_1', 'model_2')
+        if self.p_model not in avail_p_calc_methods:
             log.warning(
                 "Invalid P calculation method. Expected: %s. " +
                 "Using default g-res method.",
                 ', '.join(avail_p_calc_methods))
-            p_calc_method = 'g-res'
-        if n2o_model not in avail_n2o_models:
+            self.p_model = 'g-res'
+        if self.n2o_model not in avail_n2o_models:
             log.warning(
                 "Invalid total N2O emission model. Expected: %s. " +
                 "Using default model 1.",
                 ', '.join(avail_n2o_models))
-            n2o_model = 'model 1'
+            self.n2o_model = 'model_1'
 
         # Iterate through each set of inputs and output results in a dict
         for _, model_input in self.inputs.inputs.items():
@@ -204,12 +218,14 @@ class EmissionModel:
             reservoir_data = model_input.reservoir_data
             if catchment_data is not None and reservoir_data is not None:
                 catchment = Catchment.from_dict(
-                    parameters=catchment_data)
+                    parameters=catchment_data,
+                    name=model_input.name)
                 reservoir = Reservoir.from_dict(
                     parameters=reservoir_data,
                     temperature=monthly_temp,
                     coordinates=model_input.data["coordinates"],
-                    inflow_rate=catchment.discharge)
+                    inflow_rate=catchment.discharge,
+                    name=model_input.name)
             else:
                 log.warning("Catchment or Reservoir data absent.")
                 return None
@@ -220,7 +236,7 @@ class EmissionModel:
                     catchment=catchment,
                     reservoir=reservoir,
                     eff_temp=monthly_temp.eff_temp(gas='co2'),
-                    p_calc_method=p_calc_method)
+                    p_calc_method=self.p_model)
             else:
                 em_co2 = None
             if "ch4" in model_input.data['gasses']:
@@ -235,7 +251,8 @@ class EmissionModel:
                 em_n2o = NitrousOxideEmission(
                     catchment=catchment,
                     reservoir=reservoir,
-                    model=n2o_model)
+                    model=self.n2o_model,
+                    p_export_model=self.p_model)
             else:
                 em_n2o = None
 

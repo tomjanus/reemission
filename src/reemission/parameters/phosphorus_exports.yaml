@@ -3,6 +3,7 @@
 # Phosphorus load factors for the land cover categories at low and
 # high land use intensities (kgP/ha/yr).
 # Prairie and Kalff (1986)
+# Where values are non-numerical they correpond to names of functions
 bare:
   low_intensity: 0.31
   high_intensity: 0.31
@@ -21,10 +22,14 @@ wetlands:
 crops:
   low_intensity: crop_export
   high_intensity: 2.24
+# Shrubs are also called grasslands or pastures
 shrubs:
   low_intensity: 0.26
   high_intensity: 42.86
 forest:
   low_intensity: forest_export
   high_intensity: 0.41
+no data:
+  low_intensity: 0.0
+  high_intensity: 0.0
 ...

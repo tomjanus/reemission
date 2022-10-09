@@ -1,13 +1,18 @@
 """Reservoir calculations."""
 import logging
+import os
+import copy
 import math
+import configparser
 import inspect
 from enum import Enum
 from dataclasses import dataclass
 from typing import List, Tuple, Optional, TypeVar, Type
 from reemission.temperature import MonthlyTemperature
 from reemission.auxiliary import (
-    water_density, cd_factor, scale_windspeed, air_density)
+    water_density, cd_factor, scale_windspeed, air_density,
+    rollout_nested_list)
+from reemission.utils import read_config
 from reemission.constants import Landuse, TrophicStatus
 from reemission.exceptions import (
     WrongAreaFractionsException,
@@ -15,8 +20,13 @@ from reemission.exceptions import (
 
 # Set up module logger
 log = logging.getLogger(__name__)
+MODULE_DIR = os.path.dirname(__file__)
+INI_FILE = os.path.abspath(os.path.join(MODULE_DIR, 'config', 'config.ini'))
+
+config: configparser.ConfigParser = read_config(INI_FILE)
+
 # Margin for error by which the sum of landuse fractions can differ from 1.0
-EPS = 0.01
+EPS = config.getfloat("CALCULATIONS", "eps_reservoir_area_fractions")
 
 ReservoirType = TypeVar('ReservoirType', bound='Reservoir')
 
@@ -36,13 +46,17 @@ class Reservoir:
         area: Inundated area of the reservoir, km2
         soil_carbon: Mass of C in inundated area, kg/m2
         area_fractions: List of fractions of inundated area allocated
-            to specific landuse types given in Landue Enum type, -
+            to specific landuse types given in Landue Enum type per 3 soil
+            type categories: mineral -> organic -> nodata, -
+        wat_area_frac_pre: Fraction of reservoir area with water prior to
+            impoundment
         mean_radiance: Mean monthly horizontal radiance in a year, kWh/m2/d
         mean_radiance_may_sept: Mean monthly horizontal radiance between May
             and September, kWh/m2/d
         mean_radiance_nov_mar: Mean monthly horizontal radiance between
             November and March, kWh/m2/d
         mean_monthly_windspeed: Mean monthly wind speed in a year, m/s
+            (assumed to be at 50m height)
         water_intake_depth: Water intake depth below surface, m
 
     Notes:
@@ -50,6 +64,7 @@ class Reservoir:
         reservoir volume in G-Res is given in km3
         Water intake depth is used for estimating CH4 emissions via degassing.
     """
+
     coordinates: Tuple[float, float]
     temperature: MonthlyTemperature
     volume: float
@@ -58,12 +73,13 @@ class Reservoir:
     inflow_rate: float
     area: float
     soil_carbon: float
-    area_fractions: List[float]
+    area_fractions: List
     mean_radiance: float
     mean_radiance_may_sept: float
     mean_radiance_nov_mar: float
     mean_monthly_windspeed: float
     water_intake_depth: float
+    name: str = "n/a"
 
     def __post_init__(self):
         """Check if the provided list of landuse fractions has the same
@@ -75,18 +91,28 @@ class Reservoir:
             WrongSumAreasException if area fractions do not sum to 1 +/-
                 acurracy coefficient EPS.
         """
+        # Remove nested lists inside area_fractions
+        self.area_fractions = rollout_nested_list(
+            copy.deepcopy(self.area_fractions), None)
+
         try:
-            assert len(self.area_fractions) == len(Landuse)
+            assert len(self.area_fractions) == 3 * len(Landuse)
         except AssertionError as err:
+            message: str = \
+                f"Wrong size of the reservoir {self.name} area fractions vector."
             raise WrongAreaFractionsException(
                 number_of_fractions=len(self.area_fractions),
-                number_of_landuses=len(Landuse)) from err
+                number_of_landuses=len(Landuse),
+                message=message) from err
         try:
             assert 1 - EPS <= sum(self.area_fractions) <= 1 + EPS
         except AssertionError as err:
+            message: str = \
+                f"Wrong values in reservoir {self.name} area fractions vector."
             raise WrongSumOfAreasException(
                 fractions=self.area_fractions,
-                accuracy=EPS) from err
+                accuracy=EPS,
+                message=message) from err
         if isinstance(self.coordinates, list):
             self.coordinates = tuple(self.coordinates)
         # Validate input arguments
@@ -148,6 +174,12 @@ class Reservoir:
         """Return volume in km3. Original value is in m3."""
         return self.volume / 10**9
 
+    @property
+    def wat_area_frac_pre(self) -> float:
+        """Return a fraction of reservoir area that was already water prior
+        to impoundment"""
+        return sum([self.area_fractions[i] for i in (3, 12, 21)])
+
     def validate_attributes(self) -> None:
         """Check object attributes and log and correct, if necessary, the
         suspicious or invalid data."""
@@ -157,7 +189,9 @@ class Reservoir:
             # degassing occurs.
             self.water_intake_depth = self.max_depth
         if self.water_intake_depth > self.max_depth:
-            log.warning("Water intake depth greater than max depth")
+            log.warning(
+                "Water intake depth in reservoir %s greater than max depth",
+                self.name)
             log.warning("Setting intake depth to max depth.")
             self.water_intake_depth = self.max_depth
 
@@ -200,7 +234,7 @@ class Reservoir:
         Praire2021.
         """
         mean_depth_data = self.mean_depth
-        mean_depth_vol = self.volume_km3 / self.area * 1000
+        mean_depth_vol = self.volume_km3 / self.area * 1_000
         return 100 * (mean_depth_data - mean_depth_vol) / mean_depth_data
 
     def check_geometry(self, error_margin: float = 5) -> bool:
@@ -296,32 +330,35 @@ class Reservoir:
             wind_height: height at which wind_speed is measured, (m)
         """
         if wind_speed is None:
-            thermocline_depth = 10**(0.185 * math.log10(self.area) + 0.842)
+            #thermocline_depth = 10**(0.185 * math.log10(self.area) + 0.842)
+            thermocline_depth = 6.95 * self.area**0.185
             log.debug("Thermocline depth calculated with model of Hanna.")
         else:
             # Calculate CD coefficient and scale wind speed to 10m
             cd_coeff = cd_factor(wind_speed)
-            wind_at_10m = scale_windspeed(wind_speed=wind_speed,
-                                          wind_height=wind_height,
-                                          new_height=10)
+            wind_at_10m = scale_windspeed(
+                wind_speed=wind_speed, wind_height=wind_height, new_height=10)
             # Calculate bottom and surface water densities.
             hypolimnion_density = self.bottom_density()
             epilimnion_density = self.surface_density()
             # Find thermocline depth in metres
             aux_var_1 = cd_coeff * air_density(
                 self.temperature.mean_warmest(number_of_months=4)) * \
-                wind_at_10m
+                wind_at_10m**2
             aux_var_2 = 9.80665 * (hypolimnion_density - epilimnion_density)
-            aux_var_3 = math.sqrt(self.area) * 10**6
+            aux_var_3 = math.sqrt(self.area * 10**6)
             thermocline_depth = 2 * math.sqrt(aux_var_1 / aux_var_2) * \
                 math.sqrt(aux_var_3)
             log.debug(
                 "Thermocline depth calculated with model of Gorham and Boyce.")
         return thermocline_depth
 
-    def _k600_ch4(self, wind_speed: float, wind_height: float) -> float:
+    @staticmethod
+    def _k600_ch4(
+            waterbody_area: float, wind_speed: float,
+            wind_height: float) -> float:
         """Estimates gas transfer velocity, k600 in cm/h for CH4 from wind
-        speed in m/s and reservoir area in km2 and returns the estimate in m/d.
+        speed in m/s and waterbody area in km2 and returns the estimate in m/d.
         Table 2, p. 1760, Model B, Vachon adn Praire, 2013
         https://cdnsciencepub.com/doi/10.1139/cjfas-2013-0241.
         Eq. A.16. in Praire2021.
@@ -329,12 +366,11 @@ class Reservoir:
         if wind_height == 10:
             wind_at_10m = wind_speed
         else:
-            wind_at_10m = scale_windspeed(wind_speed=wind_speed,
-                                          wind_height=wind_height,
-                                          new_height=10)
+            wind_at_10m = scale_windspeed(
+                wind_speed=wind_speed, wind_height=wind_height, new_height=10)
         # k600 in cm/h
         k600 = 2.51 + 1.48 * wind_at_10m + 0.39 * wind_at_10m * \
-            math.log10(self.area)
+            math.log10(waterbody_area)
         # return k600 in m/d
         return k600 * 0.24
 
@@ -354,7 +390,7 @@ class Reservoir:
         kh_ch4 = 1000.0/molecular_weight_ch4 * math.exp(aux_1 + aux_2 + aux_3)
         return kh_ch4
 
-    def _p_ch4(self) -> float:
+    def _p_ch4(self, waterbody_area: float) -> float:
         r"""
         Calculate partial pressure of CH4 in microatm (\mu atm)
         Rasillo 2014, https://doi.org/10.1111/gcb.12741
@@ -363,52 +399,72 @@ class Reservoir:
         `Large-scale patterns in summer diffusive CH4 fluxes across boreal
         lakes, and contribution to diffusive C emissions.`
         Eq. A.18. in Praire2021.
+        Args:
+            waterbody_area [km2]
         """
         aux_1 = 1.46 + 0.03 * self.temperature.eff_temp(gas="ch4")
-        aux_2 = - 0.29 * math.log10(self.area)
+        aux_2 = - 0.29 * math.log10(waterbody_area)
         return 10 ** (aux_1 + aux_2)
 
-    def surface_ch4_conc(self) -> float:
+    def surface_ch4_conc(self, waterbody_area: float) -> float:
         """Calcualate surface water CH4 concentration in mgCH4/m3 (mu g/L)
         Eq. A.19. in Praire2021.
+        Args:
+            waterbody_area [km2]
         """
-        return self._kh_ch4() * self._p_ch4()
+        return self._kh_ch4() * self._p_ch4(waterbody_area)
 
-    def ch4_emission_factor(self, wind_speed: float,
-                            wind_height: float) -> float:
+    def ch4_preemission_factor(self, wind_height: float = 50) -> float:
         """Calculate CH4 emission factor the water body, (kg CH4/ha/yr)
         Eq. A.20. in Praire2021.
+        This value is used for estimating preimpoundment reservoir CH4
+        emissions from water bodies present in the inundated area prior to
+        inundation on top of what what's emitted from soil (based on inundated
+        soil landcover composition and soil type)
         """
+        # Waterbody area is the sum of water areas within the reservoir area
+        # prior to impounment (construction of the reservoir)
+        waterbody_area = self.wat_area_frac_pre * self.area
+        if waterbody_area < 1E-6:
+            return 0.0
         ch4_molar = 16  # g/mol
-        em_factor = self.surface_ch4_conc() * \
-            self._k600_ch4(wind_speed, wind_height) * ch4_molar * 365/100
+        em_factor = self.surface_ch4_conc(waterbody_area) * \
+            self._k600_ch4(
+                waterbody_area, self.mean_monthly_windspeed, wind_height) * \
+            ch4_molar * 365/100
         # 365 converts from /d to /yr
         # 1/100 converts from 1/km2 to 1/ha
         return em_factor
 
-    def retention_coeff(self, method: str = 'larsen') -> float:
+    def retention_coeff(self, method: str) -> float:
         """Return retention coefficient using the chosen calculation method.
 
         Args:
             method: Retention coefficient calculation method.
         """
         if method == 'larsen':
-            return self.retention_coeff_larsen
-        if method in ['emp', 'empirical']:
-            return self.retention_coeff_emp
-        # Otherwise, use the Larsen and Mercier model
-        log.warning('Residence time calculation method %s unknown. ' +
-                    'Using the Larsen and Mercier model', method)
-        return self.retention_coeff_larsen
+            ret_coeff = self.retention_coeff_larsen
+        elif method in ['emp', 'empirical']:
+            ret_coeff = self.retention_coeff_emp
+        else:
+            # Otherwise, use the Larsen and Mercier model
+            log.warning('Residence time calculation method %s unknown. ' +
+                        'Using the Larsen and Mercier model', method)
+            ret_coeff = self.retention_coeff_larsen
+        return ret_coeff
 
     def reservoir_tp(self, inflow_conc: float,
-                     method: str = 'larsen') -> float:
+                     method: Optional[str] = None) -> float:
         """Calculate reservoir TP concentration in micrograms/L.
 
         Args:
             inflow_conc: TP concentration in the inflow, micrograms/L.
             method: retention coefficient esimation method.
         """
+        # Method for calculating retention coefficient in reservoirs:
+        # empirical/larsen
+        if method is None:
+            method = config['CALCULATIONS']["ret_coeff_method"]
         return inflow_conc * (1.0 - self.retention_coeff(method=method))
 
     def trophic_status(self, inflow_conc: float) -> Enum:

@@ -47,10 +47,11 @@ class WrongAreaFractionsException(Exception):
     def __init__(
             self,
             number_of_fractions: int,
-            number_of_landuses: int):
+            number_of_landuses: int,
+            message: str = ""):
         self.message = f"Number of area fractions: {number_of_fractions} " + \
             f"not equal to the number of land uses: {number_of_landuses}."
-        super().__init__(self.message)
+        super().__init__(" ".join([message, self.message]))
 
 
 class WrongSumOfAreasException(Exception):
@@ -60,10 +61,10 @@ class WrongSumOfAreasException(Exception):
         fractions: list of area fractions
         accuracy: acceptable error in the sum of area fractions.
     """
-    def __init__(self, fractions: list, accuracy: float):
+    def __init__(self, fractions: list, accuracy: float, message: str = ""):
         self.message = f"Fractions sum up to: {sum(fractions)} " + \
             f"and are not within 1 +/-: {accuracy}."
-        super().__init__(self.message)
+        super().__init__(" ".join([message, self.message]))
 
 
 class TableNotReadException(Exception):

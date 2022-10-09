@@ -48,7 +48,7 @@ class Biome(Enum):
 
 @unique
 class Landuse(Enum):
-    """Landuse types."""
+    """Catchment landuse types."""
     BARE = "bare"
     SNOW_ICE = "snow_ice"
     URBAN = "urban"
@@ -57,6 +57,7 @@ class Landuse(Enum):
     CROPS = "crops"
     SHRUBS = "shrubs"
     FOREST = "forest"
+    NODATA = "no data"
 
 
 @unique
@@ -72,15 +73,16 @@ class SoilType(Enum):
     """Soil types."""
     MINERAL = "mineral"
     ORGANIC = "organic"
+    NODATA = "no-data"
 
 
 @unique
 class TreatmentFactor(Enum):
     """Wastewater treatment classifiations."""
-    NONE = "none"
-    PRIMARY = "primary"
-    SECONDARY = "secondary"
-    TERTIARY = "tertiary"
+    NONE = "no treatment"
+    PRIMARY = "primary (mechanical)"
+    SECONDARY = "secondary biological treatment"
+    TERTIARY = "tertiary"  # E.g. P - stripping
 
 
 @unique

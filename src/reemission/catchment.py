@@ -1,19 +1,23 @@
 """Catchment-related processes."""
 import os
 import inspect
+import configparser
 import logging
 import pathlib
 import math
 from dataclasses import dataclass
 from typing import Dict, List, Optional, TypeVar, Type
-from reemission.utils import read_table, find_enum_index
+from reemission.utils import read_table, find_enum_index, read_config
 from reemission.biogenic import BiogenicFactors
 from reemission.constants import Landuse
+from reemission.exceptions import (
+    WrongSumOfAreasException, WrongAreaFractionsException)
 
 # Set up module logger
 log = logging.getLogger(__name__)
 # Load path to Yaml tables
 MODULE_DIR = os.path.dirname(__file__)
+INI_FILE = os.path.abspath(os.path.join(MODULE_DIR, 'config', 'config.ini'))
 TABLES = os.path.abspath(os.path.join(MODULE_DIR, 'parameters'))
 # Provide tables as module variables
 tn_coeff_table: Dict = read_table(
@@ -25,8 +29,10 @@ p_loads_pop: Dict = read_table(
 p_exports: Dict = read_table(
     pathlib.Path(TABLES, 'phosphorus_exports.yaml'))
 
+config: configparser.ConfigParser = read_config(pathlib.Path(INI_FILE))
+
 # Margin for error by which the sum of landuse fractions can differ from 1.0
-EPS = 0.01
+EPS = config.getfloat("CALCULATIONS", "eps_catchment_area_fractions")
 
 CatchmentType = TypeVar('CatchmentType', bound='Catchment')
 
@@ -50,6 +56,11 @@ class Catchment:
         biogenic_factors: biogenic.BiogenicFactor object with categorical
             descriptors used in the determination of the trophic status of the
             reservoir.
+    Raises:
+        WrongAreaFractionsException if number of area fractions in the list
+            not equal to the number of land uses.
+        WrongSumAreasException if area fractions do not sum to 1 +/-
+            acurracy coefficient EPS.
     """
 
     area: float
@@ -63,6 +74,7 @@ class Catchment:
     mean_olsen: float
     area_fractions: List[float]
     biogenic_factors: BiogenicFactors
+    name: str = "n/a"
 
     def __post_init__(self) -> None:
         """Check if the provided list of landuse fractions has the same
@@ -72,17 +84,25 @@ class Catchment:
         """
         try:
             assert len(self.area_fractions) == len(Landuse)
-        except AssertionError:
-            log.error('List of area fractions not equal to number of landuses.')
-            log.error('Setting fractions to a vector of all zeros.')
-            self.area_fractions = [0.0] * len(Landuse)
+        except AssertionError as err:
+            message: str = \
+                "Wrong size of the catchment area fractions vector " + \
+                f"for reservoir {self.name}."
+            raise WrongAreaFractionsException(
+                number_of_fractions=len(self.area_fractions),
+                number_of_landuses=len(Landuse),
+                message=message) from err
 
         try:
             assert 1 - EPS <= sum(self.area_fractions) <= 1 + EPS
-        except AssertionError:
-            log.error('Sum of area fractions is not equal 1.0.')
-            log.error('Setting fractions to a vector of all zeros.')
-            self.area_fractions = [0.0] * len(Landuse)
+        except AssertionError as err:
+            message = \
+                "Wrong values in the catchment area fractions vector " + \
+                f"for reservoir {self.name}."
+            raise WrongSumOfAreasException(
+                fractions=self.area_fractions,
+                accuracy=EPS,
+                message=message) from err
 
     @classmethod
     def from_dict(cls: Type[CatchmentType], parameters: dict,
@@ -122,6 +142,11 @@ class Catchment:
         [mm/year] and area in [km2]."""
         return 1_000 * self.runoff * self.area
 
+    @property
+    def discharge_cumecs(self) -> float:
+        """Return mean annual discharge in m3/sec."""
+        return self.discharge/(365.25*24*60*60)
+
     def river_area_before_impoundment(
             self, river_width: Optional[float] = None) -> float:
         r"""Calculates the area taken up by the river in the impounded
@@ -138,7 +163,7 @@ class Catchment:
             :math: `L_{river}`: lentgh of the river prior to impoundment, [km]
 
         Args:
-            river_width: River width in km
+            river_width: River width in m
 
         Returns:
             River area in km2
@@ -146,7 +171,7 @@ class Catchment:
         if river_width is None:
             # Use simple allometric formula of Whipple et al. 2013 (G-Res)
             river_width = 5.9 * self.area**0.32
-        return 1E-6 * river_width * self.riv_length
+        return 1E-3 * river_width * self.riv_length
 
     def p_human_input_gres(self) -> float:
         """Return phosphorus load/input in [kgP yr-1] from human activity from
@@ -167,6 +192,8 @@ class Catchment:
         https://g-res.hydropower.org/."""
         intensity = self.biogenic_factors.landuse_intensity
         landuse_names = [landuse.value for landuse in Landuse]
+        # Area marging below which the output is output as zero
+        EPS = 1e-6
 
         # Define two inner funtions to determine land cover export coefficients
         # for two instances in which the coefficients in the phosphorus exports
@@ -184,7 +211,7 @@ class Catchment:
                     'Regression function %s unknown. Returning zero.',
                     fun_name)
                 return 0.0
-            if area_fraction < 1e-6:
+            if area_fraction < EPS:
                 return 0.0
             try:
                 # Equation gives P export coefficient in kgP/ha/yr
@@ -193,8 +220,10 @@ class Catchment:
                     reg_coeffs[0] - math.log10(
                         self.landuse_area(area_fraction)) * reg_coeffs[1])
             except ValueError:
-                log.error(f"Error processing {fun_name}, area fraction {area_fraction}")
-                log.error('Export coefficient could not be calculated. Returning 0.')
+                log.error(
+                    f"Error processing {fun_name}, area fraction {area_fraction}")
+                log.error(
+                    'Export coefficient could not be calculated. Returning 0.')
                 p_export_coeff = 0.0
             return p_export_coeff
 
@@ -262,7 +291,7 @@ class Catchment:
         load_total = load_pop + load_land
         return 10**6 * load_total / self.discharge
 
-    def inflow_p_conc(self, method: str = "g-res") -> float:
+    def inflow_p_conc(self, method: str) -> float:
         """Calculate median influent total phosphorus concentration in
         [micrograms/L] entering the reservoir with runoff."""
         if method == "g-res":
@@ -270,7 +299,9 @@ class Catchment:
         elif method == "mcdowell":
             output = self.inflow_p_conc_mcdowell()
         else:
-            log.warning('Unrecognized method %s. ', method + '. Using the default G-Res method.')
+            log.warning(
+                'Unrecognized method %s. ',
+                method + '. Using the default G-Res method.')
             output = self.inflow_p_conc_gres()
         return output
 
@@ -310,9 +341,12 @@ class Catchment:
         # 1e-6 converts mg/m3 (microgram/L) to kg/m3
         return 1e-6 * self.discharge * inflow_n
 
-    def phosphorus_load(self) -> float:
+    def phosphorus_load(self, method: str) -> float:
         """Calculate total phosphorus (TP) load in kg P yr-1 entering the
-        reservoir with catchment runoff."""
-        inflow_p = self.inflow_p_conc()
+        reservoir with catchment runoff.
+
+        Args:
+            method: P export calculation method: g-res/mcdowell"""
+        inflow_p = self.inflow_p_conc(method)
         # 1e-6 converts mg/m3 (microgram/L) to kg/m3
         return 1e-6 * self.discharge * inflow_p

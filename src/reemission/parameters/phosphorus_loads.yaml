@@ -2,8 +2,8 @@
 # Categories of water treatment representing the percent of phosphorus
 # human input that reaches the reservoir:
 # 1 means no removal, 0 means 100% removal
-none: 1
-primary: 0.9
-secondary: 0.3
+no treatment: 1
+primary (mechanical): 0.9
+secondary biological treatment: 0.3
 tertiary: 0.1
 ...

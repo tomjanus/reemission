@@ -15,13 +15,15 @@ Why does this file exist, and why not put this in __main__?
 
   Also see (1) from http://click.pocoo.org/5/setuptools/#setuptools-integration
 """
+import os
 import logging
+import configparser
 import pathlib
 import click
 import pyfiglet
 import reemission
 import reemission.presenter
-from reemission.utils import add_version, get_package_file
+from reemission.utils import add_version, get_package_file, read_config
 from reemission.model import EmissionModel
 from reemission.input import Inputs
 
@@ -38,7 +40,16 @@ ext_writer_dict = {
 # Set up module logger
 log = logging.getLogger(__name__)
 
-FIGLET = True
+FIGLET: bool = True
+
+# Get relative imports to data
+MODULE_DIR: str = os.path.dirname(__file__)
+INI_FILE: str = os.path.abspath(
+    os.path.join(MODULE_DIR, '..', 'config', 'config.ini'))
+# Derive default calculation options from config
+config: configparser.ConfigParser = read_config(INI_FILE)
+p_export_cal = config.get("CALCULATIONS", "p_export_cal")
+nitrous_oxide_model = config.get("CALCULATIONS", "nitrous_oxide_model")
 
 
 @click.group()
@@ -71,10 +82,13 @@ See the full documentation at : https://reemisison.readthedocs.io/en/latest/.
               help="Author's name")
 @click.option("-t", "--title", type=click.STRING, default="Results",
               help="Report/Study title")
-@click.option("-p", "--p-model", type=click.STRING, default="g-res",
+@click.option("-p", "--p-model", type=click.STRING, default=p_export_cal,
               help="P-calculation method for CO2 emissions: g-res/mcdowell")
+@click.option("-n", "--n2o-model", type=click.STRING,
+              default=nitrous_oxide_model,
+              help="Model for calculating N2O emissions: model_1/model_2")
 def calculate(input_file, output_files, output_config, author,
-              title, p_model) -> None:
+              title, p_model, n2o_model) -> None:
     """
     Calculates emissions based on the data in the JSON INPUT_FILE.
     Saves the results to output file(s) defined in option '--output-files'.
@@ -89,7 +103,8 @@ def calculate(input_file, output_files, output_config, author,
     output_config: YAML output configuration file.
     author: Author's name.
     title: Report/Study title.
-    p_model: P-calculation method for estimation of CO2 emissions.
+    p_model: Method for estimating phosphorus loading to reservoirs
+    n2o_model: Model for estimating N2O emissions.
     """
     click.echo("Loading inputs...\n")
     input_data = Inputs.fromfile(input_file)
@@ -113,7 +128,9 @@ def calculate(input_file, output_files, output_config, author,
         "About to run the program with the following inputs:\n",
         f"Input JSON file: {input_file_str}\n",
         f"Output config file: {output_config_str}\n",
-        f"Output files: {output_files_str}\n"]
+        f"Output files: {output_files_str}\n",
+        f"Phosphorus load estimation method: {p_model}\n",
+        f"Model for estimating nitrous oxide emissions: {n2o_model}\n"]
     click.echo("".join(msgs))
     click.echo('Continue? [yn] ', nl=False)
     c_input = click.getchar()
@@ -137,8 +154,8 @@ def calculate(input_file, output_files, output_config, author,
         file_ext = pathlib.Path(file).suffix.lower()
         popped_writer = ext_writer_dict.pop(file_ext, None)
         if popped_writer is None:
-            log.warning(
-                "Unable to save file %s. Unrecognized extension." % file)
+            log.warning("Unable to save file %s. Unrecognized extension.",
+                        file)
         else:
             writers.append(popped_writer)
 

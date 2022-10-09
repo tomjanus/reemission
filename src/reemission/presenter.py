@@ -34,6 +34,7 @@ from pylatex import (
 )
 import reemission.utils
 from reemission.input import Inputs
+from reemission.auxiliary import rollout_nested_list
 
 # Set up module logger
 logging.basicConfig(level=logging.INFO)
@@ -102,14 +103,15 @@ class Writer(ABC):
     @staticmethod
     def rollout(
             var_name: str,
-            var_vector: Sequence) -> Iterator[Tuple[str, Any]]:
+            var_vector: Union[Sequence, Dict]) -> Iterator[Tuple[str, Any]]:
         """Creates names of variables given as items in a variable that is
         a sequence, e.g. a list or a tuple.
         e.g. a variable var = [3,4,5] becomes: ('var_0', 3), ('var_1', 4),
             ('var_2', 5).
         """
-        for iter_var, var in enumerate(var_vector):
-            yield '_'.join([var_name, str(iter_var)]), var
+        if isinstance(var_vector, Sequence):
+            for iter_var, var in enumerate(var_vector):
+                yield '_'.join([var_name, str(iter_var)]), var
 
     @staticmethod
     def write_par_to_dict(input_name: str, parameter: Any, par_dict: Dict,
@@ -125,6 +127,13 @@ class Writer(ABC):
             precision: Number of decimal points for the parameter.
         """
         if isinstance(parameter, collections.abc.Sequence):
+            nested_list: bool = False
+            for val in parameter:
+                if isinstance(val, collections.abc.Sequence):
+                    nested_list = True
+                    break
+            if nested_list is True:
+                parameter = rollout_nested_list(parameter, None)
             for name, value in Writer.rollout(input_name, parameter):
                 param_dict = {name: Writer.round_parameter(
                     value, precision)}
@@ -220,7 +229,8 @@ class ExcelWriter(Writer):
                     # TODO: Fix this piece of code to work with the Biogenic object data
                     # Currently switched off as it produces errors
                     break
-                    for factor_name, factor_value in input_data['catchment'][input_name].items():
+                    for factor_name, factor_value in \
+                            input_data['catchment'][input_name].items():
                         print(factor_name, factor_value)
                         log.info(factor_name)
                         input_dict = self.write_par_to_dict(
@@ -389,7 +399,8 @@ class JSONWriter(Writer):
                     'catchment_inputs']['var_dict'][input_name]
                 param_dict[input_name]['name'] = conf_input['name']
                 param_dict[input_name]['unit'] = conf_input['unit']
-                if isinstance(input_value, Iterable):
+                if isinstance(input_value, Iterable) and not \
+                        isinstance(input_value, str):
                     input_value = ', '.join([str(item) for item in input_value])
                 param_dict[input_name]['value'] = input_value
             input_dict['inputs']['catchment_inputs'] = param_dict
@@ -405,7 +416,8 @@ class JSONWriter(Writer):
                     'reservoir_inputs']['var_dict'][input_name]
                 param_dict[input_name]['name'] = conf_input['name']
                 param_dict[input_name]['unit'] = conf_input['unit']
-                if isinstance(input_value, Iterable):
+                if isinstance(input_value, Iterable) and not \
+                        isinstance(input_value, str):
                     input_value = ', '.join([str(item) for item in input_value])
                 param_dict[input_name]['value'] = input_value
             input_dict['inputs']['reservoir_inputs'] = param_dict
@@ -910,6 +922,8 @@ class LatexWriter(Writer):
                         if not isinstance(input_value, Iterable):
                             input_value = Quantity(
                                 input_value, options=round_options)
+                        elif isinstance(input_value, str):
+                            pass
                         else:
                             input_value = ', '.join(
                                 [str(item) for item in input_value])
@@ -934,6 +948,8 @@ class LatexWriter(Writer):
                         if not isinstance(input_value, Iterable):
                             input_value = Quantity(
                                 input_value, options=round_options)
+                        elif isinstance(input_value, str):
+                            pass
                         else:
                             input_value = ', '.join(
                                 [str(item) for item in input_value])

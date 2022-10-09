@@ -3,12 +3,14 @@ import sys
 import configparser
 from distutils.spawn import find_executable
 import pathlib
-from typing import Optional, Callable
+from typing import Callable
 from enum import Enum, EnumMeta
 from packaging import version
 import yaml
 import reemission
 from reemission.exceptions import TableNotReadException
+
+APPLICATION_NAME = "reemission"
 
 
 def load_yaml(file_path: pathlib.Path) -> dict:
@@ -46,13 +48,13 @@ def get_package_file(*folders: str) -> pathlib.PosixPath:
         # importlib.resources has files(), so use that:
         import importlib.resources as importlib_resources
 
-    pkg = importlib_resources.files("reemission")
+    pkg = importlib_resources.files(APPLICATION_NAME)
     # Append folders to package-wide posix path
     pkg = pathlib.Path.joinpath(pkg, '/'.join(folders))
     return pkg
 
 
-def read_config(file_path: pathlib.Path) -> configparser.ConfigParser:
+def read_config(file_path: str) -> configparser.ConfigParser:
     """ Reads the `.ini` file with global configuration parameters and return
     the parsed config object.
 
