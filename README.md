@@ -5,11 +5,11 @@
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
+[![GPL-3.0 License][license-shield]][license-url]
 
 <!-- PROJECT LOGO -->
 <p align="center">
-    <img alt="reemission-logo" height="120" src="https://github.com/tomjanus/reemission/blob/master/graphics/logo-banner-bw.png?raw=true"/>
+    <img alt="reemission-logo" height="120" src="https://lh3.googleusercontent.com/dX8qC6sTQwHSQ1ACdf905Uy8W2G1uEDOkt3Esd3rYSVRdoAqYVdMPR-xoydhVi9is2jfpjeq1ZKzlU1TqhXWXeLHdT7BR0lo966hpDbnjJux4zVXDe-arUKN940gXyjrmV9zp0PNso9Yc2NQd1FMBmk7JzugW8KThRhNnqjvkVVCEiU0Dlh5xiiK9i1l3wLS6bfYu5Doc64cGqmuwYNqjv5K9PfWeIjIkLq8CQXvd6brz0qNJLjCFyRJwKfswihS2gsDQXzmdREGJTHQCqmAcPtyuuERpkI6TsGEfoZHPYc_l-3ioSnaf6vu0jEaD_CUVvUVPrirSr85AVCKqdQLRYKaHH2R8PU8m_4i8NPIXCo7SpFn0bpJWovbqmgsyKokvV_K3WEu6qS0rDPuBcLNdEmyKhOzpfEBeYWxlfmKv7MfOCaJ3LbMccmvZqfkNQOUT9prd9dmHJs4zdcWBXS-q9rTiOYqAKWb_cVevZkHP0MRhcO7xQ9HBP8UKXF0o9U9Zf89Z9Dr2MCYijJSLBcD3A2dufTOBcmb8cPNti_knqqhnqQnnfFXmVdhyW28YpB4Kr7rBXYZ6fN34aI9G9az5U9RBrJfq6DVImonVIXsR7_OU31BtRA4-md4LXcJFZlIw0RFJkIixch3g6oVdiyT-4H_lJa8yRDttHKA1x40R6J6zJ9FWvldRf6FlpAnKkFEksrEhozKpvPTthz8r8ItRH9uQ0gCKm6iuEQ__YIA7UDrHB8mmB15ODA5EYGLQudUXmLDD_4CuT4T-sqkJgXRpU8oIEHbvQoj2ahxycGsyrEkmLJwhmGlqX67cU69Lokxn7-CgALBa-xTvy56q-qKbDliQZUyLcJ0w3v_o1BW9fT5x8fLuqXr_WrKueNQYJZCy4LzHwyEjQRxzqqLwtuck-lV_hG4ng65bXv6KpVNx7v1KiczmO71dVmcEL8J2Ttd0L1TnOKqV5IAKxUSfOSjI6i2sMOwVyLrG86Z24MdEPyYVgFGMArMLw=w817-h218-no?authuser=2"/>
 </p>
 
 <!-- TABLE OF CONTENTS -->
@@ -131,7 +131,7 @@ For more installation options, visit [https://tug.org/texlive/windows.html](http
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install ```reemission```.
 
 ```bash
-pip install re-mission
+pip install reemission
 ```
 
 Type
@@ -389,7 +389,7 @@ Values of model coefficients, i.e. regressions used to estimate different gas em
 ```ini
 [CARBON_DIOXIDE]
 # Parameters reated to CO2 emissions
-c_1 = 1.8569682
+k1_diff = 1.8569682
 age = -0.329955
 temp = 0.0332459
 resArea = 0.0799146
@@ -446,7 +446,7 @@ If you use RE-Emission for academic research, please cite the library using the 
 
 <!-- CONTACT -->
 ## :mailbox_with_mail: Contact
-- Tomasz Janus -tomasz.janus@manchester.ac.uk
+- Tomasz Janus - tomasz.janus@manchester.ac.uk
 - Christopher Barry - c.barry@ceh.ac.uk
 - Jaise Kuriakose - jaise.kuriakose@manchester.ac.uk
 
