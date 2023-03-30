@@ -9,8 +9,9 @@
 
 <!-- PROJECT LOGO -->
 <p align="center">
-    <img alt="reemission-logo" height="120" src="https://lh3.googleusercontent.com/dX8qC6sTQwHSQ1ACdf905Uy8W2G1uEDOkt3Esd3rYSVRdoAqYVdMPR-xoydhVi9is2jfpjeq1ZKzlU1TqhXWXeLHdT7BR0lo966hpDbnjJux4zVXDe-arUKN940gXyjrmV9zp0PNso9Yc2NQd1FMBmk7JzugW8KThRhNnqjvkVVCEiU0Dlh5xiiK9i1l3wLS6bfYu5Doc64cGqmuwYNqjv5K9PfWeIjIkLq8CQXvd6brz0qNJLjCFyRJwKfswihS2gsDQXzmdREGJTHQCqmAcPtyuuERpkI6TsGEfoZHPYc_l-3ioSnaf6vu0jEaD_CUVvUVPrirSr85AVCKqdQLRYKaHH2R8PU8m_4i8NPIXCo7SpFn0bpJWovbqmgsyKokvV_K3WEu6qS0rDPuBcLNdEmyKhOzpfEBeYWxlfmKv7MfOCaJ3LbMccmvZqfkNQOUT9prd9dmHJs4zdcWBXS-q9rTiOYqAKWb_cVevZkHP0MRhcO7xQ9HBP8UKXF0o9U9Zf89Z9Dr2MCYijJSLBcD3A2dufTOBcmb8cPNti_knqqhnqQnnfFXmVdhyW28YpB4Kr7rBXYZ6fN34aI9G9az5U9RBrJfq6DVImonVIXsR7_OU31BtRA4-md4LXcJFZlIw0RFJkIixch3g6oVdiyT-4H_lJa8yRDttHKA1x40R6J6zJ9FWvldRf6FlpAnKkFEksrEhozKpvPTthz8r8ItRH9uQ0gCKm6iuEQ__YIA7UDrHB8mmB15ODA5EYGLQudUXmLDD_4CuT4T-sqkJgXRpU8oIEHbvQoj2ahxycGsyrEkmLJwhmGlqX67cU69Lokxn7-CgALBa-xTvy56q-qKbDliQZUyLcJ0w3v_o1BW9fT5x8fLuqXr_WrKueNQYJZCy4LzHwyEjQRxzqqLwtuck-lV_hG4ng65bXv6KpVNx7v1KiczmO71dVmcEL8J2Ttd0L1TnOKqV5IAKxUSfOSjI6i2sMOwVyLrG86Z24MdEPyYVgFGMArMLw=w817-h218-no?authuser=2"/>
+    <img alt="reemission-logo" height="120" src="https://user-images.githubusercontent.com/8837107/228694371-1aac24c7-97a8-4e8b-98b7-f01e63410c01.png"/>
 </p>
+
 
 <!-- TABLE OF CONTENTS -->
 <details>
