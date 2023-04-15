@@ -3,7 +3,8 @@ import sys
 import configparser
 from distutils.spawn import find_executable
 import pathlib
-from typing import Callable
+import hashlib
+from typing import Callable, Union
 from enum import Enum, EnumMeta
 from packaging import version
 import yaml
@@ -54,7 +55,7 @@ def get_package_file(*folders: str) -> pathlib.PosixPath:
     return pkg
 
 
-def read_config(file_path: str) -> configparser.ConfigParser:
+def read_config(file_path: Union[str, pathlib.Path]) -> configparser.ConfigParser:
     """ Reads the `.ini` file with global configuration parameters and return
     the parsed config object.
 
@@ -138,3 +139,42 @@ def add_version(fun: Callable) -> Callable:
     fun.__doc__ = "Package " + reemission.__name__ + " v" + \
         reemission.__version__ + "\n\n" + doc
     return fun
+
+def md5(file_name: Union[str, pathlib.Path], chunk_size: int = 4) -> str:
+    """ Generate MD5 checksum of a file
+    Args:
+        file_name: path to the file for which MD5 sum needs to be calculated
+        chunk_size: size of the file chunk to be read (in KB)
+    """
+    hash_md5 = hashlib.md5()
+    with open(file_name, "rb") as f_handle:
+        for chunk in iter(lambda: f_handle.read(chunk_size * 1024), b""):
+            hash_md5.update(chunk)
+    return hash_md5.hexdigest()
+
+
+def split_path(input_path: Union[str, pathlib.Path]) -> SplitPath:
+    """Split path into the parent directory tree and the file name."""
+    if isinstance(input_path, str):
+        input_path = pathlib.Path(input_path)
+    if not input_path.suffix:
+        # Provided input path is a path of directories (assuming each file 
+        # needs an extension - not True in Unix but we make this assumption here
+        return (input_path, None)
+    return (input_path.parent, input_path.name)
+
+
+def is_directory(input_path: pathlib.Path) -> bool:
+    """Check if the path is a directory by checking if split_path returns file
+    """
+    return (split_path(input_path)[1] is None)
+
+
+def timeit(func):
+    """Wrapper for timing executions of functions"""
+    def wrapper(*args, **kwargs):
+        tic = time.perf_counter()
+        func(*args, **kwargs)
+        toc = time.perf_counter()
+        print(f"Execution time: {toc - tic:0.4f} seconds")
+    return wrapper
