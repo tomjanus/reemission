@@ -12,6 +12,7 @@ import scipy as sc
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from reemission.constants import AssetConstructionStage
 
 
 # Default month attached to each year value in the annual time-series data
@@ -28,12 +29,6 @@ DEFAULT_SIM_START_DATE = date.today()
 class YearsNotEquallySpacedError(Exception):
     """Custom exception raised if years in the emission profile are not equally
     spaced."""
-
-
-class AssetConstructionStage(Enum):
-    """ """
-    EXISTING = auto()
-    FUTURE = auto()
 
 
 @dataclass

@@ -23,34 +23,41 @@ CH4_GWP20 = 86  # Global Warming Potential of CH4 over 20 years
 
 
 @unique
-class Climate(Enum):
+class Climate(str, Enum):
     """Climate types."""
-    BOREAL = "Boreal"
-    SUBTROPICAL = "Subtropical"
-    TEMPERATE = "Temperate"
-    TROPICAL = "Tropical"
+    BOREAL = "boreal"
+    SUBTROPICAL = "subtropical"
+    TEMPERATE = "temperate"
+    TROPICAL = "tropical"
 
 
 @unique
-class Biome(Enum):
+class BuildStatus(str, Enum):
+    """Build status of a dam"""
+    EXISTING = "existing"
+    PLANNED = "planned"
+
+
+@unique
+class Biome(str, Enum):
     """Biome types."""
-    DESERTS = 1
-    MEDFORESTS = 2
-    MONTANEGRASSLANDS = 3
-    TEMPERATEBROADLEAFANDMIXED = 4
-    TEMPERATECONIFER = 5
-    TEMPERATEGRASSLANDS = 6
-    TROPICALDRYBROADFLEAF = 7
-    TROPICALGRASSLANDS = 8
-    TROPICALMOISTBROADLEAF = 9
-    TUNDRA = 10
+    DESERTS = "deserts"
+    MEDFORESTS = "mediterreanan forests"
+    MONTANEGRASSLANDS = "montane grasslands"
+    TEMPERATEBROADLEAFANDMIXED = "temperate broadleaf and mixed"
+    TEMPERATECONIFER = "temperate coniferous"
+    TEMPERATEGRASSLANDS = "temperate grasslands"
+    TROPICALDRYBROADFLEAF = "tropical dry broadleaf"
+    TROPICALGRASSLANDS = "tropical grasslands"
+    TROPICALMOISTBROADLEAF = "tropical moist broadleaf"
+    TUNDRA = "tundra"
 
 
 @unique
-class Landuse(Enum):
+class Landuse(str, Enum):
     """Catchment landuse types."""
     BARE = "bare"
-    SNOW_ICE = "snow_ice"
+    SNOW_ICE = "snow and ice"
     URBAN = "urban"
     WATER = "water"
     WETLANDS = "wetlands"
@@ -61,23 +68,23 @@ class Landuse(Enum):
 
 
 @unique
-class LanduseIntensity(Enum):
+class LanduseIntensity(str, Enum):
     """Landuse intensities for calculating land cover export coefficients
     in kgP/ha/yr."""
-    LOW = "low_intensity"
-    HIGH = "high_intensity"
+    LOW = "low intensity"
+    HIGH = "high intensity"
 
 
 @unique
-class SoilType(Enum):
+class SoilType(str, Enum):
     """Soil types."""
     MINERAL = "mineral"
     ORGANIC = "organic"
-    NODATA = "no-data"
+    NODATA = "no data"
 
 
 @unique
-class TreatmentFactor(Enum):
+class TreatmentFactor(str, Enum):
     """Wastewater treatment classifiations."""
     NONE = "no treatment"
     PRIMARY = "primary (mechanical)"
@@ -86,9 +93,16 @@ class TreatmentFactor(Enum):
 
 
 @unique
-class TrophicStatus(Enum):
+class TrophicStatus(str, Enum):
     """Reservoir/Lake trophic status classifications."""
     OLIGOTROPHIC = "oligotrophic"
     MESOTROPHIC = "mesotrophic"
     EUTROPHIC = "eutrophic"
-    HYPER_EUTROPHIC = "hyper-eutrophic"
+    HYPER_EUTROPHIC = "hyper eutrophic"
+
+
+@unique
+class AssetConstructionStage(Enum):
+    """Construction stages of a reservoir"""
+    EXISTING = auto()
+    FUTURE = auto()
