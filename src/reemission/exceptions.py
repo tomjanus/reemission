@@ -1,5 +1,5 @@
 """Module containing custom exceptions."""
-from typing import Tuple, Union
+from typing import Tuple, Union, Iterable
 
 
 class WrongN2OModelError(Exception):
@@ -81,3 +81,63 @@ class TableNotReadException(Exception):
         else:
             self.message = ""
         super().__init__(self.message)
+
+
+class ConversionMethodUnknownException(Exception):
+    """Exception raised if a conversion of an object was not possible because
+    the conversion method supplied is unknown.
+
+    Atrributes:
+        conversion_method: name of the conversion method
+    """
+    def __init__(self, conversion_method: str, available_methods: Iterable[str]):
+        self.message = f"Conversion method {conversion_method} not recognized."
+        available_methods_str = ", ".join(available_methods)
+        self.message += f"\nAvailable methods: {available_methods_str}"
+        super().__init__(self.message)
+
+
+def append_message(exc: Exception, message: str):
+    """
+    Appends `message` to the message text of the exception `e`.
+
+    Parameters
+    ----------
+    exc: Exception
+        An exception instance whose `args` will be modified to include `message`.
+
+    message: str
+        The string to append to the message.
+    """
+    # Write message to arguments
+    if exc.args:
+        # Exception was raised with arguments
+        exc.args = (str(exc.args[0]) + message,) + exc.args[1:]
+    else:
+        exc.args = (message,)
+    # Additionally create a separate message field with exception message or
+    # add message to the existing text if message field already exists
+    try:
+        exc.message = exc.message + message
+    except AttributeError:
+        exc.message = message
+
+
+def replace_message(exc: Exception, message: str):
+    """
+    Replaces the exception message with `message`.
+
+    Parameters
+    ----------
+    exc: Exception
+        An exception instance whose `args` will be modified to be `message`.
+
+    message: str
+        The string to replace the exception message with.
+    """
+    if exc.args:
+        exc.args = (message,) + exc.args[1:]
+    else:
+        exc.args = (message,)
+    # Additionally create a separate message field with exception message
+    exc.message = message
