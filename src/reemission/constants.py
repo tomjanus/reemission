@@ -1,5 +1,6 @@
 """ Project-wide collection of constants."""
-from enum import Enum, unique
+from enum import Enum, unique, auto
+from reemission.mixins import EnumGetterMixin
 
 # Atomic mass (g/mol)
 C_MOLAR = 12  # gC/mol
@@ -23,23 +24,24 @@ CH4_GWP20 = 86  # Global Warming Potential of CH4 over 20 years
 
 
 @unique
-class Climate(str, Enum):
+class Climate(EnumGetterMixin, str, Enum):
     """Climate types."""
     BOREAL = "boreal"
     SUBTROPICAL = "subtropical"
     TEMPERATE = "temperate"
     TROPICAL = "tropical"
+    UNKNOWN = "unknown"
 
 
 @unique
-class BuildStatus(str, Enum):
+class BuildStatus(EnumGetterMixin, str, Enum):
     """Build status of a dam"""
     EXISTING = "existing"
     PLANNED = "planned"
 
 
 @unique
-class Biome(str, Enum):
+class Biome(EnumGetterMixin, str, Enum):
     """Biome types."""
     DESERTS = "deserts"
     MEDFORESTS = "mediterreanan forests"
@@ -54,7 +56,7 @@ class Biome(str, Enum):
 
 
 @unique
-class Landuse(str, Enum):
+class Landuse(EnumGetterMixin, str, Enum):
     """Catchment landuse types."""
     BARE = "bare"
     SNOW_ICE = "snow and ice"
@@ -68,7 +70,7 @@ class Landuse(str, Enum):
 
 
 @unique
-class LanduseIntensity(str, Enum):
+class LanduseIntensity(EnumGetterMixin, str, Enum):
     """Landuse intensities for calculating land cover export coefficients
     in kgP/ha/yr."""
     LOW = "low intensity"
@@ -76,7 +78,7 @@ class LanduseIntensity(str, Enum):
 
 
 @unique
-class SoilType(str, Enum):
+class SoilType(EnumGetterMixin, str, Enum):
     """Soil types."""
     MINERAL = "mineral"
     ORGANIC = "organic"
@@ -84,7 +86,7 @@ class SoilType(str, Enum):
 
 
 @unique
-class TreatmentFactor(str, Enum):
+class TreatmentFactor(EnumGetterMixin, str, Enum):
     """Wastewater treatment classifiations."""
     NONE = "no treatment"
     PRIMARY = "primary (mechanical)"
@@ -93,7 +95,7 @@ class TreatmentFactor(str, Enum):
 
 
 @unique
-class TrophicStatus(str, Enum):
+class TrophicStatus(EnumGetterMixin, str, Enum):
     """Reservoir/Lake trophic status classifications."""
     OLIGOTROPHIC = "oligotrophic"
     MESOTROPHIC = "mesotrophic"
@@ -102,7 +104,7 @@ class TrophicStatus(str, Enum):
 
 
 @unique
-class AssetConstructionStage(Enum):
+class AssetConstructionStage(EnumGetterMixin, Enum):
     """Construction stages of a reservoir"""
     EXISTING = auto()
     FUTURE = auto()
