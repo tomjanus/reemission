@@ -1,20 +1,36 @@
 """Package-wide utility functions."""
 import sys
+import os
 import configparser
+from functools import wraps
 from distutils.spawn import find_executable
 import pathlib
 import hashlib
-from typing import Callable, Union
+import time
+from typing import Callable, Union, Tuple, Optional, Dict
 from enum import Enum, EnumMeta
 from packaging import version
 import yaml
+import toml
+import json
+import pandas as pd
+import geopandas as gpd
+import logging
 import reemission
 from reemission.exceptions import TableNotReadException
+
+
+# Create a logger
+logger = logging.getLogger(__name__)
+
 
 APPLICATION_NAME = "reemission"
 
 
-def load_yaml(file_path: pathlib.Path) -> dict:
+SplitPath = Tuple[pathlib.Path, Optional[pathlib.Path]]
+
+
+def load_yaml(file_path: pathlib.Path) -> Dict:
     """Conditional yaml file loader depending on the installed yaml package
     version.
 
@@ -31,14 +47,36 @@ def load_yaml(file_path: pathlib.Path) -> dict:
     return loaded_yaml
 
 
-def get_package_file(*folders: str) -> pathlib.PosixPath:
+def load_json(file_path: pathlib.Path) -> Dict:
+    """Load json file"""
+    with open(file_path, 'r', encoding='utf-8') as json_file:
+        return json.load(json_file)
+
+
+def load_toml(file_path: pathlib.Path) -> Dict:
+    """Load toml file"""
+    return toml.load(file_path)
+
+
+def load_shape(path: pathlib.Path) -> gpd.GeoDataFrame:
+    """ Opens a shape file using geopandas."""
+    return gpd.read_file(path)
+
+
+def load_csv(path: pathlib.Path) -> pd.DataFrame:
+    """Opens a csv file with tabular data and loads it into pandas
+    dataframe."""
+    return pd.read_csv(path)
+
+
+def get_package_file(*folders: str) -> pathlib.Path:
     """Imports package data using importlib functionality.
 
     Args:
         *folers: comma-separated strings representing path to the packaged data
             file.
     Returns:
-        A os-indepenent posix path of the data file.
+        A os-indepenent path of the data file.
     """
     # Import the package based on Python's version
     if sys.version_info < (3, 9):
@@ -55,7 +93,8 @@ def get_package_file(*folders: str) -> pathlib.PosixPath:
     return pkg
 
 
-def read_config(file_path: Union[str, pathlib.Path]) -> configparser.ConfigParser:
+def read_config(
+        file_path: Union[str, pathlib.Path]) -> configparser.ConfigParser:
     """ Reads the `.ini` file with global configuration parameters and return
     the parsed config object.
 
@@ -70,7 +109,7 @@ def read_config(file_path: Union[str, pathlib.Path]) -> configparser.ConfigParse
     return config
 
 
-def read_table(file_path: pathlib.Path) -> dict:
+def read_table(file_path: pathlib.Path) -> Dict:
     """Reads yaml table from the given YAML file.
 
     Args:
@@ -140,6 +179,7 @@ def add_version(fun: Callable) -> Callable:
         reemission.__version__ + "\n\n" + doc
     return fun
 
+
 def md5(file_name: Union[str, pathlib.Path], chunk_size: int = 4) -> str:
     """ Generate MD5 checksum of a file
     Args:
@@ -172,9 +212,36 @@ def is_directory(input_path: pathlib.Path) -> bool:
 
 def timeit(func):
     """Wrapper for timing executions of functions"""
+    @wraps(func)
     def wrapper(*args, **kwargs):
         tic = time.perf_counter()
-        func(*args, **kwargs)
+        result = func(*args, **kwargs)
         toc = time.perf_counter()
-        print(f"Execution time: {toc - tic:0.4f} seconds")
+        total_time = toc - tic
+        print(
+            f'Function {func.__name__}{args} {kwargs} Took {total_time:.4f} seconds')
+        return result
     return wrapper
+
+
+def save_to_json(
+        output_path: Union[str, pathlib.Path], input_dict: Dict) -> int:
+    """ Save dictionary to JSON. If folder tree does not exist, create
+    one before saving the file. Returns an exit status."""
+    # Create output path if output path does not exist
+    if isinstance(output_path, str):
+        output_path = pathlib.Path(output_path)
+    pathlib.Path(output_path.parent).mkdir(parents=True, exist_ok=True)
+    if output_path.suffix:
+        if output_path.suffix.lower() == '.json':
+            with open(output_path, "w", encoding='utf8') as write_file:
+                json.dump(input_dict, write_file, indent=4)
+            logger.info("Data saved to %s", output_path.as_posix())
+            return os.EX_OK
+        logger.error(
+            "Output file requires `.json` extension. Data could not be saved.")
+        return os.EX_CANTCREAT
+    logger.warning(
+        "Output path %s does not specify a file. Data could not be saved.", 
+        output_path.as_posix())
+    return os.EX_CANTCREAT
