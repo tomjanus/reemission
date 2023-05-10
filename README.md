@@ -85,9 +85,17 @@ It calculates full life-cycle emissions as well as emission profiles over time f
 * Calculates CO<sub>2</sub>, CH<sub>4</sub> and N<sub>2</sub>O emissions for a single reservoir and for batches of reservoirs.
 * Two reservoir Phosphorus mass balance calculation methods in CO<sub>2</sub> emission calculations: G-Res method and McDowell method.
 * Two N<sub>2</sub>O calculation methods.
-* Model parameters, and presentation of outputs are fully configurable using YAML files.
+* Model parameters, and presentation of outputs are fully configurable using YAML configuration files.
 * Inputs can be constructed in Python using the ```Input``` class or read from JSON files.
-* Outputs can be presented in JSON, LaTeX and PDF format and are configurable in the ```outputs.yaml``` configuration file.
+* Outputs in tabular form can be presented in JSON, LaTeX and PDF formats and can be configured by changing settings in the ```outputs.yaml``` configuration file.
+* Integrates with the upstream catchment and reservoir delineation package HEET, whcih is currently in Beta version and undergoing development.
+* Combines tabular and GIS inputs from catchment delineation with gas emission outputs and visualizes the combined data in interactive maps.
+
+### A quick demo of results from RE-Emission using input data from catchment delineation tool HEET
+
+Preliminary results of our first case study (for presentation use only), are shown in [https://tomjanus.github.io/mya_emissions_map/](https://tomjanus.github.io/mya_emissions_map/). The case study looks into an assessment of gas emissions from existing and planned hydroelectric reservoirs in Myanmar. A snapshot of the map is presented below. 
+<p align="center">
+    <a href="https://tomjanus.github.io/mya_emissions_map/" target="_blank" rel="noopener noreferrer"><img alt="myanmar_hydro-map" width="650" src="https://github.com/tomjanus/reemission/assets/8837107/96a643d4-990c-451a-9d91-a83655b0be47"/></a></p>
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
