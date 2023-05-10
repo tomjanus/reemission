@@ -1,0 +1,21 @@
+[shp_output]
+[shp_output.catchments]
+    # Mapping between index of the tabular data and index of the original shp
+    match_keys = ["id", "id"]
+    # Fields to be copied from the tabular data to the shape file
+    fields = ["c_mar_mm", "c_area_km2", "c_population", "c_mean_slope_pc",
+              "c_map_mm", "c_mpet_mm", "c_masm_mm", "c_biome", "c_soil_type",
+              "c_mean_olsen", "ms_length"]
+[shp_output.dams]
+    # Mapping between index of the tabular data and index of the original shp
+    match_keys = ["id", "id"]
+    # Fields to be copied from the tabular data to the shape file
+    fields = ["t_dam_height", "dam_lat", "dam_lon"]
+[shp_output.reservoirs]
+    # Mapping between index of the tabular data and index of the original shp
+    match_keys = ["id", "id"]
+    # Fields to be copied from the tabular data to the shape file
+    fields = ["r_volume_m3","r_area_km2", "r_maximum_depth_m", "r_mean_depth_m",
+              "r_msoc_kgperm2", "r_mghr_all_kwhperm2perday",
+              "r_mghr_may_sept_kwhperm2perday",
+              "r_mghr_nov_mar_kwhperm2perday", "r_mean_annual_windspeed"]
