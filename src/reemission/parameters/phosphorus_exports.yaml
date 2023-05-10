@@ -5,31 +5,31 @@
 # Prairie and Kalff (1986)
 # Where values are non-numerical they correpond to names of functions
 bare:
-  low_intensity: 0.31
-  high_intensity: 0.31
-snow_ice:
-  low_intensity: 0.15
-  high_intensity: 0.15
+  low intensity: 0.31
+  high intensity: 0.31
+snow and ice:
+  low intensity: 0.15
+  high intensity: 0.15
 urban:
-  low_intensity: 2.75
-  high_intensity: 2.75
+  low intensity: 2.75
+  high intensity: 2.75
 water:
-  low_intensity: 0.00
-  high_intensity: 0.00
+  low intensity: 0.00
+  high intensity: 0.00
 wetlands:
-  low_intensity: 0.10
-  high_intensity: 0.10
+  low intensity: 0.10
+  high intensity: 0.10
 crops:
-  low_intensity: crop_export
-  high_intensity: 2.24
+  low intensity: crop export
+  high intensity: 2.24
 # Shrubs are also called grasslands or pastures
 shrubs:
-  low_intensity: 0.26
-  high_intensity: 42.86
+  low intensity: 0.26
+  high intensity: 42.86
 forest:
-  low_intensity: forest_export
-  high_intensity: 0.41
+  low intensity: forest export
+  high intensity: 0.41
 no data:
-  low_intensity: 0.0
-  high_intensity: 0.0
+  low intensity: 0.0
+  high intensity: 0.0
 ...

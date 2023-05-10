@@ -8,16 +8,16 @@
 # corr: Bias correction factor (-)
 # coeff_det: Coefficient of determination (-)
 # Biomes
-# 1: deserts & xeric shrublands
-# 2: mediterranean forests, woodlands & scrub
-# 3: montane grasslands & shrublands
-# 4: temperate broadleaf & mixed forests
-# 5: temperate conifer forests
-# 6: temperate grasslands, savannas & shrublands
-# 7: tropical & subtropical dry broadleaf forests
-# 8: tropical & subtropical grasslands, savannas & shrublands
-# 9: tropical & subtropical moist broadleaf forests
-# 10: tundra
+# deserts: deserts & xeric shrublands
+# mediterreanan forest: mediterranean forests, woodlands & scrub
+# montane grasslands: montane grasslands & shrublands
+# temperate broadleaf and mixed: temperate broadleaf & mixed forests
+# temperate coniferous: temperate conifer forests
+# temperate grasslands: temperate grasslands, savannas & shrublands
+# tropical dry broadleaf: tropical & subtropical dry broadleaf forests
+# tropical grasslands: tropical & subtropical grasslands, savannas & shrublands
+# tropical moist broadleaf: tropical & subtropical moist broadleaf forests
+# tundra: tundra
 intercept:
   coeff: -4.2396
   se: 0.2161
@@ -37,34 +37,34 @@ pet:
   coeff: 0.0134
   se: 0.0029
 biome:
-  1:
+  deserts:
     coeff: 1.4481
     se: 0.2496
-  2:
+  mediterreanan forest:
     coeff: 1.8352
     se: 0.3854
-  3:
+  montane grasslands:
     coeff: 0.5575
     se: 0.2531
-  4:
+  temperate broadleaf and mixed:
     coeff: 0.5216
     se: 0.1902
-  5:
+  temperate coniferous:
     coeff: 0.8749
     se: 0.222
-  6:
+  temperate grasslands:
     coeff: 1.0591
     se: 0.199
-  7:
+  tropical dry broadleaf:
     coeff: 0.2002
     se: 0.3356
-  8:
+  tropical grasslands:
     coeff: 0.9004
     se: 0.2549
-  9:
+  tropical moist broadleaf:
     coeff: 1.0789
     se: 0.2381
-  10:
+  tundra:
     coeff: 1.9464
     se: 0.4573
 corr: 0.855
