@@ -40,7 +40,7 @@ def scale_windspeed(wind_speed: float, wind_height: float,
     """Calculate wind speed at desired height base on the original wind speed
     at a known height.
 
-    Args:
+    Parameters:
         wind_speed: known wind speed, m/s
         wind_height: known wind heigt, m
         new_height: new height for which wind speed is calculated.
@@ -58,6 +58,21 @@ def scale_windspeed(wind_speed: float, wind_height: float,
 def rollout_nested_list(
         nested_list: List[Any],
         out_list: Optional[List] = None) -> List[Any]:
+    """
+    This function takes a nested list and returns a flattened version of that list.
+
+    Parameters:
+        nested_list: A list containing other lists and/or non-list elements.
+        out_list (optional): An empty list to store the flattened output.
+    Returns:
+        A flattened version of the nested_list.
+
+    Example Usage:
+
+    nested_list = [1, [2, 3], 4, [[5, 6], 7]]
+    flattened_list = rollout_nested_list(nested_list)
+    print(flattened_list) # prints [1, 2, 3, 4, 5, 6, 7]
+    """
     if out_list is None:
         out_list = []
     while nested_list:

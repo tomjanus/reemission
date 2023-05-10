@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 """
 Module that contains the command line application.
 
@@ -57,12 +56,9 @@ nitrous_oxide_model = config.get("CALCULATIONS", "nitrous_oxide_model")
 def main(figlet: bool = FIGLET) -> None:
     """------------------------ RE-EMISSION  ------------------------
 
-You are now using the Command line interface of RE-Emission, a Python3
-toolbox for calculating greenhouse gas emissions from reservoirs,
-created at the University of Manchester, UK
-(https://www.manchester.ac.uk).
+You are now using the Command line interface of RE-Emission, a Python
+toolbox for calculating greenhouse gas emissions from reservoirs..
 
-This is a python package currently installed in your python environement.
 See the full documentation at : https://reemisison.readthedocs.io/en/latest/.
 """
     if figlet:
@@ -170,4 +166,11 @@ def calculate(input_file, output_files, output_config, author,
             "Outputs written to files.", blink=False, bg='green', fg='white'))
 
 
+@click.command()
+def demo() -> None:
+    """Run a demo analysis for a set of existing and future dams."""
+    click.echo("Demo not available yet. Please come back later.")
+
+
 main.add_command(calculate)
+main.add_command(demo)

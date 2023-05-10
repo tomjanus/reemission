@@ -202,9 +202,9 @@ class Catchment:
         def fun_exp(area_fraction: float, fun_name: str) -> float:
             """Regression vs area fraction for P export from crops and
             forest."""
-            if fun_name == 'crop_export':
+            if fun_name == 'crop export':
                 reg_coeffs = (1.818, 0.227)
-            elif fun_name == 'forest_export':
+            elif fun_name == 'forest export':
                 reg_coeffs = (0.914, 0.014)
             else:
                 log.error(
@@ -231,7 +231,7 @@ class Catchment:
         for landuse, area_fraction in zip(landuse_names, self.area_fractions):
             # iterate and calculate the total phosphorus load
             coefficient = p_exports[landuse][intensity.value]
-            if coefficient in ('crop_export', 'forest_export'):
+            if coefficient in ('crop export', 'forest export'):
                 coefficient = fun_exp(area_fraction, coefficient)
             load += coefficient * area_fraction * self.area_ha
         return load

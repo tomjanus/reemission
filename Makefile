@@ -23,6 +23,10 @@ wheel:
 init:
 	pip install -r requirements.txt
 
+# Install in development mode
+dev:
+	pip install -e .
+
 # Test upload to PyPi
 upload_test:
 	twine upload --repository-url https://test.pypi.org/legacy/ dist/*

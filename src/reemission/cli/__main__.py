@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Entrypoint module, in case you use `python -m reemission`.
 

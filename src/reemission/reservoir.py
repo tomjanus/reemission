@@ -1,7 +1,6 @@
 """Reservoir calculations."""
 import logging
 import os
-import copy
 import math
 import configparser
 import inspect
@@ -10,8 +9,7 @@ from dataclasses import dataclass
 from typing import List, Tuple, Optional, TypeVar, Type
 from reemission.temperature import MonthlyTemperature
 from reemission.auxiliary import (
-    water_density, cd_factor, scale_windspeed, air_density,
-    rollout_nested_list)
+    water_density, cd_factor, scale_windspeed, air_density)
 from reemission.utils import read_config
 from reemission.constants import Landuse, TrophicStatus
 from reemission.exceptions import (
@@ -91,10 +89,6 @@ class Reservoir:
             WrongSumAreasException if area fractions do not sum to 1 +/-
                 acurracy coefficient EPS.
         """
-        # Remove nested lists inside area_fractions
-        self.area_fractions = rollout_nested_list(
-            copy.deepcopy(self.area_fractions), None)
-
         try:
             assert len(self.area_fractions) == 3 * len(Landuse)
         except AssertionError as err:
@@ -102,7 +96,7 @@ class Reservoir:
                 f"Wrong size of the reservoir {self.name} area fractions vector."
             raise WrongAreaFractionsException(
                 number_of_fractions=len(self.area_fractions),
-                number_of_landuses=len(Landuse),
+                number_of_landuses= 3 * len(Landuse),
                 message=message) from err
         try:
             assert 1 - EPS <= sum(self.area_fractions) <= 1 + EPS
@@ -183,12 +177,12 @@ class Reservoir:
     def validate_attributes(self) -> None:
         """Check object attributes and log and correct, if necessary, the
         suspicious or invalid data."""
-        if self.water_intake_depth == "null":
+        if self.water_intake_depth == "null" or self.water_intake_depth is None:
             # If water intake depth value is not given, assume that
             # the intake is from deep in the reservoir and therefore,
             # degassing occurs.
             self.water_intake_depth = self.max_depth
-        if self.water_intake_depth > self.max_depth:
+        elif self.water_intake_depth > self.max_depth:
             log.warning(
                 "Water intake depth in reservoir %s greater than max depth",
                 self.name)
