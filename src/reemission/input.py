@@ -1,7 +1,7 @@
 """ Class containg input data for calculating GHG emissions """
 import os
 from dataclasses import dataclass
-from typing import Dict, List, Tuple, TypeVar, Type, Optional
+from typing import Dict, List, Tuple, TypeVar, Type, Optional, Literal
 import json
 import logging
 from reemission.biogenic import BiogenicFactors
@@ -14,6 +14,7 @@ module_dir = os.path.dirname(__file__)
 
 InputType = TypeVar('InputType', bound='Input')
 InputsType = TypeVar('InputsType', bound='Inputs')
+EnumLoadMethods = Literal["name", "value"]
 
 
 @dataclass
@@ -26,6 +27,7 @@ class Input:
     """
     name: str
     data: Dict
+    enum_load_method: EnumLoadMethods = "value"
 
     @property
     def reservoir_data(self) -> Optional[Dict]:
@@ -38,7 +40,8 @@ class Input:
         if self.data:
             catchment_dict = self.data['catchment'].copy()
             catchment_dict["biogenic_factors"] = BiogenicFactors.fromdict(
-                catchment_dict["biogenic_factors"])
+                catchment_dict["biogenic_factors"],
+                method=self.enum_load_method)
             return catchment_dict
         return None
 
