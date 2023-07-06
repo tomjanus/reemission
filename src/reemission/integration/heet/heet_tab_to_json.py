@@ -132,7 +132,3 @@ class TabToJSONConverter:
 
 if __name__ == "__main__":
     """ """
-    heet_output = get_package_file("../../input_data/all_heet_outputs.csv")
-    reemission_input = get_package_file("../../input_data/reemission_input.json")
-    converter = TabToJSONConverter(heet_output, LegacySavingStrategy())
-    converter.to_json(reemission_input)

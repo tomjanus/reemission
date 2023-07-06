@@ -260,46 +260,5 @@ class HeetOutputReader(pydantic.BaseModel):
         return file_parser
 
 
-def test_tab_data_parsing() -> None:
-    """Parse tabular output data from HEET generated for demo purposes"""
-    # Get the IFC database of dams (providing supplementary data)
-    ifc_db_file = get_package_file(
-        "../../examples/demo/ifc_db/all_dams_replaced_refactored.shp")
-    # Get the heet output folders
-    heet_output_1 = get_package_file(
-        "../../examples/demo/XHEET_23MYEX1-9_20230316-1814/") / \
-        DEFAULT_HEET_OUTPUT_FILE
-    heet_output_2 = get_package_file(
-        "../../examples/demo/XHEET_23MYFP1-2_20230305-1653/") / \
-        DEFAULT_HEET_OUTPUT_FILE
-    heet_output_3 = get_package_file(
-        "../../examples/demo/XHEET_23MYFP2-2_20230305-2021/") / \
-        DEFAULT_HEET_OUTPUT_FILE
-    # Read the tabular output files
-    output_reader = HeetOutputReader(
-        file_paths=[heet_output_1, heet_output_2, heet_output_3])
-    heet_output = output_reader.read_files()
-    heet_output.remove_duplicates(on_column="id")
-    # Load supplementary data from the ifc database
-    sup_data = SuppDataMyanmar.from_ifc_db(ifc_db_file)
-    #heet_output.set_index("id")
-    heet_output.handle_existing_reservoirs(sup_data)
-    # Get the list of mandatory columns from config file
-    tab_data_config = load_toml(
-       get_package_file("./config/heet.toml"))['tab_data']
-    heet_output.filter_columns(
-        mandatory_columns=tab_data_config['mandatory_fields'],
-        optional_columns=tab_data_config['unused_inputs'])
-    # Add missing columns containing information about treatment factor and
-    # landuse intensity that are not currently present in HEET
-    heet_output.add_column(
-        column_name="c_treatment_factor", default_value="primary (mechanical)")
-    heet_output.add_column(
-        column_name="c_landuse_intensity", default_value="low intensity")
-    # Save the combined and parsed outputs csv file
-    heet_output.to_csv(
-        get_package_file("../../input_data/all_heet_outputs.csv"))
-
-
 if __name__ == "__main__":
-    test_tab_data_parsing()
+    """ """

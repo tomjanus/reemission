@@ -15,10 +15,8 @@ from typing import List, Dict, Set, Optional
 from dataclasses import dataclass, field
 import pathlib
 import re
-import json
 import pandas as pd
 import geopandas as gpd
-from reemission.utils import get_package_file
 
 
 @dataclass
@@ -92,23 +90,5 @@ class ShpConcatenator:
         return GeoData(gdf)
 
 
-def test_shp_concatenation() -> None:
-    """Test shp file concatenation and parsing using demo data"""
-    shp_concat = ShpConcatenator()
-    shp_dirs_rel = [
-        "../../examples/demo/XHEET_23MYEX1-9_20230316-1814/",
-        "../../examples/demo/XHEET_23MYFP1-2_20230305-1653/",
-        "../../examples/demo/XHEET_23MYFP2-2_20230305-2021/"
-    ]
-    shp_file_folders = [get_package_file(folder) for folder in shp_dirs_rel]
-    stats = shp_concat.find_in_folders(
-        folders=shp_file_folders, glob_pattern="R_*.shp")
-    print(json.dumps(stats, indent=4))
-    g_data = shp_concat.concatenate()
-    g_data.save(
-        folder=get_package_file("../../input_data"), file_name='test.shp')
-
-
 if __name__ == "__main__":
     """ """
-    test_shp_concatenation()
