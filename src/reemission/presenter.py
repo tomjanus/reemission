@@ -945,7 +945,10 @@ class LatexWriter(Writer):
                             'reservoir_inputs']['var_dict'][input_name]
                         name = conf_input['name']
                         unit = NoEscape(conf_input['unit_latex'])
-                        if not isinstance(input_value, Iterable):
+                        if input_value is None:
+                            # Convert None into empty string
+                            input_value = "N/A"
+                        elif not isinstance(input_value, Iterable):
                             input_value = Quantity(
                                 input_value, options=round_options)
                         elif isinstance(input_value, str):
