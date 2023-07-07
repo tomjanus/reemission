@@ -14,12 +14,15 @@ Why does this file exist, and why not put this in __main__?
 
   Also see (1) from http://click.pocoo.org/5/setuptools/#setuptools-integration
 """
+from typing import Dict, List
 import os
 import logging
 import configparser
 import pathlib
+import textwrap
 import click
 import pyfiglet
+from fpdf import FPDF
 import reemission
 import reemission.presenter
 from reemission.utils import add_version, get_package_file, read_config
@@ -167,10 +170,63 @@ def calculate(input_file, output_files, output_config, author,
 
 
 @click.command()
+def log_to_pdf() -> None:
+    """Converts log in text format into a PDF"""
+    def _text_to_pdf(text: str, filename: pathlib.Path) -> None:
+        """Converts string into a pdf file"""
+        # Set page dimensions and text width
+        a4_width_mm = 210
+        pt_to_mm = 0.35
+        fontsize_pt = 10
+        fontsize_mm = fontsize_pt * pt_to_mm
+        margin_bottom_mm = 10
+        character_width_mm = 7 * pt_to_mm
+        width_text = a4_width_mm / character_width_mm
+        # Instantiate the FPDF object
+        pdf = FPDF(orientation='P', unit='mm', format='A4')
+        pdf.set_auto_page_break(True, margin=margin_bottom_mm)
+        pdf.add_page()
+        pdf.set_font(family='Courier', size=fontsize_pt)
+        # Split text into lines, wrap each line to the maximum number of characters
+        # and write each line to a pdf.cell
+        splitted: List[str] = text.split('\n')
+        for line in splitted:
+            lines = textwrap.wrap(line, width_text)
+            if len(lines) == 0:
+                pdf.ln()
+            for wrap in lines:
+                pdf.cell(0, fontsize_mm, wrap, ln=1)
+        # Output the PDF file
+        pdf.output(filename, 'F')
+
+    app_config: Dict = reemission.utils.load_yaml(
+        file_path=get_package_file("./config/app_config.yaml"))
+    log_path = get_package_file(app_config['logging']['log_dir'])
+    log_filename = app_config['logging']['log_filename']
+    log_filename_no_ext = log_filename.split(".")[0]
+    log_file_path = pathlib.Path.joinpath(log_path, log_filename)
+    try:
+        with open(log_file_path, 'r') as file:
+            text_content = file.read()
+    except FileNotFoundError:
+        log.error("Log file cannot be converted to PDF")
+        log.error("Log file %s not found", log_file_path.as_posix())
+    else:
+        log_filename_pdf = ".".join([log_filename_no_ext,"pdf"])
+        pdf_log_file_path = pathlib.Path.joinpath(log_path, log_filename_pdf)
+        _text_to_pdf(text_content, pdf_log_file_path)
+        log.info(
+            "Log file converted to pdf file %s",
+            pdf_log_file_path.as_posix())
+
+
+
+@click.command()
 def demo() -> None:
     """Run a demo analysis for a set of existing and future dams."""
     click.echo("Demo not available yet. Please come back later.")
 
 
 main.add_command(calculate)
+main.add_command(log_to_pdf)
 main.add_command(demo)
