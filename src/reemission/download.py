@@ -50,7 +50,7 @@ class GDriveDirDownloader:
     Automatically overwrites whatever is already available.
     Does not check checksums during download."""
     quiet: bool = False
-    remaining_ok: bool = False
+    remaining_ok: bool = True
 
     def __call__(self, url: str, output_path: Union[pathlib.Path, str]) -> None:
         """Download directory from Google Drive using a URL (shared link)"""
@@ -121,7 +121,7 @@ def download_from_url(
     """Download data from a URL
     Args:
         url: url pointing to date, e.g. share link from Google Drive
-        output: directory/file relative to packeg root directory
+        output_path: directory/file relative to package root directory
         update: updates old data when checksum does not match
         relative_path: if True the path provided will be relative to the package
             root folder
@@ -155,15 +155,15 @@ def download_from_url(
                     "To ovewrite, run the function with output flag set to true")
                 return
             local_logger.debug(
-                "Data from url %s alread exists but file is outdated", url)
+                "Data from url %s already exists but file is outdated", url)
             local_logger.debug("Updating the file with the new version")
             downloader(url, output_path)    
         else:
             if not update:
                 local_logger.debug(
-                    "Data from url %s alread exists", url)
+                    "Data from url %s already exists", url)
                 local_logger.debug(
-                    "To overwrite, run the function with output flag set to true")
+                    "To overwrite, run the function with update flag set to true")
                 return                  
             local_logger.debug(
                 "Data from url %s alread exists, ovewriting", url)
