@@ -23,6 +23,8 @@ import reemission
 from reemission.app_logger import create_logger
 from reemission.integration.heet.heet_tab_parser import HeetOutputReader
 from reemission.integration.heet.heet_shp_parser import ShpConcatenator
+from reemission.integration.heet.heet_tab_to_json import (
+    TabToJSONConverter, LegacySavingStrategy)
 from reemission.utils import load_toml, get_package_file
 
 # Create a logger
@@ -92,6 +94,12 @@ def process_tab_outputs(
     heet_output.filter_columns(
         mandatory_columns=tab_data_config['mandatory_fields'],
         optional_columns=tab_data_config['unused_inputs'])
+    click.echo("Adding missing column 'c_treatment_factor'")
+    heet_output.add_column(
+        column_name="c_treatment_factor", default_value="primary (mechanical)")
+    click.echo("Adding missing column 'c_landuse_intensity'")
+    heet_output.add_column(
+        column_name="c_landuse_intensity", default_value="low intensity")  
     heet_output.to_csv(pathlib.Path(output_file))
     logger.info("Tabular data saved to: %s", output_file)
 
@@ -111,7 +119,8 @@ def process_tab_outputs(
 def join_shapes(
         input_folders: List[str], output_folder: str, glob_patterns: List[str], 
         output_files: List[str], indices: List[str]) -> None:
-    """ """
+    """Join multiple shapes matching glob pattern into single shape files for each
+    glob pattern, e.g. reservoirs.shp for all R_*.shp files, etc."""
     glob_patterns = [pattern.strip() for pattern in glob_patterns]
     output_files = [file.strip() for file in output_files]
     int_indices: Optional[list] = list(map(int, indices))
@@ -149,5 +158,29 @@ def join_shapes(
         click.echo(f"Data saved to shape file {file_path}.")
 
 
+@click.command()
+@click.option("-i", "--input-file", type=click.Path())
+@click.option("-o", "--output_file", type=click.Path())
+def tab_to_json(input_file: str, output_file: str) -> None:
+    """Convert tabular data in CSV format into input JSON file in the
+    RE-Emissions input format.
+    
+    Args:
+        
+    
+        input_file: CSV file with input data in tabular format
+        
+    
+        output_file: JSON file with input data in JSON format that can be
+            read and processed by RE-Emission
+    """
+    #TODO: Add tests for input and output file extensions and create tree folder
+    # structure for the output file if the folder does not exist
+    saving_strategy = LegacySavingStrategy()
+    converter = TabToJSONConverter(pathlib.Path(input_file), saving_strategy)
+    converter.to_json(pathlib.Path(output_file))
+
+
 main.add_command(process_tab_outputs)
 main.add_command(join_shapes)
+main.add_command(tab_to_json)

@@ -21,7 +21,6 @@ from reemission.app_logger import create_logger
 
 # NOTE: "r_msoc_kgperm2" now replaced with r_msocs_kgperm2
 # By default output csv file from HEET is called 'output_parameters.csv'
-DEFAULT_HEET_OUTPUT_FILE = "output_parameters.csv"
 
 # Create a logger
 logger = create_logger(logger_name=__name__)
