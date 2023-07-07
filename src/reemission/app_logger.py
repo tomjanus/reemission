@@ -1,5 +1,6 @@
 """ """
 import logging
+import pathlib
 import os
 import sys
 from typing import Tuple, Optional, Union
@@ -11,7 +12,7 @@ APP_CONFIG = load_yaml(
     file_path=get_package_file("./config/app_config.yaml"))
 # Set global logging settings from logging configuration
 try:
-    logging.getLogger('test').setLevel(APP_CONFIG['logging']['level'])
+    # logging.getLogger('test').setLevel(APP_CONFIG['logging']['level'])
     LOGGING_LEVEL = APP_CONFIG['logging']['level']
 except (ValueError, TypeError):
     LOGGING_LEVEL = logging.DEBUG
@@ -19,7 +20,7 @@ except (ValueError, TypeError):
 if APP_CONFIG['logging']['log_dir']:
     logging_path = get_package_file(APP_CONFIG['logging']['log_dir'])
 else:
-    logging_path = os.path.join(get_package_file(), 'logs')
+    logging_path = pathlib.Path.joinpath(get_package_file(), 'logs')
 # Make logging path folder structure if not present
 try:
     os.makedirs(logging_path)
@@ -30,7 +31,7 @@ except OSError as e:
 global_formatter = logging.Formatter(
     '%(asctime)s : %(levelname)s : %(name)s : %(message)s')
 global_filehandler = logging.FileHandler(
-    os.path.join(logging_path, APP_CONFIG['logging']['log_filename']),
+    pathlib.Path.joinpath(logging_path, APP_CONFIG['logging']['log_filename']),
     mode=APP_CONFIG['logging']['mode'])
 global_streamhandler = logging.StreamHandler(sys.stdout)
 

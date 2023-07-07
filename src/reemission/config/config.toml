@@ -1,7 +1,7 @@
 # Logging setup
 [logging]
     level = "DEBUG"
-    log_dir = "./tmp/mya_emissions"
+    log_dir = "../../tmp/mya_emissions"
     log_filename = "mya_emissions.log"
     mode = "w" # w for writing and a for append
 # Remote locations of data required for running a demo
