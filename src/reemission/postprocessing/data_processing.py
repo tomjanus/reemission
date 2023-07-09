@@ -2,7 +2,7 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
 import pathlib
-from typing import List, Any, Dict, ClassVar
+from typing import List, Any, Dict, ClassVar, Optional
 import pandas as pd
 import geopandas as gpd
 from reemission.utils import (
@@ -12,8 +12,6 @@ from reemission.app_logger import create_logger
 
 # Create a logger
 logger = create_logger(logger_name=__name__)
-
-
 # Read toml configuration file
 config = load_toml(get_package_file('config/heet.toml'))
 
@@ -117,22 +115,37 @@ class ShpToShpCopy:
 @dataclass
 class ExtractFromJSON:
     """Extract data from a JSON file and present them in a tabular data format"""
-    extracted_keys: ClassVar[Dict[str, List[str]]] = {
-        "inputs": [],
-        "outputs": ["co2_net", "ch4_net", "n2o_mean"]}
+    # inputs are keys found in the inputs section of the reemission output json file
+    # outputs are keys found in th eoutputs section of the reemission output json file
     reemission_output: Dict
+    extracted_keys: Dict[str, List[str]] = field(default_factory=dict)
+
+    def __post_init__(self):
+        """Provide default extracted keys if empty dictionary given as an argument"""
+        if not self.extracted_keys:
+            self.extracted_keys = {
+                "inputs": [],
+                "outputs": ["co2_net", "ch4_net", "n2o_mean"]
+            }
     
     @classmethod
-    def from_file(cls, reemission_file: pathlib.Path) -> ExtractFromJSON:
+    def from_file(
+            cls, reemission_file: pathlib.Path, 
+            extracted_keys: Optional[Dict[str, List[str]]] = None) -> ExtractFromJSON:
         """Instantiate object from data files.
         Args:
             reemission_file: Output json file from Re-Emission
         """
-        return cls(reemission_output=load_json(reemission_file))
+        if extracted_keys is None:
+            return cls(reemission_output=load_json(reemission_file))
+        return cls(
+            reemission_output=load_json(reemission_file),
+            extracted_keys=extracted_keys)
     
     def extract_outputs(self) -> pd.DataFrame:
         """Extract selected RE-Emission gas emission estimation outputs and
-        save them to a dataframe"""
+        save them to a dataframe. Calculates and adds additional field 'tot_em'
+        """
         # 1. Extract data given in class variable extracted_keys
         extracted_data = {}
         for reservoir_name, output_data in self.reemission_output.items():
@@ -153,12 +166,15 @@ class ExtractFromJSON:
 
 def append_data_to_shapes(
         shp_folder: pathlib.Path, data_file: pathlib.Path,
-        config_dict: Dict, suffix: str = "_updated") -> None:
+        config_dict: Dict, output_folder: Optional[pathlib.Path]=None, 
+        suffix: str = "_updated") -> None:
     """Appends data from the loaded tabular data into shape files using config
     information. Uses TabToShpCopy class to copy the selected tabular data
     to the shape file. Saves modified shape files in the same directory as
     the original shape files but under a different name. The new name is equal
-    to the original name plus the suffix provided as an argument."""
+    to the original name plus the suffix provided as an argument.
+    
+    Used to transfer data from HEET csv output file to the shape files."""
     config_shape_categories = config_dict['shp_output'].keys()
     tab_data = load_csv(data_file)
     for shape in shp_folder.glob('*.shp'):
@@ -172,30 +188,12 @@ def append_data_to_shapes(
                 source_key_column=match_keys[0], 
                 target_key_column=match_keys[1],
                 fields=config['shp_output'][file_category]['fields'])
+            if output_folder is None:
+                output_folder = shape.parent
             new_shp_file = pathlib.Path(
-                shape.parent, shape.stem + suffix + ".shp")
+                output_folder, shape.stem + suffix + ".shp")
             tab_shp_copy.save_shp(shp_file_name=new_shp_file)
 
 
 if __name__ == '__main__':
-    # 1. Create shape files with extra fields with values obtained from the
-    #    tabular HEET output csv file
-    shp_folder = get_package_file("../../input_data/")
-    data_file = shp_folder / "all_heet_outputs.csv"
-    append_data_to_shapes(shp_folder, data_file, config)
-    # 2. Extract data from RE-Emission output file and save it into reservoirs
-    #    shape file
-    output_json_file = get_package_file(
-        "../../outputs/reemission_output_09_05_23.json")
-    reemission_outputs_df = \
-        ExtractFromJSON.from_file(output_json_file).extract_outputs()
-    data_columns = list(reemission_outputs_df.columns)
-    data_columns.remove("name")
-    # 3. "Feed" the emission data into the reservoirs shape.
-    res_shape_file = get_package_file("../../input_data/reservoirs_updated.shp")
-    re_to_res = TabToShpCopy(
-        shp_data=load_shape(res_shape_file),
-        tab_data=reemission_outputs_df)
-    re_to_res.transfer(
-        source_key_column="name", target_key_column="name", fields=data_columns)
-    re_to_res.save_shp(res_shape_file)
+    """ """
