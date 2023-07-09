@@ -15,12 +15,14 @@ import shutil
 import pandas as pd
 import geopandas as gpd
 from reemission.utils import get_package_file, load_toml
+from reemission.app_logger import create_logger
 from reemission.integration.heet.heet_tab_parser import (
     HeetOutputReader, SuppDataMyanmar)
 
 
 DEFAULT_HEET_OUTPUT_FILE = "output_parameters.csv"
 TEST_OUTPUT_FOLDER = './test_output'
+log = create_logger(logger_name="test_tab_data_parsing")
 
 
 class TestTabDataParsing(unittest.TestCase):
@@ -42,6 +44,7 @@ class TestTabDataParsing(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         # Clean up all created shape files after running all tests
+        log.info("Clearing the %s outputs folder.", TEST_OUTPUT_FOLDER)
         shutil.rmtree(TEST_OUTPUT_FOLDER, ignore_errors=True)
 
     def setUp(self):

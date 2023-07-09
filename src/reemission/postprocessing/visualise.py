@@ -8,7 +8,6 @@ import folium
 from folium import plugins
 import webbrowser
 import branca.colormap as cm
-from reemission.utils import get_package_file, load_shape
 from reemission.app_logger import create_logger
 
 
@@ -176,15 +175,4 @@ class FoliumOutputMapper:
 
 
 if __name__ == "__main__":
-    # Create a map from existing resources
-    reservoirs = load_shape(
-        get_package_file("../../input_data/reservoirs_updated.shp"))
-    dams = load_shape(
-        get_package_file("../../input_data/dams_updated.shp"))
-    dams_ifc = load_shape(
-        get_package_file(
-            "../../examples/demo/ifc_db/all_dams_replaced_refactored.shp")
-    )
-    mapper = FoliumOutputMapper(reservoirs, dams_ifc)
-    mapper.create_map()
-    mapper.save_map(pathlib.Path("index.html"), show=True)
+    """ """

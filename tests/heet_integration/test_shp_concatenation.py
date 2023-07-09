@@ -12,11 +12,12 @@ import pathlib
 import unittest
 import shutil
 import geopandas as gpd
+from reemission.app_logger import create_logger
 from reemission.integration.heet.heet_shp_parser import ShpConcatenator
 
+
 TEST_OUTPUT_FOLDER = './test_output'
-
-
+log = create_logger(logger_name="test_shp_concatenation")
 #TODO: Test for error handling, e.g. Value Error when nothing to concatenate, etc.
 
 
@@ -35,6 +36,7 @@ class TestShpConcatenation(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         # Clean up all created shape files after running all tests
+        log.info("Clearing the %s outputs folder.", TEST_OUTPUT_FOLDER)
         shutil.rmtree(TEST_OUTPUT_FOLDER, ignore_errors=True)
 
     def setUp(self):

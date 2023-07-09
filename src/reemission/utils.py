@@ -59,7 +59,12 @@ def load_toml(file_path: pathlib.Path) -> Dict:
 
 
 def load_shape(path: pathlib.Path) -> gpd.GeoDataFrame:
-    """ Opens a shape file using geopandas."""
+    """ Opens a shape file using geopandas and returns a GeoDataFrame."""
+    return gpd.read_file(path)
+
+
+def load_geojson(path: pathlib.Path) -> gpd.GeoDataFrame:
+    """Opens a geojson file using geopandas and returns a GeoDataFrame."""
     return gpd.read_file(path)
 
 
