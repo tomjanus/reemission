@@ -1,7 +1,9 @@
 """Package-wide utility functions."""
+from typing import Union
 import sys
 import os
 import configparser
+import pathlib
 from functools import wraps
 from distutils.spawn import find_executable
 import pathlib
@@ -96,6 +98,27 @@ def get_package_file(*folders: str) -> pathlib.Path:
     # Append folders to package-wide posix path
     pkg = pathlib.Path.joinpath(pkg, '/'.join(folders))
     return pkg
+
+
+def get_folder_size(folder_path: Union[pathlib.Path, str]) -> float:
+    """Calculates size in bytes for all files in a given folder"""
+    total_size = 0
+    for dirpath, dirnames, filenames in os.walk(folder_path):
+        for filename in filenames:
+            file_path = os.path.join(dirpath, filename)
+            total_size += os.path.getsize(file_path)
+    return total_size
+
+
+def clean_folder(folder_path: Union[pathlib.Path, str]) -> None:
+    """Removes all subfolders and files in a given folder"""
+    for root, dirs, files in os.walk(folder_path, topdown=False):
+        for file_name in files:
+            file_path = os.path.join(root, file_name)
+            os.remove(file_path)
+        for dir_name in dirs:
+            dir_path = os.path.join(root, dir_name)
+            os.rmdir(dir_path)
 
 
 def read_config(
