@@ -761,7 +761,7 @@ class NitrousOxideEmission(Emission):
 
     Attrributes:
         available_models: tuple of supporte N2O emission models.
-        model: selected N2O emission  model.
+        model: selected N2O emission  model ('model_1', 'model_2').
         p_export_model: Model for calculating P export from catchments
     """
 
