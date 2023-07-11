@@ -18,10 +18,11 @@ This is a short example of how `RE-EMISSION` works in combintion with an `upstre
 
 ## Manual problem formulation / Python API (`examples/notebooks` folder)
 The usage of the RE-Emission Toolbox and its various components is demonstrated in four notebooks:
+
 <font size="3"> 1. [Manual Step-By-Step Calculations](notebooks/01-Step-By-Step-Manual-Calculations.ipynb)</font> shows how to manually construct input data structures for a hypotethical reservoir and calculate GHG emission estimates.
 
-<font size="3"> 2. [Automatic Calculation Of Batches of Reservoirs](notebooks/02-Automatic-Calculation-Of-Reservoir-Batches.ipynb)</font> demonstrates how to: read input data in <b>JSON</b> format and output configuration <b>YAML</b> file, instantiate the emission model object from input data output configuration file, calculate emissions and display model outputs.
+<font size="3"> 2. [Automatic Calculation Of Batches of Reservoirs](notebooks/02-Automatic-Calculation-Of-Emissions-For-Batches-Of-Reservoirs.ipynb)</font> demonstrates how to: read input data in <b>JSON</b> format and output configuration <b>YAML</b> file, instantiate the emission model object from input data output configuration file, calculate emissions and display model outputs.
 
-<font size="3"> 3. [Presentation of Results in JSON Format](notebooks/03-Saving-Results-To-JSON)</font> demonstrates how to: read input data and output configuration <b>YAML</b> file and instantiate the emission model, add <b>JSON</b> model presenter, calculate emissions and save results to <b>JSON</b> file, read and display the results saved in <b>JSON</b> format.
+<font size="3"> 3. [Presentation of Results in JSON Format](notebooks/03-Saving-Results-To-JSON.ipynb)</font> demonstrates how to: read input data and output configuration <b>YAML</b> file and instantiate the emission model, add <b>JSON</b> model presenter, calculate emissions and save results to <b>JSON</b> file, read and display the results saved in <b>JSON</b> format.
 
 <font size="3"> 4. [Presentation of Results in PDF Format (via $\LaTeX$)](notebooks/04-Saving-Results-To-LaTeX.ipynb)</font> shows how to: read input data and output configuration <b>YAML</b> file and instantiate the emission mode, add $\LaTeX$ model presenter, calculate emissions and save results to $\TeX$ and <b>PDF</b> files, and open the generated <b>PDF</b> document.
