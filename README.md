@@ -107,9 +107,13 @@ If you would like to generate output documents in a PDF format, you will need to
 ### LaTeX installation guidelines
 
 #### Debian-based Linux Distributions
-For basic LaTex version (recommended)
+For basic LaTeX version (recommended)
 ```bash
 sudo apt install texlive
+```
+`texlive` requires additional manual installation of the following two packages: `type1ec.sty` and `siunitx.sty`. These two packages can be installed by issuing the following commands in the Terminal:
+```bash
+sudo apt install cm-super && sudo apt install texlive-science
 ```
 For full LaTeX version with all packages (requires around 2GB to download and 5GB free space on a local hard drive)
 ```bash
@@ -145,9 +149,10 @@ pip install reemission
 
 Type
 ```bash
-pip install reemission -r requirements.txt -e .
+pip install reemission -e .
 ```
 if you'd like to use the package in a development mode.
+
 
 ### From GitHub
 1. Clone the repository using either:
@@ -181,131 +186,390 @@ if you'd like to use the package in a development mode.
 ## Usage
 
 #### As a toolbox
-For calculation of emissions for a number of reservoirs with input data in ```inputs.json``` file and output configuration in ```outputs.yaml``` file.
+For calculation of emissions for a number of reservoirs with input data in ```test_input.json``` file and output configuration in ```outputs.yaml``` file.
 ```python
-import reemission
-# Import from the model module
+import pprint
+# Import reemission utils module
+import reemission.utils as utils
+# Import EmissionModel class from the `model` module
 from reemission.model import EmissionModel
-# Import from the input module
+# Import Inputs class from the `input` module
 from reemission.input import Inputs
-input_data = Inputs.fromfile('reemission/tests/test_data/inputs.json')
-output_config = 'reemission/config/emissions/outputs.yaml'
+# Run a simple example input file from the /examples/ suite
+input_data = Inputs.fromfile(utils.get_package_file('../../examples/simple_example/test_input.json'))
+output_config = utils.get_package_file('config/outputs.yaml')
 model = EmissionModel(inputs=input_data, config=output_config)
 model.calculate()
-print(mode.outputs)
+pprint.pprint(model.outputs)
 ```
 
 #### Jupyter Notebook Examples
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tomjanus/reemission/blob/master/docs/notebooks/index.ipynb)
 
 #### Using Command Line Interface (CLI)
-In Terminal/Console
+RE-Emission has two CLI interfaces: `reemission` for performing greenhouse gas emission calculations and `reemission-heet` for processing outputs obtained from an upstream reservoir and catchment delineation tool HEET and creating input files to RE-Emission.
+For more information about the usage, type in Terminal/Console:
 ```bash
-reemission [input-file] [output-file]
+reemission --help
+```
+and 
+```bash
+reemission-heet --help
 ```
 
 For more examples, please refer to the [Documentation](https://example.com)
 
 ### Example inputs
-#### Input JSON file
+#### Input JSON file for a single reservoir
 
 ```json
-{
-    "Reservoir 1":
-    {
-        "monthly_temps": [10.56,11.99,15.46,18.29,20.79,22.09,22.46,22.66,
-                          21.93,19.33,15.03,11.66],
+{    
+    "Reservoir 1": {
+        "coordinates": [23.698, 97.506],
+        "monthly_temps": [13.9, 16.0, 19.3, 22.8, 24.2, 24.5,
+                          24.2, 24.3, 23.9, 22.1, 18.5, 14.8],
         "year_vector": [1, 5, 10, 20, 30, 40, 50, 65, 80, 100],
         "gasses": ["co2", "ch4", "n2o"],
-        "catchment":
-        {
-            "runoff": 1685.5619,
-            "area": 78203.0,
-            "population": 8463,
-            "area_fractions": [0.0, 0.0, 0.0, 0.0, 0.0, 0.01092, 0.11996,
-                               0.867257],
-            "slope": 8.0,
-            "precip": 2000.0,
-            "etransp": 400.0,
-            "soil_wetness": 140.0,
-            "biogenic_factors":
-            {
-                "biome": "TROPICALMOISTBROADLEAF",
-                "climate": "TROPICAL",
-                "soil_type": "MINERAL",
-                "treatment_factor": "NONE",
-                "landuse_intensity": "LOW"
+        "catchment": {
+            "runoff": 1115.0,
+            "area": 12582.613,
+            "riv_length": 0.0,
+            "population": 1587524.0,
+            "area_fractions": [0.000, 0.000, 0.003, 0.002,
+                               0.001, 0.146, 0.391, 0.457, 0.000],
+            "slope": 23.0,
+            "precip": 1498.0,
+            "etransp": 1123.0,
+            "soil_wetness": 144.0,
+            "mean_olsen": 5.85,
+            "biogenic_factors": {
+                "biome": "tropical moist broadleaf",
+                "climate": "temperate",
+                "soil_type": "mineral",
+                "treatment_factor": "primary (mechanical)",
+                "landuse_intensity": "low intensity"
             }
         },
-        "reservoir":{
-            "volume": 7663812,
-            "area": 0.56470,
-            "max_depth": 32.0,
-            "mean_depth": 13.6,
-            "area_fractions": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
-            "soil_carbon": 10.228
+        "reservoir": {
+            "volume": 7238166.0,
+            "area": 1.604,
+            "max_depth": 22.0,
+            "mean_depth": 4.5,
+            "area_fractions": [
+                0.0, 0.0, 0.0, 0.0, 0.0, 0.45, 0.15, 0.4, 0.0,
+                0.0, 0.0, 0.0, 0.0, 0.0, 0.0,  0.0,  0.0, 0.0, 
+                0.0, 0.0, 0.0, 0.0, 0.0, 0.0,  0.0,  0.0, 0.0],
+            "soil_carbon": 6.281,
+            "mean_radiance": 4.66,
+            "mean_radiance_may_sept": 4.328,
+            "mean_radiance_nov_mar": 4.852,
+            "mean_monthly_windspeed": 1.08,
+            "water_intake_depth": null
         }
-    }
+    },
 }
 ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Example outputs
+#### `model.outputs` dictionary
+```json
+{'Reservoir 2': {
+    'ch4_degassing': 769.76,
+    'ch4_diffusion': 230.98,
+    'ch4_ebullition': 210.60,
+    'ch4_net': 1211.35,
+    'ch4_preimp': 0.0,
+    'ch4_profile': [3525.45, 3119.39, 2681.04, 1992.56, 1495.95, 1137.74, 879.35, 620.29, 461.58, 341.18]
+    'ch4_total_lifetime': 5353.45,
+    'ch4_total_per_year': 53534.55,
+    'co2_diffusion': 994.36,
+    'co2_diffusion_nonanthro': 682.41,
+    'co2_minus_nonanthro': 311.95,
+    'co2_net': 311.95,
+    'co2_preimp': 0.00,
+    'co2_profile': [2436.81, 1151.53, 776.55, 478.25,332.89, 240.93, 175.38, 104.24, 52.14, 0.00],
+    'co2_total_lifetime': 1378.64,
+    'co2_total_per_year': 13786.49,
+    'n2o_mean': 3.610,
+    'n2o_methodA': 3.61,
+    'n2o_methodB': 2.24,
+    'n2o_profile': [3.61, 3.61, 3.61, 3.61, 3.61, 3.61, 3.61, 3.61, 3.61, 3.61],
+    'n2o_total_lifetime': 15.95,
+    'n2o_total_per_year': 159.54}
+}
+```
+
 #### Outputs in JSON format
+This is a formatted output format containing the input and the output data including variable names and units. 
 ```json
 {
-    "Reservoir 1": {
-        "co2_diffusion": 243.65,
-        "co2_diffusion_nonanthro": 167.25,
-        "co2_preimp": -140.0,
-        "co2_minus_nonanthro": 76.40,
-        "co2_net": 216.40,
-        "co2_profile": [
-            737.05,
-            422.16,
-            330.28,
-            257.19,
-            221.57,
-            199.04,
-            182.98,
-            165.54,
-            152.78,
-            140.00
-        ],
-        "ch4_diffusion": 95.09,
-        "ch4_ebullition": 83.52,
-        "ch4_degassing": 361.83,
-        "ch4_preimp": 0.00,
-        "ch4_net": 540.44,
-        "ch4_profile": [
-            1585.01,
-            1399.71,
-            1199.89,
-            886.67,
-            661.33,
-            499.21,
-            382.58,
-            266.01,
-            194.88,
-            141.16
-        ],
-        "n2o_methodA": 1.198,
-        "n2o_methodB": 1.332,
-        "n2o_mean": 1.265,
-        "n2o_profile": [
-            1.20,
-            1.20,
-            1.20,
-            1.20,
-            1.20,
-            1.20,
-            1.20,
-            1.20,
-            1.20,
-            1.20
-        ]
-    }
+    "Reservoir 3": {
+        "inputs": {
+            "coordinates": {
+                "name": "Reservoir coordinates (lat/lon)",
+                "unit": "deg",
+                "value": [23.698,97.506]},
+            "monthly_temps": {
+                "name": "Monthly Temperatures",
+                "unit": "deg C",
+                "value": [13.9,16.0,19.3,22.8,24.2,24.5,24.2,24.3,23.9,22.1,18.5,14.8]},
+            "year_profile": {
+                "name": "Year vector for emission profiles",
+                "unit": "yr",
+                "value": [1,5,10,20,30,40,50,65,80,100},
+            "gasses": {
+                "name": "Calculated gas emissions",
+                "unit": "-",
+                "value": ["co2","ch4","n2o"]},
+            "biogenic_factors": {
+                "name": "Biogenic factors",
+                "biome": {
+                    "name": "Biome",
+                    "unit": "",
+                    "value": "tropical moist broadleaf"},
+                "climate": {
+                    "name": "Climate",
+                    "unit": "",
+                    "value": "temperate"},
+                "soil_type": {
+                    "name": "Soil Type",
+                    "unit": "",
+                    "value": "mineral"},
+                "treatment_factor": {
+                    "name": "Treatment Factor",
+                    "unit": "",
+                    "value": "primary (mechanical)"},
+                "landuse_intensity": {
+                    "name": "Landuse Intensity",
+                    "unit": "",
+                    "value": "low intensity"}},
+            "catchment_inputs": {
+                "name": "Inputs for catchment-level process calculations",
+                "runoff": {
+                    "name": "Annual runoff",
+                    "unit": "mm/year",
+                    "value": 1115.0},
+                "area": {
+                    "name": "Catchment area",
+                    "unit": "km2",
+                    "value": 12582.613},
+                "riv_length": {
+                    "name": "Length of inundated river",
+                    "unit": "km",
+                    "value": 0.0},
+                "population": {
+                    "name": "Population",
+                    "unit": "capita",
+                    "value": 1587524.0},
+                "area_fractions": {
+                    "name": "Area fractions",
+                    "unit": "-",
+                    "value": "0.0, 0.0, 0.003, 0.002, 0.001, 0.146, 0.391, 0.457, 0.0"},
+                "slope": {
+                    "name": "Mean catchment slope",
+                    "unit": "%",
+                    "value": 23.0},
+                "precip": {
+                    "name": "Mean annual precipitation",
+                    "unit": "mm/year",
+                    "value": 1498.0},
+                "etransp": {
+                    "name": "Mean annual evapotranspiration",
+                    "unit": "mm/year",
+                    "value": 1123.0},
+                "soil_wetness": {
+                    "name": "Soil wetness",
+                    "unit": "mm over profile",
+                    "value": 144.0},
+                "mean_olsen": {
+                    "name": "Soil Olsen P content",
+                    "unit": "kgP/ha",
+                    "value": 5.85}},
+            "reservoir_inputs": {
+                "name": "Inputs for reservoir-level process calculations",
+                "volume": {
+                    "name": "Reservoir volume",
+                    "unit": "m3",
+                    "value": 7238166.0},
+                "area": {
+                    "name": "Reservoir area",
+                    "unit": "km2",
+                    "value": 1.604},
+                "max_depth": {
+                    "name": "Maximum reservoir depth",
+                    "unit": "m",
+                    "value": 22.0},
+                "mean_depth": {
+                    "name": "Mean reservoir depth",
+                    "unit": "m",
+                    "value": 4.5},
+                "area_fractions": {
+                    "name": "Inundated area fractions",
+                    "unit": "-",
+                    "value": "0.0, 0.0, 0.0, 0.0, 0.0, 0.45, 0.15, 0.4, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0"},
+                "soil_carbon": {
+                    "name": "Soil carbon in inundated area",
+                    "unit": "kgC/m2",
+                    "value": 6.281},
+                "mean_radiance": {
+                    "name": "Mean monthly horizontal radiance",
+                    "unit": "kWh/m2/d",
+                    "value": 4.66},
+                "mean_radiance_may_sept": {
+                    "name": "Mean monthly horizontal radiance: May - Sept",
+                    "unit": "kWh/m2/d",
+                    "value": 4.328},
+                "mean_radiance_nov_mar": {
+                    "name": "Mean monthly horizontal radiance: Nov - Mar",
+                    "unit": "kWh/m2/d",
+                    "value": 4.852},
+                "mean_monthly_windspeed": {
+                    "name": "Mean monthly wind speed",
+                    "unit": "m/s",
+                    "value": 1.08},
+                "water_intake_depth": {
+                    "name": "Water intake depth below surface",
+                    "unit": "m",
+                    "value": null}
+            }
+        },
+        "outputs": {
+            "co2_diffusion": {
+                "name": "CO2 diffusion flux",
+                "gas_name": "CO2",
+                "unit": "gCO2eq m-2 yr-1",
+                "long_description": "Total CO2 emissions from a reservoir integrated over lifetime",
+                "value": 572.82},
+            "co2_diffusion_nonanthro": {
+                "name": "Nonanthropogenic CO2 diffusion flux",
+                "gas_name": "CO2",
+                "unit": "gCO2eq m-2 yr-1",
+                "long_description": "CO2 diffusion flux taken at (after) 100 years",
+                "value": 393.12},
+            "co2_preimp": {
+                "name": "Preimpoundment CO2 emissions",
+                "gas_name": "CO2",
+                "unit": "gCO2eq m-2 yr-1",
+                "long_description": "CO2 emission in the area covered by the reservoir prior to impoundment",
+                "value": 0.0},
+            "co2_minus_nonanthro": {
+                "name": "CO2 emission minus non-anthropogenic",
+                "gas_name": "CO2",
+                "unit": "gCO2eq m-2 yr-1",
+                "long_description": "CO2 emissions minus non-anthropogenic over a number of years",
+                "value": 179.71},
+            "co2_net": {
+                "name": "Net CO2 emission",
+                "gas_name": "CO2",
+                "unit": "gCO2eq m-2 yr-1",
+                "long_description": "Overall integrated emissions for lifetime",
+                "value": 179.71},
+            "co2_total_per_year": {
+                "name": "Total CO2 emission per year",
+                "gas_name": "CO2",
+                "unit": "tCO2eq yr-1",
+                "long_description": "Total CO2 emission per year integrated over lifetime",
+                "value": 288.25},
+            "co2_total_lifetime": {
+                "name": "Total CO2 emission per lifetime",
+                "gas_name": "CO2",
+                "unit": "tCO2eq",
+                "long_description": "Total CO2 emission integrated over lifetime",
+                "value": 28.83},
+            "co2_profile": {
+                "name": "CO2 emission profile",
+                "gas_name": "CO2",
+                "unit": "gCO2eq m-2 yr-1",
+                "long_description": "CO2 emission per year for a defined list of years",
+                "value": [1403.78,663.36,447.35,275.51,191.77,138.8,101.04,60.05,30.04,0.0]},
+            "ch4_diffusion": {
+                "name": "CH4 emission via diffusion",
+                "gas_name": "CH4",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "CH4 emission via diffusion integrated over a number of years.",
+                "value": 222.13},
+            "ch4_ebullition": {
+                "name": "CH4 emission via ebullition",
+                "gas_name": "CH4",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "CH4 emission via ebullition",
+                "value": 321.23},
+            "ch4_degassing": {
+                "name": "CH4 emission via degassing",
+                "gas_name": "CH4",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "CH4 emission via degassing integrated for a number of years",
+                "value": 3857.24},
+            "ch4_preimp": {
+                "name": "Pre-impounment CH4 emission",
+                "gas_name": "CH4",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "Pre-impounment CH4 emission",
+                "value": 0.0},
+            "ch4_net": {
+                "name": "Net CH4 emission",
+                "gas_name": "CH4",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "Net per area CH4 emission",
+                "value": 4400.6},
+            "ch4_total_per_year": {
+                "name": "Total CH4 emission per year",
+                "gas_name": "CH4",
+                "unit": "tCO2eq yr-1",
+                "long_description": "Total CH4 emission per year integrated over lifetime",
+                "value": 7058.56},
+            "ch4_total_lifetime": {
+                "name": "Total CH4 emission per lifetime",
+                "gas_name": "CH4",
+                "unit": "ktCO2eq",
+                "long_description": "Total CH4 emission integrated over lifetime",
+                "value": 705.86},
+            "ch4_profile": {
+                "name": "CH4 emission profile",
+                "gas_name": "CH4",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "CH4 emission per year for a defined list of years",
+                "value": [13754.64,12109.16,10332.79,7542.77,5530.28,4078.62,3031.52,1981.61,1338.42,850.48]},
+            "n2o_methodA": {
+                "name": "N2O emission, method A",
+                "gas_name": "N2O",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "N2O emission, method A",
+                "value": 0.04},
+            "n2o_methodB": {
+                "name": "N2O emission, method B",
+                "gas_name": "N2O",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "N2O emission, method B",
+                "value": 0.05},
+            "n2o_mean": {
+                "name": "N2O emission, mean value",
+                "gas_name": "N2O",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "N2O emission factor, average of two methods",
+                "value": 0.04},
+            "n2o_total_per_year": {
+                "name": "Total N2O emission per year",
+                "gas_name": "N2O",
+                "unit": "tCO2eq yr-1",
+                "long_description": "Total N2O emission per year integrated over lifetime",
+                "value": 0.07},
+            "n2o_total_lifetime": {
+                "name": "Total N2O emission per lifetime",
+                "gas_name": "N2O",
+                "unit": "ktCO2eq",
+                "long_description": "Total N2O emission integrated over lifetime",
+                "value": 0.01},
+            "n2o_profile": {
+                "name": "N2O emission profile",
+                "gas_name": "N2O",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "N2O emission per year for a defined list of years",
+                "value": [0.04,0.04,0.04,0.04,0.04,0.04,0.04,0.04,0.04,0.04]}
+        }
+    },
 }
 ```
 
@@ -455,9 +719,9 @@ If you use RE-Emission for academic research, please cite the library using the 
 
 <!-- CONTACT -->
 ## :mailbox_with_mail: Contact
-- Tomasz Janus - tomasz.janus@manchester.ac.uk
-- Christopher Barry - c.barry@ceh.ac.uk
-- Jaise Kuriakose - jaise.kuriakose@manchester.ac.uk
+- Tomasz Janus - <mailto:tomasz.janus@manchester.ac.uk> , <mailto:tomasz.k.janus@gmail.com>
+- Christopher Barry - <mailto:c.barry@ceh.ac.uk>
+- Jaise Kuriakose - <mailto:jaise.kuriakose@manchester.ac.uk>
 
 Project Link: [https://github.com/tomjanus/reemission](https://github.com/tomjanus/reemission)
 
