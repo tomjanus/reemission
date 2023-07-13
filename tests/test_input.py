@@ -38,11 +38,11 @@ class TestInput(unittest.TestCase):
                 "soil_wetness": 100.0,
                 "biogenic_factors":
                 {
-                    "biome": "MEDFORESTS",
-                    "climate": "SUBTROPICAL",
-                    "soil_type": "ORGANIC",
-                    "treatment_factor": "PRIMARY",
-                    "landuse_intensity": "HIGH"
+                    "biome": "mediterreanan forests",
+                    "climate": "subtropical",
+                    "soil_type": "organic",
+                    "treatment_factor": "primary (mechanical)",
+                    "landuse_intensity": "high intensity"
                 }
             },
             "reservoir": {
@@ -65,12 +65,14 @@ class TestInput(unittest.TestCase):
         self.assertIsInstance(table_ns.biome, dict)
 
     def test_input_fromfile(self) -> None:
-        """ Test input object initialization """
-        # Check if instiating with wrong key does not raise an error
+        """ Test input object initialization 
+            Intented behaviour: Instantiating with wrong key should create a 
+            new input object with name=[Reservoir Name] and data={}
+        """
         reservoir_name = "Reservoir 3"
         self.input = Input.fromfile(file=self.input_file,
                                     reservoir_name=reservoir_name)
-        self.assertIsNone(self.input.data)
+        self.assertDictEqual(self.input.data, dict())
 
         # Assert that instantiating with the key creates a dict inside Input
         reservoir_name = "Reservoir 2"
@@ -137,11 +139,11 @@ class TestInputs(unittest.TestCase):
                 "soil_wetness": 100.0,
                 "biogenic_factors":
                 {
-                    "biome": "MEDFORESTS",
-                    "climate": "SUBTROPICAL",
-                    "soil_type": "ORGANIC",
-                    "treatment_factor": "PRIMARY",
-                    "landuse_intensity": "HIGH"
+                    "biome": "mediterreanan forests",
+                    "climate": "subtropical",
+                    "soil_type": "organic",
+                    "treatment_factor": "primary (mechanical)",
+                    "landuse_intensity": "high intensity"
                 }
             },
             "reservoir": {

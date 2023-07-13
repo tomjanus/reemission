@@ -37,7 +37,6 @@ class TestPresenter(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        return
         shutil.rmtree(TEST_OUTPUT_FOLDER, ignore_errors=True)
 
     def test_presenter_init(self):
