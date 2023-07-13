@@ -275,29 +275,29 @@ For more examples, please refer to the [Documentation](https://example.com)
 ### Example outputs
 #### `model.outputs` dictionary
 ```json
-{'Reservoir 2': {
-    'ch4_degassing': 769.76,
-    'ch4_diffusion': 230.98,
-    'ch4_ebullition': 210.60,
-    'ch4_net': 1211.35,
-    'ch4_preimp': 0.0,
-    'ch4_profile': [3525.45, 3119.39, 2681.04, 1992.56, 1495.95, 1137.74, 879.35, 620.29, 461.58, 341.18]
-    'ch4_total_lifetime': 5353.45,
-    'ch4_total_per_year': 53534.55,
-    'co2_diffusion': 994.36,
-    'co2_diffusion_nonanthro': 682.41,
-    'co2_minus_nonanthro': 311.95,
-    'co2_net': 311.95,
-    'co2_preimp': 0.00,
-    'co2_profile': [2436.81, 1151.53, 776.55, 478.25,332.89, 240.93, 175.38, 104.24, 52.14, 0.00],
-    'co2_total_lifetime': 1378.64,
-    'co2_total_per_year': 13786.49,
-    'n2o_mean': 3.610,
-    'n2o_methodA': 3.61,
-    'n2o_methodB': 2.24,
-    'n2o_profile': [3.61, 3.61, 3.61, 3.61, 3.61, 3.61, 3.61, 3.61, 3.61, 3.61],
-    'n2o_total_lifetime': 15.95,
-    'n2o_total_per_year': 159.54}
+{"Reservoir 2": {
+    "ch4_degassing": 769.76,
+    "ch4_diffusion": 230.98,
+    "ch4_ebullition": 210.60,
+    "ch4_net": 1211.35,
+    "ch4_preimp": 0.0,
+    "ch4_profile": [3525.45, 3119.39, 2681.04, 1992.56, 1495.95, 1137.74, 879.35, 620.29, 461.58, 341.18],
+    "ch4_total_lifetime": 5353.45,
+    "ch4_total_per_year": 53534.55,
+    "co2_diffusion": 994.36,
+    "co2_diffusion_nonanthro": 682.41,
+    "co2_minus_nonanthro": 311.95,
+    "co2_net": 311.95,
+    "co2_preimp": 0.00,
+    "co2_profile": [2436.81, 1151.53, 776.55, 478.25,332.89, 240.93, 175.38, 104.24, 52.14, 0.00],
+    "co2_total_lifetime": 1378.64,
+    "co2_total_per_year": 13786.49,
+    "n2o_mean": 3.610,
+    "n2o_methodA": 3.61,
+    "n2o_methodB": 2.24,
+    "n2o_profile": [3.61, 3.61, 3.61, 3.61, 3.61, 3.61, 3.61, 3.61, 3.61, 3.61],
+    "n2o_total_lifetime": 15.95,
+    "n2o_total_per_year": 159.54}
 }
 ```
 
@@ -318,7 +318,7 @@ This is a formatted output format containing the input and the output data inclu
             "year_profile": {
                 "name": "Year vector for emission profiles",
                 "unit": "yr",
-                "value": [1,5,10,20,30,40,50,65,80,100},
+                "value": [1,5,10,20,30,40,50,65,80,100]},
             "gasses": {
                 "name": "Calculated gas emissions",
                 "unit": "-",
