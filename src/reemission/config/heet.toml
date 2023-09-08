@@ -1,3 +1,9 @@
+[calculations]
+    # Combination of runoff/evapotranspiration/precipitation fields to be used for water-mass balancing at the catchment scale
+    runoff_field = "c_mar_mm_alt2"
+    # c_mar_mm for Fekete et al. / c_mar_mm_alt2 for terraclim data
+    et_field = "c_mpet_mm"
+    precipitation_field = "c_map_mm_alt1"
 # Parameters of HEET tabular data output 
 [tab_data]
     # Mandatory fields required for generating input file(s) to RE-EMISSION
@@ -20,13 +26,14 @@
         'r_landcover_bysoil_21', 'r_landcover_bysoil_22',
         'r_landcover_bysoil_23', 'r_landcover_bysoil_24',
         'r_landcover_bysoil_25', 'r_landcover_bysoil_26', 
-        "r_maximum_depth_m", "r_mean_annual_windspeed",  "r_mean_depth_m",
-        "t_dam_height", 'r_mean_temp_1', 'r_mean_temp_2', 'r_mean_temp_3', 
+        "r_maximum_depth_m", "r_mean_annual_windspeed",  'r_mean_depth_m',
+        'r_mean_temp_1', 'r_mean_temp_2', 'r_mean_temp_3', 
         'r_mean_temp_4', 'r_mean_temp_5', 'r_mean_temp_6', 'r_mean_temp_7', 
         'r_mean_temp_8', 'r_mean_temp_9', 'r_mean_temp_10', 'r_mean_temp_11', 
         'r_mean_temp_12', "r_mghr_all_kwhperm2perday", 
         "r_mghr_may_sept_kwhperm2perday", "r_mghr_nov_mar_kwhperm2perday",
-        "r_msocs_kgperm2", "r_volume_m3", "year_commissioned"]
+        "r_msocs_kgperm2", "r_volume_m3", "year_commissioned",
+        "c_landuse_intensity", "c_treatment_factor"]
     # Alternative fields, e.g. fields containing outputs required for calculating
     # gas emissions that are derived from alternative data sources
     alternative_fields = [
@@ -69,7 +76,7 @@
     # Mapping between index of the tabular data and index of the original shp
     match_keys = ["id", "id"]
     # Fields to be copied from the tabular data to the shape file
-    fields = ["t_dam_height", "dam_lat", "dam_lon"]
+    fields = ["dam_height", "dam_lat", "dam_lon"]
 [shp_output.reservoirs]
     # Mapping between index of the tabular data and index of the original shp
     match_keys = ["id", "id"]

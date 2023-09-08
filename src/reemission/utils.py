@@ -273,3 +273,8 @@ def save_to_json(
         "Output path %s does not specify a file. Data could not be saved.", 
         output_path.as_posix())
     return os.EX_CANTCREAT
+
+
+def strip_double_quotes(input: str) -> str:
+    """ """
+    return input.replace('"','')

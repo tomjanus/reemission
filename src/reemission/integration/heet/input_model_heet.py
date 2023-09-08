@@ -6,6 +6,15 @@ import pandas as pd
 from reemission.data_models.input_model import BuildStatusModel, \
     BiogenicFactorsModel, CatchmentModel, ReservoirModel, DamDataModel
 from reemission.auxiliary import rollout_nested_list
+from reemission.utils import read_config, get_package_file, strip_double_quotes
+
+
+# Read config defaults
+heet_config: Dict = read_config(get_package_file('config/heet.toml'))
+# Access the selected runoff, rainfall and evapotranspiration fields from config
+runoff_field = strip_double_quotes(heet_config['calculations']['runoff_field'])
+precipitation_field = strip_double_quotes(heet_config['calculations']['precipitation_field'])
+et_field = strip_double_quotes(heet_config['calculations']['et_field'])
 
 
 class DamDataModelHeet(DamDataModel):
@@ -127,6 +136,7 @@ class BiogenicFactorsModelHeet(BiogenicFactorsModel):
 class CatchmentModelHeet(CatchmentModel):
     """Model for Re-Emission catchment parameters adapted to read and
     parse model output from HEET"""
+    runoff_field: str = 'c_mar_mm_alt2'
 
     catchment_landuse_map: ClassVar[Dict[str, int]] = {
         "BARE": 6,
@@ -135,32 +145,34 @@ class CatchmentModelHeet(CatchmentModel):
         "WATER": 7,
         "WETLANDS": 4,
         "CROPS": 1,
-        "SHRUBS": 3,
-        "FOREST": 2,
+        "SHRUBS": 2,  # Initially shrubs were 3 and forests were 2. There seems to have been a mistake in how areas were categorized in HEET
+        "FOREST": 3,
         "NODATA": 0}
 
     @root_validator(pre=True)
     @classmethod
     def root_validator(cls, values):
         """Obtain a vector of c area fractions for RE-EMISSION from fractions
-        in c_landcover_[i] fields in raw tabular HEET output data"""
+        in c_landcover_[i] fields in raw tabular HEET output data.
+        Remaps area fraction indices to match order of landuses in constants.Landuse"""
         values["c_area_fractions"] = [
             values['c_landcover_'+str(ix)] for ix in 
             cls.catchment_landuse_map.values()]
         return values
 
     class Config:
+        import inspect
         allow_population_by_field_name = False
         allow_extra_values = True
         fields = {
-            "runoff": {'alias': 'c_mar_mm'},
+            "runoff": {'alias': runoff_field},
             "area": {'alias': 'c_area_km2'},
             "riv_length": {'alias': "ms_length"},
             "population": {'alias': 'n_population'},
             "area_fractions": {'alias': 'c_area_fractions'},
             "slope": {'alias': 'c_mean_slope_pc'},
-            "precip": {'alias': 'c_map_mm'},
-            "etransp": {'alias': 'c_mpet_mm'},
+            "precip": {'alias': precipitation_field},
+            "etransp": {'alias': et_field},
             "soil_wetness": {'alias': 'c_masm_mm'},
             "mean_olsen": {'alias': 'c_mean_olsen'}}
 
@@ -197,9 +209,9 @@ class ReservoirModelHeet(ReservoirModel):
         of index "i" in all three lists.
         """
         index_order: Dict["str", List[int]] = {
-            "mineral": [6, 8, 5, 7, 4, 1, 3, 2, 0],
-            "organic": [15, 17, 14, 16, 13, 10, 12, 11, 9],
-            "nodata": [24, 26, 23, 25, 22, 19, 21, 20, 18]}
+            "mineral": [6, 8, 5, 7, 4, 1, 2, 3, 0],
+            "organic": [15, 17, 14, 16, 13, 10, 12, 12, 9],
+            "nodata": [24, 26, 23, 25, 22, 19, 20, 21, 18]}
         output_lists: List[List[float]] = []
         for _, indices in index_order.items():
             soil_cat_indices = [r_landuses[index] for index in indices]
