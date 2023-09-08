@@ -4,7 +4,7 @@
 
 # Water bodies: Calculate following: Rasilo et al. 2015, Vachon and Prairie
 # 2013.
-Boreal:
+boreal:
   mineral:
     bare: 0.0
     crops: 0.0
@@ -19,7 +19,7 @@ Boreal:
     shrubs: 1.4
     urban: 19.6
     wetlands: 89.0
-Subtropical:
+subtropical:
   mineral:
     bare: 0.0
     crops: 0.0
@@ -34,7 +34,7 @@ Subtropical:
     shrubs: 7.0
     urban: 19.6
     wetlands: 116.3
-Temperate:
+temperate:
   mineral:
     bare: 0.0
     crops: 0.0
@@ -49,7 +49,7 @@ Temperate:
     shrubs: 18.9
     urban: 19.6
     wetlands: 0.0
-Tropical:
+tropical:
   mineral:
     bare: 0.0
     crops: 0.0

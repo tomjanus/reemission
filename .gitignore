@@ -141,11 +141,24 @@ dask-worker-space/
 
 # Outputs
 outputs/
+# inputs
+inputs/
 
-# Examples
-examples/*
-!examples/inputs.json
-!examples/MYA_inputs_existing.json
+# Outputs generated while running examples
+examples/*/outputs
+examples/myanmar_case_study/*_output
+# Data for examples fetched from remote servers
+examples/myanmar_case_study/mya_delineations
+examples/myanmar_case_study/ifc_database
+
+# Demo files
+examples/demo/*
+# Except the files required for running the demonstration code
+!examples/demo/run_demo.bat
+!examples/demo/run_demo.sh
+!examples/demo/fetch_inputs.py
+!examples/demo/postprocess_results.py
+
 
 # Unused legacy files
 legacy/

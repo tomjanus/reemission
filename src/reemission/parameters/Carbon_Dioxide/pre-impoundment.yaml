@@ -3,7 +3,7 @@
 # categories of inundated area – IHA land use categories.
 
 # Water bodies: n/a.
-Boreal:
+boreal:
   mineral:
     bare: 0.0
     crops: 0.0
@@ -18,7 +18,7 @@ Boreal:
     shrubs: 5.7
     urban: 6.4
     wetlands: -0.5
-Subtropical:
+subtropical:
   mineral:
     bare: 0.0
     crops: 0.0
@@ -33,7 +33,7 @@ Subtropical:
     shrubs: 9.6
     urban: 6.4
     wetlands: 0.1
-Temperate:
+temperate:
   mineral:
     bare: 0.0
     crops: 0.0
@@ -48,7 +48,7 @@ Temperate:
     shrubs: 5.0
     urban: 6.4
     wetlands: -0.5
-Tropical:
+tropical:
   mineral:
     bare: 0.0
     crops: 0.0

@@ -14,12 +14,10 @@ Why does this file exist, and why not put this in __main__?
 
   Also see (1) from http://click.pocoo.org/5/setuptools/#setuptools-integration
 """
-from typing import Callable, List, Optional
+from typing import Callable, List, Optional, Tuple, Any
 import sys
 import pathlib
-import click
-import pyfiglet
-import reemission
+import rich_click as click
 from reemission.app_logger import create_logger
 from reemission.integration.heet.heet_tab_parser import HeetOutputReader
 from reemission.integration.heet.heet_shp_parser import ShpConcatenator
@@ -30,10 +28,10 @@ from reemission.utils import load_toml, get_package_file
 # Create a logger
 logger = create_logger(logger_name=__name__)
 FIGLET = True
+click.rich_click.USE_MARKDOWN = True
 
-
-def add_version(fun: Callable) -> Callable:
-    """Adds version of the tool to the help heading.
+def add_description(fun: Callable) -> Callable:
+    """Adds desciption of the HEET integration CLI.
 
     Params:
         fun: Function to decorate
@@ -41,29 +39,23 @@ def add_version(fun: Callable) -> Callable:
         Decorated function
     """
     doc = fun.__doc__
-    fun.__doc__ = "Package " + reemission.__name__ + " v" + \
-        reemission.__version__ + "\n\n" + doc
+    fun.__doc__ = "Integration of RE-Emission with HEET outputs \n\n" + doc
     return fun
 
 
 @click.group()
-@add_version
-def main(figlet: bool = FIGLET) -> None:
+@add_description
+def heet_integrate() -> None:
     """--------------- RE-EMISSION HEET OUTPUT PROCESSING  --------------------
 
 You are now using the Command line interface for an interface package designed
 for processing outputs obtained from HEET and creating input files for
 RE-EMISSION. \n
 HEET is a generalized catchment delineation and gis processing tool.\n
-RE-EMISSION is a collection of methods for estimating GHG emissions from
-    reservoirs
+RE-EMISSION is a collection of methods for estimating GHG emissions from reservoirs
 
 Full documentation at : https://reemission.readthedocs.io/en/latest/.
 """
-    if figlet:
-        result = pyfiglet.figlet_format("REEMISSION")
-        click.echo(click.style(result, fg='blue'))
-
 
 @click.option("-i", "--input-files", type=click.Path(), multiple=True)
 @click.option("-c", "--config-file", type=click.Path(), default=None)
@@ -73,12 +65,16 @@ Full documentation at : https://reemission.readthedocs.io/en/latest/.
               help="Field on which duplicates are looked for")
 @click.option('-rd', '--remove-dups', is_flag=True, default=True,
               help="Remove duplicate dam IDs.")
+@click.option('-cv', '--col-value-pair', nargs=2, type=click.Tuple([str, str]), multiple=True,
+              help="Column / default value pairs for supplying missing tabular information.")
 @click.command()
 def process_tab_outputs(
         input_files: List[str], config_file: Optional[str], 
-        output_file: str, id_field: str, remove_dups: bool) -> None:
+        output_file: str, id_field: str, remove_dups: bool,
+        col_value_pair: Optional[List[Tuple[str, str]]]=None) -> None:
     """Read tabular output data from HEET. Remove rows with
     duplicate dam ids, selects dam ids from the list or required dam ids.
+    
     TODO: Handle existing reservoirs for which volume, max_depth and mean_depth
     are unknown."""
     output_reader = HeetOutputReader(file_paths=input_files)
@@ -91,15 +87,20 @@ def process_tab_outputs(
     else:
         tab_data_config = load_toml(pathlib.Path(config_file))['tab_data']
     # Get the list of mandatory columns from config file
+    input_files_str: str = ", ".join(input_files)
+    if col_value_pair is not None:
+        for col_name, col_value in col_value_pair:
+            click.echo(f"Adding column: {col_name} with value {col_value} to data in file(s) {input_files_str}")
+            heet_output.add_column(column_name=col_name, default_value=col_value)
     heet_output.filter_columns(
         mandatory_columns=tab_data_config['mandatory_fields'],
-        optional_columns=tab_data_config['unused_inputs'])
-    click.echo("Adding missing column 'c_treatment_factor'")
-    heet_output.add_column(
-        column_name="c_treatment_factor", default_value="primary (mechanical)")
-    click.echo("Adding missing column 'c_landuse_intensity'")
-    heet_output.add_column(
-        column_name="c_landuse_intensity", default_value="low intensity")  
+        optional_columns=tab_data_config['alternative_fields'])
+    #click.echo("Adding missing column 'c_treatment_factor'")
+    #heet_output.add_column(
+    #    column_name="c_treatment_factor", default_value="primary (mechanical)")
+    #click.echo("Adding missing column 'c_landuse_intensity'")
+    #heet_output.add_column(
+    #    column_name="c_landuse_intensity", default_value="low intensity")  
     heet_output.to_csv(pathlib.Path(output_file))
     logger.info("Tabular data saved to: %s", output_file)
 
@@ -181,6 +182,6 @@ def tab_to_json(input_file: str, output_file: str) -> None:
     converter.to_json(pathlib.Path(output_file))
 
 
-main.add_command(process_tab_outputs)
-main.add_command(join_shapes)
-main.add_command(tab_to_json)
+heet_integrate.add_command(process_tab_outputs)
+heet_integrate.add_command(join_shapes)
+heet_integrate.add_command(tab_to_json)

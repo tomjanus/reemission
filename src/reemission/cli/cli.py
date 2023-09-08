@@ -14,14 +14,14 @@ Why does this file exist, and why not put this in __main__?
 
   Also see (1) from http://click.pocoo.org/5/setuptools/#setuptools-integration
 """
-from typing import Dict, List
+from typing import Dict, List, Tuple
 import sys
 import os
 import logging
 import configparser
 import pathlib
 import textwrap
-import click
+import rich_click as click
 import pyfiglet
 from fpdf import FPDF
 import subprocess
@@ -32,6 +32,8 @@ from reemission.utils import (
 from reemission.model import EmissionModel
 from reemission.input import Inputs
 
+from reemission.integration.cli import cli as integration_cli
+click.rich_click.USE_MARKDOWN = True
 
 # Update this section if new writers are added to the package
 ext_writer_dict = {
@@ -313,6 +315,14 @@ def run_demo() -> None:
         command_1.append("-i")
         input_file = os.path.join(input_folder, "output_parameters.csv")
         command_1.append(f"{input_file}")
+    # Append missing columns to data that are required but not given in HEET
+    missing_col_value_pairs: List[Tuple[str, str]] = [
+        ("c_treatment_factor", "primary (mechanical)"), 
+        ("c_landuse_intensity", "low intensity")]
+    for col_name, col_val in missing_col_value_pairs:
+        command_1.append('-cv')
+        command_1.append(col_name)
+        command_1.append(col_val)
     command_1.append("-o")
     command_1.append(combined_csv_file)
     subprocess.run(command_1)
@@ -370,3 +380,4 @@ def run_demo() -> None:
 main.add_command(calculate)
 main.add_command(log_to_pdf)
 main.add_command(run_demo)
+main.add_command(integration_cli.heet_integrate)
