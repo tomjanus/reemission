@@ -227,7 +227,7 @@ class Catchment:
                 p_export_coeff = 0.0
             return p_export_coeff
 
-        load = 0.0
+        load: float = 0.0
         for landuse, area_fraction in zip(landuse_names, self.area_fractions):
             # iterate and calculate the total phosphorus load
             coefficient = p_exports[landuse][intensity.value]
@@ -236,12 +236,12 @@ class Catchment:
             load += coefficient * area_fraction * self.area_ha
         return load
 
-    def p_input_gres(self):
+    def p_input_gres(self) -> float:
         """Return annual input of P from catchment to the reservoir in
         [kg P yr-1] using g-res approach."""
         return self.p_human_input_gres() + self.p_land_input_gres()
 
-    def p_input_mcdowell(self):
+    def p_input_mcdowell(self) -> float:
         """Calculate annual input of P from catchment to the reservoir
         in [kg P yr-1] using McDowell regression."""
         # 1e-6 converts mg/m3 to kg/m3; discharge is given in m3/year
