@@ -189,13 +189,15 @@ class CarbonDioxideEmission(Emission):
         _list_of_landuses = 3 * list(Landuse.__dict__['_member_map_'].values())
         climate = self.catchment.biogenic_factors.climate
         soil_type = self.catchment.biogenic_factors.soil_type
-        emissions = []
-        for landuse, fraction in zip(
-                _list_of_landuses, self.reservoir.area_fractions):
+        # Find which landuses are supported from the first entry of pre-impoundment table
+        supported_landuses = self.pre_impoundment_table['boreal']['mineral'].keys()
+        emissions: List[float] = []
+        for landuse, fraction in zip( _list_of_landuses, self.reservoir.area_fractions):
             # Area in ha allocated to each landuse (reservoir.area in km2)
             area_landuse = 100 * self.reservoir.area * fraction
-            coeff = self.pre_impoundment_table.get(climate.value, {}).get(
-                soil_type.value, {}).get(landuse.value, 0)
+            if landuse.value not in supported_landuses:
+                continue
+            coeff = self.pre_impoundment_table[climate.value][soil_type.value][landuse.value]
             emissions.append(area_landuse * coeff)
         # Total emission in t CO2-C /yr
         tot_emission = sum(emissions)
@@ -408,16 +410,18 @@ class MethaneEmission(Emission):
         _list_of_landuses = 3 * list(Landuse.__dict__['_member_map_'].values())
         climate = self.catchment.biogenic_factors.climate
         soil_type = self.catchment.biogenic_factors.soil_type
-        emissions = []
+        supported_landuses = self.pre_impoundment_table['boreal']['mineral'].keys()
+        emissions: List[float] = []
         for landuse, fraction in zip(
                 _list_of_landuses, self.reservoir.area_fractions):
             # Area in ha allocated to each landuse (reservoir.area in km2)
             area_landuse = 100 * self.reservoir.area * fraction
-            coeff = self.pre_impoundment_table.get(
-                climate.value, {}).get(
-                soil_type.value, {}).get(landuse.value, 0)
+            if landuse.value not in supported_landuses:
+                continue
+            coeff = self.pre_impoundment_table[climate.value][soil_type.value][landuse.value]
             # Create a list of emissions per area fraction, in kg CH4 yr-1
             emissions.append(area_landuse * coeff)
+            print(soil_type.value, coeff)
         # The below calculation assumes that the windspeed provided as an
         # Attribute to the reservoir object is at 50m height. Put this in
         # documentation or allow wind speed at different heights and addd
@@ -845,10 +849,11 @@ class NitrousOxideEmission(Emission):
         if mean:
             output = 0.5 * (self._n2o_emission_m1_co2() +
                             self._n2o_emission_m2_co2())
-        if model == "model_1":
-            output = self._n2o_emission_m1_co2()
-        if model == "model_2":
-            output = self._n2o_emission_m2_co2()
+        else:
+            if model == "model_1":
+                output = self._n2o_emission_m1_co2()
+            if model == "model_2":
+                output = self._n2o_emission_m2_co2()
         return output
 
     def profile(
