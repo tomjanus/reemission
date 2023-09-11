@@ -3,8 +3,8 @@
 import collections.abc
 from collections.abc import Iterable
 from dataclasses import dataclass, field
-from typing import (Dict, Tuple, List, Type, Union, Sequence, Iterator, Any,
-                    Optional)
+from typing import (
+    Dict, Tuple, List, Type, Union, Sequence, Iterator, Any, Optional)
 from abc import ABC, abstractmethod
 import pathlib
 import configparser
@@ -67,7 +67,7 @@ CONFIG_INI_PATH = pathlib.Path(CONFIG_DIR, 'config.ini')
 JSON_NUMBER_DECIMALS = 2
 EXCEL_NUMBER_DECIMALS = 3
 
-INPUT_NAMES = ['coordinates', 'monthly_temps', 'biogenic_factors',
+INPUT_NAMES = ['coordinates', 'id', 'monthly_temps', 'biogenic_factors',
                'year_profile', 'catchment_inputs', 'reservoir_inputs',
                'gasses']
 
@@ -126,7 +126,10 @@ class Writer(ABC):
                 be added.
             precision: Number of decimal points for the parameter.
         """
-        if isinstance(parameter, collections.abc.Sequence):
+        if isinstance(parameter, str):
+            param_dict = {input_name: parameter}
+            par_dict[reservoir_name].update(param_dict)
+        elif isinstance(parameter, collections.abc.Sequence):
             nested_list: bool = False
             for val in parameter:
                 if isinstance(val, collections.abc.Sequence):
@@ -202,23 +205,23 @@ class ExcelWriter(Writer):
 
         # Mapping between input names and input names in the Input.data dict.
         config_to_data = {"coordinates": "coordinates",
+                          "id": "id",
                           "monthly_temps": "monthly_temps",
                           "year_profile": "year_vector",
                           "gasses": "gasses"}
-
         for input_name, input_name_mapped in config_to_data.items():
             if input_name in included_inputs:
                 try:
                     parameter_value = input_data[input_name_mapped]
-                    input_dict = self.write_par_to_dict(
-                        input_name=input_name,
-                        parameter=parameter_value,
-                        par_dict=input_dict,
-                        reservoir_name=reservoir_name,
-                        precision=EXCEL_NUMBER_DECIMALS)
-                except AttributeError:
+                except (KeyError, AttributeError):
                     log.error("Input name %s not found. Skipping",
                               input_name_mapped)
+                input_dict = self.write_par_to_dict(
+                    input_name=input_name,
+                    parameter=parameter_value,
+                    par_dict=input_dict,
+                    reservoir_name=reservoir_name,
+                    precision=EXCEL_NUMBER_DECIMALS)
 
         # Add catchment inputs
         if 'catchment_inputs' in included_inputs:
@@ -354,6 +357,7 @@ class JSONWriter(Writer):
             return None
         # Mapping between input names and input names in the Input.data dict.
         config_to_data = {"coordinates": "coordinates",
+                          "id": "id",
                           "monthly_temps": "monthly_temps",
                           "year_profile": "year_vector",
                           "gasses": "gasses"}
@@ -834,6 +838,14 @@ class LatexWriter(Writer):
                 data_table.add_hline()
                 # Add stuff to the table if they're to be included
                 printout = False
+                if "id" in included_inputs:
+                    name = self.input_config['id']['name']
+                    unit = NoEscape(
+                        self.input_config['id']['unit_latex'])
+                    input_value_str = str(input_data["id"])
+                    row = [name, unit, input_value_str]
+                    data_table.add_row(row)
+                    printout = True
                 if "coordinates" in included_inputs:
                     name = self.input_config['coordinates']['name']
                     unit = NoEscape(
@@ -960,7 +972,7 @@ class LatexWriter(Writer):
                         data_table.add_row(row)
         return None
 
-    def add_header(self, header_title: str = "Results") -> None:
+    def add_header(self, header_title: str = "GHG emission estimation results") -> None:
         """Adds a header to latex document source code."""
         header = PageStyle("header")
         # Create center header

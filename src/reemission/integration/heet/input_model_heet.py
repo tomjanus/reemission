@@ -36,6 +36,7 @@ class DamDataModelHeet(DamDataModel):
         allow_extra_values = False
         fields = {
             'name': {'alias': 'name'},
+            'id': {'alias': 'id'},
             'longitude': {'alias': 'dam_lon'},
             'latitude': {'alias': 'dam_lat'},
             'monthly_temps': {'alias': 'monthly_temps'}}

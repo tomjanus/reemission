@@ -39,6 +39,7 @@ LENGTH_AREA_FRACTIONS = 9
 class DamDataModel(BaseModel):
     """Dam information"""
     name: str = Field(description="Dam name")
+    id: str = Field(description="Dam ID")
     longitude: float = Field(description="Longitude")
     latitude: float = Field(description="Latitude")
     monthly_temps: List[float] = Field(

@@ -50,6 +50,7 @@ class LegacySavingStrategy:
         legacy_input: Dict[str, Any] = {}
         legacy_input["coordinates"] = [
             input_model.dam_data.latitude, input_model.dam_data.longitude]
+        legacy_input["id"] = input_model.dam_data.id
         legacy_input["monthly_temps"] = input_model.dam_data.monthly_temps
         legacy_input["year_vector"] = self.year_vector
         legacy_input["gasses"] = self.gasses

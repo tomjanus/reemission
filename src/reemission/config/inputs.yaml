@@ -6,6 +6,12 @@ coordinates:
   long_description: ""
   unit: "deg"
   unit_latex: "$^o$"
+id:
+  include: True
+  name: "Reservoir ID"
+  long_description: ""
+  unit: ""
+  unit_latex: ""
 monthly_temps:
   include: True
   name: "Monthly Temperatures"
