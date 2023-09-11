@@ -46,6 +46,7 @@ from reemission.utils import read_config, read_table
 from reemission.constants import Landuse
 from reemission.catchment import Catchment
 from reemission.reservoir import Reservoir
+from reemission.ns_catchment import NSCatchmentCreator
 from reemission.temperature import MonthlyTemperature
 from reemission.exceptions import WrongN2OModelError
 
@@ -133,6 +134,9 @@ class CarbonDioxideEmission(Emission):
         par: Indexable structure of equation parameters for emission
             calculations.
         pre_impoundment_table: Dictionary of pre_impoundment emission factors.
+        use_red_area (bool): If True, P exports are calculated using the area
+            surface and composition calculated as a difference between the
+            catchment area and the reservoir area
 
     Notes:
         Total CO2 emission =
@@ -145,8 +149,9 @@ class CarbonDioxideEmission(Emission):
     p_calc_method: str
     par: SimpleNamespace
     pre_impoundment_table: dict
+    use_red_area: bool = True
 
-    def __init__(self, catchment, reservoir, eff_temp, p_calc_method,
+    def __init__(self, catchment, reservoir, eff_temp, p_calc_method, 
                  preinund_area=None, config_file=INI_FILE):
         super().__init__(catchment=catchment, reservoir=reservoir,
                          config_file=config_file, preinund_area=preinund_area)
@@ -168,12 +173,22 @@ class CarbonDioxideEmission(Emission):
             section_name='CARBON_DIOXIDE')
         self.pre_impoundment_table = read_table(
             os.path.join(TABLES, 'Carbon_Dioxide', 'pre-impoundment.yaml'))
+        # Read from config
+        self.use_red_area = self.config.getboolean('CALCULATIONS','use_ns_catchment')
+
 
     @property
     def reservoir_tp(self) -> float:
         """Return reservoir total phosphorus concentration in micrograms/L."""
+        if not self.use_red_area:
+            catchment = self.catchment
+        else:
+            # Calculate reduced catchment area as a difference between the
+            # original catchment and the reservoir.
+            catchment = NSCatchmentCreator(
+                self.catchment, self.reservoir).get_catchment()
         return self.reservoir.reservoir_tp(
-            inflow_conc=self.catchment.inflow_p_conc(method=self.p_calc_method),
+            inflow_conc=catchment.inflow_p_conc(method=self.p_calc_method),
             method=self.config['CALCULATIONS']['ret_coeff_method'])
 
     def pre_impoundment(self) -> float:
@@ -421,7 +436,6 @@ class MethaneEmission(Emission):
             coeff = self.pre_impoundment_table[climate.value][soil_type.value][landuse.value]
             # Create a list of emissions per area fraction, in kg CH4 yr-1
             emissions.append(area_landuse * coeff)
-            print(soil_type.value, coeff)
         # The below calculation assumes that the windspeed provided as an
         # Attribute to the reservoir object is at 50m height. Put this in
         # documentation or allow wind speed at different heights and addd
