@@ -37,6 +37,7 @@ import os
 import math
 import logging
 import configparser
+from functools import lru_cache
 from dataclasses import dataclass
 from types import SimpleNamespace
 from typing import List, Tuple, Optional, ClassVar
@@ -58,6 +59,12 @@ TABLES = os.path.abspath(os.path.join(MODULE_DIR, 'parameters'))
 # Set up module logger
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
+
+
+@lru_cache(maxsize=None)
+def check_preimpoundment_area(preimp_area: float, reservoir_area: float, reservoir_name: str) -> None:
+    if preimp_area > reservoir_area:
+            log.warning(f"Pre impoundment area for reservoir '{reservoir_name}' larger than the reservoir area.")
 
 
 @dataclass  # type: ignore
@@ -88,8 +95,7 @@ class Emission(ABC):
         if preinund_area is None:
             self.preinund_area = self.catchment.river_area_before_impoundment()
         # Check if preinindation area is not larger than reservoir area
-        if self.preinund_area > self.reservoir.area:
-            log.warning("Pre impoundment area larger than the reservoir area.")
+        check_preimpoundment_area(self.preinund_area, reservoir.area, reservoir.name)
 
     def _par_from_config(
             self, list_of_constants: list,
