@@ -108,3 +108,10 @@ class AssetConstructionStage(EnumGetterMixin, Enum):
     """Construction stages of a reservoir"""
     EXISTING = auto()
     FUTURE = auto()
+
+
+@unique
+class ReservoirType(EnumGetterMixin, str, Enum):
+    HP = "hydroelectric"
+    MP = "multipurpose"
+    AGRI = "agricultural"

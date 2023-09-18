@@ -731,6 +731,7 @@ class LatexWriter(Writer):
             with self.document.create(Figure(position='htbp')) as plot:
                 width = r'{}\textwidth'.format(plot_fraction)
                 plot.add_plot(width=NoEscape(width), dpi=dpi)
+        plt.close()
         return None
 
     def add_parameters(self, precision: int = 4) -> None:
@@ -1134,6 +1135,7 @@ class LatexWriter(Writer):
             # Generate a PDF (requires a LaTeX compiler present in the system)
             BatchCompiler(self.document).generate_pdf(
                 clean_tex=False, compiler= 'pdflatex', compilations=2)
+            log.info("Created a PDF file with outputs.")
         else:
             log.error(
                 "LaTeX compiler cannot be found in your environment." +
