@@ -1,5 +1,4 @@
 """Catchment-related processes."""
-import os
 import inspect
 import configparser
 import logging
@@ -7,29 +6,27 @@ import pathlib
 import math
 from dataclasses import dataclass
 from typing import Dict, List, Optional, TypeVar, Type
-from reemission.utils import read_table, find_enum_index, read_config
+from reemission.utils import (
+    read_table, find_enum_index, read_config, save_return, get_package_file, load_yaml)
 from reemission.biogenic import BiogenicFactors
 from reemission.constants import Landuse
-from reemission.exceptions import (
-    WrongSumOfAreasException, WrongAreaFractionsException)
+from reemission.exceptions import WrongSumOfAreasException, WrongAreaFractionsException
+from reemission.globals import internal
+
 
 # Set up module logger
 log = logging.getLogger(__name__)
 # Load path to Yaml tables
-MODULE_DIR = os.path.dirname(__file__)
-INI_FILE = os.path.abspath(os.path.join(MODULE_DIR, 'config', 'config.ini'))
-TABLES = os.path.abspath(os.path.join(MODULE_DIR, 'parameters'))
-# Provide tables as module variables
-tn_coeff_table: Dict = read_table(
-    pathlib.Path(TABLES, 'McDowell', 'landscape_TN_export.yaml'))
-tp_coeff_table: Dict = read_table(
-    pathlib.Path(TABLES, 'McDowell', 'landscape_TP_export.yaml'))
-p_loads_pop: Dict = read_table(
-    pathlib.Path(TABLES, 'phosphorus_loads.yaml'))
-p_exports: Dict = read_table(
-    pathlib.Path(TABLES, 'phosphorus_exports.yaml'))
+INI_FILE = get_package_file("config/config.ini")
+TABLES = get_package_file("parameters")
 
-config: configparser.ConfigParser = read_config(pathlib.Path(INI_FILE))
+tn_coeff_table = read_table(TABLES / "McDowell/landscape_TN_export.yaml")
+tp_coeff_table = read_table(TABLES / "McDowell/landscape_TP_export.yaml")
+p_loads_pop = read_table(TABLES / "phosphorus_loads.yaml")
+p_exports = read_table(TABLES / "phosphorus_exports.yaml")
+
+config: configparser.ConfigParser = read_config(INI_FILE)
+internals_config = load_yaml(get_package_file("config/internal_vars.yaml"))
 
 # Margin for error by which the sum of landuse fractions can differ from 1.0
 EPS = config.getfloat("CALCULATIONS", "eps_catchment_area_fractions")
@@ -291,6 +288,7 @@ class Catchment:
         load_total = load_pop + load_land
         return 10**6 * load_total / self.discharge
 
+    @save_return(internal, internals_config['inflow_p_conc']['include'])
     def inflow_p_conc(self, method: str) -> float:
         """Calculate median influent total phosphorus concentration in
         [micrograms/L] entering the reservoir with runoff."""
@@ -305,6 +303,7 @@ class Catchment:
             output = self.inflow_p_conc_gres()
         return output
 
+    @save_return(internal, internals_config['inflow_n_conc']['include'])
     def inflow_n_conc(self) -> float:
         """Calculate median influent total N concentration in [micrograms/L]
         entering the reservoir with runoff.
@@ -334,6 +333,7 @@ class Catchment:
             ) * bias_corr)
         return inflow_n
 
+    @save_return(internal, internals_config['nitrogen_load']['include'])
     def nitrogen_load(self) -> float:
         """Calculate total nitrogen (TN) load in kg N yr-1 entering the
         reservoir with catchment runoff."""
@@ -341,6 +341,7 @@ class Catchment:
         # 1e-6 converts mg/m3 (microgram/L) to kg/m3
         return 1e-6 * self.discharge * inflow_n
 
+    @save_return(internal, internals_config['phosphorus_load']['include'])
     def phosphorus_load(self, method: str) -> float:
         """Calculate total phosphorus (TP) load in kg P yr-1 entering the
         reservoir with catchment runoff.

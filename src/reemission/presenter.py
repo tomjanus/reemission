@@ -6,7 +6,6 @@ from dataclasses import dataclass, field
 from typing import (
     Dict, Tuple, List, Type, Union, Sequence, Iterator, Any, Optional)
 from abc import ABC, abstractmethod
-import pathlib
 import configparser
 import os
 import logging
@@ -32,9 +31,10 @@ from pylatex import (
     Command,
     MultiColumn,
 )
-import reemission.utils
+from reemission.utils import get_package_file, is_latex_installed, load_yaml, read_config
 from reemission.input import Inputs
 from reemission.auxiliary import rollout_nested_list
+from reemission.document_compiler import BatchCompiler
 
 # Set up module logger
 logging.basicConfig(level=logging.INFO)
@@ -56,16 +56,16 @@ TICK_FONTSIZE = 10
 ANNOTATION_FONTSIZE = 10
 
 # Get the file paths
-MODULE_DIR = os.path.dirname(__file__)
-CONFIG_DIR = os.path.abspath(os.path.join(MODULE_DIR, 'config'))
-INPUT_CONFIG_PATH = pathlib.Path(CONFIG_DIR, 'inputs.yaml')
-OUTPUT_CONFIG_PATH = pathlib.Path(CONFIG_DIR, 'outputs.yaml')
-PARAMETER_CONFIG_PATH = pathlib.Path(CONFIG_DIR, 'parameters.yaml')
-CONFIG_INI_PATH = pathlib.Path(CONFIG_DIR, 'config.ini')
+CONFIG_DIR = get_package_file('config')
+INPUT_CONFIG_PATH = CONFIG_DIR / 'inputs.yaml'
+OUTPUT_CONFIG_PATH = CONFIG_DIR / 'outputs.yaml'
+INTERN_VARS_CONFIG_PATH = CONFIG_DIR / 'internal_vars.yaml'
+PARAMETER_CONFIG_PATH = CONFIG_DIR / 'parameters.yaml'
+CONFIG_INI_PATH = CONFIG_DIR / 'config.ini'
 
 # JSONWriter parameters
-JSON_NUMBER_DECIMALS = 2
-EXCEL_NUMBER_DECIMALS = 3
+JSON_NUMBER_DECIMALS = 4
+EXCEL_NUMBER_DECIMALS = 4
 
 INPUT_NAMES = ['coordinates', 'id', 'monthly_temps', 'biogenic_factors',
                'year_profile', 'catchment_inputs', 'reservoir_inputs',
@@ -159,9 +159,11 @@ class ExcelWriter(Writer):
     Attributes:
         inputs: Inputs object with input data.
         outputs: Outputs dictionary.
+        intern_vars: Internal variables dictionary.
         output_file_path: Path where the output file is to be saved/written to.
         output_config: Configuration file with formatting settings.
         input_config: Configuration file with formatting settings.
+        intern_vars_config: Configuration dictionary with formatting settings.
         parameter_config: Configuration file with formatting settings.
         config_ini: Global parameter configuration file.
         author: Author of the document.
@@ -173,20 +175,28 @@ class ExcelWriter(Writer):
 
     inputs: Inputs
     outputs: Dict
+    intern_vars: Dict
+
     output_file_path: str
+
     output_config: Dict
     input_config: Dict
+    intern_vars_config: Dict
+
     parameter_config: Dict
     config_ini: configparser.ConfigParser
     author: str
     title: str
+
     output_df: pd.DataFrame = field(init=False)
     input_df: pd.DataFrame = field(init=False)
+    intern_vars_df: pd.DataFrame = field(init=False)
 
     def __post_init__(self):
         """Initialize output dataframe which will be output as Excel file."""
         self.output_df = pd.DataFrame()
         self.input_df = pd.DataFrame()
+        self.intern_vars_df = pd.DataFrame()
 
     def add_inputs(self, reservoir_name: str) -> None:
         """Create an inputs dictionary for a given reservoir and append to
@@ -268,32 +278,52 @@ class ExcelWriter(Writer):
         else:
             self.input_df = pd.concat([self.input_df, reservoir_df])
 
-    def add_outputs(self, reservoir_name: str) -> None:
-        """Create an outputs dataframe for a given reservoir."""
-        config = self.output_config['outputs']
-        data = self.outputs[reservoir_name]
-        output_dict: dict = {reservoir_name: {}}
+    def dict_data_to_df(
+            self, id: str, data: Dict, config: Dict, 
+            index_name: str = 'Name') -> pd.DataFrame:
+        """Parse data in a dictionary format into pandas dataframe format"""
+        output: Dict = {id: {}}
         for parameter, parameter_value in data.items():
             # Add parameter if the parameter is marked for presentation
             if config[parameter]['include']:
-                # If variabel is a sequence, rollout to multiple variables
+                # If variable is a sequence, rollout to multiple variables
                 # stored in individual columns
-                if isinstance(parameter_value, collections.abc.Sequence):
+                if isinstance(parameter_value, collections.abc.Sequence) and \
+                        not isinstance(parameter_value, str):
                     for name, value in self.rollout(
                             parameter, parameter_value):
                         param_dict = {name: self.round_parameter(
                             value, EXCEL_NUMBER_DECIMALS)}
-                        output_dict[reservoir_name].update(param_dict)
+                        output[id].update(param_dict)
                 else:
                     param_dict = {parameter: self.round_parameter(
                         parameter_value, EXCEL_NUMBER_DECIMALS)}
-                    output_dict[reservoir_name].update(param_dict)
-        reservoir_df = pd.DataFrame.from_dict(output_dict, orient='index')
-        reservoir_df.index.names = ['Name']
+                    output[id].update(param_dict)
+        output_df = pd.DataFrame.from_dict(output, orient='index')
+        output_df.index.names = [index_name]
+        return output_df
+    
+    def add_outputs(self, reservoir_name: str) -> None:
+        """Add outputs selected for presentation, for a given reservoir."""
+        config = self.output_config['outputs']
+        data = self.outputs[reservoir_name]
+        reservoir_df = self.dict_data_to_df(
+            id=reservoir_name, data=data, config=config, index_name='Name')
         if self.output_df.empty:
             self.output_df = reservoir_df
         else:
             self.output_df = pd.concat([self.output_df, reservoir_df])
+
+    def add_internals(self, reservoir_name: str) -> None:
+        """Add internal variables selected for presentation, for a given reservoir."""
+        config = self.intern_vars_config
+        data=self.intern_vars[reservoir_name]
+        reservoir_df = self.dict_data_to_df(
+            id=reservoir_name, data=data, config=config, index_name='Name')
+        if self.intern_vars_df.empty:
+            self.intern_vars_df = reservoir_df
+        else:
+            self.intern_vars_df = pd.concat([self.intern_vars_df, reservoir_df])
 
     def write(self) -> None:
         """Write input/output data (all reservoirs) to an excel file."""
@@ -303,9 +333,11 @@ class ExcelWriter(Writer):
         for reservoir_name in self.outputs:
             self.add_inputs(reservoir_name=reservoir_name)
             self.add_outputs(reservoir_name=reservoir_name)
+            self.add_internals(reservoir_name=reservoir_name)
         with pd.ExcelWriter(self.output_file_path) as writer:
             self.input_df.to_excel(writer, sheet_name="inputs", index=True)
             self.output_df.to_excel(writer, sheet_name="outputs", index=True)
+            self.intern_vars_df.to_excel(writer, sheet_name="internals", index=True)
         log.info("Created a Excel file with outputs.")
         return None
 
@@ -317,9 +349,11 @@ class JSONWriter(Writer):
     Attributes:
         inputs: Inputs object with input data.
         outputs: Outputs dictionary.
+        intern_vars: Internal variables dictionary.
         output_file_path: Path where the output file is to be saved/written to.
-        output_config: Configuration file with formatting settings.
-        input_config: Configuration file with formatting settings.
+        output_config: Configuration dictionary with formatting settings.
+        input_config: Configuration dictionary with formatting settings.
+        intern_vars_config: Configuration dictionary with formatting settings.
         parameter_config: Configuration file with formatting settings.
         config_ini: Global parameter configuration file.
         author: Author of the document.
@@ -329,11 +363,16 @@ class JSONWriter(Writer):
 
     inputs: Inputs
     outputs: Dict
+    intern_vars: Dict
+
     output_file_path: str
+
     output_config: Dict
     input_config: Dict
+    intern_vars_config: Dict
     parameter_config: Dict
     config_ini: configparser.ConfigParser
+
     author: str
     title: str
     json_dict: Dict = field(init=False)
@@ -430,27 +469,45 @@ class JSONWriter(Writer):
         except KeyError:
             self.json_dict[reservoir_name] = input_dict
 
+    def parse_dict_data(self, config: Dict, data: Dict, item_names: Tuple) -> Dict:
+        """ """
+        output_dict: Dict = {}
+        for parameter, parameter_value in data.items():
+            if config[parameter]['include']:
+                param_dict: Dict = {parameter: {}}
+                for item_name in item_names:
+                    item = config[parameter].get(item_name)
+                    param_dict[parameter][item_name] = item
+                param_dict[parameter]['value'] = self.round_parameter(
+                    parameter_value, JSON_NUMBER_DECIMALS)
+                output_dict.update(param_dict)
+        return output_dict
+            
     def add_outputs(self, reservoir_name: str) -> None:
         """Create an outputs dictionary for a given reservoir and append to
         json_dict."""
         config = self.output_config['outputs']
         data = self.outputs[reservoir_name]
-        output_dict: dict = {'outputs': {}}
-        for parameter, parameter_value in data.items():
-            # Add parameter if the parameter is marked for presentation
-            if config[parameter]['include']:
-                param_dict: dict = {parameter: {}}
-                for item_name in ['name', 'gas_name', 'unit',
-                                  'long_description']:
-                    item = config[parameter].get(item_name)
-                    param_dict[parameter][item_name] = item
-                param_dict[parameter]['value'] = self.round_parameter(
-                    parameter_value, JSON_NUMBER_DECIMALS)
-                output_dict['outputs'].update(param_dict)
+        parsed_data = self.parse_dict_data(
+            config=config ,data=data,
+            item_names=('name', 'gas_name', 'unit', 'long_description'))
         try:
-            self.json_dict[reservoir_name].update(output_dict)
+            self.json_dict[reservoir_name].update({'outputs': parsed_data})
         except KeyError:
-            self.json_dict[reservoir_name] = output_dict
+            self.json_dict[reservoir_name] = {'outputs': parsed_data}
+
+    def add_internals(self, reservoir_name: str) -> None:
+        """Create an internal variables dictionary for a given reservoir and 
+        append to json_dict."""
+        config = self.intern_vars_config
+        data = self.intern_vars[reservoir_name]
+        parsed_data = self.parse_dict_data(
+            config=config ,data=data,
+            item_names=('name', 'unit', 'long_description'))
+        try:
+            self.json_dict[reservoir_name].update({'intern_vars': parsed_data})
+        except KeyError:
+            self.json_dict[reservoir_name] = {'intern_vars': parsed_data}
 
     def write(self) -> None:
         """Write output data (all reservoirs) to a JSON file."""
@@ -460,6 +517,7 @@ class JSONWriter(Writer):
         for reservoir_name in self.outputs:
             self.add_inputs(reservoir_name=reservoir_name)
             self.add_outputs(reservoir_name=reservoir_name)
+            self.add_internals(reservoir_name=reservoir_name)
         with open(self.output_file_path,
                   'w', encoding='utf-8') as file_pointer:
             json.dump(self.json_dict, file_pointer, indent=4)
@@ -474,9 +532,11 @@ class LatexWriter(Writer):
     Attrributes:
         inputs: Inputs object with input data.
         outputs: Outputs dictionary.
+        intern_vars: Internal variables dictionary.
         output_file_path: Path where the output file is to be saved/written to.
         output_config: Configuration file with formatting settings.
         input_config: Configuration file with formatting settings.
+        intern_vars_config: Configuration dictionary with formatting settings.
         parameter_config: Configuration file with formatting settings.
         config_ini: Global parameter configuration file.
         author: Author of the document.
@@ -487,11 +547,16 @@ class LatexWriter(Writer):
 
     inputs: Inputs
     outputs: Dict
+    intern_vars: Dict
+
     output_file_path: str
+
     output_config: Dict
     input_config: Dict
+    intern_vars_config: Dict
     parameter_config: Dict
     config_ini: configparser.ConfigParser
+
     author: str
     title: str
 
@@ -735,6 +800,40 @@ class LatexWriter(Writer):
                 except configparser.NoSectionError:
                     pass
 
+    def add_intern_vars_table(self, output_name: str, precision: int = 4) -> None:
+        """Adds internal variables table to latex source code.
+
+        Args:
+            output_name: Name of the intenral variable/reservoir.
+            precision: Number of decimal points in the output input values.
+        """
+        round_options = {'round-precision': precision,
+                         'round-mode': 'figures'}
+        column_names = ["Name", "Unit", "Value"]
+        table_format = "p{10cm} X[c] X[l]"
+        data = self.intern_vars[output_name]
+        with self.document.create(Center()) as centered:
+            with centered.create(Tabu(table_format, booktabs=True,
+                                      row_height=1.0)) as data_table:
+                data_table.add_row(column_names, mapper=[bold])
+                data_table.add_hline()
+                # Iterate through outputs and generate rows of data to be
+                # entered into the table
+                for parameter, value in data.items():
+                    parameter_name = NoEscape(
+                        self.intern_vars_config[parameter]['name_latex'])
+                    unit = NoEscape(
+                        self.intern_vars_config[parameter]['unit_latex'])
+                    if isinstance(value, np.float64):
+                        value = float(value)
+                    if self.intern_vars_config[parameter]['include'] \
+                            and not isinstance(value, Iterable):
+                        # Lists describe profiles and should not be put in the
+                        # table
+                        value = Quantity(value, options=round_options)
+                        row = [parameter_name, unit, value]
+                        data_table.add_row(row)
+
     def add_outputs_table(self, output_name: str, precision: int = 4) -> None:
         """Adds outputs table to latex source code.
 
@@ -786,13 +885,11 @@ class LatexWriter(Writer):
                         # Do not output anything if one of the data (either)
                         # CO2 net or CH4 net are not included in the results
                         pass
-
                 if (
                     self.output_config['outputs']['co2_ch4_n2o']['include']
                     and self.output_config['outputs']['co2_net']['include']
                     and self.output_config['outputs']['ch4_net']['include']
-                    and self.output_config['outputs']['n2o_mean']['include']
-                ):
+                    and self.output_config['outputs']['n2o_mean']['include']):
                     try:
                         value = Quantity(
                             data['co2_net'] + data['ch4_net'] +
@@ -1013,13 +1110,18 @@ class LatexWriter(Writer):
             self.add_outputs_table(output_name=reservoir_name)
             self.add_plots(output_name=reservoir_name,
                            plot_fraction=plot_fraction)
+            
+    def add_intern_var_subsection(self, reservoir_name: str) -> None:
+        """Writes internal varaibel information to latex document source code"""
+        with self.document.create(Subsection('Intermediate variables')):
+            self.add_intern_vars_table(output_name=reservoir_name)
 
     def write(self) -> None:
         """Writes output data (all reservoir) to a tex and pdf files."""
         if not bool(self.outputs):
             # If outputs are None or an empty dictionary.
             return None
-        if reemission.utils.is_latex_installed():
+        if is_latex_installed():
             self.add_header()
             self.add_title_section(title=self.title, author=self.author)
             self.add_parameters_section()
@@ -1028,19 +1130,13 @@ class LatexWriter(Writer):
                 with self.document.create(Section(reservoir_name)):
                     self.add_inputs_subsection(reservoir_name=reservoir_name)
                     self.add_outputs_subsection(reservoir_name=reservoir_name)
-            # Generate a Tex Source file
-            self.document.generate_tex()
-            log.info("Created a LaTeX document with outputs.")
+                    self.add_intern_var_subsection(reservoir_name=reservoir_name)
             # Generate a PDF (requires a LaTeX compiler present in the system)
-            try:
-                self.document.generate_pdf(clean_tex=False)
-            except CompilerError:
-                log.error(
-                    "LaTeX compiler not found or returned an error. " +
-                    "PDF could not be created.")
+            BatchCompiler(self.document).generate_pdf(
+                clean_tex=False, compiler= 'pdflatex', compilations=2)
         else:
             log.error(
-                "LaTeX cannot be found in your environment." +
+                "LaTeX compiler cannot be found in your environment." +
                 "'.tex' and '.pdf' files could not be created.")
         return None
 
@@ -1053,6 +1149,7 @@ class Presenter:
     Atrributes:
         inputs: inputs.Inputs object.
         outputs: Model outputs dictionary.
+        intern_vars: Dictionary of internal variables.
         writers: a list of Writer objects.
         author: Author name.
         title: Document title.
@@ -1060,25 +1157,30 @@ class Presenter:
 
     inputs: Inputs
     outputs: Dict
+    intern_vars: Dict
     writers: Optional[List[Writer]] = field(default=None)
     author: str = field(default='Anonymous')
     title: str = field(default='HEET Results')
 
     @classmethod
-    def fromfiles(cls, input_file: str, output_file: str, **kwargs):
+    def fromfiles(cls, input_file: str, output_file: str, interns_file: str, **kwargs):
         """Load outputs dictionary from json file."""
         inputs = Inputs.fromfile(input_file)
         with open(output_file, 'r', encoding='utf-8') as json_file:
             output_dict = json.load(json_file)
-        return cls(inputs=inputs, outputs=output_dict, **kwargs)
+        with open(interns_file, 'r', encoding='utf-8') as json_file:
+            intern_dict = json.load(json_file)
+        return cls(
+            inputs=inputs, outputs=output_dict, intern_vars=intern_dict, **kwargs)
 
     def __post_init__(self):
         """Load configuration dictionaries from provided yaml files."""
-        self.input_config = reemission.utils.load_yaml(INPUT_CONFIG_PATH)
-        self.output_config = reemission.utils.load_yaml(OUTPUT_CONFIG_PATH)
-        self.parameter_config = reemission.utils.load_yaml(
+        self.input_config = load_yaml(INPUT_CONFIG_PATH)
+        self.output_config = load_yaml(OUTPUT_CONFIG_PATH)
+        self.intern_vars_config = load_yaml(INTERN_VARS_CONFIG_PATH)
+        self.parameter_config = load_yaml(
             PARAMETER_CONFIG_PATH)
-        self.config_ini = reemission.utils.read_config(CONFIG_INI_PATH)
+        self.config_ini = read_config(CONFIG_INI_PATH)
 
     def add_writer(self, writer: Type[Writer], output_file: str) -> None:
         """Insantiates writer object and appends it to self.writers."""
@@ -1088,8 +1190,10 @@ class Presenter:
             writer(
                 output_file_path=output_file,
                 outputs=self.outputs,
+                intern_vars=self.intern_vars,
                 output_config=self.output_config,
                 input_config=self.input_config,
+                intern_vars_config=self.intern_vars_config,
                 parameter_config=self.parameter_config,
                 config_ini=self.config_ini,
                 inputs=self.inputs,

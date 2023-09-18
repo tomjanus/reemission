@@ -1,6 +1,5 @@
 """Reservoir calculations."""
 import logging
-import os
 import math
 import configparser
 import inspect
@@ -10,18 +9,20 @@ from typing import List, Tuple, Optional, TypeVar, Type
 from reemission.temperature import MonthlyTemperature
 from reemission.auxiliary import (
     water_density, cd_factor, scale_windspeed, air_density)
-from reemission.utils import read_config
+from reemission.utils import read_config, save_return, get_package_file, load_yaml
 from reemission.constants import Landuse, TrophicStatus
 from reemission.exceptions import (
     WrongAreaFractionsException,
     WrongSumOfAreasException)
+from reemission.globals import internal
+
 
 # Set up module logger
 log = logging.getLogger(__name__)
-MODULE_DIR = os.path.dirname(__file__)
-INI_FILE = os.path.abspath(os.path.join(MODULE_DIR, 'config', 'config.ini'))
+config: configparser.ConfigParser = read_config(
+    get_package_file("config/config.ini"))
 
-config: configparser.ConfigParser = read_config(INI_FILE)
+internals_config = load_yaml(get_package_file("config/internal_vars.yaml"))
 
 # Margin for error by which the sum of landuse fractions can differ from 1.0
 EPS = config.getfloat("CALCULATIONS", "eps_reservoir_area_fractions")
@@ -112,6 +113,22 @@ class Reservoir:
         # Validate input arguments
         self.validate_attributes()
 
+
+    def validate_attributes(self) -> None:
+        """Check object attributes and log and correct, if necessary, the
+        suspicious or invalid data."""
+        if self.water_intake_depth == "null" or self.water_intake_depth is None:
+            # If water intake depth value is not given, assume that
+            # the intake is from deep in the reservoir and therefore,
+            # degassing occurs.
+            self.water_intake_depth = self.max_depth
+        elif self.water_intake_depth > self.max_depth:
+            log.warning(
+                "Water intake depth in reservoir %s greater than max depth",
+                self.name)
+            log.warning("Setting intake depth to max depth.")
+            self.water_intake_depth = self.max_depth
+
     @classmethod
     def from_dict(cls: Type[ReservoirType], parameters: dict,
                   **kwargs) -> ReservoirType:
@@ -169,26 +186,13 @@ class Reservoir:
         return self.volume / 10**9
 
     @property
+    @save_return(internal, True)
     def wat_area_frac_pre(self) -> float:
         """Return a fraction of reservoir area that was already water prior
         to impoundment"""
         return sum([self.area_fractions[i] for i in (3, 12, 21)])
 
-    def validate_attributes(self) -> None:
-        """Check object attributes and log and correct, if necessary, the
-        suspicious or invalid data."""
-        if self.water_intake_depth == "null" or self.water_intake_depth is None:
-            # If water intake depth value is not given, assume that
-            # the intake is from deep in the reservoir and therefore,
-            # degassing occurs.
-            self.water_intake_depth = self.max_depth
-        elif self.water_intake_depth > self.max_depth:
-            log.warning(
-                "Water intake depth in reservoir %s greater than max depth",
-                self.name)
-            log.warning("Setting intake depth to max depth.")
-            self.water_intake_depth = self.max_depth
-
+    @save_return(internal, internals_config['mean_radiance_lat']['include'])
     def mean_radiance_lat(self) -> float:
         """Selects representative mean horizontal radiance in (kWh/m2/d)
         for a reservoir depending on its latitude."""
@@ -200,6 +204,7 @@ class Reservoir:
             radiance = self.mean_radiance_nov_mar
         return radiance
 
+    @save_return(internal, internals_config['global_radiance']['include'])
     def global_radiance(self, period: str = "d") -> float:
         """Calculates reservoir cumulative global horizontal radiance in
         (kWh/m2/period) depending on reservoir's latitude.
@@ -250,6 +255,7 @@ class Reservoir:
         """
         return self.max_depth / self.mean_depth - 1.0
 
+    @save_return(internal, internals_config['littoral_area_frac']['include'])
     def littoral_area_frac(self) -> float:
         r"""Calculate percentage of reservoir's surface area that is
         littoral, i.e. close to the shore. Eq. A22 in Praire2021.
@@ -266,6 +272,7 @@ class Reservoir:
         """
         return 100.0 * (1 - (1 - 3.0 / self.max_depth) ** self.q_bath_shape())
 
+    @save_return(internal, internals_config['bottom_temperature']['include'])
     def bottom_temperature(self) -> float:
         """Calculates bottom (hypolimnion) temperature in the reservoir from
         a 12x1 profile of monthly average air temperatures.
@@ -282,24 +289,28 @@ class Reservoir:
             hypolimnion_temp = (0.2345 * self.temperature.coldest) + 10.11
         return hypolimnion_temp
 
+    @save_return(internal, internals_config['surface_temperature']['include'])
     def surface_temperature(self) -> float:
         """Calculates surface/epilimnion temperature as the mean temperature of
         the 4 warmest months in a year. Equation A.4. in Praire2021.
         """
         return self.temperature.mean_warmest(number_of_months=4)
 
+    @save_return(internal, internals_config['bottom_density']['include'])
     def bottom_density(self) -> float:
-        """Calculates water density at the bottom of the reservoir.
+        """Calculates water density in kg/m3 at the bottom of the reservoir.
         Equation A.3. in Praire2021.
         """
         return water_density(temp=self.bottom_temperature())
 
+    @save_return(internal, internals_config['surface_density']['include'])
     def surface_density(self) -> float:
-        """Calculates water density at the surface of the reservoir.
+        """Calculates water density in kg/m3 at the surface of the reservoir.
         Equation A.4. in Praire2021.
         """
         return water_density(temp=self.surface_temperature())
 
+    @save_return(internal, internals_config['thermocline_depth']['include'])
     def thermocline_depth(self, wind_speed: Optional[float] = None,
                           wind_height: float = 50) -> float:
         """Calculate thermocline depth required for the calculation of CH4
@@ -332,14 +343,11 @@ class Reservoir:
             cd_coeff = cd_factor(wind_speed)
             wind_at_10m = scale_windspeed(
                 wind_speed=wind_speed, wind_height=wind_height, new_height=10)
-            # Calculate bottom and surface water densities.
-            hypolimnion_density = self.bottom_density()
-            epilimnion_density = self.surface_density()
             # Find thermocline depth in metres
             aux_var_1 = cd_coeff * air_density(
                 self.temperature.mean_warmest(number_of_months=4)) * \
                 wind_at_10m**2
-            aux_var_2 = 9.80665 * (hypolimnion_density - epilimnion_density)
+            aux_var_2 = 9.80665 * (self.bottom_density() - self.surface_density())
             aux_var_3 = math.sqrt(self.area * 10**6)
             thermocline_depth = 2 * math.sqrt(aux_var_1 / aux_var_2) * \
                 math.sqrt(aux_var_3)
@@ -400,6 +408,7 @@ class Reservoir:
         aux_2 = - 0.29 * math.log10(waterbody_area)
         return 10 ** (aux_1 + aux_2)
 
+    @save_return(internal, internals_config['surface_ch4_conc']['include'])
     def surface_ch4_conc(self, waterbody_area: float) -> float:
         """Calcualate surface water CH4 concentration in mgCH4/m3 (mu g/L)
         Eq. A.19. in Praire2021.
@@ -430,6 +439,8 @@ class Reservoir:
         # 1/100 converts from 1/km2 to 1/ha
         return em_factor
 
+
+    @save_return(internal, internals_config['retention_coeff']['include'])
     def retention_coeff(self, method: str) -> float:
         """Return retention coefficient using the chosen calculation method.
 
@@ -447,33 +458,39 @@ class Reservoir:
             ret_coeff = self.retention_coeff_larsen
         return ret_coeff
 
-    def reservoir_tp(self, inflow_conc: float,
+    def reservoir_conc(self, inflow_conc: float,
                      method: Optional[str] = None) -> float:
-        """Calculate reservoir TP concentration in micrograms/L.
+        """Calculate reservoir concentration based on inflow concentration and
+        reservoir retention coefficient.
 
         Args:
-            inflow_conc: TP concentration in the inflow, micrograms/L.
+            inflow_conc: Usually TP/TN concentration in micrograms/L.
             method: retention coefficient esimation method.
         """
         # Method for calculating retention coefficient in reservoirs:
         # empirical/larsen
         if method is None:
             method = config['CALCULATIONS']["ret_coeff_method"]
-        return inflow_conc * (1.0 - self.retention_coeff(method=method))
+        return float(inflow_conc * (1.0 - self.retention_coeff(method=method)))
 
-    def trophic_status(self, inflow_conc: float) -> Enum:
+
+    @save_return(internal, internals_config['trophic_status']['include'])
+    def trophic_status(self, tp_inflow_conc: float, as_value: bool = True) -> Enum | str:
         """Return reservoirs trophic status depending on the influent
         TP concentration.
 
         Args:
             inflow_conc: TP concentration in the inflow, micrograms/L.
         """
-        reservoir_tp = self.reservoir_tp(inflow_conc)
+        reservoir_tp = self.reservoir_conc(tp_inflow_conc)
         if reservoir_tp < 10.0:
-            return TrophicStatus.OLIGOTROPHIC
+            trophic_status = TrophicStatus.OLIGOTROPHIC
         if reservoir_tp < 30.0:
-            return TrophicStatus.MESOTROPHIC
+            trophic_status = TrophicStatus.MESOTROPHIC
         if reservoir_tp < 100.0:
-            return TrophicStatus.EUTROPHIC
-        # If concentration >= 100.0
-        return TrophicStatus.HYPER_EUTROPHIC
+            trophic_status = TrophicStatus.EUTROPHIC
+        else:
+            trophic_status = TrophicStatus.HYPER_EUTROPHIC
+        if as_value:
+            return trophic_status.value
+        return trophic_status

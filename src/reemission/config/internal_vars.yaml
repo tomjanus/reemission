@@ -1,0 +1,172 @@
+# RESERVOIR
+# Preimpoundment water area fraction
+wat_area_frac_pre:
+  include: True
+  name: "Water area fraction, pre-impoundment"
+  name_latex: "Water area fraction, pre-impoundment"
+  unit: "-"
+  unit_latex: "-"
+  long_description: ""
+  hint: "Cannot be larger than 1"
+# Mean radiance
+mean_radiance_lat:
+  include: True
+  name: "Mean radiance at the reservoir"
+  name_latex: "Mean radiance at the reservoir"
+  unit: "kWh m-2 d-1"
+  unit_latex: "kWh m$^{-2}$ d$^{-1}$"
+  long_description: ""
+  hint: ""
+# Global radiance
+global_radiance:
+  include: True
+  name: "Cumulative global horizontal radiance at the reservoir"
+  name_latex: "Cumulative global horizontal radiance at the reservoir"
+  unit: "kWh m-2 d-1"
+  unit_latex: "kWh m$^{-2}$ d$^{-1}$"
+  long_description: ""
+  hint: "Period (day/month/year) set in method's argument - day by default"
+# Littoral area fraction
+littoral_area_frac:
+  include: True
+  name: "Percentage of reservoir's surface area that is littoral"
+  name_latex: "Percentage of reservoir's surface area that is littoral"
+  unit: "%"
+  unit_latex: "\\%"
+  long_description: ""
+  hint: ""
+# Bottom temperature in the reservoir
+bottom_temperature:
+  include: True
+  name: "Bottom (hypolimnion) temperature in the reservoir"
+  name_latex: "Bottom (hypolimnion) temperature in the reservoir"
+  unit: "deg C"
+  unit_latex: "$^o$C"
+  long_description: ""
+  hint: ""
+# Temperature at the reservoir surface
+surface_temperature:
+  include: True
+  name: "Surface/epilimnion temperature in the reservoir"
+  name_latex: "Surface/epilimnion temperature in the reservoir"
+  unit: "deg C"
+  unit_latex: "$^o$C"
+  long_description: ""
+  hint: ""
+# Water density at the bottom of the reservoir
+bottom_density:
+  include: True
+  name: "Water density at the bottom of the reservoir"
+  name_latex: "Water density at the bottom of the reservoir"
+  unit: "kg/m3"
+  unit_latex: "kg m$^{-3}$"
+  long_description: ""
+  hint: ""
+# Water density at the surface of the reservoir
+surface_density:
+  include: True
+  name: "Water density at the surface of the reservoir"
+  name_latex: "Water density at the surface of the reservoir"
+  unit: "kg/m3"
+  unit_latex: "kg m$^{-3}$"
+  long_description: ""
+  hint: ""
+# Thermocline depth
+thermocline_depth:
+  include: True
+  name: "Thermocline depth"
+  name_latex: "Thermocline depth"
+  unit: "m"
+  unit_latex: "m"
+  long_description: ""
+  hint: ""
+# Surface CH4 concentration
+surface_ch4_conc:
+  include: True
+  name: "Surface CH4 concentration"
+  name_latex: "Surface CH$_4$ concentration"
+  unit: "mgCH4 / m3"
+  unit_latex: "mgCH$_4$ m$^{-3}$"
+  long_description: ""
+  hint: ""
+# Trophic status of the reservoir
+trophic_status:
+  include: True
+  name: "Trophic status of the reservoir"
+  name_latex: "Trophic status of the reservoir"
+  unit: "-"
+  unit_latex: "-"
+  long_description: ""
+  hint: ""
+# Retention coefficient
+retention_coeff:
+  include: True
+  name: "Retention coefficient"
+  name_latex: "Retention coefficient"
+  unit: "-"
+  unit_latex: "-"
+  long_description: ""
+  hint: ""
+# CATCHMENT
+# Inflow P concentration 
+inflow_p_conc:
+  include: True
+  name: "Influent total P concentration"
+  name_latex: "Influent total P concentration"
+  unit: "micrograms / L"
+  unit_latex: "$\\mu$g L$^{-1}$"
+  long_description: "Median influent total phosphorus concentration in micrograms/L entering the reservoir with runoff"
+  hint: ""
+# Inflow N concentration 
+inflow_n_conc:
+  include: True
+  name: "Influent total N concentration"
+  name_latex: "Influent total N concentration"
+  unit: "micrograms / L"
+  unit_latex: "$\\mu$g L$^{-1}$"
+  long_description: "Median influent total nitrogen concentration in micrograms/L entering the reservoir with runoff"
+  hint: ""
+# Total P load
+phosphorus_load:
+  include: True
+  name: "Influent total P load"
+  name_latex: "Influent total P load"
+  unit: "kgP / yr-1"
+  unit_latex: "kgP~yr$^{-1}$"
+  long_description: ""
+  hint: ""
+# Total N load
+nitrogen_load:
+  include: True
+  name: "Influent total N load"
+  name_latex: "Influent total N load"
+  unit: "kgN / yr-1"
+  unit_latex: "kgN~yr$^{-1}$"
+  long_description: ""
+  hint: ""
+# EMISSIONS
+reservoir_tp:
+  include: True
+  name: "Reservoir TP concentration"
+  name_latex: "Reservoir TP concentration"
+  unit: "micrograms / L"
+  unit_latex: "$\\mu$g L$^{-1}$"
+  long_description: ""
+  hint: ""
+reservoir_tn:
+  include: True
+  name: "Reservoir TN concentration"
+  name_latex: "Reservoir TN concentration"
+  unit: "micrograms / L"
+  unit_latex: "$\\mu$g L$^{-1}$"
+  long_description: ""
+  hint: ""
+nitrogen_downstream_conc:
+  include: True
+  name: "Downstream TN concentration"
+  name_latex: "Downstream TN concentration"
+  unit: "mg / L"
+  unit_latex: "mg L$^{-1}$"
+  long_description: ""
+  hint: ""
+...

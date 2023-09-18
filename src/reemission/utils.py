@@ -278,3 +278,24 @@ def save_to_json(
 def strip_double_quotes(input: str) -> str:
     """ """
     return input.replace('"','')
+
+
+def save_return(output: Dict, save_output: bool=True):
+    """Decorator that saves the output of the decorated method to an output dict 
+    (usually a global var)
+    
+    Used for saving internal variables to a global shared variable internals in
+    `shared_intern.py`
+    """
+    def decorator(func: Callable) -> Callable:
+        def wrapper(*args, **kwargs) -> Callable:
+            # Get the method name
+            method_name = func.__name__
+            # Call the target method and store its output if save_output is True
+            result = func(*args, **kwargs)
+            if save_output:
+                output[method_name] = result
+            # Return the result as usual
+            return result
+        return wrapper
+    return decorator

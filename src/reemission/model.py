@@ -1,12 +1,12 @@
 """Simulation/calculation wrapper for GHG emission models."""
-import os
 import configparser
 from dataclasses import dataclass, field
 from typing import Type, Dict, Tuple, Union, Optional, List
 import pathlib
 import logging
 from itertools import chain
-import reemission.utils
+from reemission.utils import read_config, get_package_file, load_yaml
+from reemission.globals import internal
 from reemission.input import Inputs
 from reemission.temperature import MonthlyTemperature
 from reemission.catchment import Catchment
@@ -19,12 +19,9 @@ from reemission.presenter import Presenter, Writer
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
-# Get relative imports to data
-MODULE_DIR: str = os.path.dirname(__file__)
-INI_FILE: str = os.path.abspath(
-    os.path.join(MODULE_DIR, 'config', 'config.ini'))
 # Derive default calculation options from config
-config: configparser.ConfigParser = reemission.utils.read_config(INI_FILE)
+config: configparser.ConfigParser = read_config(
+    get_package_file("config/config.ini"))
 ret_coeff_method = config.get("CALCULATIONS", "ret_coeff_method")
 p_export_cal = config.get("CALCULATIONS", "p_export_cal")
 nitrous_oxide_model = config.get("CALCULATIONS", "nitrous_oxide_model")
@@ -53,7 +50,8 @@ class EmissionModel:
     """
     inputs: Inputs
     config: Union[Dict, pathlib.Path, str]
-    outputs: Dict = field(init=False)
+    outputs: Dict = field(default_factory=dict)
+    internal: Dict = field(default_factory=dict)
     author: str = field(default="")
     report_title: str = field(default="Results")
     ret_coeff: str = field(default=ret_coeff_method)
@@ -63,10 +61,9 @@ class EmissionModel:
 
     def __post_init__(self) -> None:
         """Initialize outputs dict an load config file if config is a path."""
-        self.outputs = {}
+        internal = {}
         if isinstance(self.config, (pathlib.Path, str)):
-            self.config: dict = \
-                reemission.utils.load_yaml(pathlib.Path(self.config))
+            self.config: dict = load_yaml(pathlib.Path(self.config))
 
     @staticmethod
     def create_exec_dictionary(
@@ -167,8 +164,11 @@ class EmissionModel:
             output_files: Paths to output files, one per writer.
         """
         self.presenter = Presenter(
-            inputs=self.inputs, outputs=self.outputs,
-            author=self.author, title=self.report_title)
+            inputs=self.inputs, 
+            outputs=self.outputs, 
+            intern_vars=self.internal,
+            author=self.author, 
+            title=self.report_title)
         try:
             assert len(writers) == len(output_files)
         except AssertionError:
@@ -229,6 +229,12 @@ class EmissionModel:
             else:
                 log.warning("Catchment or Reservoir data absent.")
                 return None
+            
+            # Run calculations of internal variables that we might want to output
+            # but which are not called during GHG estimation
+            #1. Trophic status
+            _ = reservoir.trophic_status(
+                tp_inflow_conc=catchment.inflow_p_conc(method=self.p_model))
 
             # Calculate gas emissions
             if "co2" in model_input.data['gasses']:
@@ -237,6 +243,10 @@ class EmissionModel:
                     reservoir=reservoir,
                     eff_temp=monthly_temp.eff_temp(gas='co2'),
                     p_calc_method=self.p_model)
+                
+                #2. Reservoir TN concentration
+                _ = em_co2.reservoir_tn
+
             else:
                 em_co2 = None
             if "ch4" in model_input.data['gasses']:
@@ -272,6 +282,10 @@ class EmissionModel:
                         output[emission] = exec_dict[emission]['ref'](
                             **exec_dict[emission]['args'])
                 self.outputs[model_input.name] = output
+                # WARNING - COULD RUN INTO ISSUES IF CONFIG CHANGES IN BETWEEN RESERVOIRS
+                # BECAUSE THE `INTERNAL` GLOBAL VAR IS NOT RESET IN BETWEEN CONSECUTIVE
+                # RESERVOIR GHG EMISSION CALCULATIONS
+                self.internal[model_input.name] = internal.copy()
             else:
                 log.warning(
                     "Output/Input configuration file not instantiated.")

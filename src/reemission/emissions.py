@@ -43,22 +43,26 @@ from types import SimpleNamespace
 from typing import List, Tuple, Optional, ClassVar
 from abc import ABC, abstractmethod
 import numpy as np
-from reemission.utils import read_config, read_table
+from reemission.utils import (
+    read_config, read_table, save_return, get_package_file, load_yaml)
 from reemission.constants import Landuse
 from reemission.catchment import Catchment
 from reemission.reservoir import Reservoir
 from reemission.ns_catchment import NSCatchmentCreator
 from reemission.temperature import MonthlyTemperature
 from reemission.exceptions import WrongN2OModelError
+from reemission.globals import internal
 
-# Get relative imports to data
-MODULE_DIR = os.path.dirname(__file__)
-INI_FILE = os.path.abspath(os.path.join(MODULE_DIR, 'config', 'config.ini'))
-TABLES = os.path.abspath(os.path.join(MODULE_DIR, 'parameters'))
+
+INI_FILE = get_package_file("config/config.ini")
+TABLES = get_package_file("parameters")
 
 # Set up module logger
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
+
+
+internals_config = load_yaml(get_package_file("config/internal_vars.yaml"))
 
 
 @lru_cache(maxsize=None)
@@ -182,8 +186,8 @@ class CarbonDioxideEmission(Emission):
         # Read from config
         self.use_red_area = self.config.getboolean('CALCULATIONS','use_ns_catchment')
 
-
     @property
+    @save_return(internal, internals_config['reservoir_tp']['include'])
     def reservoir_tp(self) -> float:
         """Return reservoir total phosphorus concentration in micrograms/L."""
         if not self.use_red_area:
@@ -193,9 +197,25 @@ class CarbonDioxideEmission(Emission):
             # original catchment and the reservoir.
             catchment = NSCatchmentCreator(
                 self.catchment, self.reservoir).get_catchment()
-        return self.reservoir.reservoir_tp(
+        return self.reservoir.reservoir_conc(
             inflow_conc=catchment.inflow_p_conc(method=self.p_calc_method),
             method=self.config['CALCULATIONS']['ret_coeff_method'])
+
+    @property
+    @save_return(internal, internals_config['reservoir_tn']['include'])
+    def reservoir_tn(self) -> float:
+        """Return reservoir total nitrogen concentratinon in micrograms/L"""
+        if not self.use_red_area:
+            catchment = self.catchment
+        else:
+            # Calculate reduced catchment area as a difference between the
+            # original catchment and the reservoir.
+            catchment = NSCatchmentCreator(
+                self.catchment, self.reservoir).get_catchment()
+        return self.reservoir.reservoir_conc(
+            inflow_conc=catchment.inflow_n_conc(),
+            method=self.config['CALCULATIONS']['ret_coeff_method'])
+        
 
     def pre_impoundment(self) -> float:
         """
@@ -990,6 +1010,7 @@ class NitrousOxideEmission(Emission):
         tn_downstream_load = tn_loading - tn_burial - tn_denitr
         return tn_downstream_load
 
+    @save_return(internal, internals_config['nitrogen_downstream_conc']['include'])
     def nitrogen_downstream_conc(self) -> float:
         """Calculate downstream TN concentration in [mgN/L] == [gN/m3]"""
         return 1e03 * self.nitrogen_downstream_load() / \
@@ -1002,5 +1023,9 @@ class NitrousOxideEmission(Emission):
 
     def total_lifetime_emission(self, number_of_years: int = 100) -> float:
         """Calculates total reservoir emission per lifetime in ktCO2,eq."""
+
+        # Dummy call so that the internal variable can be saved
+        _ = self.nitrogen_downstream_conc()
+
         return self.total_emission_per_year(
             number_of_years=number_of_years) * number_of_years / 1_000
