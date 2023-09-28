@@ -1,0 +1,118 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$ref": "#/definitions/TP_export",
+    "definitions": {
+        "TP_export": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "intercept": {
+                    "$ref": "#/definitions/Regression"
+                },
+                "olsen_p": {
+                    "$ref": "#/definitions/Regression"
+                },
+                "mean_prec": {
+                    "$ref": "#/definitions/Regression"
+                },
+                "mean_slope": {
+                    "$ref": "#/definitions/Regression"
+                },
+                "cropland": {
+                    "$ref": "#/definitions/Regression"
+                },
+                "pet": {
+                    "$ref": "#/definitions/Regression"
+                },
+                "biome": {
+                    "$ref": "#/definitions/Biome"
+                },
+                "corr": {
+                    "type": "number"
+                },
+                "coeff_det": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "biome",
+                "coeff_det",
+                "corr",
+                "cropland",
+                "intercept",
+                "mean_prec",
+                "mean_slope",
+                "olsen_p",
+                "pet"
+            ],
+            "title": "TP_export"
+        },
+        "Biome": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "deserts": {
+                    "$ref": "#/definitions/Regression"
+                },
+                "mediterreanan forest": {
+                    "$ref": "#/definitions/Regression"
+                },
+                "montane grasslands": {
+                    "$ref": "#/definitions/Regression"
+                },
+                "temperate broadleaf and mixed": {
+                    "$ref": "#/definitions/Regression"
+                },
+                "temperate coniferous": {
+                    "$ref": "#/definitions/Regression"
+                },
+                "temperate grasslands": {
+                    "$ref": "#/definitions/Regression"
+                },
+                "tropical dry broadleaf": {
+                    "$ref": "#/definitions/Regression"
+                },
+                "tropical grasslands": {
+                    "$ref": "#/definitions/Regression"
+                },
+                "tropical moist broadleaf": {
+                    "$ref": "#/definitions/Regression"
+                },
+                "tundra": {
+                    "$ref": "#/definitions/Regression"
+                }
+            },
+            "required": [
+                "deserts",
+                "mediterreanan forest",
+                "montane grasslands",
+                "temperate broadleaf and mixed",
+                "temperate coniferous",
+                "temperate grasslands",
+                "tropical dry broadleaf",
+                "tropical grasslands",
+                "tropical moist broadleaf",
+                "tundra"
+            ],
+            "title": "Biome"
+        },
+        "Regression": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "coeff": {
+                    "type": "number"
+                },
+                "se": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "coeff",
+                "se"
+            ],
+            "title": "Regression"
+        }
+    }
+}
+

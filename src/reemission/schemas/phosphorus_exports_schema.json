@@ -1,0 +1,86 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$ref": "#/definitions/P_exports",
+    "definitions": {
+        "P_exports": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "bare": {
+                    "$ref": "#/definitions/Intensity_numbers"
+                },
+                "snow and ice": {
+                    "$ref": "#/definitions/Intensity_numbers"
+                },
+                "urban": {
+                    "$ref": "#/definitions/Intensity_numbers"
+                },
+                "water": {
+                    "$ref": "#/definitions/Intensity_numbers"
+                },
+                "wetlands": {
+                    "$ref": "#/definitions/Intensity_numbers"
+                },
+                "crops": {
+                    "$ref": "#/definitions/Intensity_with_function"
+                },
+                "shrubs": {
+                    "$ref": "#/definitions/Intensity_numbers"
+                },
+                "forest": {
+                    "$ref": "#/definitions/Intensity_with_function"
+                },
+                "no data": {
+                    "$ref": "#/definitions/Intensity_numbers"
+                }
+            },
+            "required": [
+                "bare",
+                "crops",
+                "forest",
+                "no data",
+                "shrubs",
+                "snow and ice",
+                "urban",
+                "water",
+                "wetlands"
+            ],
+            "title": "P_exports"
+        },
+        "Intensity_numbers": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "low intensity": {
+                    "type": "number"
+                },
+                "high intensity": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "high intensity",
+                "low intensity"
+            ],
+            "title": "Intensity_numbers"
+        },
+        "Intensity_with_function": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "low intensity": {
+                    "type": "string"
+                },
+                "high intensity": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "high intensity",
+                "low intensity"
+            ],
+            "title": "Intensity_with_function"
+        }
+    }
+}
+

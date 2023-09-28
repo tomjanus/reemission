@@ -1,0 +1,81 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$ref": "#/definitions/CH4_preimpoundment",
+    "definitions": {
+        "CH4_preimpoundment": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "boreal": {
+                    "$ref": "#/definitions/ClimateZone"
+                },
+                "subtropical": {
+                    "$ref": "#/definitions/ClimateZone"
+                },
+                "temperate": {
+                    "$ref": "#/definitions/ClimateZone"
+                },
+                "tropical": {
+                    "$ref": "#/definitions/ClimateZone"
+                }
+            },
+            "required": [
+                "boreal",
+                "subtropical",
+                "temperate",
+                "tropical"
+            ],
+            "title": "CH4_preimpoundment"
+        },
+        "ClimateZone": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "mineral": {
+                    "$ref": "#/definitions/SoilType"
+                },
+                "organic": {
+                    "$ref": "#/definitions/SoilType"
+                }
+            },
+            "required": [
+                "mineral",
+                "organic"
+            ],
+            "title": "Climate Zone"
+        },
+        "SoilType": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "bare": {
+                    "type": "number"
+                },
+                "crops": {
+                    "type": "number"
+                },
+                "forest": {
+                    "type": "number"
+                },
+                "shrubs": {
+                    "type": "number"
+                },
+                "urban": {
+                    "type": "number"
+                },
+                "wetlands": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "bare",
+                "crops",
+                "forest",
+                "shrubs",
+                "urban",
+                "wetlands"
+            ],
+            "title": "Soil Type"
+        }
+    }
+}

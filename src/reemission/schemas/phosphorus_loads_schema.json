@@ -1,0 +1,32 @@
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$ref": "#/definitions/P_loads",
+    "definitions": {
+        "P_loads": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "no treatment": {
+                    "type": "integer"
+                },
+                "primary (mechanical)": {
+                    "type": "number"
+                },
+                "secondary biological treatment": {
+                    "type": "number"
+                },
+                "tertiary": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "no treatment",
+                "primary (mechanical)",
+                "secondary biological treatment",
+                "tertiary"
+            ],
+            "title": "P_loads"
+        }
+    }
+}
+
