@@ -4,6 +4,7 @@ import unittest
 from unittest.mock import patch, Mock
 from typing import Dict, List, Any
 import jsonschema
+import numpy as np
 import pandas as pd
 from reemission.integration.heet.input_model_heet import map_c_landuse, map_r_landuse
 from reemission.utils import get_package_file, load_yaml, load_json
@@ -20,22 +21,67 @@ class TestLanduseMapping(unittest.TestCase):
     
     @classmethod
     def setUpClass(cls):
-        cls.catchment_fractions = pd.read_csv(
-            get_package_file("../../tests/test_data/catchment_fractions.csv"))
-        cls.reservoir_fractions = pd.read_csv(
-            get_package_file("../../tests/test_data/reservoir_fractions.csv"))
 
-    def get_c_landuse_heet(self) -> List[List[float]]:
-        return self.catchment_fractions.iloc[:, :9].values.tolist()
+        def generate_input_c_landuse_array() -> np.ndarray:
+            top = np.eye(9)
+            bottom_1 = np.eye(9) * 0.5
+            bottom_2 = np.roll(bottom_1, 1, axis=1)
+            bottom = bottom_1 + bottom_2
+            return np.vstack((top, bottom))
+        
+        cls.c_landuse_heet = generate_input_c_landuse_array()
+        
+        cls.c_landuse_reemission = [
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.5],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.5, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5, 0.5, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 0.5, 0.0, 0.0, 0.5, 0.0],
+            [0.0, 0.0, 0.5, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0],
+            [0.5, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.5, 0.0, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.5, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5]]
     
-    def get_c_landuse_reemission(self) -> List[List[float]]:
-        return self.catchment_fractions.iloc[:, -9:].values.tolist()
-    
-    def get_r_landuse_heet(self) -> List[List[float]]:
-        return self.reservoir_fractions.iloc[:, :27].values.tolist()
-    
-    def get_r_landuse_reemission(self) -> List[List[float]]:
-        return self.reservoir_fractions.iloc[:, -27:].values.tolist()
+        cls.r_landuse_heet = np.eye(27)
+
+        cls.r_landuse_reemission = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+            [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+            [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+            [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+            [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], 
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0], 
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0], 
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0], 
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0], 
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0], 
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0], 
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0], 
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]]
+        
 
     def test_catchment_landuse_mapping(self):
         """Test mapping between heet and re-emission
@@ -60,13 +106,11 @@ class TestLanduseMapping(unittest.TestCase):
             c_landcover_7	'Water Bodies'
             c_landcover_8	'Permanent snow and ice'"""
         # Load input/output data
-        heet_data = self.get_c_landuse_heet()
-        reemission_des_outputs = self.get_c_landuse_reemission()
-
-        for row in range(0,len(heet_data)):
+        for row in range(0,len(self.c_landuse_heet)):
             heet_c_fractions = {
-                f'c_landcover_{str(ix)}': fraction for ix, fraction in enumerate(heet_data[row])} 
-            reemission_fractions_desired = reemission_des_outputs[row]
+                f'c_landcover_{str(ix)}': fraction for ix, fraction in 
+                enumerate(self.c_landuse_heet[row])} 
+            reemission_fractions_desired = self.c_landuse_reemission[row]
             reemission_fractions_calc = map_c_landuse(heet_c_fractions)
             self.assertEqual(reemission_fractions_desired, reemission_fractions_calc)
 
@@ -74,8 +118,8 @@ class TestLanduseMapping(unittest.TestCase):
         """Reservoir landuse mapping follows the same order as catchment landuse mapping
         but the vector is 3 x 9 = 27 long as the landuse mapping is divided into three
         categories based on soil type: Mineral -> Organic -> No Data"""
-        heet_data = self.get_r_landuse_heet()
-        reemission_des_outputs = self.get_r_landuse_reemission()
+        heet_data = self.r_landuse_heet
+        reemission_des_outputs = self.r_landuse_reemission
 
         for row in range(0,len(heet_data)):
             reemission_fractions_desired = reemission_des_outputs[row]
@@ -94,24 +138,42 @@ class TestPreimpoundment(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        """Load pre-impoundment-emission-tables from the test environment"""
-        cls.ch4_preimpoundment = load_yaml(
-            get_package_file("../../tests/test_data/pre-impoundment_ch4.yaml"))
-        cls.co2_preimpoundment = load_yaml(
-            get_package_file("../../tests/test_data/pre-impoundment_co2.yaml"))
-        # Load schema
-        cls.preimpoundment_schema = load_json(
-            get_package_file("schemas/pre_impoundment_yaml_schema.json"))
-        # Validate the pre-impoundment emission files
-        jsonschema.validate(
-            instance=cls.ch4_preimpoundment, schema=cls.preimpoundment_schema)
-        jsonschema.validate(
-            instance=cls.co2_preimpoundment, schema=cls.preimpoundment_schema)
+        """Load pre-impoundment-emission-tables"""
+
+        cls.co2_preimpoundment = {
+            'boreal': {
+                'mineral': {'bare': 0.0, 'crops': 0.0, 'forest': -0.4, 'shrubs': 0.0, 'urban': 0.0, 'wetlands': 0.0}, 
+                'organic': {'bare': 2.8, 'crops': 7.9, 'forest': 0.6, 'shrubs': 5.7, 'urban': 6.4, 'wetlands': -0.5}}, 
+            'subtropical': {
+                'mineral': {'bare': 0.0, 'crops': 0.0, 'forest': -1.4, 'shrubs': 0.0, 'urban': 0.0, 'wetlands': 0.0}, 
+                'organic': {'bare': 2.0, 'crops': 11.7, 'forest': 2.6, 'shrubs': 9.6, 'urban': 6.4, 'wetlands': 0.1}}, 
+            'temperate': {
+                'mineral': {'bare': 0.0, 'crops': 0.0, 'forest': -0.9, 'shrubs': 0.0, 'urban': 0.0, 'wetlands': 0.0},
+                'organic': {'bare': 2.8, 'crops': 7.9, 'forest': 0.0, 'shrubs': 5.0, 'urban': 6.4, 'wetlands': -0.5}}, 
+            'tropical': {
+                'mineral': {'bare': 0.0, 'crops': 0.0, 'forest': -1.4, 'shrubs': 0.0, 'urban': 0.0, 'wetlands': 0.0}, 
+                'organic': {'bare': 2.0, 'crops': 11.7, 'forest': 15.3, 'shrubs': 9.6, 'urban': 6.4, 'wetlands': 0.0}}}
+
+        
+        cls.ch4_preimpoundment = {
+            'boreal': {
+                'mineral': {'bare': 0.0, 'crops': 0.0, 'forest': 0.0, 'shrubs': 0.0, 'urban': 0.0, 'wetlands': 0.0}, 
+                'organic': {'bare': 6.1, 'crops': 0.0, 'forest': 4.5, 'shrubs': 1.4, 'urban': 19.6, 'wetlands': 89.0}}, 
+            'subtropical': {
+                'mineral': {'bare': 0.0, 'crops': 0.0, 'forest': 0.0, 'shrubs': 0.0, 'urban': 0.0, 'wetlands': 0.0}, 
+                'organic': {'bare': 7.0, 'crops': 11.7, 'forest': 2.5, 'shrubs': 7.0, 'urban': 19.6, 'wetlands': 116.3}}, 
+            'temperate': {
+                'mineral': {'bare': 0.0, 'crops': 0.0, 'forest': 0.0, 'shrubs': 0.0, 'urban': 0.0, 'wetlands': 0.0}, 
+                'organic': {'bare': 6.1, 'crops': 0.0, 'forest': 0.0, 'shrubs': 18.9, 'urban': 19.6, 'wetlands': 0.0}}, 
+            'tropical': {
+                'mineral': {'bare': 0.0, 'crops': 0.0, 'forest': 0.0, 'shrubs': 0.0, 'urban': 0.0, 'wetlands': 0.0}, 
+                'organic': {'bare': 7.0, 'crops': 75.0, 'forest': 1.8, 'shrubs': 7.0, 'urban': 19.6, 'wetlands': 41.0}}}
+
+        cls.r_landuse = np.eye(27)
+
         # Instantiate catchment and reservoir objects
-        r_area_fractions = [0]*27
-        c_area_fractions = [0]*9
-        r_area_fractions[0] = 1
-        c_area_fractions[0] = 1
+        r_area_fractions, c_area_fractions = [0]*27, [0]*9
+        r_area_fractions[0], c_area_fractions[0] = 1, 1
         b_factors = BiogenicFactors.fromdict({
             "biome": "TROPICALMOISTBROADLEAF",
             "climate": "TROPICAL",
@@ -123,7 +185,8 @@ class TestPreimpoundment(unittest.TestCase):
             r_area_fractions, 0, 0, 0, 0, 0)
         cls.test_catchment = Catchment(
             0, 0, 0, 0, 0, 0, 0, 0, 0, c_area_fractions, b_factors)
-        cls.test_climates = [Climate.BOREAL, Climate.SUBTROPICAL, Climate.TEMPERATE, Climate.TROPICAL]
+        cls.test_climates = [
+            Climate.BOREAL, Climate.SUBTROPICAL, Climate.TEMPERATE, Climate.TROPICAL]
         cls.test_soiltypes = [SoilType.MINERAL, SoilType.ORGANIC]
 
 
@@ -134,25 +197,50 @@ class TestPreimpoundment(unittest.TestCase):
         co2_emission.par.weight_C = 1
         co2_emission.par.weight_CO2 = 1
         co2_emission.par.co2_gwp100 = 1
-        test_data = pd.read_csv(
-            get_package_file("../../tests/test_data/reservoir_preimpoundment_co2_test.csv"))
-        r_landuse_data = test_data.iloc[:,:27].values.tolist()
-        results_data = test_data.iloc[:,-8:].values.tolist()
+        co2_emission_calc = [
+            [0.0, 2.8, 0.0, 2.0, 0.0, 2.8, 0.0, 2.0], 
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 
+            [0.0, 6.4, 0.0, 6.4, 0.0, 6.4, 0.0, 6.4], 
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 
+            [0.0, -0.5, 0.0, 0.1, 0.0, -0.5, 0.0, 0.0], 
+            [0.0, 7.9, 0.0, 11.7, 0.0, 7.9, 0.0, 11.7], 
+            [0.0, 5.7, 0.0, 9.6, 0.0, 5.0, 0.0, 9.6],
+            [-0.4, 0.6, -1.4, 2.6, -0.9, 0.0, -1.4, 15.3],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 2.8, 0.0, 2.0, 0.0, 2.8, 0.0, 2.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 6.4, 0.0, 6.4, 0.0, 6.4, 0.0, 6.4],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, -0.5, 0.0, 0.1, 0.0, -0.5, 0.0, 0.0],
+            [0.0, 7.9, 0.0, 11.7, 0.0, 7.9, 0.0, 11.7],
+            [0.0, 5.7, 0.0, 9.6, 0.0, 5.0, 0.0, 9.6],
+            [-0.4, 0.6, -1.4, 2.6, -0.9, 0.0, -1.4, 15.3],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 2.8, 0.0, 2.0, 0.0, 2.8, 0.0, 2.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 6.4, 0.0, 6.4, 0.0, 6.4, 0.0, 6.4],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, -0.5, 0.0, 0.1, 0.0, -0.5, 0.0, 0.0],
+            [0.0, 7.9, 0.0, 11.7, 0.0, 7.9, 0.0, 11.7],
+            [0.0, 5.7, 0.0, 9.6, 0.0, 5.0, 0.0, 9.6],
+            [-0.4, 0.6, -1.4, 2.6, -0.9, 0.0, -1.4, 15.3],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]]
 
-        for row in range(0, len(r_landuse_data)):
-            co2_emission.reservoir.area_fractions = r_landuse_data[row]
+        for row in range(0, len(self.r_landuse)):
+            co2_emission.reservoir.area_fractions = self.r_landuse[row]
             output_ix: int = 0
             for climate, soil in itertools.product(self.test_climates, self.test_soiltypes):
                 co2_emission.catchment.biogenic_factors.climate = climate
                 co2_emission.catchment.biogenic_factors.soil_type = soil
                 try:
                     # 0.01 is a coefficient that is applied in the method to convert area from km2 to ha
-                    self.assertAlmostEqual(0.01 * co2_emission.pre_impoundment(), results_data[row][output_ix])
+                    self.assertAlmostEqual(
+                        0.01 * co2_emission.pre_impoundment(), 
+                        co2_emission_calc[row][output_ix])
                     output_ix += 1
                 except AssertionError as e:
                     print("Preimpoundment CH4 emission failed at row %d" % row)
                     raise e
-
         
 
     def test_preimpoundment_ch4_emissions(self):
@@ -164,28 +252,50 @@ class TestPreimpoundment(unittest.TestCase):
         ch4_emission.par.weight_CH4 = 1
         ch4_emission.par.weight_CO2 = 1
         ch4_emission.par.ch4_gwp100 = 1
-
-        test_data = pd.read_csv(
-            get_package_file("../../tests/test_data/reservoir_preimpoundment_ch4_test.csv"))
-        r_landuse_data = test_data.iloc[:,:27].values.tolist()
-        results_data = test_data.iloc[:,-8:].values.tolist()
+        ch4_emission_calc = [
+            [0.0, 6.1, 0.0, 7.0, 0.0, 6.1, 0.0, 7.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 19.6, 0.0, 19.6, 0.0, 19.6, 0.0, 19.6],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 89.0, 0.0, 116.3, 0.0, 0.0, 0.0, 41.0],
+            [0.0, 0.0, 0.0, 11.7, 0.0, 0.0, 0.0, 75.0],
+            [0.0, 1.4, 0.0, 7.0, 0.0, 18.9, 0.0, 7.0],
+            [0.0, 4.5, 0.0, 2.5, 0.0, 0.0, 0.0, 1.8],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 6.1, 0.0, 7.0, 0.0, 6.1, 0.0, 7.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 19.6, 0.0, 19.6, 0.0, 19.6, 0.0, 19.6],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 89.0, 0.0, 116.3, 0.0, 0.0, 0.0, 41.0],
+            [0.0, 0.0, 0.0, 11.7, 0.0, 0.0, 0.0, 75.0],
+            [0.0, 1.4, 0.0, 7.0, 0.0, 18.9, 0.0, 7.0],
+            [0.0, 4.5, 0.0, 2.5, 0.0, 0.0, 0.0, 1.8],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 6.1, 0.0, 7.0, 0.0, 6.1, 0.0, 7.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 19.6, 0.0, 19.6, 0.0, 19.6, 0.0, 19.6],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 89.0, 0.0, 116.3, 0.0, 0.0, 0.0, 41.0],
+            [0.0, 0.0, 0.0, 11.7, 0.0, 0.0, 0.0, 75.0],
+            [0.0, 1.4, 0.0, 7.0, 0.0, 18.9, 0.0, 7.0],
+            [0.0, 4.5, 0.0, 2.5, 0.0, 0.0, 0.0, 1.8],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]]
         
-
-        for row in range(0, len(r_landuse_data)):
-            ch4_emission.reservoir.area_fractions = r_landuse_data[row]
+        for row in range(0, len(self.r_landuse)):
+            ch4_emission.reservoir.area_fractions = self.r_landuse[row]
             output_ix: int = 0
             for climate, soil in itertools.product(self.test_climates, self.test_soiltypes):
                 ch4_emission.catchment.biogenic_factors.climate = climate
                 ch4_emission.catchment.biogenic_factors.soil_type = soil
                 try:
                     # Multiplier 10 is a result of km2->ha coefficient 100 and second coefficient 0.001
-                    self.assertAlmostEqual(10 * ch4_emission.pre_impoundment(), results_data[row][output_ix])
+                    self.assertAlmostEqual(
+                        10 * ch4_emission.pre_impoundment(), 
+                        ch4_emission_calc[row][output_ix])
                     output_ix += 1
                 except AssertionError as e:
                     print("Preimpoundment CH4 emission failed at row %d" % row)
                     raise e
-            
-
 
 
 if __name__ == '__main__':
