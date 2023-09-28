@@ -2,8 +2,8 @@
 # Preimpoundment water area fraction
 wat_area_frac_pre:
   include: True
-  name: "Water area fraction, pre-impoundment"
-  name_latex: "Water area fraction, pre-impoundment"
+  name: "Pre-impoundment water area fraction"
+  name_latex: "Pre-impoundment water area fraction"
   unit: "-"
   unit_latex: "-"
   long_description: ""
@@ -47,8 +47,8 @@ bottom_temperature:
 # Temperature at the reservoir surface
 surface_temperature:
   include: True
-  name: "Surface/epilimnion temperature in the reservoir"
-  name_latex: "Surface/epilimnion temperature in the reservoir"
+  name: "Surface (epilimnion) temperature in the reservoir"
+  name_latex: "Surface (epilimnion) temperature in the reservoir"
   unit: "deg C"
   unit_latex: "$^o$C"
   long_description: ""

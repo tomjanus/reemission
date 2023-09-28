@@ -20,7 +20,7 @@ class TestBiogenic(unittest.TestCase):
     def setUp(self):
         pass
 
-    def test_read_from_dict(self):
+    def test_read_from_dict(self) -> None:
         """ Test initialization of BiogenicFactors from dictionary """
         biogenic_factors = BiogenicFactors.fromdict(self.data)
         self.assertEqual(
@@ -37,7 +37,7 @@ class TestBiogenic(unittest.TestCase):
             biogenic_factors.landuse_intensity.value,
             LanduseIntensity.LOW.value)
 
-    def test_convert_to_dict(self):
+    def test_convert_to_dict(self) -> None:
         """ Test conversion to a dictionary """
         # Initialize BiogenicFactors from dictionary and then convert
         # the data to a dictionary and check if both are equal

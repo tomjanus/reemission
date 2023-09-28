@@ -1,4 +1,7 @@
-""" Tests for the Input and Inputs classes """
+""" Tests for the Input and Inputs classes
+
+TODO: Modify so that model loading involves parsing with InputModel.
+"""
 import os
 import unittest
 from types import SimpleNamespace

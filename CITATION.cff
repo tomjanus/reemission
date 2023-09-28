@@ -1,15 +1,15 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
-title: "RE-Emission: Python tool for calculating greenhouse gas emissions from man-made reservoirs"
+title: "RE-Emission: Python tool for estimation of greenhouse gas emissions from reservoirs"
 authors:
   - family-names: Janus
     given-names: Tomasz
   - family-names: Barry
     given-names: Christopher
-  - family-names: Aung
-    given-names: Kyaw Kyaw 
+  - family-names: Kuriakose
+    given-names: Jaise 
 version: 0.0.1
 date-released: "2022-05-20"
-license: MIT
+license: GPL-3.0
 repository-code: "https://github.com/tomjanus/reemission"
 doi: 

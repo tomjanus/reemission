@@ -47,8 +47,6 @@ class Reservoir:
         area_fractions: List of fractions of inundated area allocated
             to specific landuse types given in Landue Enum type per 3 soil
             type categories: mineral -> organic -> nodata, -
-        wat_area_frac_pre: Fraction of reservoir area with water prior to
-            impoundment
         mean_radiance: Mean monthly horizontal radiance in a year, kWh/m2/d
         mean_radiance_may_sept: Mean monthly horizontal radiance between May
             and September, kWh/m2/d
@@ -189,7 +187,8 @@ class Reservoir:
     @save_return(internal, True)
     def wat_area_frac_pre(self) -> float:
         """Return a fraction of reservoir area that was already water prior
-        to impoundment"""
+        to impoundment
+        """
         return sum([self.area_fractions[i] for i in (3, 12, 21)])
 
     @save_return(internal, internals_config['mean_radiance_lat']['include'])
@@ -418,7 +417,7 @@ class Reservoir:
         return self._kh_ch4() * self._p_ch4(waterbody_area)
 
     def ch4_preemission_factor(self, wind_height: float = 50) -> float:
-        """Calculate CH4 emission factor the water body, (kg CH4/ha/yr)
+        """Calculate CH4 emission factor for the water body, (kg CH4/ha/yr)
         Eq. A.20. in Praire2021.
         This value is used for estimating preimpoundment reservoir CH4
         emissions from water bodies present in the inundated area prior to

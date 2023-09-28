@@ -37,10 +37,11 @@ import os
 import math
 import logging
 import configparser
+import pathlib
 from functools import lru_cache
 from dataclasses import dataclass
 from types import SimpleNamespace
-from typing import List, Tuple, Optional, ClassVar
+from typing import List, Tuple, Dict, Optional, ClassVar
 from abc import ABC, abstractmethod
 import numpy as np
 from reemission.utils import (
@@ -158,11 +159,12 @@ class CarbonDioxideEmission(Emission):
     eff_temp: float
     p_calc_method: str
     par: SimpleNamespace
-    pre_impoundment_table: dict
+    pre_impoundment_table: Dict
     use_red_area: bool = True
 
-    def __init__(self, catchment, reservoir, eff_temp, p_calc_method, 
-                 preinund_area=None, config_file=INI_FILE):
+    def __init__(self, catchment: Catchment, reservoir: Reservoir, eff_temp: float, 
+                 p_calc_method: str, preinund_area: Optional[float] = None,
+                 config_file: pathlib.Path = INI_FILE) -> None:
         super().__init__(catchment=catchment, reservoir=reservoir,
                          config_file=config_file, preinund_area=preinund_area)
         # Initialise input data specific to carbon dioxide emissions
@@ -182,7 +184,8 @@ class CarbonDioxideEmission(Emission):
                                'co2_gwp100', 'weight_C', 'weight_CO2'],
             section_name='CARBON_DIOXIDE')
         self.pre_impoundment_table = read_table(
-            os.path.join(TABLES, 'Carbon_Dioxide', 'pre-impoundment.yaml'))
+            os.path.join(TABLES, 'Carbon_Dioxide', 'pre-impoundment.yaml'),
+            schema_file = get_package_file("schemas/pre_impoundment_schema.json"))
         # Read from config
         self.use_red_area = self.config.getboolean('CALCULATIONS','use_ns_catchment')
 
@@ -234,10 +237,10 @@ class CarbonDioxideEmission(Emission):
         supported_landuses = self.pre_impoundment_table['boreal']['mineral'].keys()
         emissions: List[float] = []
         for landuse, fraction in zip( _list_of_landuses, self.reservoir.area_fractions):
-            # Area in ha allocated to each landuse (reservoir.area in km2)
-            area_landuse = 100 * self.reservoir.area * fraction
             if landuse.value not in supported_landuses:
                 continue
+            # Area in ha allocated to each landuse (reservoir.area in km2)
+            area_landuse = 100 * self.reservoir.area * fraction
             coeff = self.pre_impoundment_table[climate.value][soil_type.value][landuse.value]
             emissions.append(area_landuse * coeff)
         # Total emission in t CO2-C /yr
@@ -413,11 +416,14 @@ class MethaneEmission(Emission):
 
     monthly_temp: MonthlyTemperature
 
-    def __init__(self, catchment, reservoir, monthly_temp,
-                 preinund_area=None, config_file=INI_FILE):
+    def __init__(self, catchment: Catchment, reservoir: Reservoir, 
+                 monthly_temp: MonthlyTemperature,
+                 preinund_area: Optional[float] = None, 
+                 config_file: pathlib.Path = INI_FILE):
         self.monthly_temp = monthly_temp
         self.pre_impoundment_table: dict = read_table(
-            os.path.join(TABLES, 'Methane', 'pre-impoundment.yaml'))
+            os.path.join(TABLES, 'Methane', 'pre-impoundment.yaml'),
+            schema_file = get_package_file("schemas/pre_impoundment_schema.json"))
         super().__init__(
             catchment=catchment,
             reservoir=reservoir,
@@ -432,7 +438,7 @@ class MethaneEmission(Emission):
         self.par = self._par_from_config(
             list_of_constants=par_list, section_name='METHANE')
 
-    def pre_impoundment(self) -> float:
+    def pre_impoundment(self, add_preemission: bool = False) -> float:
         """
         Calculate CH4 emissions from the inundated area prior to impoundment.
 
@@ -459,16 +465,18 @@ class MethaneEmission(Emission):
             area_landuse = 100 * self.reservoir.area * fraction
             if landuse.value not in supported_landuses:
                 continue
-            coeff = self.pre_impoundment_table[climate.value][soil_type.value][landuse.value]
+            coeff = self.pre_impoundment_table[
+                climate.value][soil_type.value][landuse.value]
             # Create a list of emissions per area fraction, in kg CH4 yr-1
             emissions.append(area_landuse * coeff)
         # The below calculation assumes that the windspeed provided as an
         # Attribute to the reservoir object is at 50m height. Put this in
         # documentation or allow wind speed at different heights and addd
         # one more argument which is the windspeed measurement height.
-        emissions.append(
-            self.reservoir.ch4_preemission_factor() * self.reservoir.area *
-            100)
+        if add_preemission:
+            emissions.append(
+                self.reservoir.ch4_preemission_factor() * self.reservoir.area *
+                100)
         # Total emission needs to be in g CO2eq m-2 yr-1.
         # To convert from CH4 to CO2
         # the unit emission is multiplied by 44/16, i.e. molecular weight
@@ -813,8 +821,9 @@ class NitrousOxideEmission(Emission):
     model: str
     p_export_model: str
 
-    def __init__(self, catchment, reservoir, model, p_export_model,
-                 preinund_area=None, config_file=INI_FILE):
+    def __init__(self, catchment: Catchment, reservoir: Reservoir, model: str, 
+                 p_export_model: str, preinund_area: Optional[float] = None, 
+                 config_file: pathlib.Path = INI_FILE) -> None:
         if model not in self.available_models:
             log.warning('Model %s unknown. ', model)
             log.info('Initializing with default model 1')

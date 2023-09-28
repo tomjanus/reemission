@@ -147,11 +147,9 @@ def calculate(input_file, output_files, output_config, author,
     else:
         click.echo(f'Input `{c_input}` not recognized. Please try again.')
         return
-    click.echo(click.style(
-        "Calculating...", blink=True, bg='blue', fg='white'))
+    click.echo("Calculating...")
     model.calculate()
-    click.echo(click.style(
-        "Calculation finished", blink=False, bg='green', fg='white'))
+    click.echo("Calculation finished")
 
     writers = []
     for file in output_files:
@@ -164,14 +162,12 @@ def calculate(input_file, output_files, output_config, author,
             writers.append(popped_writer)
 
     if writers:
-        click.echo(click.style(
-            "Writing outputs...", blink=True, bg='blue', fg='white'))
+        click.echo("Writing outputs...")
         model.add_presenter(
             writers=writers,
             output_files=output_files)
         model.save_results()
-        click.echo(click.style(
-            "Outputs written to files.", blink=False, bg='green', fg='white'))
+        click.echo("Outputs written to files.")
 
 
 @click.command()

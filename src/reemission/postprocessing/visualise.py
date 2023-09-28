@@ -44,6 +44,8 @@ class FoliumOutputMapper:
         """ """
         if not self.location:
             self.location = [19.749883, 96.080650]
+        # Filter out the dams that do not have names
+        self.dams_df = self.dams_df[self.dams_df['DAM_NAME'].notna()] 
         self.map = folium.Map(
             location=self.location, zoom_start=self.init_zoom, min_zoom=5,
             max_zoom=13, control_scale=True)

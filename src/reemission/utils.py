@@ -9,7 +9,7 @@ from distutils.spawn import find_executable
 import pathlib
 import hashlib
 import time
-from typing import Callable, Union, Tuple, Optional, Dict
+from typing import Callable, Union, Tuple, Optional, Dict, Any
 from enum import Enum, EnumMeta
 from packaging import version
 import yaml
@@ -18,6 +18,7 @@ import json
 import pandas as pd
 import geopandas as gpd
 import logging
+import jsonschema
 import reemission
 from reemission.exceptions import TableNotReadException
 
@@ -32,12 +33,24 @@ APPLICATION_NAME = "reemission"
 SplitPath = Tuple[pathlib.Path, Optional[pathlib.Path]]
 
 
-def load_yaml(file_path: pathlib.Path) -> Dict:
+def validate(data: Any, schema: Dict) -> None:
+    """Validate data in a dictionary format against schema with jsonschema"""
+    try:
+        jsonschema.validate(instance=data, schema=schema)
+    except jsonschema.exceptions.ValidationError as e:
+        print("Validation failed. Data does not conform to the schema.")
+        raise jsonschema.exceptions.ValidationError from e
+
+
+def load_yaml(
+        file_path: pathlib.Path, 
+        schema_file: Optional[pathlib.Path] = None) -> Dict:
     """Conditional yaml file loader depending on the installed yaml package
     version.
 
     Args:
-        file: path to the yaml file.
+        file_path: path to the yaml file
+        schema_file: path to json 'jsonschema' file
     Returns:
         A dictionary representation of the yaml file.
     """
@@ -46,6 +59,11 @@ def load_yaml(file_path: pathlib.Path) -> Dict:
             loaded_yaml = yaml.load(file_handle)
         else:
             loaded_yaml = yaml.load(file_handle, Loader=yaml.FullLoader)
+
+    if schema_file:
+        schema = load_json(schema_file)
+        validate(loaded_yaml, schema)
+
     return loaded_yaml
 
 
@@ -137,11 +155,14 @@ def read_config(
     return config
 
 
-def read_table(file_path: pathlib.Path) -> Dict:
+def read_table(
+            file_path: pathlib.Path, 
+            schema_file: Optional[pathlib.Path] = None) -> Dict:
     """Reads yaml table from the given YAML file.
 
     Args:
         file_path: path to the YAML file.
+        schema_file: path to json 'jsonschema' file
     Returns:
         Dictionary representation of the yaml file if the file exists and no
             errors occured while parsing the file.
@@ -150,7 +171,7 @@ def read_table(file_path: pathlib.Path) -> Dict:
     """
     try:
         stream = open(file_path, "r", encoding="utf-8")
-        return yaml.safe_load(stream)
+        loaded_yaml = yaml.safe_load(stream)
     except FileNotFoundError as exc:
         print(f"File in {file_path} not found.")
         raise TableNotReadException(table=file_path.as_posix()) from exc
@@ -159,6 +180,12 @@ def read_table(file_path: pathlib.Path) -> Dict:
         raise TableNotReadException(table=file_path.as_posix()) from exc
     finally:
         stream.close()
+
+    if schema_file:
+        schema = load_json(schema_file)
+        validate(loaded_yaml, schema)
+
+    return loaded_yaml
 
 
 def find_enum_index(enum: EnumMeta, to_find: Enum) -> int:

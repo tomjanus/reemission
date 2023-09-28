@@ -134,12 +134,9 @@ class BiogenicFactorsModelHeet(BiogenicFactorsModel):
         heet_soil_type_to_reemission)
 
 
-class CatchmentModelHeet(CatchmentModel):
-    """Model for Re-Emission catchment parameters adapted to read and
-    parse model output from HEET"""
-    runoff_field: str = 'c_mar_mm_alt2'
-
-    catchment_landuse_map: ClassVar[Dict[str, int]] = {
+def map_c_landuse(
+        input_fractions: Dict[str, float]) -> List[float]:
+    catchment_landuse_map: Dict[str, int] = {
         "BARE": 6,
         "SNOW_ICE": 8,
         "URBAN": 5,
@@ -149,6 +146,45 @@ class CatchmentModelHeet(CatchmentModel):
         "SHRUBS": 2,  # Initially shrubs were 3 and forests were 2. There seems to have been a mistake in how areas were categorized in HEET
         "FOREST": 3,
         "NODATA": 0}
+    return [input_fractions['c_landcover_'+str(ix)] for ix in 
+            catchment_landuse_map.values()]
+
+
+def map_r_landuse(r_landuses: List[float], aggregate: bool = False) -> Sequence:
+    """
+    Maps between 27 categories in reservoir landuse output data and
+    9 categories used by the re-emission tool
+    NOTE: DATA IS DIVIDED INTO LANDUSE TYPE PER SOIL (MINERAL, ORGANIC, and
+    NO-DATA)
+
+    Processes those three soil categories independently and creates 3 9x1
+    lists.
+
+    If aggregate is True, adds the three lists together and output a single
+    list in which each item of index "i" for "i = 0:8" is the sum of items
+    of index "i" in all three lists.
+    """
+    index_order: Dict[str, List[int]] = {
+        "mineral": [6,  8,  5,  7,  4,  1,  2,  3,  0],
+        "organic": [15, 17, 14, 16, 13, 10, 11, 12, 9],
+        "nodata":  [24, 26, 23, 25, 22, 19, 20, 21, 18]}
+    output_lists: List[List[float]] = []
+    for _, indices in index_order.items():
+        soil_cat_indices = [r_landuses[index] for index in indices]
+        output_lists.append(soil_cat_indices)
+    # The below returns a 9x1 vector of aggregated values
+    if aggregate:
+        output = [sum(x) for x in zip(*output_lists)]
+    # The below returns 27x1 vector
+    else:
+        output = rollout_nested_list(output_lists)
+    return output
+    
+
+class CatchmentModelHeet(CatchmentModel):
+    """Model for Re-Emission catchment parameters adapted to read and
+    parse model output from HEET"""
+    runoff_field: str = 'c_mar_mm_alt2'
 
     @root_validator(pre=True)
     @classmethod
@@ -156,9 +192,7 @@ class CatchmentModelHeet(CatchmentModel):
         """Obtain a vector of c area fractions for RE-EMISSION from fractions
         in c_landcover_[i] fields in raw tabular HEET output data.
         Remaps area fraction indices to match order of landuses in constants.Landuse"""
-        values["c_area_fractions"] = [
-            values['c_landcover_'+str(ix)] for ix in 
-            cls.catchment_landuse_map.values()]
+        values["c_area_fractions"] = map_c_landuse(values)
         return values
 
     class Config:
@@ -187,43 +221,10 @@ class ReservoirModelHeet(ReservoirModel):
     def root_validator(cls, values):
         """Obtain a vector of r area fractions for RE-EMISSION from fractions
         in r_landcover_[i] fields in raw tabular HEET output data"""
-        values['r_area_fractions'] = cls.map_r_landuse(
+        values['r_area_fractions'] = map_r_landuse(
                 r_landuses=[values['r_landcover_bysoil_'+str(ix)] for
                             ix in range(0, 27)])
         return values
-
-    @classmethod
-    def map_r_landuse(
-            cls, r_landuses: List[float],
-            aggregate: bool = False) -> Sequence:
-        """
-        Maps between 27 categories in reservoir landuse output data and
-        9 categories used by the re-emission tool
-        NOTE: DATA IS DIVIDED INTO LANDUSE TYPE PER SOIL (MINERAL, ORGANIC, and
-        NO-DATA)
-
-        Processes those three soil categories independently and creates 3 9x1
-        lists.
-
-        If aggregate is True, adds the three lists together and output a single
-        list in which each item of index "i" for "i = 0:8" is the sum of items
-        of index "i" in all three lists.
-        """
-        index_order: Dict["str", List[int]] = {
-            "mineral": [6, 8, 5, 7, 4, 1, 2, 3, 0],
-            "organic": [15, 17, 14, 16, 13, 10, 12, 12, 9],
-            "nodata": [24, 26, 23, 25, 22, 19, 20, 21, 18]}
-        output_lists: List[List[float]] = []
-        for _, indices in index_order.items():
-            soil_cat_indices = [r_landuses[index] for index in indices]
-            output_lists.append(soil_cat_indices)
-        # The below returns a 9x1 vector of aggregated values
-        if aggregate:
-            output = [sum(x) for x in zip(*output_lists)]
-        # The below returns 27x1 vector
-        else:
-            output = rollout_nested_list(output_lists)
-        return output
 
     def get_water_area_frac_in_res(self) -> float:
         """Finds how much water was initially within the reservoir contour

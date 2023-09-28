@@ -20,10 +20,18 @@ log = logging.getLogger(__name__)
 INI_FILE = get_package_file("config/config.ini")
 TABLES = get_package_file("parameters")
 
-tn_coeff_table = read_table(TABLES / "McDowell/landscape_TN_export.yaml")
-tp_coeff_table = read_table(TABLES / "McDowell/landscape_TP_export.yaml")
-p_loads_pop = read_table(TABLES / "phosphorus_loads.yaml")
-p_exports = read_table(TABLES / "phosphorus_exports.yaml")
+tn_coeff_table = read_table(
+    TABLES / "McDowell/landscape_TN_export.yaml", 
+    schema_file=get_package_file('schemas/landscape_TN_export_schema.json'))
+tp_coeff_table = read_table(
+    TABLES / "McDowell/landscape_TP_export.yaml",
+    schema_file=get_package_file('schemas/landscape_TP_export_schema.json'))
+p_loads_pop = read_table(
+    TABLES / "phosphorus_loads.yaml",
+    schema_file=get_package_file('schemas/phosphorus_loads_schema.json'))
+p_exports = read_table(
+    TABLES / "phosphorus_exports.yaml",
+    schema_file=get_package_file('schemas/phosphorus_exports_schema.json'))
 
 config: configparser.ConfigParser = read_config(INI_FILE)
 internals_config = load_yaml(get_package_file("config/internal_vars.yaml"))
