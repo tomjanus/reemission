@@ -326,3 +326,18 @@ def save_return(output: Dict, save_output: bool=True):
             return result
         return wrapper
     return decorator
+    
+    
+def debug_on_exception(func: Callable):
+    """Wrapper for debugging functions that raise exception
+    Enters debug mode if (some) generic exception is raised
+    """
+    def wrapper(*args, **kwargs) -> Callable:
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            import pdb
+            print(f"OOpsie daisey, we've raised an exception: {e}")
+            pdb.set_trace()
+
+    return wrapper
