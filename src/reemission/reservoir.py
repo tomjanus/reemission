@@ -9,7 +9,7 @@ from typing import List, Tuple, Optional, TypeVar, Type
 from reemission.temperature import MonthlyTemperature
 from reemission.auxiliary import (
     water_density, cd_factor, scale_windspeed, air_density)
-from reemission.utils import read_config, save_return, get_package_file, load_yaml
+from reemission.utils import read_config, save_return, get_package_file, load_yaml, debug_on_exception
 from reemission.constants import Landuse, TrophicStatus
 from reemission.exceptions import (
     WrongAreaFractionsException,
@@ -258,6 +258,7 @@ class Reservoir:
     def littoral_area_frac(self) -> float:
         r"""Calculate percentage of reservoir's surface area that is
         littoral, i.e. close to the shore. Eq. A22 in Praire2021.
+        Make sure that the return value is always >0 zero.
         Return:
             Littoral area fraction in \%
 
@@ -269,7 +270,10 @@ class Reservoir:
             are, respectively: littoral area fraction (\%), maximum reservoir
             depth, (m), and q-bathymetric shape, (-).
         """
-        return 100.0 * (1 - (1 - 3.0 / self.max_depth) ** self.q_bath_shape())
+        if self.max_depth < 3.0:
+            # return 100% littoral area fraction for shallow systems
+            return 100       
+        return max(100.0 * (1 - (1 - 3.0 / self.max_depth) ** self.q_bath_shape()),0)
 
     @save_return(internal, internals_config['bottom_temperature']['include'])
     def bottom_temperature(self) -> float:
