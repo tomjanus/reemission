@@ -2,7 +2,7 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
 import pathlib
-from typing import List, Any, Dict, ClassVar, Optional
+from typing import List, Any, Dict, Optional
 import pandas as pd
 import geopandas as gpd
 from reemission.utils import (
@@ -36,8 +36,8 @@ class TabToShpCopy:
 
     def find_missing_tab_keys(
             self, shp_column: Any, tab_column: Any) -> List[Any]:
-        """Find a list of key values that are present in tabular data but are 
-        absent in the shape (GIS) data. Common keys are values that are shared
+        """Find a list of keys that are present in tabular data but are 
+        absent in the shape (GIS) data. Common keys are keys that are shared
         between two datasets in shp_column and tab_column, respectively.
         """
         tab_data_ids = set(self.tab_data[tab_column].tolist())
