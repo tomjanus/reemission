@@ -98,7 +98,7 @@ def get_package_file(*folders: str) -> pathlib.Path:
     """Imports package data using importlib functionality.
 
     Args:
-        *folers: comma-separated strings representing path to the packaged data
+        *folders: comma-separated strings representing path to the packaged data
             file.
     Returns:
         A os-indepenent path of the data file.
@@ -108,14 +108,15 @@ def get_package_file(*folders: str) -> pathlib.Path:
         # importlib.resources either doesn't exist or lacks the files()
         # function, so use the PyPI version:
         import importlib_resources
+        pkg = importlib_resources.files(APPLICATION_NAME)
+        pkg = pathlib.Path.joinpath(pkg, '/'.join(folders))
+        return pkg
     else:
         # importlib.resources has files(), so use that:
         import importlib.resources as importlib_resources
-
-    pkg = importlib_resources.files(APPLICATION_NAME)
-    # Append folders to package-wide posix path
-    pkg = pathlib.Path.joinpath(pkg, '/'.join(folders))
-    return pkg
+        pkg = importlib_resources.files(APPLICATION_NAME)
+        pkg = pkg.joinpath("/".join(folders))
+        return pkg
 
 
 def get_folder_size(folder_path: Union[pathlib.Path, str]) -> float:
