@@ -5,7 +5,7 @@ from reemission.utils import load_toml, load_shape, get_package_file
 from reemission.postprocessing.data_processing import (
     append_data_to_shapes, ExtractFromJSON, TabToShpCopy)
 from reemission.postprocessing.visualise import FoliumOutputMapper
-
+from reemission.myanmar.folium_layers import DelineationsPolyLayer, MyaIFCDamsLayer
 
 config = load_toml(get_package_file('config/heet.toml'))
 
@@ -38,7 +38,11 @@ def process_mya_case_study_results(
     map_path.mkdir(parents=True, exist_ok=True)
     updated_reservoirs = re_to_res.shp_data
     ifc_dams = load_shape(ifc_dam_path)
-    mapper = FoliumOutputMapper(updated_reservoirs, ifc_dams, location=[18.049883, 97.080650], init_zoom=9)
+    layers = [
+        DelineationsPolyLayer(data=updated_reservoirs),
+        MyaIFCDamsLayer(data=ifc_dams)
+    ]
+    mapper = FoliumOutputMapper(layers, location=[18.049883, 97.080650], init_zoom=9)
     mapper.create_map()
     mapper.save_map(map_path / "index.html", show=True)
 

@@ -82,6 +82,9 @@ for input_folder in "${SHP_FOLDERS[@]}"; do
   command_1+=" -i $input_folder/output_parameters.csv"
 done
 command_1+=" -o $COMBINED_CSV_FILE"
+command_1+=" -cv 'c_treatment_factor' 'primary (mechanical)'"
+command_1+=" -cv 'c_landuse_intensity' 'low intensity'"
+command_1+=" -cv 'type' 'unknown'"
 eval $command_1
 
 echo
