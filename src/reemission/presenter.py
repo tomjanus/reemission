@@ -67,7 +67,8 @@ CONFIG_INI_PATH = CONFIG_DIR / 'config.ini'
 JSON_NUMBER_DECIMALS = 4
 EXCEL_NUMBER_DECIMALS = 4
 
-INPUT_NAMES = ['coordinates', 'id', 'monthly_temps', 'biogenic_factors',
+# TODO: Create this list from True/False values in the input config YAML file
+INPUT_NAMES = ['coordinates', 'id', 'type', 'monthly_temps', 'biogenic_factors',
                'year_profile', 'catchment_inputs', 'reservoir_inputs',
                'gasses']
 
@@ -216,6 +217,7 @@ class ExcelWriter(Writer):
         # Mapping between input names and input names in the Input.data dict.
         config_to_data = {"coordinates": "coordinates",
                           "id": "id",
+                          "type": "type",
                           "monthly_temps": "monthly_temps",
                           "year_profile": "year_vector",
                           "gasses": "gasses"}
@@ -397,6 +399,7 @@ class JSONWriter(Writer):
         # Mapping between input names and input names in the Input.data dict.
         config_to_data = {"coordinates": "coordinates",
                           "id": "id",
+                          "type": "type",
                           "monthly_temps": "monthly_temps",
                           "year_profile": "year_vector",
                           "gasses": "gasses"}
@@ -944,6 +947,14 @@ class LatexWriter(Writer):
                     row = [name, unit, input_value_str]
                     data_table.add_row(row)
                     printout = True
+                if 'type' in included_inputs:
+                    name = self.input_config['type']['name']
+                    unit = NoEscape(
+                        self.input_config['type']['unit_latex'])
+                    input_value_str = str(input_data["type"])
+                    row = [name, unit, input_value_str]
+                    data_table.add_row(row)
+                    printout = True                    
                 if "coordinates" in included_inputs:
                     name = self.input_config['coordinates']['name']
                     unit = NoEscape(

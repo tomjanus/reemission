@@ -112,6 +112,10 @@ class AssetConstructionStage(EnumGetterMixin, Enum):
 
 @unique
 class ReservoirType(EnumGetterMixin, str, Enum):
+    """Reservoir classification by the type of use"""
     HP = "hydroelectric"
-    MP = "multipurpose"
-    AGRI = "agricultural"
+    MULTI = "multipurpose"
+    IRRIGATION = "irrigation"
+    POTABLE = "potable"
+    FLOOD_CONTROL = "flod control"
+    UNKNOWN = "unknown"

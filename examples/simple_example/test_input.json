@@ -1,9 +1,7 @@
 {
     "Shweli 1": {
-        "coordinates": [
-            23.698,
-            97.506
-        ],
+        "id": 1,
+        "type": "hydroelectric",
         "monthly_temps": [
             13.9,
             16.0,
@@ -60,8 +58,8 @@
                 "biome": "tropical moist broadleaf",
                 "climate": "temperate",
                 "soil_type": "mineral",
-                "treatment_factor": "primary (mechanical)",
-                "landuse_intensity": "low intensity"
+                "treatment_factor": "primary (mechanical)"
+
             }
         },
         "reservoir": {
@@ -111,6 +109,7 @@
             19.785,
             96.335
         ],
+        "id": 2,
         "monthly_temps": [
             21.2,
             23.5,
@@ -218,6 +217,7 @@
             18.8967,
             96.2208
         ],
+        "id": 3,
         "monthly_temps": [
             21.6,
             23.7,
@@ -325,6 +325,7 @@
             25.715,
             97.535
         ],
+        "id": 4,
         "monthly_temps": [
             15.9,
             17.7,

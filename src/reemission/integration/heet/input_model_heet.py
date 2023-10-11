@@ -37,6 +37,7 @@ class DamDataModelHeet(DamDataModel):
         fields = {
             'name': {'alias': 'name'},
             'id': {'alias': 'id'},
+            'type': {'alias': 'type'},
             'longitude': {'alias': 'dam_lon'},
             'latitude': {'alias': 'dam_lat'},
             'monthly_temps': {'alias': 'monthly_temps'}}

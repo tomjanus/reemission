@@ -12,6 +12,12 @@ id:
   long_description: ""
   unit: ""
   unit_latex: ""
+type:
+  include: True
+  name: "Reservoir type"
+  long_description: ""
+  unit: ""
+  unit_latex: ""
 monthly_temps:
   include: True
   name: "Monthly Temperatures"

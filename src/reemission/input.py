@@ -1,7 +1,7 @@
 """ Class containg input data for calculating GHG emissions """
 import os
 from dataclasses import dataclass
-from typing import Dict, List, Tuple, TypeVar, Type, Optional, Literal
+from typing import Dict, List, Tuple, TypeVar, Type, Optional, Literal, Any
 import json
 import logging
 from reemission.biogenic import BiogenicFactors
@@ -9,8 +9,6 @@ from reemission.biogenic import BiogenicFactors
 # Set up module logger
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
-# Load path to Yaml tables
-module_dir = os.path.dirname(__file__)
 
 InputType = TypeVar('InputType', bound='Input')
 InputsType = TypeVar('InputsType', bound='Inputs')
@@ -28,6 +26,22 @@ class Input:
     name: str
     data: Dict
     enum_load_method: EnumLoadMethods = "value"
+
+    def __post_init__(self) -> None:
+        """ Instantiate optional input fields with default values, e.g. 
+        reservoir type - as it is not required in the model, the input
+        data may not include the 'type' field."""
+
+        # TODO: Move defaults to a configuration file
+        defaults: Dict[str, Any] = {
+            'type': 'unknown',
+            'coordinates': [0.0, 0.0],
+            'gasses': ["co2", "ch4", "n2o"],
+            'year_vector': [1, 5, 10, 20, 30, 40, 50, 65, 80, 100]
+        }
+        for data_key, data_value in defaults.items():
+            if data_key not in self.data.keys():
+                self.data[data_key] = data_value
 
     @property
     def reservoir_data(self) -> Optional[Dict]:

@@ -15,6 +15,7 @@ import math
 import copy
 from typing import List, Optional, Literal
 from pydantic import BaseModel, Field, PositiveFloat, validator
+#from pydantic.dataclasses import dataclass
 from datetime import date
 import pandas as pd
 from reemission.constants import Biome, Climate, SoilType, TreatmentFactor, \
@@ -35,16 +36,26 @@ EPS = 0.01
 # Number of soil categories for determining soil type area fraction vectors
 LENGTH_AREA_FRACTIONS = 9
 
+ReservoirType = Literal[
+    'hydroelectric', 'multipurpose', 'potable', 'irrigation', 'flood control', 
+    'unknown']
 
+
+#@dataclass
 class DamDataModel(BaseModel):
     """Dam information"""
     name: str = Field(description="Dam name")
     id: str = Field(description="Dam ID")
+    type: ReservoirType = Field(description="Reservoir type", default="unknown")
     longitude: float = Field(description="Longitude")
     latitude: float = Field(description="Latitude")
     monthly_temps: List[float] = Field(
         description="Monthly average air temperatures, degC", 
         default_factory=list)
+        
+    def __post_init__(self) -> None:
+        """ """
+        self.type = 'unknown'
     
     @classmethod
     def from_row(cls, row: pd.Series) -> DamDataModel:
