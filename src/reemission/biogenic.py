@@ -1,7 +1,8 @@
 """Categorical descriptors for determination of the trophic status of the the
 reservoir."""
-from dataclasses import dataclass
-from typing import Dict, Literal
+from __future__ import annotations
+from dataclasses import dataclass, field
+from typing import Dict, Literal, Any, List
 from reemission.constants import (
     Biome, Climate, SoilType, TreatmentFactor, LanduseIntensity)
 from reemission.exceptions import ConversionMethodUnknownException
@@ -13,54 +14,68 @@ ToDictMethod = Literal["name", "value"]
 @dataclass
 class BiogenicFactors:
     """Catchment's properties impacting the reservoir's trophic status."""
-
     biome: Biome
     climate: Climate
-    soil_type: SoilType
-    treatment_factor: TreatmentFactor
-    landuse_intensity: LanduseIntensity
+    # TODO: Move these optional fields to a config file
+    soil_type: SoilType = field(default=SoilType.MINERAL)
+    treatment_factor: TreatmentFactor = field(default=TreatmentFactor.NONE)
+    landuse_intensity: LanduseIntensity = field(default=LanduseIntensity.LOW)
 
     @classmethod
-    def fromdict(cls, data_dict: Dict, method: ToDictMethod = "name"):
+    def fromdict(cls, data_dict: Dict, method: ToDictMethod = "name") -> BiogenicFactors:
         """Initialize class from dictionary."""
+        fields_and_enums = [
+            ('biome', Biome), ('climate', Climate), ('soil_type', SoilType), 
+            ('treatment_factor', TreatmentFactor), 
+            ('landuse_intensity', LanduseIntensity)]
+        
+        def _instantiate_from_keys(cls) -> BiogenicFactors:
+            """ """
+            input_dict = {}
+            for key, enum_class in fields_and_enums:
+                try:
+                    value = data_dict[key]
+                    input_dict.update({key: enum_class.from_key(value)})
+                except KeyError:
+                    pass
+            return cls(**input_dict)
+
+        def _instantiate_from_values(cls) -> BiogenicFactors:
+            """ """
+            input_dict = {}
+            for key, enum_class in fields_and_enums:
+                try:
+                    value = data_dict[key]
+                    input_dict.update({key: enum_class.from_value(value)})
+                except KeyError:
+                    pass
+            return cls(**input_dict)
+
         if method == "name":
-            return cls(
-                biome=Biome.from_key(data_dict['biome']),
-                climate=Climate.from_key(data_dict['climate']),
-                soil_type=SoilType.from_key(data_dict['soil_type']),
-                treatment_factor=TreatmentFactor.from_key(
-                    data_dict['treatment_factor']),
-                landuse_intensity=LanduseIntensity.from_key(
-                    data_dict['landuse_intensity']))
+            return _instantiate_from_keys(cls)
         elif method == "value":
-            return cls(
-                biome=Biome.from_value(data_dict['biome']),
-                climate=Climate.from_value(data_dict['climate']),
-                soil_type=SoilType.from_value(data_dict['soil_type']),
-                treatment_factor=TreatmentFactor.from_value(
-                    data_dict['treatment_factor']),
-                landuse_intensity=LanduseIntensity.from_value(
-                    data_dict['landuse_intensity']))
+            return _instantiate_from_values(cls)
         else:
             raise ConversionMethodUnknownException(
                 conversion_method=method,
                 available_methods=ToDictMethod.__args__)
+        
+    def get_attributes(self) -> List[str]:
+        return [
+            attr for attr in dir(self) if not callable(getattr(self, attr)) and 
+            not attr.startswith("__")]
 
     def todict(self, method: ToDictMethod = "name") -> Dict:
         """Convert the class to its dictionary representation"""
         biogenic_factors = {}
         if method == "name":
-            biogenic_factors['biome'] = self.biome.name
-            biogenic_factors['climate'] = self.climate.name
-            biogenic_factors['soil_type'] = self.soil_type.name
-            biogenic_factors['treatment_factor'] = self.treatment_factor.name
-            biogenic_factors['landuse_intensity'] = self.landuse_intensity.name
+            for attribute_name in self.get_attributes():
+                biogenic_factors.update(
+                    {attribute_name: getattr(attribute_name).name})
         elif method == "value":
-            biogenic_factors['biome'] = self.biome.value
-            biogenic_factors['climate'] = self.climate.value
-            biogenic_factors['soil_type'] = self.soil_type.value
-            biogenic_factors['treatment_factor'] = self.treatment_factor.value
-            biogenic_factors['landuse_intensity'] = self.landuse_intensity.value
+            for attribute_name in self.get_attributes():
+                biogenic_factors.update(
+                    {attribute_name: getattr(attribute_name).value})
         else:
             raise ConversionMethodUnknownException(
                 conversion_method=method,
