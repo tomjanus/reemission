@@ -28,7 +28,7 @@ import subprocess
 import reemission
 import reemission.presenter
 from reemission.utils import (
-    add_version, get_package_file, read_config, get_folder_size, clean_folder)
+    add_version, get_package_file, read_config, get_folder_size, clean_folder, debug_on_exception)
 from reemission.model import EmissionModel
 from reemission.input import Inputs
 
@@ -57,6 +57,7 @@ INI_FILE: str = os.path.abspath(
 config: configparser.ConfigParser = read_config(INI_FILE)
 p_export_cal = config.get("CALCULATIONS", "p_export_cal")
 nitrous_oxide_model = config.get("CALCULATIONS", "nitrous_oxide_model")
+
 
 
 @click.group()

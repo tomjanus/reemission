@@ -95,12 +95,6 @@ def process_tab_outputs(
     heet_output.filter_columns(
         mandatory_columns=tab_data_config['mandatory_fields'],
         optional_columns=tab_data_config['alternative_fields'])
-    #click.echo("Adding missing column 'c_treatment_factor'")
-    #heet_output.add_column(
-    #    column_name="c_treatment_factor", default_value="primary (mechanical)")
-    #click.echo("Adding missing column 'c_landuse_intensity'")
-    #heet_output.add_column(
-    #    column_name="c_landuse_intensity", default_value="low intensity")  
     heet_output.to_csv(pathlib.Path(output_file))
     logger.info("Tabular data saved to: %s", output_file)
 
