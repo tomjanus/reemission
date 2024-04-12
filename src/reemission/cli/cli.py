@@ -92,8 +92,9 @@ See the full documentation at : https://reemisison.readthedocs.io/en/latest/.
 @click.option("-n", "--n2o-model", type=click.STRING,
               default=nitrous_oxide_model,
               help="Model for calculating N2O emissions: model_1/model_2")
+@click.option("-c", "--confirm", is_flag=True, show_default=True, default=False)
 def calculate(input_file, output_files, output_config, author,
-              title, p_model, n2o_model) -> None:
+              title, p_model, n2o_model, confirm) -> None:
     """
     Calculates emissions based on the data in the JSON INPUT_FILE.
     Saves the results to output file(s) defined in option '--output-files'.
@@ -129,28 +130,36 @@ def calculate(input_file, output_files, output_config, author,
         f"{click.format_filename(file)}" for file in output_files]
     output_files_str = ', '.join(output_files_unicode)
     # Create a confirmation message
-    msgs = [
-        "About to run the program with the following inputs:\n",
-        f"Input JSON file: {input_file_str}\n",
-        f"Output config file: {output_config_str}\n",
-        f"Output files: {output_files_str}\n",
-        f"Phosphorus load estimation method: {p_model}\n",
-        f"Model for estimating nitrous oxide emissions: {n2o_model}\n"]
-    click.echo("".join(msgs))
-    click.echo('Continue? [yn] ', nl=False)
-    c_input = click.getchar()
-    click.echo()
-    if c_input.lower() == 'y':
-        click.echo('Ready to calculate.')
-    elif c_input.lower() == 'n':
-        click.echo('Aborting.')
-        return
+    if not confirm:
+        msgs = [
+            "Running reemission with the following inputs:\n",
+            f"Input JSON file: {input_file_str}\n",
+            f"Output config file: {output_config_str}\n",
+            f"Output files: {output_files_str}\n",
+            f"Phosphorus load estimation method: {p_model}\n",
+            f"Model for estimating nitrous oxide emissions: {n2o_model}\n"]
     else:
-        click.echo(f'Input `{c_input}` not recognized. Please try again.')
-        return
-    click.echo("Calculating...")
+        msgs = [
+            "About to run reemission with the following inputs:\n",
+            f"Input JSON file: {input_file_str}\n",
+            f"Output config file: {output_config_str}\n",
+            f"Output files: {output_files_str}\n",
+            f"Phosphorus load estimation method: {p_model}\n",
+            f"Model for estimating nitrous oxide emissions: {n2o_model}\n"]    
+        click.echo("".join(msgs))
+        click.echo('Continue? [yn] ', nl=False)
+        c_input = click.getchar()
+        click.echo()
+        if c_input.lower() == 'y':
+            click.echo('Ready to calculate.')
+        elif c_input.lower() == 'n':
+            click.echo('Aborting.')
+            return
+        else:
+            click.echo(f'Input `{c_input}` not recognized. Please try again.')
+            return
+        click.echo("Calculating...")
     model.calculate()
-    click.echo("Calculation finished")
 
     writers = []
     for file in output_files:
