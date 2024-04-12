@@ -9,7 +9,8 @@ from typing import List, Tuple, Optional, TypeVar, Type
 from reemission.temperature import MonthlyTemperature
 from reemission.auxiliary import (
     water_density, cd_factor, scale_windspeed, air_density)
-from reemission.utils import read_config, save_return, get_package_file, load_yaml, debug_on_exception
+from reemission.utils import (
+    read_config, save_return, get_package_file, load_yaml, debug_on_exception)
 from reemission.constants import Landuse, TrophicStatus
 from reemission.exceptions import (
     WrongAreaFractionsException,
@@ -350,12 +351,24 @@ class Reservoir:
             aux_var_1 = cd_coeff * air_density(
                 self.temperature.mean_warmest(number_of_months=4)) * \
                 wind_at_10m**2
+            # It is possible that the second auxiliary variable turns out negative
+            # due to some previous empirical calculations not working properly for
+            # some combinations of input variables.
             aux_var_2 = 9.80665 * (self.bottom_density() - self.surface_density())
             aux_var_3 = math.sqrt(self.area * 10**6)
-            thermocline_depth = 2 * math.sqrt(aux_var_1 / aux_var_2) * \
-                math.sqrt(aux_var_3)
-            log.debug(
-                "Thermocline depth calculated with model of Gorham and Boyce.")
+            try:
+                thermocline_depth = 2 * math.sqrt(aux_var_1 / aux_var_2) * \
+                    math.sqrt(aux_var_3)
+                log.debug(
+                    "Thermocline depth calculated with model of Gorham and Boyce.")
+            except ValueError:
+                thermocline_depth = 6.95 * self.area**0.185
+                main_msg: str = \
+                    "Problem with thermocline depth calculation using Gorham and Boyce model."
+                extra_msg: str = \
+                    "Area, depth, wind and temperature inputs produce errorenous output.\n"
+                extra_msg += "Thermocline depth calculated with the model of Hanna instead."
+                log.debug(main_msg, extra={'detail': extra_msg})
         return thermocline_depth
 
     @staticmethod
