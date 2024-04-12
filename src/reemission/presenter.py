@@ -608,6 +608,7 @@ class LatexWriter(Writer):
             y_data = data[emission_var[emission]]
             x_data = self.inputs.inputs[output_name].data["year_vector"]
         except KeyError:
+            print("WARNING: Problem with plotting emission profiles, X or Y data for emission profiles, not found. ")
             y_data = None
             x_data = None
 
@@ -625,8 +626,7 @@ class LatexWriter(Writer):
                         labelpad=plot_options['labelpad'])
         axis.set_title(title, fontsize=plot_options['title_fontsize'],
                        pad=plot_options['titlepad'])
-        plt.xticks(fontsize=plot_options['tick_fontsize'])
-        plt.yticks(fontsize=plot_options['tick_fontsize'])
+        axis.tick_params(axis="both", labelsize=plot_options['tick_fontsize'])
         # Make the (visible) axes thicker
         for axis_pos in ['bottom', 'left']:
             axis.spines[axis_pos].set_linewidth(plot_options['axiswidth'])
@@ -671,14 +671,14 @@ class LatexWriter(Writer):
         values = [data[var] * area * 10 ** (-6) for var in vars_to_plot
                   if var in data]
         y_pos = np.arange(len(bars))[::-1]
-        plt.barh(y_pos, values, color=(0.2, 0.4, 0.6, 0.6), edgecolor='blue')
-        plt.yticks(y_pos, bars)
-        plt.xticks(fontsize=plot_options['tick_fontsize'])
-        plt.yticks(fontsize=plot_options['tick_fontsize'])
+        axis.barh(y_pos, values, color=(0.2, 0.4, 0.6, 0.6), edgecolor='blue')
+        axis.set_yticks(y_pos, bars)
+        #axis.tick_params(fontsize=plot_options['tick_fontsize'])
+        axis.tick_params(axis="both", labelsize=plot_options['tick_fontsize'])
         axis.set_xlabel("Total annual emission, tonnes CO$_{2,eq}$ yr$^{-1}$",
                         fontsize=plot_options['label_fontsize'])
         axis.set_ylabel("Gas", fontsize=plot_options['label_fontsize'])
-        axis.set_title("Total annual gas emissions, {}".format(output_name),
+        axis.set_title("Total annual emission, {}".format(output_name),
                        fontsize=plot_options['title_fontsize'],
                        pad=plot_options['titlepad'])
         # Make the (visible) axes thicker
@@ -734,6 +734,9 @@ class LatexWriter(Writer):
             with self.document.create(Figure(position='htbp')) as plot:
                 width = r'{}\textwidth'.format(plot_fraction)
                 plot.add_plot(width=NoEscape(width), dpi=dpi)
+        # TODO: There's an intermittent error with profiles not being plotted and only
+        # bar plot appearing in the report. Could be sth. to do with overwriting axes
+        # as profile plot is added with add_subplot method. 
         plt.close()
         return None
 
