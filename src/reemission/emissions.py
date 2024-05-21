@@ -940,22 +940,22 @@ class NitrousOxideEmission(Emission):
         """Calculate N2O emission (kgN yr-1) from denitrification using
         Model 1
         0.009 * [tn_catchment_load + tn_fixation_load] *
-            [0.3833 * erf(0.4723 * residence time(yrs))] * 1e3
+            [0.3833 * erf(0.4723 * residence time(yrs))]
         """
         n2o_emission_den = (
             0.009 * (self.catchment.nitrogen_load() + self.tn_fixation_load())
-            * (0.3833 * math.erf(0.4723 * self.reservoir.residence_time))) * 1e3
+            * (0.3833 * math.erf(0.4723 * self.reservoir.residence_time)))
         return n2o_emission_den
 
     def _n2o_nitrification_m1(self) -> float:
         """Calculate N2O emission (kgN yr-1) from nitrification using
         Model 1
         0.009 * [tn_catchment_load + tn_fixation_load] *
-            [0.5144 * erf(0.3692 * water residence time(yrs))] * 1e3
+            [0.5144 * erf(0.3692 * water residence time(yrs))]
         """
         n2o_emission_nitr = (
             0.009 * (self.catchment.nitrogen_load() + self.tn_fixation_load())
-            * (0.5144 * math.erf(0.3692 * self.reservoir.residence_time))) * 1e3
+            * (0.5144 * math.erf(0.3692 * self.reservoir.residence_time)))
         return n2o_emission_nitr
 
     def _n2o_emission_m2_n(self) -> float:
@@ -972,7 +972,7 @@ class NitrousOxideEmission(Emission):
         water residence time.
         """
         n2o_emission = self.catchment.nitrogen_load() * (
-            0.002277 * math.erf(1.63 * self.reservoir.residence_time)) * 1e3
+            0.002277 * math.erf(1.63 * self.reservoir.residence_time))
         return n2o_emission
 
     def _unit_n2o_emission_m2(self) -> float:
