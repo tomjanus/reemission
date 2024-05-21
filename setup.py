@@ -24,8 +24,8 @@ if __name__ == '__main__':
     # release, or 0.16.0.dev113+g3d1a8747 for a developer version.
     setup(
         name="reemission",
-        version='0.0.0',
-        description='Python package for calculating GHG emissions from man-made reservoirs',
+        version='1.0.0',
+        description='Python package for calculating greenhouse gas emissions from reservoirs',
         long_description='{}\n{}'.format(
             re.compile('^.. start-badges.*^.. end-badges', re.M | re.S).sub('', read('README.rst')),
             re.sub(':[a-z]+:`~?(.*?)`', r'``\1``', read('CHANGELOG.rst')),
@@ -33,10 +33,21 @@ if __name__ == '__main__':
         author='Tomasz Janus (dev), Aung Kyaw Kyaw (dev), Chris Barry (methodology)',
         author_email='tomasz.k.janus@gmail.com',
         url='https://github.com/tomjanus/reemission',
-        packages=find_packages('src'),
-        package_dir={'': 'src'},
+        #packages=find_packages(),
+        packages = ['reemission.tests', 'reemission.examples', 'reemission'],
+        package_dir={
+            "reemission":"src/reemission",
+            "reemission.tests":"tests",
+            "reemission.examples":"examples"
+        },
         py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
         include_package_data=True,
+        exclude_package_data={
+            'reemission.examples': [
+                ".shx", ".shp", ".prj", ".dbf", "cpg", "pdf", ".qmd", ".geojson", 
+                ".html", ".csv", ".tex", ".xlsx"
+            ]
+        },
         zip_safe=False
     )
 # use_scm_version=True,

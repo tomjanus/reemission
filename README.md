@@ -78,7 +78,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Library
-*Re-Emission* is a Python library and a command line interface (CLI) tool for estimating **CO<sub>2</sub>**, **CH<sub>4</sub>** and **N<sub>2</sub>O** emissions from man-made reservoirs.
+*Re-Emission* is a Python library and a command line interface (CLI) tool for estimating **CO<sub>2</sub>**, **CH<sub>4</sub>** and **N<sub>2</sub>O** emissions from reservoirs.
 It calculates full life-cycle emissions as well as emission profiles over time for each of the three greenhouse gases.
 
 ### :fire: Features

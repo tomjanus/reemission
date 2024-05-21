@@ -13,3 +13,4 @@ pyfiglet
 openpyxl
 gdown
 PyYAML
+rich-click

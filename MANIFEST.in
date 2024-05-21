@@ -5,7 +5,14 @@ include *.txt
 recursive-include docs/notebooks *.md
 recursive-include src *.ini
 recursive-include src *.yaml
+recursive-include src *.toml
+recursive-include src/reemission/schemas *
+recursive-include examples/ *.py *.ipynb
+recursive-include notebooks/ *.py *.ipynb *.json *.md *.png
+prune notebooks/outputs/ *
 recursive-include tests *.json
 recursive-include tests *.py
 recursive-include tests/test_data inputs*
+global-exclude *~ *.py[cod] *.so
+include CHANGELOG.rst LICENSE.txt README.rst README.md GITHUB_COMMIT_GUIDE.md CONTRIBUTING.rst
 exclude MANIFEST.in
