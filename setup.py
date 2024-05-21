@@ -16,12 +16,12 @@ def read(*names, **kwargs):
                  encoding=kwargs.get('encoding', 'utf8')) as file_handle:
         return file_handle.read()
 
-
 if __name__ == '__main__':
     # The use_scm_version option indicates that we want to use the
     # setuptools_scm package to set the version automatically based on git
     # tags, which will produce version strings such as 0.13 for a stable
     # release, or 0.16.0.dev113+g3d1a8747 for a developer version.
+    
     setup(
         name="reemission",
         version='1.0.0',
@@ -34,13 +34,24 @@ if __name__ == '__main__':
         author_email='tomasz.k.janus@gmail.com',
         url='https://github.com/tomjanus/reemission',
         #packages=find_packages(),
-        packages = ['reemission.tests', 'reemission.examples', 'reemission'],
+        packages = [
+            'reemission.tests', 
+            'reemission.examples', 
+            'reemission.cli',
+            'reemission.data_models',
+            'reemission.integration',
+            'reemission.postprocessing',
+            'reemission'],
         package_dir={
             "reemission":"src/reemission",
             "reemission.tests":"tests",
-            "reemission.examples":"examples"
+            "reemission.examples":"examples",
+            "reemission.cli":"src/reemission/cli",
+            "reemission.data_models":"src/reemission/data_models",
+            "reemission.integration":"src/reemission/integration",
+            "reemission.postprocessing":"src/reemission/postprocessing"
         },
-        py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
+        #py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
         include_package_data=True,
         exclude_package_data={
             'reemission.examples': [
