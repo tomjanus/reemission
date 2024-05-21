@@ -4,6 +4,7 @@ global:
   print_long_descriptions: False
   plot_profiles: True
   plot_emission_bars: True
+  plot_landcover_piecharts: True
 
 # OUTPUTS
 outputs:

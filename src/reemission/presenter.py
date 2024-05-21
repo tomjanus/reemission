@@ -2,6 +2,7 @@
 """
 import collections.abc
 from collections.abc import Iterable
+from functools import reduce
 from dataclasses import dataclass, field
 from typing import (
     Dict, Tuple, List, Type, Union, Sequence, Iterator, Any, Optional)
@@ -33,6 +34,7 @@ from pylatex import (
 )
 from reemission.utils import get_package_file, is_latex_installed, load_yaml, read_config
 from reemission.input import Inputs
+from reemission.constants import Landuse
 from reemission.auxiliary import rollout_nested_list
 from reemission.document_compiler import BatchCompiler
 
@@ -79,6 +81,80 @@ FACTOR_NAMES = {
     "treatment_factor": "Treatment Factor",
     "landuse_intensity": "Landuse Intensity",
 }
+
+landcover_names: List[str] = [landcover.value for landcover in Landuse.__dict__['_member_map_'].values()]
+
+
+def parse_landcover_composition(vector: List[float]) -> List[float]:
+    """ """
+    vector_length = len(vector)
+    supported_vector_lengths = (9,27)
+    try:
+        assert vector_length in supported_vector_lengths
+    except AssertionError:
+        vector_sizes: str = ", ".join(map(str,supported_vector_lengths))
+        raise ValueError(f"Supported vector sizes: {vector_sizes}. Provided vector has size {vector_length}")
+    if vector_length == 9:
+        return vector
+    # Fold the 27x1 vector into three parts and sum the 9x1 vectors
+    len_list = vector_length // 3
+    sublist1 = vector[:len_list]
+    sublist2 = vector[len_list:2*len_list]
+    sublist3 = vector[2*len_list:]
+    return reduce(
+        lambda acc, val: 
+            [acc[i] + val[i] for i in range(len(acc))], 
+            [sublist1, sublist2, sublist3])
+
+
+def enforce_unity_sum(vector: List[float], epsilon: float = 0.001) -> List[float]:
+    """Makes sure the sum of values in the vector are 1.0 +/- epsilon.
+    In case they're not, rescales the values so that the sum is equal to 1
+    """
+    if not 1.0 - epsilon <= sum(vector) <= 1.0 + epsilon:
+        # TODO: Add warning, maybe to a logger.
+        return [value/sum(vector) for value in vector]
+    return vector
+    
+
+landcover_cmap = plt.get_cmap('Spectral')
+landcover_colors = [landcover_cmap(i) for i in np.linspace(0, 1, 9)]
+
+
+def landcover_pie(
+        axis: plt.Axes, values: List[float], labels: List[str], colors: List[Any],
+        title: str | None = None, show_legend: bool = False) -> None:
+    """ """
+    explode_offset: float = 0.05
+    labels_tr = [label for label, value in zip(labels, values) if value >0]
+    values_tr = [value for value in values if value >0]
+    colors_tr = [color for color, value in zip(colors, values) if value >0]
+    # Explode the pie with the highest value
+    max_value_index = values_tr.index(max(values_tr))
+    one_hot_list = [0] * len(values_tr)
+    one_hot_list[max_value_index] = 1
+    explode = [explode_offset * item for item in one_hot_list]
+    
+    axis.pie(values_tr, 
+        labels=labels_tr, 
+        explode=explode,
+        pctdistance = 0.6, 
+        labeldistance = 1.1,
+        wedgeprops = {"edgecolor":"k",'linewidth': 0.5},
+        startangle=180,
+        autopct=lambda x: f'{x:.1f}%',
+        textprops={"size": 8}, 
+        radius = 1.0,
+        colors = colors_tr
+        )
+    if title:
+        axis.set_title(title, fontsize=9)
+    if show_legend:
+        legend = axis.legend(
+            loc="lower right", frameon=False, bbox_to_anchor=(1.5,0), borderaxespad=0.5)
+        for text in legend.get_texts():
+            text.set_fontstyle("italic")
+            text.set_fontsize(8)
 
 
 @dataclass  # type: ignore[misc]
@@ -246,7 +322,6 @@ class ExcelWriter(Writer):
                     break
                     for factor_name, factor_value in \
                             input_data['catchment'][input_name].items():
-                        print(factor_name, factor_value)
                         log.info(factor_name)
                         input_dict = self.write_par_to_dict(
                             input_name=factor_name,
@@ -689,6 +764,32 @@ class LatexWriter(Writer):
         axis.spines['right'].set_visible(False)
         axis.spines['top'].set_visible(False)
 
+
+    def plot_landcover_piecharts(self, axes: np.ndarray, output_name: str) -> None:
+        """ 
+        axes: np.ndarray of plt.Axes objects
+        """
+        #data = self.inputs.data[output_name]
+        input_data = self.inputs.inputs[output_name]
+        landcovers_reservoir = parse_landcover_composition(
+            input_data.data['reservoir']['area_fractions'])
+        landcovers_catchment = parse_landcover_composition(
+            input_data.data['catchment']['area_fractions'])
+        # Make sure that the sums are equal to one (they should be because of earlier steps)
+        # But just for the piece of mind, make an additional check
+        landcovers_reservoir = enforce_unity_sum(landcovers_reservoir)
+        landcovers_catchment = enforce_unity_sum(landcovers_catchment)
+
+        landcover_pie(
+            axis = axes[0], values=landcovers_reservoir, labels=landcover_names,
+            colors=landcover_colors, 
+            show_legend=True, title="Reservoir\nLandcover Composition")
+        landcover_pie(
+            axis = axes[1], values=landcovers_catchment, labels=landcover_names,
+            colors=landcover_colors, 
+            show_legend=True, title="Catchment\nLandcover Composition")
+
+
     def add_plots(self, output_name: str, plot_fraction: float = 0.75,
                   dpi: int = 300) -> None:
         """Checks the number of plots to be produced and plots them in
@@ -739,7 +840,24 @@ class LatexWriter(Writer):
         # as profile plot is added with add_subplot method. 
         plt.close()
         return None
-
+        
+    def add_landcover_charts(self, output_name: str, plot_fraction: float = 0.95,
+                  dpi: int = 300) -> None:
+        """Adds pie-charts with land-cover proportions for reservoir and catchment """
+        plot_piecharts = bool(self.output_config['global']['plot_landcover_piecharts'])
+        if not plot_piecharts: # Playing the non-indent guy.
+            return None
+        fig, axs = plt.subplots(1,2)
+        self.plot_landcover_piecharts(axes=axs, output_name=output_name)
+        fig.tight_layout(pad=1.0)
+        #with self.document.create(Subsection('Landcover composition plots')):
+        with self.document.create(Figure(position='h')) as plot:
+            width = r'{}\textwidth'.format(plot_fraction)
+            plot.add_plot(width=NoEscape(width), dpi=dpi)
+        plt.close()
+        return None
+        
+        
     def add_parameters(self, precision: int = 4) -> None:
         """Adds information about model parameters such as conversion factors
         and other information that might be useful to report alongside
@@ -1144,6 +1262,7 @@ class LatexWriter(Writer):
             for reservoir_name in self.outputs:
                 with self.document.create(Section(reservoir_name)):
                     self.add_inputs_subsection(reservoir_name=reservoir_name)
+                    self.add_landcover_charts(reservoir_name)
                     self.add_outputs_subsection(reservoir_name=reservoir_name)
                     self.add_intern_var_subsection(reservoir_name=reservoir_name)
             # Generate a PDF (requires a LaTeX compiler present in the system)
