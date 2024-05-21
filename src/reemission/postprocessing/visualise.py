@@ -70,7 +70,7 @@ class FoliumOutputMapper:
 
         # Add tiles to map
         for layer in self.map_layers:
-            folium.raster_layers.TileLayer(layer).add_to(self.map)
+            folium.raster_layers.TileLayer(layer, attr=layer).add_to(self.map)
 
         logger.info("Creating map...")
 
