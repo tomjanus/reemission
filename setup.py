@@ -40,7 +40,9 @@ if __name__ == '__main__':
             'reemission.cli',
             'reemission.data_models',
             'reemission.integration',
+            'reemission.integration.cli',
             'reemission.postprocessing',
+            'reemission.myanmar',
             'reemission'],
         package_dir={
             "reemission":"src/reemission",
@@ -49,7 +51,9 @@ if __name__ == '__main__':
             "reemission.cli":"src/reemission/cli",
             "reemission.data_models":"src/reemission/data_models",
             "reemission.integration":"src/reemission/integration",
-            "reemission.postprocessing":"src/reemission/postprocessing"
+            "reemission.integration.cli":"src/reemission/integration/cli",
+            "reemission.postprocessing":"src/reemission/postprocessing",
+            "reemission.myanmar":"src/reemission/myanmar"
         },
         #py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
         include_package_data=True,
