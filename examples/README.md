@@ -2,14 +2,16 @@
 This module contains the examples of the usage of `RE-EMISSION` as a standalone command-line (CLI) tool and as a Python API, i.e. collection of classes and methods for processing input data, estimating GHG emissions and outputting results in the form of raw output files in `JSON` format, formatted output files/reports in `Excel/CSV` and `LaTeX/PDF` formats, as well as in the form of interactive maps, combining the tabular input and output data with geospatial data, i.e. delineated reservoirs and catchments.
 
 ## Standalone applications
-The use of `RE-EMISSION` as a standalone application is showcased in two examples. To run each example, , navigate to the corresponding folder and execute the script file dedicated to your operating system. On Linux/Mac OS execute the `run_*.sh` file. On Windows use the `run_*.bat` script.
+The use of `RE-EMISSION` as a standalone application is showcased in two examples. To run each example, navigate to the corresponding folder and execute the script file dedicated to your operating system. On Linux/Mac OS execute the `run_*.sh` file. On Windows use the `run_*.bat` script.
 
 ### 1. Simple example (`examples/simple_example` folder)
 Reads input file in `JSON` format, calculates GHG emissions for a number of reservoirs and outputs the results in three file formats: `JSON`, `PDF`, and `XLSX`. 
 **Note:** Saving outputs to `XLSX` format is still experimental.
 
-### 2. Demo (`examples/demo` folder)
-This is a short example of how `RE-EMISSION` works in combintion with an `upstream` reservoir and catchment delineation tool `GeoCARET`. This example showcases `RE-EMISSION`'s integration capabilities with `GeoCARET` on a small example from a larger real-life case study on estimating GHG emissions from existing and planned hydroelectric reservoirs in Myanmar. The demo runs in the following steps:
+### 2. Demo (`src/reemission/demo` folder)
+This is a short example of how `RE-EMISSION` works in combintion with an `upstream` reservoir and catchment delineation tool `GeoCARET`. This example showcases `RE-EMISSION`'s integration capabilities with `GeoCARET` on a small example from a larger real-life case study on estimating GHG emissions from existing and planned hydroelectric reservoirs in Myanmar. 
+The demo has been moved to `src/reemission/demo` i.e. to the main package installation folder.
+The demo runs in the following steps:
 * Merging multiple tabular data files from several batches of reservoir delineations in `GeoCARET` into a single `CSV` file.
 * Merging shape files for individual reservoirs and catchments into combined shape files representing reservoirs and catchments for all items in the study.
 * Converting the merged tabular data from `GeoCARET` into `RE-EMISSION` JSON input file.
