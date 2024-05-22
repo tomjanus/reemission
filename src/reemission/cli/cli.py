@@ -15,7 +15,6 @@ Why does this file exist, and why not put this in __main__?
   Also see (1) from http://click.pocoo.org/5/setuptools/#setuptools-integration
 """
 from typing import Dict, List, Tuple
-import sys
 import os
 import logging
 import configparser
@@ -27,11 +26,12 @@ from fpdf import FPDF
 import subprocess
 import reemission
 import reemission.presenter
+from reemission.app_logger import create_logger
 from reemission.utils import (
-    add_version, get_package_file, read_config, get_folder_size, clean_folder, debug_on_exception)
+    add_version, get_package_file, read_config, get_folder_size, 
+    clean_folder, debug_on_exception)
 from reemission.model import EmissionModel
 from reemission.input import Inputs
-
 from reemission.integration.cli import cli as integration_cli
 click.rich_click.USE_MARKDOWN = True
 
@@ -45,19 +45,27 @@ ext_writer_dict = {
 }
 
 # Set up module logger
-log = logging.getLogger(__name__)
+log = create_logger(logger_name=__name__)
 
 FIGLET: bool = True
-
-# Get relative imports to data
-MODULE_DIR: str = os.path.dirname(__file__)
-INI_FILE: str = os.path.abspath(
-    os.path.join(MODULE_DIR, '..', 'config', 'config.ini'))
+INI_FILE: str = get_package_file('config', 'config.ini')
 # Derive default calculation options from config
 config: configparser.ConfigParser = read_config(INI_FILE)
 p_export_cal = config.get("CALCULATIONS", "p_export_cal")
 nitrous_oxide_model = config.get("CALCULATIONS", "nitrous_oxide_model")
 
+def run_command(command, print_result: bool = False, check: bool = False):
+    #log.debug("Command: {}".format(command))
+    result = subprocess.run(command, shell=False, capture_output=False, check=check)
+    if result.stderr:
+        raise subprocess.CalledProcessError(
+                returncode = result.returncode,
+                cmd = result.args,
+                stderr = result.stderr
+                )
+    if result.stdout and print_result:
+        log.debug("Command Result: {}".format(result.stdout.decode('utf-8')))
+    return result
 
 
 @click.group()
@@ -217,7 +225,7 @@ def log_to_pdf() -> None:
     log_filename_no_ext = log_filename.split(".")[0]
     log_file_path = pathlib.Path.joinpath(log_path, log_filename)
     try:
-        with open(log_file_path, 'r') as file:
+        with open(log_file_path, 'r', encoding='utf-8') as file:
             text_content = file.read()
     except FileNotFoundError:
         log.error("Log file cannot be converted to PDF")
@@ -231,21 +239,21 @@ def log_to_pdf() -> None:
             pdf_log_file_path.as_posix())
 
 
-
 @click.command()
-def run_demo() -> None:
+@click.argument("demo_folder", nargs=1, type=click.Path())
+def run_demo(demo_folder: str) -> None:
     """Run a demo analysis for a set of existing and future dams.
     
     Uses a subset of dams from Myanmar case study on assessment of gas emissions
     from existing and future hydroelectric reservoirs in Myanmar
     """
+    os.makedirs(demo_folder, exist_ok=True)
     # Import modules in /examples/demo in order to run the demo example
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    demo_folder = os.path.normpath(
-        os.path.join(current_dir, "..", "..", "..", "examples", "demo"))
-    sys.path.append(demo_folder)
-    from fetch_inputs import download_mya_case_study_inputs
-    from postprocess_results import process_mya_case_study_results
+    
+    #demo_folder = get_package_file("demo")
+    from reemission.demo.fetch_inputs import download_mya_case_study_inputs
+    from reemission.demo.postprocess_results import process_mya_case_study_results
 
     # Define folders and remote addresses for downloading input data
     INPUT_FOLDER=os.path.join(demo_folder, "reemission_demo_delineations")
@@ -254,7 +262,6 @@ def run_demo() -> None:
     IFC_DB_FOLDER=os.path.join(demo_folder, "reemission_demo_dam_db")
     IFC_DB_LINK="https://drive.google.com/file/d/1OZAVdRMOQN8J-7h3bZIMeQzIfBuo5adC/view?usp=drive_link"
     IFC_DB_SIZE=51854 # Size in bytes
-    
     
     click.echo("RUNNING CALCULATIONS FOR A SUBSET OF EXISTING AND FUTURE HYDROELECTRIC RESERVOIRS IN MYANMAR...")
     
@@ -324,14 +331,18 @@ def run_demo() -> None:
     # Append missing columns to data that are required but not given in GeoCARET
     missing_col_value_pairs: List[Tuple[str, str]] = [
         ("c_treatment_factor", "primary (mechanical)"), 
-        ("c_landuse_intensity", "low intensity")]
+        ("c_landuse_intensity", "low intensity"),
+        ('type', 'unknown')]
     for col_name, col_val in missing_col_value_pairs:
         command_1.append('-cv')
         command_1.append(col_name)
         command_1.append(col_val)
     command_1.append("-o")
     command_1.append(combined_csv_file)
-    subprocess.run(command_1)
+    #print(command_1)
+    run_command(command_1)
+    #res = subprocess.run(command_1, shell=True, capture_output=False)
+    #print(res)
 
     click.echo("\n5. Merging shape files for individual reservoirs into combined shape files...")
     # Convert the csv file into a JSON input file to RE-Emission
@@ -344,12 +355,14 @@ def run_demo() -> None:
     command_2 += [
         "-o", OUTPUTS_FOLDER, "-gp", "R_*.shp, C_*.shp, MS_*.shp, PS_*.shp", 
         "-f", "reservoirs.shp, catchments.shp, rivers.shp, dams.shp"]
-    subprocess.run(command_2)
+    run_command(command_2)
+    #subprocess.run(command_2, capture_output=True)
 
     click.echo("\n6. Converting GeoCARET tabular data to the RE-Emission input JSON file")
     command_3 = ["reemission-geocaret", "tab-to-json", "-i", combined_csv_file,
                  "-o", os.path.join(OUTPUTS_FOLDER,"reemission_inputs.json")]
-    subprocess.run(command_3)
+    #subprocess.run(command_3, capture_output=True)
+    run_command(command_3)
 
     REEMISSION_OUTPUTS_FOLDER=os.path.join(demo_folder, "reemission_outputs")
     click.echo(f"\n7. Creating the outputs folder {REEMISSION_OUTPUTS_FOLDER} ...")
@@ -370,7 +383,8 @@ def run_demo() -> None:
         "-o", os.path.join(REEMISSION_OUTPUTS_FOLDER, "demo_GHG_outputs.json"),
         "-o", os.path.join(REEMISSION_OUTPUTS_FOLDER, "demo_GHG_outputs_.xlsx")
     ]
-    subprocess.run(command_4)
+    run_command(command_4)
+    #subprocess.run(command_4, capture_output=True)
 
     # Merge results into shape files and visualise on a map
     click.echo("\n9. Merging input and output data into shape files")

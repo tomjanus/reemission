@@ -6,7 +6,7 @@ class ColumnsNotFoundError(Exception):
     """Custom exception raised if some columns could not be found in the dataframe"""
     def __init__(self, missing_columns: Iterable[str]):
         missing_columns_str = ", ".join(missing_columns)
-        message = f"Missing columns {missing_columns_str}"
+        message = f"Missing columns: {missing_columns_str}"
         self.message = message
         super().__init__(message)
 

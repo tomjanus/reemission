@@ -44,6 +44,7 @@ if __name__ == '__main__':
             'reemission.integration.geocaret',
             'reemission.postprocessing',
             'reemission.myanmar',
+            'reemission.demo',
             'reemission'],
         package_dir={
             "reemission":"src/reemission",
@@ -55,6 +56,7 @@ if __name__ == '__main__':
             "reemission.integration.cli":"src/reemission/integration/cli",
             "reemission.integration.geocaret":"src/reemission/integration/geocaret",
             "reemission.postprocessing":"src/reemission/postprocessing",
+            "reemission.demo":"src/reemission/demo",
             "reemission.myanmar":"src/reemission/myanmar"
         },
         #py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],

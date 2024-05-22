@@ -77,6 +77,8 @@ def process_tab_outputs(
     
     TODO: Handle existing reservoirs for which volume, max_depth and mean_depth
     are unknown."""
+    if not input_files:
+        raise ValueError("No input files. Provide input files preceded with -i tags.")
     output_reader = GeoCaretOutputReader(file_paths=input_files)
     geocaret_output = output_reader.read_files()
     if remove_dups:
@@ -95,6 +97,7 @@ def process_tab_outputs(
     geocaret_output.filter_columns(
         mandatory_columns=tab_data_config['mandatory_fields'],
         optional_columns=tab_data_config['alternative_fields'])
+    logger.debug(f"Saving to {output_file}")
     geocaret_output.to_csv(pathlib.Path(output_file))
     logger.info("Tabular data saved to: %s", output_file)
 

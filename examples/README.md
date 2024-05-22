@@ -9,12 +9,12 @@ Reads input file in `JSON` format, calculates GHG emissions for a number of rese
 **Note:** Saving outputs to `XLSX` format is still experimental.
 
 ### 2. Demo (`examples/demo` folder)
-This is a short example of how `RE-EMISSION` works in combintion with an `upstream` reservoir and catchment delineation tool `HEET`. This example showcases `RE-EMISSION`'s integration capabilities with `HEET` on a small example from a larger real-life case study on estimating GHG emissions from existing and planned hydroelectric reservoirs in Myanmar. The demo runs in the following steps:
-* Merging multiple tabular data files from several batches of reservoir delineations in `HEET` into a single `CSV` file.
+This is a short example of how `RE-EMISSION` works in combintion with an `upstream` reservoir and catchment delineation tool `GeoCARET`. This example showcases `RE-EMISSION`'s integration capabilities with `GeoCARET` on a small example from a larger real-life case study on estimating GHG emissions from existing and planned hydroelectric reservoirs in Myanmar. The demo runs in the following steps:
+* Merging multiple tabular data files from several batches of reservoir delineations in `GeoCARET` into a single `CSV` file.
 * Merging shape files for individual reservoirs and catchments into combined shape files representing reservoirs and catchments for all items in the study.
-* Converting the merged tabular data from `HEET` into `RE-EMISSION` JSON input file.
+* Converting the merged tabular data from `GeoCARET` into `RE-EMISSION` JSON input file.
 * Calculating GHG emissions with RE-EMISSION taking the JSON input file generated in the previous step.
-* Pasting selected `HEET` tabular input data and `RE-EMISSIONS` output data into the combined shape files for reservoirs and dams and presenting the updated shape files in the form of an interactive map using `Folium`.
+* Pasting selected `GeoCARET` tabular input data and `RE-EMISSIONS` output data into the combined shape files for reservoirs and dams and presenting the updated shape files in the form of an interactive map using `Folium`.
 
 ## Manual problem formulation / Python API (`examples/notebooks` folder)
 The usage of the RE-Emission Toolbox and its various components is demonstrated in four notebooks:
