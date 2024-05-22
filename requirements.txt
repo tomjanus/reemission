@@ -1,11 +1,9 @@
+click
 numpy
 pandas
-click
+geopandas
 matplotlib
 pylatex
-pytest
-unittest
-coverage
 notebook
 pyyaml
 quantities
@@ -13,4 +11,13 @@ pyfiglet
 openpyxl
 gdown
 PyYAML
+toml
+pydantic==1.10
+folium
+branca
+fpdf
+geojson
 rich-click
+pytest
+unittest2
+coverage
