@@ -1,6 +1,6 @@
 """ """
 import unittest
-from reemission.integration.heet.input_model_heet import (
+from reemission.integration.geocaret.input_model_geocaret import (
     DamDataModelHeet, BuildStatusModelHeet, BiogenicFactorsModelHeet, 
     CatchmentModelHeet, ReservoirModelHeet)
 
@@ -49,7 +49,7 @@ class TestHeetInputModel(unittest.TestCase):
             ', 13.9, 13.9, 14.2, 14.8]}'
         self.assertEqual(dam_data_txt, dam_data_expected)
 
-    def test_heet_build_status_model(self) -> None:
+    def test_geocaret_build_status_model(self) -> None:
         """Instantiate build status from dummy data in a dictionary"""
         status_dict = {
             "r_status": "ExisTing",
@@ -60,7 +60,7 @@ class TestHeetInputModel(unittest.TestCase):
         status_data_expected = '{"status": "existing", "construction_date": 2000}'
         self.assertEqual(status_data_txt, status_data_expected)
 
-    def test_heet_biogenic_factors_model(self) -> None:
+    def test_geocaret_biogenic_factors_model(self) -> None:
         """Instantiate biogenic factors from dummy data in a dictionary"""
         biogenic_factors_dict = {
             "c_biome": "Tropical & Subtropical Dry Broadleaf Forests",
@@ -75,7 +75,7 @@ class TestHeetInputModel(unittest.TestCase):
         + '"primary (mechanical)", "landuse_intensity": "low intensity"}'
         self.assertEqual(biogenic_factors_data_txt, biogenic_factors_data_expected)
 
-    def test_heet_catchment_model(self) -> None:
+    def test_geocaret_catchment_model(self) -> None:
         """Instantiate catchment data from dummy data in a dictionary"""
         catchment_data_dict = {
             "c_mar_mm": 1115.0,
@@ -104,7 +104,7 @@ class TestHeetInputModel(unittest.TestCase):
             '"slope": 23.0, "precip": 1498.0, "etransp": 1123.0, "soil_wetness": 144.0, "mean_olsen": 5.85}'
         self.assertEqual(catchment_data_txt, catchment_data_expected)
 
-    def test_heet_reservoir_model(self) -> None:
+    def test_geocaret_reservoir_model(self) -> None:
         """Instantiate reservoir data from dummy data in a dictionary"""
         reservoir_dict = {
             "r_volume_m3": 7238166.0,

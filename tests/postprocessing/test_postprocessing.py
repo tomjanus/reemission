@@ -18,7 +18,7 @@ class TestHeetReemissionIntegration(unittest.TestCase):
     """ """
     @classmethod
     def setUpClass(cls):
-        cls.config = load_toml(get_package_file('config/heet.toml'))
+        cls.config = load_toml(get_package_file('config/geocaret.toml'))
         pathlib.Path(TEST_OUTPUT_FOLDER).mkdir(parents=True, exist_ok=True)
 
     @classmethod
@@ -30,7 +30,7 @@ class TestHeetReemissionIntegration(unittest.TestCase):
     def setUp(self):
         # 
         self.shp_folder = pathlib.Path("test_data/merged_shp_files")
-        self.data_file = pathlib.Path("test_data/heet_output/heet_outputs.csv")
+        self.data_file = pathlib.Path("test_data/geocaret_output/geocaret_outputs.csv")
         self.output_json_file = pathlib.Path(
             "test_data/reemission_output/reemission_output.json")
 
@@ -38,7 +38,7 @@ class TestHeetReemissionIntegration(unittest.TestCase):
         # 
         ...
 
-    def test_heet_outputs_to_shapes(self) -> None:
+    def test_geocaret_outputs_to_shapes(self) -> None:
         """ Create shape files with extra fields with values obtained from the
         tabular HEET output csv file. Assert that the file has been created """
         append_data_to_shapes(

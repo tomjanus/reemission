@@ -41,7 +41,7 @@ if __name__ == '__main__':
             'reemission.data_models',
             'reemission.integration',
             'reemission.integration.cli',
-            'reemission.integration.heet',
+            'reemission.integration.geocaret',
             'reemission.postprocessing',
             'reemission.myanmar',
             'reemission'],
@@ -53,7 +53,7 @@ if __name__ == '__main__':
             "reemission.data_models":"src/reemission/data_models",
             "reemission.integration":"src/reemission/integration",
             "reemission.integration.cli":"src/reemission/integration/cli",
-            "reemission.integration.heet":"src/reemission/integration/heet",
+            "reemission.integration.geocaret":"src/reemission/integration/geocaret",
             "reemission.postprocessing":"src/reemission/postprocessing",
             "reemission.myanmar":"src/reemission/myanmar"
         },

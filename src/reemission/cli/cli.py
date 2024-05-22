@@ -300,7 +300,7 @@ def run_demo() -> None:
         download_mya_case_study_inputs(
                 INPUT_FOLDER_LINK, os.path.join(INPUT_FOLDER,"reemission_demo_delineations.zip"))
 
-    OUTPUTS_FOLDER=os.path.join(demo_folder, "heet_outputs")
+    OUTPUTS_FOLDER=os.path.join(demo_folder, "geocaret_outputs")
     click.echo(f"\n3. Creating the outputs folder {OUTPUTS_FOLDER} ...")
     # Create outputs folder if it does not exist already
     if not os.path.isdir(OUTPUTS_FOLDER):
@@ -311,17 +311,17 @@ def run_demo() -> None:
 
     click.echo(
         "\n4. Merging tabular data into a single CSV file and saving to "+
-        f"{os.path.join(OUTPUTS_FOLDER,'heet_outputs.csv')} ...")
+        f"{os.path.join(OUTPUTS_FOLDER,'geocaret_outputs.csv')} ...")
     # Find subfolders in the shp folder
     shp_folders = [f.path for f in os.scandir(INPUT_FOLDER) if f.is_dir()]
-    combined_csv_file = os.path.join(OUTPUTS_FOLDER, "heet_outputs.csv")
+    combined_csv_file = os.path.join(OUTPUTS_FOLDER, "geocaret_outputs.csv")
     # Run CLI command as a subprocess
-    command_1 = ["reemission-heet", "process-tab-outputs"]
+    command_1 = ["reemission-geocaret", "process-tab-outputs"]
     for input_folder in shp_folders:
         command_1.append("-i")
         input_file = os.path.join(input_folder, "output_parameters.csv")
         command_1.append(f"{input_file}")
-    # Append missing columns to data that are required but not given in HEET
+    # Append missing columns to data that are required but not given in GeoCARET
     missing_col_value_pairs: List[Tuple[str, str]] = [
         ("c_treatment_factor", "primary (mechanical)"), 
         ("c_landuse_intensity", "low intensity")]
@@ -337,7 +337,7 @@ def run_demo() -> None:
     # Convert the csv file into a JSON input file to RE-Emission
     # Write reemission tab2json CLI function
     # Join shape files for individual reservoirs into combined shapes for each category of shapes
-    command_2 = ["reemission-heet", "join-shapes"]
+    command_2 = ["reemission-geocaret", "join-shapes"]
     for input_folder in shp_folders:
         command_2.append("-i")
         command_2.append(input_folder)
@@ -346,8 +346,8 @@ def run_demo() -> None:
         "-f", "reservoirs.shp, catchments.shp, rivers.shp, dams.shp"]
     subprocess.run(command_2)
 
-    click.echo("\n6. Converting HEET tabular data to the RE-Emission input JSON file")
-    command_3 = ["reemission-heet", "tab-to-json", "-i", combined_csv_file,
+    click.echo("\n6. Converting GeoCARET tabular data to the RE-Emission input JSON file")
+    command_3 = ["reemission-geocaret", "tab-to-json", "-i", combined_csv_file,
                  "-o", os.path.join(OUTPUTS_FOLDER,"reemission_inputs.json")]
     subprocess.run(command_3)
 
@@ -375,7 +375,7 @@ def run_demo() -> None:
     # Merge results into shape files and visualise on a map
     click.echo("\n9. Merging input and output data into shape files")
     process_mya_case_study_results(
-        shp_folder = pathlib.Path(demo_folder)/"heet_outputs",
+        shp_folder = pathlib.Path(demo_folder)/"geocaret_outputs",
         output_json_file =pathlib.Path(demo_folder)/"reemission_outputs/demo_GHG_outputs.json",
         map_path = pathlib.Path(demo_folder)/"demo_interactive_map",
         ifc_dam_path = pathlib.Path(demo_folder)/"reemission_demo_dam_db"/"dam_db.shp")
@@ -386,4 +386,4 @@ def run_demo() -> None:
 main.add_command(calculate)
 main.add_command(log_to_pdf)
 main.add_command(run_demo)
-main.add_command(integration_cli.heet_integrate)
+main.add_command(integration_cli.geocaret_integrate)

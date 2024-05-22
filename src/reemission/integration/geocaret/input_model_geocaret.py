@@ -10,15 +10,15 @@ from reemission.utils import read_config, get_package_file, strip_double_quotes
 
 
 # Read config defaults
-heet_config: Dict = read_config(get_package_file('config/heet.toml'))
+geocaret_config: Dict = read_config(get_package_file('config/geocaret.toml'))
 # Access the selected runoff, rainfall and evapotranspiration fields from config
-runoff_field = strip_double_quotes(heet_config['calculations']['runoff_field'])
-precipitation_field = strip_double_quotes(heet_config['calculations']['precipitation_field'])
-et_field = strip_double_quotes(heet_config['calculations']['et_field'])
+runoff_field = strip_double_quotes(geocaret_config['calculations']['runoff_field'])
+precipitation_field = strip_double_quotes(geocaret_config['calculations']['precipitation_field'])
+et_field = strip_double_quotes(geocaret_config['calculations']['et_field'])
 
 
-class DamDataModelHeet(DamDataModel):
-    """Dam, data model adapted to data format from HEET"""
+class DamDataModelGeoCaret(DamDataModel):
+    """Dam, data model adapted to data format from GeoCARET"""
     
     @root_validator(pre=True)
     @classmethod
@@ -31,7 +31,7 @@ class DamDataModelHeet(DamDataModel):
     
     class Config:
         """Add field aliases specific to the output data format received from
-        HEET."""
+        GeoCARET."""
         allow_population_by_field_name = False
         allow_extra_values = False
         fields = {
@@ -43,12 +43,12 @@ class DamDataModelHeet(DamDataModel):
             'monthly_temps': {'alias': 'monthly_temps'}}
 
 
-class BuildStatusModelHeet(BuildStatusModel):
-    """Build status model adapted to data format from HEET"""
+class BuildStatusModelGeoCaret(BuildStatusModel):
+    """Build status model adapted to data format from GeoCARET"""
 
     class Config:
         """Add field aliases specific to the output data format received from
-        HEET."""
+        GeoCARET."""
         allow_population_by_field_name = False
         allow_extra_values = False
         fields = {
@@ -58,7 +58,7 @@ class BuildStatusModelHeet(BuildStatusModel):
     @classmethod
     def from_row(
             cls, row: pd.Series, r_status, 
-            r_construction_date) -> BuildStatusModelHeet:
+            r_construction_date) -> BuildStatusModelGeoCaret:
         """ """
         row = row.copy()
         # Supply missing information
@@ -67,11 +67,11 @@ class BuildStatusModelHeet(BuildStatusModel):
         return cls(**row.to_dict())
 
 
-class BiogenicFactorsModelHeet(BiogenicFactorsModel):
+class BiogenicFactorsModelGeoCaret(BiogenicFactorsModel):
     """Model for Re-Emission biogenic factor parameters adapted to read and
-    parse model output from HEET"""
+    parse model output from GeoCARET"""
 
-    # Add custom data parsers/translators for reading HEET output data
+    # Add custom data parsers/translators for reading GeoCARET output data
     biome_map: ClassVar[Dict[str, str]] = {
         "Deserts & Xeric Shrublands ": "deserts",
         "Mediterranean Forests Woodlands & Scrub": "mediterreanan forests",
@@ -97,7 +97,7 @@ class BiogenicFactorsModelHeet(BiogenicFactorsModel):
 
     @classmethod
     def c_cat_from_koppen(cls, koppen_id: Union[int, float, str]) -> str:
-        """Conversion between Köppen-Geiger specific identifiers in HEET output
+        """Conversion between Köppen-Geiger specific identifiers in GeoCARET output
         and broad classes used in RE-Emission."""
         koppen_id = int(koppen_id)
         for key, value in cls.c_cat_koppen_map.items():
@@ -106,16 +106,16 @@ class BiogenicFactorsModelHeet(BiogenicFactorsModel):
         return "unknown"
 
     @classmethod
-    def translate_biome_names(cls, biome_name_heet: str) -> str:
-        """Translate biome names in HEET output to names following the 
+    def translate_biome_names(cls, biome_name_geocaret: str) -> str:
+        """Translate biome names in GeoCARET output to names following the 
         convention implemented in RE-Emission"""
-        return cls.biome_map[biome_name_heet]
+        return cls.biome_map[biome_name_geocaret]
 
     @classmethod
-    def heet_soil_type_to_reemission(cls, heet_soil_type: str) -> str:
-        """Turn Heet soil types (capitalized) into Re-Emission soil types (small
+    def geocaret_soil_type_to_reemission(cls, geocaret_soil_type: str) -> str:
+        """Turn GeoCaret soil types (capitalized) into Re-Emission soil types (small
         letter)"""
-        return heet_soil_type.lower()
+        return geocaret_soil_type.lower()
 
     class Config:
         use_enum_values = True
@@ -132,7 +132,7 @@ class BiogenicFactorsModelHeet(BiogenicFactorsModel):
     _translate_biome = validator('biome', pre=True)(translate_biome_names)
     _translate_climate = validator('climate', pre=True)(c_cat_from_koppen)
     _translate_soil_type = validator('soil_type', pre=True)(
-        heet_soil_type_to_reemission)
+        geocaret_soil_type_to_reemission)
 
 
 def map_c_landuse(
@@ -144,7 +144,7 @@ def map_c_landuse(
         "WATER": 7,
         "WETLANDS": 4,
         "CROPS": 1,
-        "SHRUBS": 2,  # Initially shrubs were 3 and forests were 2. There seems to have been a mistake in how areas were categorized in HEET
+        "SHRUBS": 2,  # Initially shrubs were 3 and forests were 2. There seems to have been a mistake in how areas were categorized in GeoCARET
         "FOREST": 3,
         "NODATA": 0}
     return [input_fractions['c_landcover_'+str(ix)] for ix in 
@@ -182,16 +182,16 @@ def map_r_landuse(r_landuses: List[float], aggregate: bool = False) -> Sequence:
     return output
     
 
-class CatchmentModelHeet(CatchmentModel):
+class CatchmentModelGeoCaret(CatchmentModel):
     """Model for Re-Emission catchment parameters adapted to read and
-    parse model output from HEET"""
+    parse model output from GeoCARET"""
     runoff_field: str = 'c_mar_mm_alt2'
 
     @root_validator(pre=True)
     @classmethod
     def root_validator(cls, values):
         """Obtain a vector of c area fractions for RE-EMISSION from fractions
-        in c_landcover_[i] fields in raw tabular HEET output data.
+        in c_landcover_[i] fields in raw tabular GeoCARET output data.
         Remaps area fraction indices to match order of landuses in constants.Landuse"""
         values["c_area_fractions"] = map_c_landuse(values)
         return values
@@ -213,15 +213,15 @@ class CatchmentModelHeet(CatchmentModel):
             "mean_olsen": {'alias': 'c_mean_olsen'}}
 
 
-class ReservoirModelHeet(ReservoirModel):
+class ReservoirModelGeoCaret(ReservoirModel):
     """Model for Re-Emission reservoir parameters adapted to read and
-    parse model output from HEET"""
+    parse model output from GeoCARET"""
 
     @root_validator(pre=True)
     @classmethod
     def root_validator(cls, values):
         """Obtain a vector of r area fractions for RE-EMISSION from fractions
-        in r_landcover_[i] fields in raw tabular HEET output data"""
+        in r_landcover_[i] fields in raw tabular GeoCARET output data"""
         values['r_area_fractions'] = map_r_landuse(
                 r_landuses=[values['r_landcover_bysoil_'+str(ix)] for
                             ix in range(0, 27)])

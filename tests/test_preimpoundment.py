@@ -6,7 +6,7 @@ from typing import Dict, List, Any
 import jsonschema
 import numpy as np
 import pandas as pd
-from reemission.integration.heet.input_model_heet import map_c_landuse, map_r_landuse
+from reemission.integration.geocaret.input_model_geocaret import map_c_landuse, map_r_landuse
 from reemission.utils import get_package_file, load_yaml, load_json
 from reemission.emissions import CarbonDioxideEmission, MethaneEmission
 from reemission.reservoir import Reservoir
@@ -16,7 +16,7 @@ from reemission.biogenic import BiogenicFactors, Climate, SoilType
 
 
 class TestLanduseMapping(unittest.TestCase):
-    """Checks if data mapping from heet to re-emission and pre-impoundment
+    """Checks if data mapping from geocaret to re-emission and pre-impoundment
     emission calculation in re-emission produce correct results"""
     
     @classmethod
@@ -29,7 +29,7 @@ class TestLanduseMapping(unittest.TestCase):
             bottom = bottom_1 + bottom_2
             return np.vstack((top, bottom))
         
-        cls.c_landuse_heet = generate_input_c_landuse_array()
+        cls.c_landuse_geocaret = generate_input_c_landuse_array()
         
         cls.c_landuse_reemission = [
             [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
@@ -51,7 +51,7 @@ class TestLanduseMapping(unittest.TestCase):
             [0.0, 0.5, 0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0],
             [0.0, 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.5]]
     
-        cls.r_landuse_heet = np.eye(27)
+        cls.r_landuse_geocaret = np.eye(27)
 
         cls.r_landuse_reemission = [
             [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -84,7 +84,7 @@ class TestLanduseMapping(unittest.TestCase):
         
 
     def test_catchment_landuse_mapping(self):
-        """Test mapping between heet and re-emission
+        """Test mapping between geocaret and re-emission
         Re-emission landuse map is shown below:
             "bare", 
             "snow and ice"
@@ -106,24 +106,24 @@ class TestLanduseMapping(unittest.TestCase):
             c_landcover_7	'Water Bodies'
             c_landcover_8	'Permanent snow and ice'"""
         # Load input/output data
-        for row in range(0,len(self.c_landuse_heet)):
-            heet_c_fractions = {
+        for row in range(0,len(self.c_landuse_geocaret)):
+            geocaret_c_fractions = {
                 f'c_landcover_{str(ix)}': fraction for ix, fraction in 
-                enumerate(self.c_landuse_heet[row])} 
+                enumerate(self.c_landuse_geocaret[row])} 
             reemission_fractions_desired = self.c_landuse_reemission[row]
-            reemission_fractions_calc = map_c_landuse(heet_c_fractions)
+            reemission_fractions_calc = map_c_landuse(geocaret_c_fractions)
             self.assertEqual(reemission_fractions_desired, reemission_fractions_calc)
 
     def test_reservoir_landuse_mapping(self):
         """Reservoir landuse mapping follows the same order as catchment landuse mapping
         but the vector is 3 x 9 = 27 long as the landuse mapping is divided into three
         categories based on soil type: Mineral -> Organic -> No Data"""
-        heet_data = self.r_landuse_heet
+        geocaret_data = self.r_landuse_geocaret
         reemission_des_outputs = self.r_landuse_reemission
 
-        for row in range(0,len(heet_data)):
+        for row in range(0,len(geocaret_data)):
             reemission_fractions_desired = reemission_des_outputs[row]
-            reemission_fractions_calc = map_r_landuse(heet_data[row])
+            reemission_fractions_calc = map_r_landuse(geocaret_data[row])
             try:
                 self.assertEqual(reemission_fractions_desired, reemission_fractions_calc)
             except AssertionError as e:

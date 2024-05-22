@@ -207,14 +207,14 @@ pprint.pprint(model.outputs)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tomjanus/reemission/blob/master/docs/notebooks/index.ipynb)
 
 #### Using Command Line Interface (CLI)
-RE-Emission has two CLI interfaces: `reemission` for performing greenhouse gas emission calculations and `reemission-heet` for processing outputs obtained from an upstream reservoir and catchment delineation tool HEET and creating input files to RE-Emission.
+RE-Emission has two CLI interfaces: `reemission` for performing greenhouse gas emission calculations and `reemission-geocaret` for processing outputs obtained from an upstream reservoir and catchment delineation tool HEET and creating input files to RE-Emission.
 For more information about the usage, type in Terminal/Console:
 ```bash
 reemission --help
 ```
 and 
 ```bash
-reemission-heet --help
+reemission-geocaret --help
 ```
 
 For more examples, please refer to the [Documentation](https://example.com)

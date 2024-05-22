@@ -19,9 +19,9 @@ import sys
 import pathlib
 import rich_click as click
 from reemission.app_logger import create_logger
-from reemission.integration.heet.heet_tab_parser import HeetOutputReader
-from reemission.integration.heet.heet_shp_parser import ShpConcatenator
-from reemission.integration.heet.heet_tab_to_json import (
+from reemission.integration.geocaret.geocaret_tab_parser import GeoCaretOutputReader
+from reemission.integration.geocaret.geocaret_shp_parser import ShpConcatenator
+from reemission.integration.geocaret.geocaret_tab_to_json import (
     TabToJSONConverter, LegacySavingStrategy)
 from reemission.utils import load_toml, get_package_file
 
@@ -31,7 +31,7 @@ FIGLET = True
 click.rich_click.USE_MARKDOWN = True
 
 def add_description(fun: Callable) -> Callable:
-    """Adds desciption of the HEET integration CLI.
+    """Adds desciption of the GeoCARET integration CLI.
 
     Params:
         fun: Function to decorate
@@ -39,19 +39,19 @@ def add_description(fun: Callable) -> Callable:
         Decorated function
     """
     doc = fun.__doc__
-    fun.__doc__ = "Integration of RE-Emission with HEET outputs \n\n" + doc
+    fun.__doc__ = "Integration of RE-Emission with GeoCARET outputs \n\n" + doc
     return fun
 
 
 @click.group()
 @add_description
-def heet_integrate() -> None:
-    """--------------- RE-EMISSION HEET OUTPUT PROCESSING  --------------------
+def geocaret_integrate() -> None:
+    """--------------- RE-EMISSION GeoCARET OUTPUT PROCESSING  --------------------
 
 You are now using the Command line interface for an interface package designed
-for processing outputs obtained from HEET and creating input files for
+for processing outputs obtained from GeoCARET and creating input files for
 RE-EMISSION. \n
-HEET is a generalized catchment delineation and gis processing tool.\n
+GeoCARET is a general catchment and reservoir evaluation tool that uses GIS data.\n
 RE-EMISSION is a collection of methods for estimating GHG emissions from reservoirs
 
 Full documentation at : https://reemission.readthedocs.io/en/latest/.
@@ -60,7 +60,7 @@ Full documentation at : https://reemission.readthedocs.io/en/latest/.
 @click.option("-i", "--input-files", type=click.Path(), multiple=True)
 @click.option("-c", "--config-file", type=click.Path(), default=None)
 @click.option("-o", "--output-file", type=click.Path(), 
-              default="input_data/all_heet_outputs.csv")
+              default="input_data/all_geocaret_outputs.csv")
 @click.option("-id", "--id-field", type=click.STRING, default="id",
               help="Field on which duplicates are looked for")
 @click.option('-rd', '--remove-dups', is_flag=True, default=True,
@@ -72,18 +72,18 @@ def process_tab_outputs(
         input_files: List[str], config_file: Optional[str], 
         output_file: str, id_field: str, remove_dups: bool,
         col_value_pair: Optional[List[Tuple[str, str]]]=None) -> None:
-    """Read tabular output data from HEET. Remove rows with
+    """Read tabular output data from GeoCARET. Remove rows with
     duplicate dam ids, selects dam ids from the list or required dam ids.
     
     TODO: Handle existing reservoirs for which volume, max_depth and mean_depth
     are unknown."""
-    output_reader = HeetOutputReader(file_paths=input_files)
-    heet_output = output_reader.read_files()
+    output_reader = GeoCaretOutputReader(file_paths=input_files)
+    geocaret_output = output_reader.read_files()
     if remove_dups:
-        heet_output.remove_duplicates(on_column=id_field)
+        geocaret_output.remove_duplicates(on_column=id_field)
     if config_file is None:
         tab_data_config = load_toml(
-            get_package_file("./config/heet.toml"))['tab_data']
+            get_package_file("./config/geocaret.toml"))['tab_data']
     else:
         tab_data_config = load_toml(pathlib.Path(config_file))['tab_data']
     # Get the list of mandatory columns from config file
@@ -91,11 +91,11 @@ def process_tab_outputs(
     if col_value_pair is not None:
         for col_name, col_value in col_value_pair:
             click.echo(f"Adding column: {col_name} with value {col_value} to data in file(s) {input_files_str}")
-            heet_output.add_column(column_name=col_name, default_value=col_value)
-    heet_output.filter_columns(
+            geocaret_output.add_column(column_name=col_name, default_value=col_value)
+    geocaret_output.filter_columns(
         mandatory_columns=tab_data_config['mandatory_fields'],
         optional_columns=tab_data_config['alternative_fields'])
-    heet_output.to_csv(pathlib.Path(output_file))
+    geocaret_output.to_csv(pathlib.Path(output_file))
     logger.info("Tabular data saved to: %s", output_file)
 
 
@@ -176,6 +176,6 @@ def tab_to_json(input_file: str, output_file: str) -> None:
     converter.to_json(pathlib.Path(output_file))
 
 
-heet_integrate.add_command(process_tab_outputs)
-heet_integrate.add_command(join_shapes)
-heet_integrate.add_command(tab_to_json)
+geocaret_integrate.add_command(process_tab_outputs)
+geocaret_integrate.add_command(join_shapes)
+geocaret_integrate.add_command(tab_to_json)

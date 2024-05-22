@@ -53,7 +53,7 @@ else
     python fetch_inputs.py $INPUT_FOLDER_LINK -o $INPUT_FOLDER/"reemission_demo_delineations.zip"
 fi
 
-OUTPUTS_FOLDER="heet_outputs"
+OUTPUTS_FOLDER="geocaret_outputs"
 echo
 echo "3. Creating the outputs folder $OUTPUTS_FOLDER ..."
 echo
@@ -66,7 +66,7 @@ else
 fi
 
 echo
-echo "4. Merging tabular data into a single CSV file and saving to $OUTPUTS_FOLDER/heet_outputs.csv ..."
+echo "4. Merging tabular data into a single CSV file and saving to $OUTPUTS_FOLDER/geocaret_outputs.csv ..."
 echo
 # Pre-process the input data
 SHP_FOLDERS=(
@@ -76,8 +76,8 @@ SHP_FOLDERS=(
     "$INPUT_FOLDER/batch_4"
 )
 # echo ${SHP_FOLDERS[1]}
-COMBINED_CSV_FILE="$OUTPUTS_FOLDER/heet_outputs.csv"
-command_1="reemission-heet process-tab-outputs"
+COMBINED_CSV_FILE="$OUTPUTS_FOLDER/geocaret_outputs.csv"
+command_1="reemission-geocaret process-tab-outputs"
 for input_folder in "${SHP_FOLDERS[@]}"; do
   command_1+=" -i $input_folder/output_parameters.csv"
 done
@@ -93,7 +93,7 @@ echo
 # Convert the csv file into a JSON input file to RE-Emission
 # Write reemission tab2json CLI function
 # Join shape files for individual reservoirs into combined shapes for each category of shapes
-command_2="reemission-heet join-shapes"
+command_2="reemission-geocaret join-shapes"
 for input_folder in "${SHP_FOLDERS[@]}"; do
   command_2+=" -i $input_folder"
 done
@@ -101,9 +101,9 @@ command_2+=" -o $OUTPUTS_FOLDER \-gp 'R_*.shp, C_*.shp, MS_*.shp, PS_*.shp' -f '
 eval $command_2
 
 echo
-echo "6. Converting HEET tabular data to the RE-Emission input JSON file"
+echo "6. Converting tabular data from GeoCARET to the RE-Emission input JSON file"
 echo
-reemission-heet tab-to-json -i $COMBINED_CSV_FILE -o $OUTPUTS_FOLDER/"reemission_inputs.json"
+reemission-geocaret tab-to-json -i $COMBINED_CSV_FILE -o $OUTPUTS_FOLDER/"reemission_inputs.json"
 
 REEMISSION_OUTPUTS_FOLDER="reemission_outputs"
 echo

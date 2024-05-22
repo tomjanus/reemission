@@ -13,7 +13,7 @@ from reemission.app_logger import create_logger
 # Create a logger
 logger = create_logger(logger_name=__name__)
 # Read toml configuration file
-config = load_toml(get_package_file('config/heet.toml'))
+config = load_toml(get_package_file('config/geocaret.toml'))
 
 
 @dataclass
@@ -174,7 +174,7 @@ def append_data_to_shapes(
     the original shape files but under a different name. The new name is equal
     to the original name plus the suffix provided as an argument.
     
-    Used to transfer data from HEET csv output file to the shape files."""
+    Used to transfer data from GeoCARET csv output file to the shape files."""
     config_shape_categories = config_dict['shp_output'].keys()
     tab_data = load_csv(data_file)
     for shape in shp_folder.glob('*.shp'):

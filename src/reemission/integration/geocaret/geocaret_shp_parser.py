@@ -1,6 +1,6 @@
-"""Module for processing shape delineation files from HEET
+"""Module for processing shape delineation files from GeoCARET
 
-Summary: Delineations produced by HEET come in batches and are saved in multiple
+Summary: Delineations produced by GeoCARET come in batches and are saved in multiple
 separate folders.
 
 Naming conventions of the shape files produced in reservoir / catchment delineation
@@ -42,7 +42,7 @@ class ShpConcatenator:
             sel_ids: Optional[List[int]] = None) -> Dict:
         """Find shape files in folder that match the pattern given in
         glob_pattern and represent certain dam/reservoir IDs. An example
-        glob pattern could be `MS_*.shp` which, in the context of heet, matches
+        glob pattern could be `MS_*.shp` which, in the context of geocaret, matches
         shape files for any dam/reservoir ID representing flooded river 
         sections"""
         # List all shapes files in folders matching a given pattern
@@ -64,7 +64,7 @@ class ShpConcatenator:
         else:
             sel_ids = []
             selected_shape_files = shp_files
-            # Get dam/reservoir index values from file names (By HEET convention
+            # Get dam/reservoir index values from file names (By GeoCARET convention
             # delineation shp file has ID embedded in file name.)
             for shp_file in selected_shape_files:
                 shp_match = re.search(r'_\d+.shp', shp_file.as_posix())

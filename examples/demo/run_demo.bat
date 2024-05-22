@@ -57,7 +57,7 @@ if exist "%INPUT_FOLDER%" (
     python fetch_inputs.py %INPUT_FOLDER_LINK% -o "%INPUT_FOLDER%\reemission_demo_delineations.zip"
 )
 
-set "OUTPUTS_FOLDER=heet_outputs"
+set "OUTPUTS_FOLDER=gecaret_outputs"
 echo.
 echo "3. Creating the outputs folder %OUTPUTS_FOLDER% ..."
 echo.
@@ -70,12 +70,12 @@ if not exist "%OUTPUTS_FOLDER%" (
 )
 
 echo.
-echo "4. Merging tabular data into a single CSV file and saving to %OUTPUTS_FOLDER%/heet_outputs.csv ..."
+echo "4. Merging tabular data into a single CSV file and saving to %OUTPUTS_FOLDER%/geocaret_outputs.csv ..."
 echo.
 REM Pre-process the input data
 set "SHP_FOLDERS=%INPUT_FOLDER%\batch_1 %INPUT_FOLDER%\batch_2 %INPUT_FOLDER%\batch_3 %INPUT_FOLDER%\batch_4"
-set "COMBINED_CSV_FILE=%OUTPUTS_FOLDER%\heet_outputs.csv"
-set "command_1=reemission-heet process-tab-outputs"
+set "COMBINED_CSV_FILE=%OUTPUTS_FOLDER%\geocaret_outputs.csv"
+set "command_1=reemission-geocaret process-tab-outputs"
 for %%F in (%SHP_FOLDERS%) do (
     set "command_1=!command_1! -i %%F\output_parameters.csv"
 )
@@ -88,7 +88,7 @@ echo.
 REM Convert the csv file into a JSON input file to RE-Emission
 REM Write reemission tab2json CLI function
 REM Join shape files for individual reservoirs into combined shapes for each category of shapes
-set "command_2=reemission-heet join-shapes"
+set "command_2=reemission-geocaret join-shapes"
 for %%F in (%SHP_FOLDERS%) do (
     set "command_2=!command_2! -i %%F"
 )
@@ -96,9 +96,9 @@ set "command_2=!command_2! -o %OUTPUTS_FOLDER% -gp 'R_*.shp, C_*.shp, MS_*.shp, 
 %command_2%
 
 echo.
-echo "6. Converting HEET tabular data to the RE-Emission input JSON file"
+echo "6. Converting GeoCARET tabular data to the RE-Emission input JSON file"
 echo.
-reemission-heet tab-to-json -i %COMBINED_CSV_FILE% -o %OUTPUTS_FOLDER%/reemission_inputs.json
+reemission-geocaret tab-to-json -i %COMBINED_CSV_FILE% -o %OUTPUTS_FOLDER%/reemission_inputs.json
 
 set "REEMISSION_OUTPUTS_FOLDER=reemission_outputs"
 echo.

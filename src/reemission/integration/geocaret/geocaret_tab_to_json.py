@@ -1,4 +1,4 @@
-"""Process parsed tabular data from HEET and create RE-EMISSION input JSON
+"""Process parsed tabular data from GeoCARET and create RE-EMISSION input JSON
 files"""
 from __future__ import annotations
 import pathlib
@@ -8,12 +8,12 @@ from dataclasses import dataclass
 import pandas as pd
 import json
 from reemission.utils import get_package_file
-from reemission.integration.heet.heet_tab_parser import TabularHeetOutput
+from reemission.integration.geocaret.geocaret_tab_parser import TabularGeoCaretOutput
 from reemission.data_models.input_model import InputModel
-from reemission.integration.heet.input_model_heet import \
-    DamDataModelHeet, BuildStatusModelHeet, \
-    CatchmentModelHeet, ReservoirModelHeet, BiogenicFactorsModelHeet
-from reemission.integration.heet.custom_exceptions import CompositeModelValidationException
+from reemission.integration.geocaret.input_model_geocaret import \
+    DamDataModelGeoCaret, BuildStatusModelGeoCaret, \
+    CatchmentModelGeoCaret, ReservoirModelGeoCaret, BiogenicFactorsModelGeoCaret
+from reemission.integration.geocaret.custom_exceptions import CompositeModelValidationException
 from reemission.app_logger import create_logger
 
 
@@ -68,22 +68,22 @@ class LegacySavingStrategy:
 
 @dataclass
 class InputToDictConverter:
-    """Conversion of HEET output data to RE-Emission input structure."""
+    """Conversion of GeoCARET output data to RE-Emission input structure."""
     input: InputModel
 
     @classmethod
     def from_row(
             cls, row: pd.Series, r_status: BuildStatus, 
             r_construction_year: Union[str, int]) -> InputToDictConverter:
-        """Instantiate InputModel from a row of tabular data output from HEET"""
+        """Instantiate InputModel from a row of tabular data output from GeoCARET"""
         # Since objects are instantiated one by one, we need to manually accumulate
         # Pydantic's ValidationErrors and throw and re-throw validation error with
         # one big compound error message
-        model_caller = {"dam_data": DamDataModelHeet,
-                        "build_status": BuildStatusModelHeet,
-                        "catchment": CatchmentModelHeet,
-                        "reservoir": ReservoirModelHeet,
-                        "biogenic_factors": BiogenicFactorsModelHeet}
+        model_caller = {"dam_data": DamDataModelGeoCaret,
+                        "build_status": BuildStatusModelGeoCaret,
+                        "catchment": CatchmentModelGeoCaret,
+                        "reservoir": ReservoirModelGeoCaret,
+                        "biogenic_factors": BiogenicFactorsModelGeoCaret}
         error_stack = ""
         input_model_data = {}
         for field_name, model in model_caller.items():
@@ -117,8 +117,8 @@ class TabToJSONConverter:
     def to_json(self, output_file: pathlib.Path) -> None:
         """ """
         out_dict = {}
-        heet_output = TabularHeetOutput.from_csv(self.tab_data_file)
-        for _, row in heet_output.data.iterrows():
+        geocaret_output = TabularGeoCaretOutput.from_csv(self.tab_data_file)
+        for _, row in geocaret_output.data.iterrows():
             try:
                 input_model = InputToDictConverter.from_row(row, 'existing', 2000)
                 out_dict.update(input_model.to_dict(self.saving_strategy))

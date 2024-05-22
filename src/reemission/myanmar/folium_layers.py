@@ -176,7 +176,7 @@ class MyaIFCDamsLayer(FoliumLayer):
 
 @dataclass
 class DelineationsPolyLayer(FoliumLayer):
-    """HEET-delineated reservoirs as a Folium layer"""
+    """GeoCARET-delineated reservoirs as a Folium layer"""
     data: gpd.GeoDataFrame
     v_minmax: Optional[Tuple[float, float]] = None
     drop_na_emissions: bool = True

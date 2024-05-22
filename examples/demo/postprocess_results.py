@@ -7,7 +7,7 @@ from reemission.postprocessing.data_processing import (
 from reemission.postprocessing.visualise import FoliumOutputMapper
 from reemission.myanmar.folium_layers import DelineationsPolyLayer, MyaIFCDamsLayer
 
-config = load_toml(get_package_file('config/heet.toml'))
+config = load_toml(get_package_file('config/geocaret.toml'))
 
 
 def process_mya_case_study_results(
@@ -17,8 +17,8 @@ def process_mya_case_study_results(
         ifc_dam_path: pathlib.Path) -> None:
     """Process (merge, clean) and visualise data for the demo case study"""
     # 1. Create shape files with extra fields with values obtained from the
-    #    tabular HEET output csv file
-    data_file = shp_folder / "heet_outputs.csv"
+    #    tabular GeoCARET output csv file
+    data_file = shp_folder / "geocaret_outputs.csv"
     append_data_to_shapes(shp_folder, data_file, config)
     # 2. Extract data from RE-Emission output file and save it into reservoirs
     #    shape file
@@ -50,7 +50,7 @@ def process_mya_case_study_results(
 if __name__ == "__main__":
     """ """
     process_mya_case_study_results(
-        shp_folder = pathlib.Path("heet_outputs"),
+        shp_folder = pathlib.Path("geocaret_outputs"),
         output_json_file =pathlib.Path("reemission_outputs/demo_GHG_outputs.json"),
         map_path = pathlib.Path("demo_interactive_map"),
         ifc_dam_path = pathlib.Path("reemission_demo_dam_db")/"dam_db.shp")

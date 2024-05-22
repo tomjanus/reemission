@@ -13,7 +13,7 @@ import unittest
 import shutil
 import geopandas as gpd
 from reemission.app_logger import create_logger
-from reemission.integration.heet.heet_shp_parser import ShpConcatenator
+from reemission.integration.geocaret.geocaret_shp_parser import ShpConcatenator
 
 
 TEST_OUTPUT_FOLDER = './test_output'
