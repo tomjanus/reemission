@@ -12,3 +12,6 @@ reemission run-demo [working-directory]
 ```
 `working-directory` is a folder in which all the inputs and outpus for the demo will be stored. If the folder structure does not exists it will be created.
 The demo relies on several input datasets originating form `GeoCARET`. If not already in your `working-directory` they will be automatically downloaded. This step requires working internet connection.
+
+If all goes well the demo should run as follows:
+![demo-22-05-24-compressed](https://github.com/tomjanus/reemission/assets/8837107/b101e9d0-ac60-4f21-bbeb-a8a8ae85522b)
