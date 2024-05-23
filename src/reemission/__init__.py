@@ -1,9 +1,9 @@
 """ """
-from pkg_resources import get_distribution, DistributionNotFound
-
+from importlib.metadata import version, PackageNotFoundError
 # automatically set __version__ to the global version of the package declared
 # in setup.cfg or set by the setuptools_scm package
 try:
-    __version__ = get_distribution(__name__).version
-except DistributionNotFound:
+    __version__ = version(__name__)
+except PackageNotFoundError:
     pass  # package is not installed
+
