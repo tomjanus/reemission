@@ -84,6 +84,23 @@ FACTOR_NAMES = {
 
 landcover_names: List[str] = [landcover.value for landcover in Landuse.__dict__['_member_map_'].values()]
 
+app_config: Dict = load_yaml(
+    file_path=get_package_file("./config/app_config.yaml"))
+clean_tex = app_config['latex']['clean_tex']
+compilations = app_config['latex']['compilations']
+def _get_latex_compiler() -> str:
+    """ """
+    default_compiler = 'pdflatex'
+    try:
+        latex_options = app_config['latex']
+        compiler = latex_options['compiler']
+        if compiler in ('pdflatex', 'latexmk'):
+            return compiler
+        else:
+            return default_compiler
+    except KeyError:
+        return 'pdflatex'
+
 
 def parse_landcover_composition(vector: List[float]) -> List[float]:
     """ """
@@ -92,7 +109,7 @@ def parse_landcover_composition(vector: List[float]) -> List[float]:
     try:
         assert vector_length in supported_vector_lengths
     except AssertionError:
-        vector_sizes: str = ", ".join(map(str,supported_vector_lengths))
+        vector_sizes: str = ", ".join(map(str, supported_vector_lengths))
         raise ValueError(f"Supported vector sizes: {vector_sizes}. Provided vector has size {vector_length}")
     if vector_length == 9:
         return vector
@@ -1266,8 +1283,12 @@ class LatexWriter(Writer):
                     self.add_outputs_subsection(reservoir_name=reservoir_name)
                     self.add_intern_var_subsection(reservoir_name=reservoir_name)
             # Generate a PDF (requires a LaTeX compiler present in the system)
+            print(clean_tex, type(clean_tex))
+            print(_get_latex_compiler(), type(_get_latex_compiler()))
+            print(compilations, type(compilations))
             BatchCompiler(self.document).generate_pdf(
-                clean_tex=False, compiler= 'pdflatex', compilations=2)
+                clean_tex=clean_tex, compiler=_get_latex_compiler(), 
+                compilations=compilations)
             log.info("Created a PDF file with outputs.")
         else:
             log.error(

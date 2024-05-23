@@ -4,6 +4,10 @@ logging:
   log_dir: '../../tmp/reemission'
   log_filename: reemission.log
   mode: w # w for writing and a for append
+latex:
+  compiler: pdflatex # pdflatex, latexmk, default
+  clean_tex: True
+  compilations: 2
 demo_data:
   dam_db:
     url: ""
