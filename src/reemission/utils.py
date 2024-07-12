@@ -5,7 +5,8 @@ import os
 import configparser
 import pathlib
 from functools import wraps
-from distutils.spawn import find_executable
+# from distutils.spawn import find_executable # DEPRECATED
+import shutil
 import pathlib
 import hashlib
 import time
@@ -34,7 +35,15 @@ SplitPath = Tuple[pathlib.Path, Optional[pathlib.Path]]
 
 
 def validate(data: Any, schema: Dict) -> None:
-    """Validate data in a dictionary format against schema with jsonschema"""
+    """Validate data in a dictionary format against schema with jsonschema.
+    
+    Args:
+        data: Data to be validated.
+        schema: Schema against which the data is to be validated.
+
+    Raises:
+        jsonschema.exceptions.ValidationError: If validation fails.
+    """ 
     try:
         jsonschema.validate(instance=data, schema=schema)
     except jsonschema.exceptions.ValidationError as e:
@@ -45,14 +54,14 @@ def validate(data: Any, schema: Dict) -> None:
 def load_yaml(
         file_path: pathlib.Path, 
         schema_file: Optional[pathlib.Path] = None) -> Dict:
-    """Conditional yaml file loader depending on the installed yaml package
-    version.
-
+    """Conditional yaml file loader depending on the installed yaml package version.
+    
     Args:
-        file_path: path to the yaml file
-        schema_file: path to json 'jsonschema' file
+        file_path: Path to the yaml file.
+        schema_file: Path to json 'jsonschema' file (optional).
+    
     Returns:
-        A dictionary representation of the yaml file.
+        Dict: A dictionary representation of the yaml file.
     """
     with open(file_path, encoding='utf-8') as file_handle:
         if version.parse(yaml.__version__) < version.parse("5.1"):
@@ -68,40 +77,74 @@ def load_yaml(
 
 
 def load_json(file_path: pathlib.Path) -> Dict:
-    """Load json file"""
+    """Load json file.
+    
+    Args:
+        file_path: Path to the json file.
+    
+    Returns:
+        Dict: A dictionary representation of the json file.
+    """
     with open(file_path, 'r', encoding='utf-8') as json_file:
         return json.load(json_file)
 
 
 def load_toml(file_path: pathlib.Path) -> Dict:
-    """Load toml file"""
+    """Load toml file.
+    
+    Args:
+        file_path: Path to the toml file.
+    
+    Returns:
+        Dict: A dictionary representation of the toml file.
+    """
     return toml.load(file_path)
 
 
 def load_shape(path: pathlib.Path) -> gpd.GeoDataFrame:
-    """ Opens a shape file using geopandas and returns a GeoDataFrame."""
+    """Opens a shape file using geopandas and returns a GeoDataFrame.
+    
+    Args:
+        path: Path to the shape file.
+    
+    Returns:
+        gpd.GeoDataFrame: A GeoDataFrame containing the shape data.
+    """
     return gpd.read_file(path)
 
 
 def load_geojson(path: pathlib.Path) -> gpd.GeoDataFrame:
-    """Opens a geojson file using geopandas and returns a GeoDataFrame."""
+    """Opens a geojson file using geopandas and returns a GeoDataFrame.
+    
+    Args:
+        path: Path to the geojson file.
+    
+    Returns:
+        gpd.GeoDataFrame: A GeoDataFrame containing the geojson data.
+    """
     return gpd.read_file(path)
 
 
 def load_csv(path: pathlib.Path) -> pd.DataFrame:
-    """Opens a csv file with tabular data and loads it into pandas
-    dataframe."""
+    """Opens a csv file with tabular data and loads it into a pandas DataFrame.
+    
+    Args:
+        path: Path to the csv file.
+    
+    Returns:
+        pd.DataFrame: A DataFrame containing the csv data.
+    """
     return pd.read_csv(path)
 
 
 def get_package_file(*folders: str) -> pathlib.Path:
     """Imports package data using importlib functionality.
-
+    
     Args:
-        *folders: comma-separated strings representing path to the packaged data
-            file.
+        *folders: Comma-separated strings representing path to the packaged data file.
+    
     Returns:
-        A os-indepenent path of the data file.
+        pathlib.Path: A os-independent path of the data file.
     """
     # Import the package based on Python's version
     if sys.version_info < (3, 9):
@@ -120,7 +163,14 @@ def get_package_file(*folders: str) -> pathlib.Path:
 
 
 def get_folder_size(folder_path: Union[pathlib.Path, str]) -> float:
-    """Calculates size in bytes for all files in a given folder"""
+    """Calculates size in bytes for all files in a given folder.
+    
+    Args:
+        folder_path: Path to the folder.
+    
+    Returns:
+        float: Total size of the folder in bytes.
+    """
     total_size = 0
     for dirpath, dirnames, filenames in os.walk(folder_path):
         for filename in filenames:
@@ -130,7 +180,11 @@ def get_folder_size(folder_path: Union[pathlib.Path, str]) -> float:
 
 
 def clean_folder(folder_path: Union[pathlib.Path, str]) -> None:
-    """Removes all subfolders and files in a given folder"""
+    """Removes all subfolders and files in a given folder.
+    
+    Args:
+        folder_path: Path to the folder to be cleaned.
+    """
     for root, dirs, files in os.walk(folder_path, topdown=False):
         for file_name in files:
             file_path = os.path.join(root, file_name)
@@ -142,14 +196,13 @@ def clean_folder(folder_path: Union[pathlib.Path, str]) -> None:
 
 def read_config(
         file_path: Union[str, pathlib.Path]) -> configparser.ConfigParser:
-    """ Reads the `.ini` file with global configuration parameters and return
-    the parsed config object.
-
+    """Reads the `.ini` file with global configuration parameters and returns the parsed config object.
+    
     Args:
-        file_path: path to the .ini file.
-
+        file_path: Path to the .ini file.
+    
     Returns:
-        configparser.ConfigParser object of the .ini file.
+        configparser.ConfigParser: ConfigParser object of the .ini file.
     """
     config = configparser.ConfigParser()
     config.read(file_path)
@@ -160,15 +213,16 @@ def read_table(
             file_path: pathlib.Path, 
             schema_file: Optional[pathlib.Path] = None) -> Dict:
     """Reads yaml table from the given YAML file.
-
+    
     Args:
-        file_path: path to the YAML file.
-        schema_file: path to json 'jsonschema' file
+        file_path: Path to the YAML file.
+        schema_file: Path to json 'jsonschema' file (optional).
+    
     Returns:
-        Dictionary representation of the yaml file if the file exists and no
-            errors occured while parsing the file.
+        Dict: Dictionary representation of the yaml file if the file exists and no errors occurred while parsing the file.
+    
     Raises:
-        TableNotReadException.
+        TableNotReadException: If the table cannot be read.
     """
     try:
         stream = open(file_path, "r", encoding="utf-8")
@@ -190,19 +244,17 @@ def read_table(
 
 
 def find_enum_index(enum: EnumMeta, to_find: Enum) -> int:
-    """ Finds index of an item in an Enum class corresponding to an item
-    given in to_find.
-
+    """Finds index of an item in an Enum class corresponding to an item given in to_find.
+    
     Args:
-        enum: enum object in which the item to find is stored.
-        to_find: key in the enum object.
-
+        enum: Enum object in which the item to find is stored.
+        to_find: Key in the enum object.
+    
     Returns:
-        Index of the item to find if the item exists in enum.
-        Otherwise, returns None.
-
+        int: Index of the item to find if the item exists in enum.
+    
     Raises:
-        KeyError if index could not be found.
+        KeyError: If index could not be found.
     """
     item: str
     for index, item in enumerate(enum):
@@ -213,22 +265,23 @@ def find_enum_index(enum: EnumMeta, to_find: Enum) -> int:
 
 def is_latex_installed() -> bool:
     """Checks if LaTeX is available as a command.
-
+    
     Returns:
-        True if LaTeX is installed and False otherwise.
+        bool: True if LaTeX is installed, False otherwise.
     """
-    if find_executable('latex'):
+    if shutil.which('latex'):
         return True
     return False
 
 
 def add_version(fun: Callable) -> Callable:
     """Adds version of the tool to the help heading.
-
-    Params:
-        fun: Function to decorate
+    
+    Args:
+        fun: Function to decorate.
+    
     Returns:
-        Decorated function
+        Callable: Decorated function.
     """
     doc = fun.__doc__
     fun.__doc__ = "Package " + reemission.__name__ + " v" + \
@@ -237,10 +290,14 @@ def add_version(fun: Callable) -> Callable:
 
 
 def md5(file_name: Union[str, pathlib.Path], chunk_size: int = 4) -> str:
-    """ Generate MD5 checksum of a file
+    """Generate MD5 checksum of a file.
+    
     Args:
-        file_name: path to the file for which MD5 sum needs to be calculated
-        chunk_size: size of the file chunk to be read (in KB)
+        file_name: Path to the file for which MD5 sum needs to be calculated.
+        chunk_size: Size of the file chunk to be read (in KB).
+    
+    Returns:
+        str: MD5 checksum of the file.
     """
     hash_md5 = hashlib.md5()
     with open(file_name, "rb") as f_handle:
@@ -250,7 +307,14 @@ def md5(file_name: Union[str, pathlib.Path], chunk_size: int = 4) -> str:
 
 
 def split_path(input_path: Union[str, pathlib.Path]) -> SplitPath:
-    """Split path into the parent directory tree and the file name."""
+    """Split path into the parent directory tree and the file name.
+    
+    Args:
+        input_path: Path to be split.
+    
+    Returns:
+        SplitPath: Tuple containing the parent directory and the file name.
+    """
     if isinstance(input_path, str):
         input_path = pathlib.Path(input_path)
     if not input_path.suffix:
@@ -261,13 +325,26 @@ def split_path(input_path: Union[str, pathlib.Path]) -> SplitPath:
 
 
 def is_directory(input_path: pathlib.Path) -> bool:
-    """Check if the path is a directory by checking if split_path returns file
+    """Check if the path is a directory by checking if split_path returns file.
+    
+    Args:
+        input_path: Path to be checked.
+    
+    Returns:
+        bool: True if the path is a directory, False otherwise.
     """
     return (split_path(input_path)[1] is None)
 
 
-def timeit(func):
-    """Wrapper for timing executions of functions"""
+def timeit(func: Callable) -> Callable:
+    """Wrapper for timing executions of functions.
+    
+    Args:
+        func: Function to be wrapped.
+    
+    Returns:
+        Callable: Wrapped function.
+    """
     @wraps(func)
     def wrapper(*args, **kwargs):
         tic = time.perf_counter()
@@ -282,8 +359,15 @@ def timeit(func):
 
 def save_to_json(
         output_path: Union[str, pathlib.Path], input_dict: Dict) -> int:
-    """ Save dictionary to JSON. If folder tree does not exist, create
-    one before saving the file. Returns an exit status."""
+    """Save dictionary to JSON. If folder tree does not exist, create one before saving the file. Returns an exit status.
+    
+    Args:
+        output_path: Path to save the JSON file.
+        input_dict: Dictionary to be saved.
+    
+    Returns:
+        int: Exit status code.
+    """
     # Create output path if output path does not exist
     if isinstance(output_path, str):
         output_path = pathlib.Path(output_path)
@@ -304,18 +388,32 @@ def save_to_json(
 
 
 def strip_double_quotes(input: str) -> str:
-    """ """
+    """Strip double quotes from a string.
+    
+    Args:
+        input: Input string.
+    
+    Returns:
+        str: String with sinfgle quotes.
+    """
     return input.replace('"','')
 
 
-def save_return(output: Dict, save_output: bool=True):
-    """Decorator that saves the output of the decorated method to an output dict 
-    (usually a global var)
+def save_return(output: Dict, save_output: bool=True) -> Callable:
+    """Decorator that saves the output of the decorated method to an output dict (usually a global var).
     
     Used for saving internal variables to a global shared variable internals in
     `shared_intern.py`
+    
+    Args:
+        output: Dictionary to save the output.
+        save_output: Whether to save the output or not (default is True).
+    
+    Returns:
+        Callable: Decorated function.
     """
     def decorator(func: Callable) -> Callable:
+        @wraps(func)
         def wrapper(*args, **kwargs) -> Callable:
             # Get the method name
             method_name = func.__name__
@@ -329,16 +427,22 @@ def save_return(output: Dict, save_output: bool=True):
     return decorator
     
     
-def debug_on_exception(func: Callable):
-    """Wrapper for debugging functions that raise exception
-    Enters debug mode if (some) generic exception is raised
+def debug_on_exception(func: Callable) -> Callable:
+    """Wrapper for debugging functions that raise exceptions. Enters debug mode if an exception is raised.
+    
+    Args:
+        func: Function to be wrapped.
+    
+    Returns:
+        Callable: Wrapped function.
     """
+    @wraps(func)
     def wrapper(*args, **kwargs) -> Callable:
         try:
             return func(*args, **kwargs)
         except Exception as e:
             import pdb
-            print(f"OOpsie daisey, we've raised an exception: {e}")
+            print(f"Oopsie daisey, we've raised exception: {e}")
             pdb.set_trace()
 
     return wrapper
