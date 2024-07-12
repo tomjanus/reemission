@@ -6,16 +6,16 @@ Google Drive using URLs. It includes classes for different download scenarios
 and utility functions to validate files and create directory structures.
 
 Classes:
-    GDriveDirDownloader: Downloads directories from Google Drive.
-    GDriveFileDownloader: Downloads files from Google Drive.
-    GDriveCachedFileDownloader: Downloads cached files from Google Drive.
+    * **GDriveDirDownloader**: Downloads directories from Google Drive.
+    * **GDriveFileDownloader**: Downloads files from Google Drive.
+    * **GDriveCachedFileDownloader**: Downloads cached files from Google Drive.
 
 Functions:
-    file_valid: Validates a file against an MD5 hash value.
-    create_directory_tree: Ensures the directory structure is present.
-    download_from_url: Downloads data from a URL.
+    * **file_valid**: Validates a file against an MD5 hash value.
+    * **create_directory_tree**: Ensures the directory structure is present.
+    * **download_from_url**: Downloads data from a URL.
 
-Usage Example:
+**Usage Example:**
 
 .. code-block:: Python
 
