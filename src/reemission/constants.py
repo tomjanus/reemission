@@ -1,4 +1,21 @@
-""" Project-wide collection of constants."""
+"""
+Project-wide collection of constants for emission calculations and classifications.
+
+This module provides various constants related to atomic and molar masses,
+global warming potentials (GWP), and enumerations for different classifications
+such as climate types, build status, biomes, land use, and more.
+
+Atomic and Molar Masses:
+    These constants represent the atomic and molar masses of various elements and compounds.
+
+Global Warming Potentials (GWP):
+    These constants provide the GWP values for different gases over specified time horizons,
+    primarily sourced from the IPCC 2013 report.
+
+Enumerations:
+    This module includes various enumerations that classify different types such as climate, build status, biomes,
+    land use, land use intensity, soil type, wastewater treatment, trophic status, asset construction stage, and reservoir type.s
+"""
 from enum import Enum, unique, auto
 from reemission.mixins import EnumGetterMixin
 
@@ -25,7 +42,7 @@ CH4_GWP20 = 86  # Global Warming Potential of CH4 over 20 years
 
 @unique
 class Climate(EnumGetterMixin, str, Enum):
-    """Climate types."""
+    """Enumeration for different climate types."""
     BOREAL = "boreal"
     SUBTROPICAL = "subtropical"
     TEMPERATE = "temperate"
@@ -35,14 +52,14 @@ class Climate(EnumGetterMixin, str, Enum):
 
 @unique
 class BuildStatus(EnumGetterMixin, str, Enum):
-    """Build status of a dam"""
+    """Enumeration for the build status of a dam."""
     EXISTING = "existing"
     PLANNED = "planned"
 
 
 @unique
 class Biome(EnumGetterMixin, str, Enum):
-    """Biome types."""
+    """Enumeration for different biome types."""
     DESERTS = "deserts"
     MEDFORESTS = "mediterreanan forests"
     MONTANEGRASSLANDS = "montane grasslands"
@@ -57,7 +74,7 @@ class Biome(EnumGetterMixin, str, Enum):
 
 @unique
 class Landuse(EnumGetterMixin, str, Enum):
-    """Catchment landuse types."""
+    """Enumeration for catchment land use types."""
     BARE = "bare"
     SNOW_ICE = "snow and ice"
     URBAN = "urban"
@@ -71,15 +88,14 @@ class Landuse(EnumGetterMixin, str, Enum):
 
 @unique
 class LanduseIntensity(EnumGetterMixin, str, Enum):
-    """Landuse intensities for calculating land cover export coefficients
-    in kgP/ha/yr."""
+    """Enumeration for land use intensities for calculating land cover export coefficients in kgP/ha/yr."""
     LOW = "low intensity"
     HIGH = "high intensity"
 
 
 @unique
 class SoilType(EnumGetterMixin, str, Enum):
-    """Soil types."""
+    """Enumeration for different soil types."""
     MINERAL = "mineral"
     ORGANIC = "organic"
     NODATA = "no data"
@@ -87,7 +103,7 @@ class SoilType(EnumGetterMixin, str, Enum):
 
 @unique
 class TreatmentFactor(EnumGetterMixin, str, Enum):
-    """Wastewater treatment classifiations."""
+    """Enumeration for wastewater treatment classifications."""
     NONE = "no treatment"
     PRIMARY = "primary (mechanical)"
     SECONDARY = "secondary biological treatment"
@@ -96,7 +112,7 @@ class TreatmentFactor(EnumGetterMixin, str, Enum):
 
 @unique
 class TrophicStatus(EnumGetterMixin, str, Enum):
-    """Reservoir/Lake trophic status classifications."""
+    """Enumeration for reservoir/lake trophic status classifications."""
     OLIGOTROPHIC = "oligotrophic"
     MESOTROPHIC = "mesotrophic"
     EUTROPHIC = "eutrophic"
@@ -105,17 +121,17 @@ class TrophicStatus(EnumGetterMixin, str, Enum):
 
 @unique
 class AssetConstructionStage(EnumGetterMixin, Enum):
-    """Construction stages of a reservoir"""
+    """Enumeration for the construction stages of a reservoir."""
     EXISTING = auto()
     FUTURE = auto()
 
 
 @unique
 class ReservoirType(EnumGetterMixin, str, Enum):
-    """Reservoir classification by the type of use"""
+    """Enumeration for reservoir classification by type of use."""
     HP = "hydroelectric"
     MULTI = "multipurpose"
     IRRIGATION = "irrigation"
     POTABLE = "potable"
-    FLOOD_CONTROL = "flod control"
+    FLOOD_CONTROL = "flood control"
     UNKNOWN = "unknown"
