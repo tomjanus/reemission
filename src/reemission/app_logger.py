@@ -1,4 +1,21 @@
-""" """
+"""
+This module sets up global logging configurations for the application.
+
+It reads the logging configuration from a YAML file, sets up the logging
+directory, and provides a function to create and configure individual loggers.
+
+Functions:
+    create_logger: Create and configure a logger using global settings.
+
+Usage Example:
+
+.. code-block:: Python
+
+    from logger_setup import create_logger
+
+    logger = create_logger(__name__)
+    logger.info("This is an info message.")
+"""
 import logging
 import pathlib
 import os
@@ -42,14 +59,18 @@ def create_logger(
         handlers: Tuple[logging.Handler, ...] = (
             global_filehandler, global_streamhandler),
         logging_level: Optional[Union[str, int]] = None) -> logging.Logger:
-    """Create and setup a logger using global settings
+    """
+    Create and setup a logger using global settings.
 
     Args:
-        logger_name: Name of the logger, usually file name given in
-            variable `__name__`
+        logger_name (str): Name of the logger, usually file name given in
+            variable `__name__`.
+        formatter (logging.Formatter): The logging formatter to use. Defaults to global_formatter.
+        handlers (Tuple[logging.Handler, ...]): The logging handlers to use. Defaults to global_filehandler and global_streamhandler.
+        logging_level (Optional[Union[str, int]]): The logging level to set. If None, uses the global logging level.
 
     Returns:
-        initialized logging.Logger object
+        logging.Logger: Initialized logger object.
     """
     log = logging.getLogger(logger_name)
     # Get a global logging level
@@ -67,4 +88,4 @@ def create_logger(
 
 
 if __name__ == "__main__":
-    """ """
+    """Main entry point for the module."""
