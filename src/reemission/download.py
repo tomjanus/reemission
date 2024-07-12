@@ -1,4 +1,30 @@
-"""Fetching binary and large-volume data from Google Drive."""
+"""
+Fetching binary and large-volume data from Google Drive.
+
+This module provides functionality to download files and directories from
+Google Drive using URLs. It includes classes for different download scenarios
+and utility functions to validate files and create directory structures.
+
+Classes:
+    GDriveDirDownloader: Downloads directories from Google Drive.
+    GDriveFileDownloader: Downloads files from Google Drive.
+    GDriveCachedFileDownloader: Downloads cached files from Google Drive.
+
+Functions:
+    file_valid: Validates a file against an MD5 hash value.
+    create_directory_tree: Ensures the directory structure is present.
+    download_from_url: Downloads data from a URL.
+
+Usage Example:
+
+.. code-block:: Python
+
+    from google_drive_downloader import GDriveFileDownloader, download_from_url
+    url = "https://drive.google.com/..."
+    output_path = pathlib.Path("/path/to/save/file")
+    downloader = GDriveFileDownloader()
+    download_from_url(url, output_path, downloader)
+"""
 from typing import Union, Protocol, Optional, Any
 import sys
 from dataclasses import dataclass
@@ -17,18 +43,28 @@ def file_valid(
         valid_hash: str, 
         chunk_size: int = 4) -> bool:
     """
-    Validates a file against an MD5 hash value
+    Validates a file against an MD5 hash value.
+
     Args:
-        file_path: path to the file for hash validation
-        hash: str MD5 sum to validate the file against
+        file_path (Union[str, pathlib.Path]): Path to the file for hash validation.
+        valid_hash (str): MD5 sum to validate the file against.
+        chunk_size (int): Size of chunks to read the file. Default is 4.
+
+    Returns:
+        bool: True if the file's hash matches the valid_hash, False otherwise.
     """
     return md5(file_path, chunk_size) == valid_hash
 
 
-def create_directory_tree(path: pathlib.Path, verbose: bool = True) -> None:
-    """For a given path, checks if the directory structure is present. If it is
-    not, create the directory path from the first directory (counting from top)
-    that is absent"""
+def create_directory_tree(path: pathlib.Path, verbose: bool = True) -> None:  
+    """
+    Ensures the directory structure is present. If it is not, creates the
+    directory path from the first directory (counting from top) that is absent.
+
+    Args:
+        path (pathlib.Path): Path of the directory to create.
+        verbose (bool): If True, logs the directory creation process. Default is True.
+    """
     if verbose:
         logger.info("Creating folder structure in %s", path.as_posix())
     try:
@@ -39,21 +75,40 @@ def create_directory_tree(path: pathlib.Path, verbose: bool = True) -> None:
 
 
 class URL_Downloader(Protocol):
-    """ """
+    """
+    Protocol for URL downloader.
+    """
     def __call__(self, url: str, output_path: Union[pathlib.Path, str]) -> None:
-        """Download data from url to output destination (path) """
+        """
+        Download data from URL to output destination (path).
+
+        Args:
+            url (str): URL to download data from.
+            output_path (Union[pathlib.Path, str]): Path to save the downloaded data.
+        """
 
 
 @dataclass
 class GDriveDirDownloader:
-    """URL downloader using gdown's `download_folder' functionality. 
+    """
+    URL downloader using gdown's download_folder functionality. 
     Automatically overwrites whatever is already available.
-    Does not check checksums during download."""
+    
+    Attention:
+    
+        Does not check checksums during download.
+    """
     quiet: bool = False
     remaining_ok: bool = True
 
     def __call__(self, url: str, output_path: Union[pathlib.Path, str]) -> None:
-        """Download directory from Google Drive using a URL (shared link)"""
+        """
+        Download directory from Google Drive using a URL (shared link).
+
+        Args:
+            url (str): URL of the Google Drive folder to download.
+            output_path (Union[pathlib.Path, str]): Path to save the downloaded folder.
+        """
         if isinstance(output_path, pathlib.Path):
             output_path = output_path.as_posix()
         if not is_directory(output_path):
@@ -66,14 +121,21 @@ class GDriveDirDownloader:
 
 @dataclass
 class GDriveFileDownloader:
-    """ """
+    """
+    URL downloader for files using gdown's download functionality.
+    """
     quiet: bool = False
     fuzzy: bool = True
     resume: bool = False
 
     def __call__(self, url: str, output_path: Union[pathlib.Path, str]) -> None:
-        """Download file from Google Drive using a URL to output destination 
-        (path) """
+        """
+        Download file from Google Drive using a URL to output destination (path).
+
+        Args:
+            url (str): URL of the Google Drive file to download.
+            output_path (Union[pathlib.Path, str]): Path to save the downloaded file.
+        """
         if isinstance(output_path, pathlib.Path):
             output_path = output_path.as_posix()
         if is_directory(output_path):
@@ -89,14 +151,21 @@ class GDriveFileDownloader:
 
 @dataclass
 class GDriveCachedFileDownloader:
-    """ """
+    """
+    URL downloader for cached files using gdown's cached_download functionality.
+    """
     quiet: bool = False
     md5: Optional[Any] = None
     extract: bool = False
 
     def __call__(self, url: str, output_path: Union[pathlib.Path, str]) -> None:
-        """Download cached file from Google Drive using a URL to output 
-        destination (path) """
+        """
+        Download cached file from Google Drive using a URL to output destination (path).
+
+        Args:
+            url (str): URL of the Google Drive file to download.
+            output_path (Union[pathlib.Path, str]): Path to save the downloaded file.
+        """
         if isinstance(output_path, pathlib.Path):
             output_path = output_path.as_posix()
         if self.extract:
@@ -118,16 +187,18 @@ def download_from_url(
         checksum: Optional[Any] = None,
         verbose: bool = False,
         post_checksum_check: bool = False) -> None:
-    """Download data from a URL
+    """
+    Download data from a URL.
+
     Args:
-        url: url pointing to date, e.g. share link from Google Drive
-        output_path: directory/file relative to package root directory
-        update: updates old data when checksum does not match
-        relative_path: if True the path provided will be relative to the package
-            root folder
-        verbose: print more detailed output
-        checksum: If given validate the file against the md5 sum
-        post_checksum_check: Check the checksum once again, if given
+        url (str): URL pointing to data, e.g., share link from Google Drive.
+        output_path (pathlib.Path): Directory/file relative to package root directory.
+        downloader (URL_Downloader): Downloader instance to use for downloading.
+        update (bool): Updates old data when checksum does not match. Default is True.
+        relative_path (bool): If True, the path provided will be relative to the package root folder. Default is False.
+        checksum (Optional[Any]): If given, validate the file against the MD5 sum.
+        verbose (bool): If True, print more detailed output. Default is False.
+        post_checksum_check (bool): Check the checksum once again, if given. Default is False.
     """
     # Create a separate function logger
     local_logger = create_logger(logger_name="Download_URL")
@@ -181,4 +252,5 @@ def download_from_url(
 
 
 if __name__ == "__main__":
-    """ """
+    """Main entry point for the module."""
+    pass
