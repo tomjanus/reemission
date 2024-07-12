@@ -259,7 +259,7 @@ class Reservoir:
         Returns:
             float: Global horizontal radiance, kWh/m$^2$/period.       
         
-        Note:
+        Caution:
             The multiplier of 30.4 was included in the published in `G-Res Technical Documentation`_ but not in Praire2021_.
             This multiplier converts the unit of radiance from kWh/m$^2$/day to kWh/m$^2$/month. However, this results in very high CH$_4$ emission estimates. Hence, we set it to 1.0.
         """
