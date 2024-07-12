@@ -1,4 +1,7 @@
-""" """
+"""
+Collection of classes and functions for managing and calculating emission profiles of
+emissions from multiple reservoirs constructed at different dates.
+"""
 from __future__ import annotations
 from enum import Enum, auto
 from functools import reduce
@@ -27,15 +30,21 @@ DEFAULT_SIM_START_DATE = date.today()
 
 
 class YearsNotEquallySpacedError(Exception):
-    """Custom exception raised if years in the emission profile are not equally
-    spaced."""
+    """Custom exception raised if years in the emission profile are not equally spaced."""
+    pass
 
 
 @dataclass
 class AssetSimDateManager:
-    """Stores construction date and simulation date for asset simulation purposes
-    e.g. for determining asset construction stage during simulation and asset
-    age.
+    """Manages construction and simulation dates for asset simulations.
+
+    Attributes:
+        construction_date (datetime): The construction date of the asset.
+        sim_start_date (datetime): The start date for the simulation.
+
+    Methods:
+        asset_status(): Returns the construction stage of the asset.
+        asset_age(): Returns the age of the asset.
     """
     construction_date: datetime
     sim_start_date: datetime
@@ -53,74 +62,99 @@ class AssetSimDateManager:
 
     @staticmethod
     def _year_to_date(year: int) -> datetime:
-        """Conversion from year (integer) to datetime.date object"""
+        """Converts a year (integer) to a datetime object."""
         return datetime.strptime(str(year), '%Y')
 
     def asset_status(self) -> AssetConstructionStage:
-        """Return asset construction stage based on its age relative to 
-        simulation start date"""
+        """Determines the asset status (EXISTING/FUTURE) based on its age."""
         if self.asset_age >= 0:
             return AssetConstructionStage.EXISTING
         return AssetConstructionStage.FUTURE
 
     @property
     def asset_age(self) -> int:
-        """Return asset age in years"""
+        """Calculates the asset age in years."""
         return self.sim_start_date.year - self.construction_date.year
 
 
 @dataclass
 class EmissionQuantity:
-    """Class for coupling information about emission magnitude and unit"""
+    """Represents emission magnitude and unit.
+
+    Attributes:
+        value (float): The emission value.
+        unit (str): The unit of the emission.
+
+    Methods:
+        convert_unit(new_unit): Converts the emission quantity to a different unit.
+        __add__(emission2): Adds two emission quantities.
+        __sub__(emission2): Subtracts two emission quantities.
+    """
     value: float
     unit: str
     _unit: str = field(init=False, repr=False, default='default')
 
     @property
     def unit(self) -> str:
-        """ """
+        """Returns the unit as a string."""
         return self._unit
 
     @unit.setter
     def unit(self, unit: str) -> None:
-        """TODO: Enable automatic conversion of values on unit change"""
+        """Sets the unit and handles unit conversion.
+        
+        Todo: 
+            Enable automatic conversion of values on unit change
+        """
         self._unit = unit
 
     def convert_unit(self, new_unit: str) -> None:
-        """Converts the emission quantity to a different unit
+        """Converts the emission quantity to a different unit.
+        
         Model: self.value = self.value * CONV_VALUE
-               self.unit = new_unit
+            self.unit = new_unit
+        Attention:
+            Not implemented yet.
         """
         raise NotImplementedError("Unit conversion not yet implemented.")
 
     def __add__(self, emission2: EmissionQuantity) -> EmissionQuantity:
-        """Method for adding two emission quantities.
-        Currently supports single units but it is meant to expand to adding
-        emissions with different units using unit conversion tools like pint
+        """Adds two emission quantities.
+        
+        Note:
+          Currently supports single units but it is meant to expand to adding
+          emissions with different units using unit conversion tools like `pint`.
         """
         return EmissionQuantity(
             value=self.value + emission2.value, unit=self.unit)
 
     def __sub__(self, emission2: EmissionQuantity) -> EmissionQuantity:
-        """Method for subtracting two emission quantities."""
+        """Subtracts two emission quantities.
+        
+        Note:
+          Currently supports single units but it is meant to expand to adding
+          emissions with different units using unit conversion tools like `pint`.
+        """
         return EmissionQuantity(
             value=self.value - emission2.value, unit=self.unit)
 
 
 @dataclass
 class EmissionProfile(Iterator):
-    """Class for storing emission profiles and converting them to Pandas series
-    Attributes
-        values: List of EmissionQuantity objects at time intervals (years) from
-            initial state (year).
-        years: List of integers representing years from initial year 0
-    Methods
-        __next__(): Returns the next element of the values list, or raises a 
-            StopIteration error if the list is empty
-        to_series(construction_year): Converts an emission profile (a list of 
-            emission quantities) into a pandas Series with DateTimeIndex. Allows 
-            subsequent addition of multiple profiles with different lengths 
-            and starting/ending in different years.
+    """Stores and manipulates emission profiles.
+
+    Attributes:
+        values (Iterable[EmissionQuantity]): List of emission quantities.
+        years (Iterable[int]): List of corresponding years.
+
+    Methods:
+        __next__(): Returns the next emission quantity.
+        convert_unit(new_unit): Converts all emission quantities to a new unit.
+        unit(check_consistency): Returns the unit of the emission profile.
+        _is_equally_spaced(spacing): Checks if the years are equally spaced.
+        interpolate(spacing): Interpolates the emission profile to have equally spaced years.
+        plot(): Plots the emission profile.
+        to_series(construction_year, interpolate): Converts the emission profile to a Pandas Series.
     """
     values: Iterable[EmissionQuantity]
     years: Iterable[int]
@@ -132,9 +166,13 @@ class EmissionProfile(Iterator):
         self._check_units()
 
     def _check_units(self) -> None:
-        """Checks if the units in the emission list are the same for all 
-        emissions. If not, raise value error.
-        In later implementations, attempt unit conversion before throwing error
+        """Checks if all emission quantities have the same unit.
+       
+        Raises:
+            ValueError: If emissions in the EmissionProfile do not have same units.
+            
+        Todo:
+           In later implementations, attempt unit conversion before throwing error
         """
         for _ix in range(len(self.values) - 1):
             if self.values[_ix].unit != self.values[_ix + 1].unit:
@@ -147,26 +185,30 @@ class EmissionProfile(Iterator):
         return self.values.pop()
 
     def convert_unit(self, new_unit: str) -> None:
-        """Converts all emission quantities in the profile to a different unit"""
+        """Converts all emission quantities in the profile to a different unit."""
         for emission in self.values:
             emission.convert_unit(new_unit)
 
     def unit(self, check_consistency: bool = False) -> str:
-        """Infer unit from the list of values"""
+        """Returns the unit of the emission profile."""
         if check_consistency:
             self._check_units()
         return self.values[0].unit
 
     def _is_equally_spaced(self, spacing: int = 1) -> bool:
-        """Check if the years are equally spaced - required for conversion into
-        EmissionProfileSeries that require an equally spaced grid - by default
-        at spacing = 1 year."""
+        """Checks if the years are equally spaced.
+        
+        Note:
+          Required for conversion into EmissionProfileSeries that require an equally spaced grid.
+          By default, spacing is at 1 year.
+        """
         return all(np.diff(self.years) == spacing)
 
-    def interpolate(self, spacing: int = 1) -> EmissionProfile:
+    def interpolate(self, spacing: int = 1) -> EmissionProfile:        
         """Construct emission profile with equal year spacing given in argument
         `spacing` (default = 1) spanning from the first to the last year in
-        self.years"""
+        self.years
+        """
         if self._is_equally_spaced(spacing):
             return self
         first_year, last_year = self.years[0], self.years[-1]
@@ -180,25 +222,33 @@ class EmissionProfile(Iterator):
             values=interp_emission_quants, years=list(interp_years))
 
     def plot(self) -> None:
-        """Plot the emission profile"""
+        """Plots the emission profile.
+        
+        Attention:
+          Not implemented yet.
+        """
         raise NotImplementedError(
             "Plotting EmissionProfile objects not yet implemented")
 
     def to_series(
             self, construction_year: int, 
             interpolate: bool = False) -> EmissionProfileSeries:
-        """
-        Conversion of emission profile (a list of emission quantities) into a
-        pandas Series with DateTimeIndex.
+        """Converts the emission profile (a list of emission quantities) to a Pandas Series
+        with DateTimeIndex.
+        
+        Hint:
+            Allows subsequent addition of multiple profiles with different lengths
+            and starting/ending in different years.
 
-        Allows subsequent addition of multiple profiles with different lengths
-        and starting/ending in different years.
+        Args:
+            construction_year (int): The construction year of the reservoir.
+            interpolate (bool): Whether to interpolate the profile if years are not equally spaced.
+            
+        Raises:
+            YearsNotEquallySpacedError: If emissions in are not equally spaced.
 
-        Parameters
-            construction_year : An integer representing the year in which the
-                reservoir was created
-        Return
-            A pandas Series with the values and an index of datetimes.
+        Returns:
+            EmissionProfileSeries: The emission profile as a Pandas Series.
         """
         if not self._is_equally_spaced():
             if interpolate:
@@ -220,13 +270,28 @@ class EmissionProfile(Iterator):
 
 @dataclass
 class EmissionProfileSeries:
-    """Emission profile represented with Pandas series"""
+    """Represents an emission profile as a Pandas Series.
+
+    Attributes:
+        values (pd.Series[EmissionQuantity]): The emission profile values.
+        unit (str): The unit of the emission profile.
+
+    Methods:
+        plot(title, marker, linestyle, linewidth): Plots the emission profile.
+    """
     values: pd.Series[EmissionQuantity]
     unit: str
 
     def plot(self, title: str, marker: str = "o", linestyle: str = "-",
              linewidth: float = 1.0) -> None:
-        """Plot emission data in the form of pandas time-series. """
+        """Plots the emission profile as a Pandas time-series.
+
+        Args:
+            title (str): The title of the plot.
+            marker (str): The marker style.
+            linestyle (str): The line style.
+            linewidth (float): The line width.
+        """
         plot_font = {'family': 'serif', 'color':  'darkred', 'size': 16}
         # Reindex and add zero values in the missing fields
         idx = pd.date_range(
@@ -246,11 +311,20 @@ class EmissionProfileSeries:
 
 @dataclass
 class CombinedEmissionProfile:
-    """Emission profile from multiple reservoirs.
+    """Represents a combined emission profile from multiple sources.
+    
+    Note:
+        Enables addition of several profiles from different reservoirs constructed
+        in different years. Enforces that each of the added emission profiles
+        has to have the same length and unit.
+    
+    Attributes:
+        emission_profiles (Iterable[EmissionProfileSeries]): The list of emission profiles to combine.
+        profile (EmissionProfileSeries): The combined emission profile.
 
-    Enables addition of several profiles from different reservoirs constructed
-    in different years. Enforces that each of the added emission profiles
-    has to have the same length and unit.
+    Methods:
+        unit(): Returns the unit of the combined emission profile.
+        plot(title, marker, linestyle, linewidth): Plots the combined emission profile.
     """
     emission_profiles: InitVar[Iterable[EmissionProfileSeries]]
     profile: EmissionProfileSeries = field(init=False)
@@ -266,15 +340,18 @@ class CombinedEmissionProfile:
 
     @property
     def unit(self) -> str:
-        """Retrieve unit of the emission profile (combined)"""
+        """Returns the unit of the combined emission profile."""
         return self.profile.unit
 
     @staticmethod
     def _check_units(
             emission_profiles: Iterable[EmissionProfileSeries]) -> None:
-        """Checks if the units of all emission profiles are the same. If not,
-        raise value error.
-        In later implementations, attempt unit conversion before throwing error
+        """Checks if the units of all emission profiles are the same. 
+        
+        Raises:
+            ValueError: If the units of all emission profiles are not the same.
+        Todo:
+            In later implementations, attempt unit conversion before throwing error
         """
         for _ix in range(len(emission_profiles) - 1):
             unit_curr = emission_profiles[_ix].unit
@@ -287,8 +364,17 @@ class CombinedEmissionProfile:
     @staticmethod
     def _combine_profiles(
             profiles: Iterable[EmissionProfileSeries]) -> EmissionProfileSeries:
-        """Comnbine multiple emission profiles. These can start and end at
-        different time"""
+        """Combines multiple emission profiles into one.
+        
+        Note:
+            Profiles can start and end at different times (years).
+
+        Args:
+            profiles (Iterable[EmissionProfileSeries]): The list of emission profiles to combine.
+
+        Returns:
+            EmissionProfileSeries: The combined emission profile.
+        """
         em_series: List[pd.Series[EmissionQuantity]] = [
             emission.values for emission in profiles]
         inferred_unit: str = profiles[0].unit
@@ -299,36 +385,58 @@ class CombinedEmissionProfile:
 
     def plot(self, title: str = "Combined emission profile", marker: str = "o",
              linestyle: str = "-", linewidth: float = 1.0) -> None:
-        """Function for plotting combined (total) emission profiles"""
+        """Plots the combined emission profile.
+
+        Args:
+            title (str): The title of the plot.
+            marker (str): The marker style.
+            linestyle (str): The line style.
+            linewidth (float): The line width.
+        """
         self.profile.plot(title, marker, linestyle, linewidth)
 
 
 @dataclass
 class EmissionProfileCalculator:
-    """Calculation of emission profiles using a profile function (a Callable)
-    It is assumed that emission function for the years larger than time horizon
-    plateus and becomes constant.
+    """Calculates emission profiles using a provided profile function.
+    
+    Note:
+        It is assumed that emission functions for years above certain time horizon 
+        plateau and becomes constant.
+
+    Attributes:
+        time_horizon (ClassVar[int]): The time horizon for the emission profile.
+        profile_fun (Callable[[int], EmissionQuantity]): The function to calculate emissions.
+
+    Methods:
+        emission(no_years): Calculates the emission for a given number of years.
+        calculate(years): Calculates the emission profile for a range of years.
+        integrate(start_year, end_year): Integrates the emission profile over a range of years.
     """
     time_horizon: ClassVar[int] = 100
     profile_fun: Callable[[int], EmissionQuantity]
 
     def emission(self, no_years: int) -> EmissionQuantity:
-        """Calculate emission for a given number of years elapsed from
-        impoundment using the profile function in attributes.
+        """Calculates the emission for a given number of years elapsed from impoundment.
 
-        Parameters
-            no_years: Number of years elapsed from impoundment
+        Args:
+            no_years (int): The number of years elapsed from impoundment.
+
+        Returns:
+            EmissionQuantity: The calculated emission.
         """
         if no_years > self.time_horizon:
             return self.profile_fun(self.time_horizon)
         return self.profile_fun(no_years)
 
     def calculate(self, years: Iterable[int]) -> EmissionProfile:
-        """Calculate emission profile for a number of years after impoundment.
-        Parameters
-            years(Itrerable[int]): An iterable collection of years.
-        Return Value
-            EmissionProfile: An emission profile object
+        """Calculates the emission profile for a range of years.
+
+        Args:
+            years (Iterable[int]): The range of years.
+
+        Returns:
+            EmissionProfile: The calculated emission profile.
         """
         years.sort()
         emissions = [self.emission(year) for year in years]
@@ -337,8 +445,18 @@ class EmissionProfileCalculator:
     def integrate(
             self, start_year: int = 0, 
             end_year: Optional[int] = None) -> EmissionQuantity:
-        """Performs numerical integration of emission profile using scipy's
-        trapezoidal rule"""
+        """Integrates the emission profile over a range of years.
+    
+        Note:
+            Uses scipy's trapezoidal rule.
+
+        Args:
+            start_year (int): The start year for the integration.
+            end_year (Optional[int]): The end year for the integration.
+
+        Returns:
+            EmissionQuantity: The integrated emission quantity.
+        """
         if not end_year:
             end_year = start_year + self.time_horizon
         if end_year <= start_year:
@@ -352,7 +470,14 @@ class EmissionProfileCalculator:
 
 @dataclass
 class TotalEmissionCalculator:
-    """Calculate total (integrated) emission using analytical integral function
+    """Calculates total emissions using an analytical integral function.
+
+    Attributes:
+        time_horizon (ClassVar[int]): The time horizon for the emission profile.
+        integral_fun (Callable[[int], EmissionQuantity]): The function to calculate total emissions.
+
+    Methods:
+        calculate(start_year, end_year): Calculates total emissions over a range of years.
     """
     time_horizon: ClassVar[int] = 100
     integral_fun: Callable[[int], EmissionQuantity]
@@ -360,8 +485,18 @@ class TotalEmissionCalculator:
     def calculate(
             self, start_year: int = 0, 
             end_year: Optional[int] = None) -> EmissionQuantity:
-        """Calculate total emission analytically using integral_fun and (if
-        integral_fun not present) - use numerical integration"""
+        """Calculates total emissions over a range of years.
+        
+        Note:
+            If integral function *integral_fun* not given, use numerical integration.
+
+        Args:
+            start_year (int): The start year for the calculation.
+            end_year (Optional[int]): The end year for the calculation.
+
+        Returns:
+            EmissionQuantity: The calculated total emission.
+        """
         if not end_year:
             end_year = start_year + self.time_horizon
         if end_year <= start_year:
