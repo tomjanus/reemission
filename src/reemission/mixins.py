@@ -1,6 +1,8 @@
-"""Mixins for instantiating enums from keys as well as from values
+r"""Mixins for instantiating enums from keys as well as from values
 
 Usage:
+    
+.. code-block:: Python
 
     class ExampleEnum(EnumGetterMixin, Enum):
         ITEM1 = 'item 1'
@@ -21,19 +23,44 @@ from reemission.exceptions import replace_message
 
 
 class EnumGetterMixin:
-    """EnumGetterMixin is a Mixin class providing easier access to enum values 
-    via key and value. It is a subclass of Enum and is used to instantiate enums
-    from keys as well as from values."""
+    """
+    A Mixin class providing easier access to enum values via key and value.
+
+    This class is a subclass of Enum and is used to instantiate enums from keys 
+    as well as from values.
+
+    Methods:
+        from_value(cls, value): Returns an Enum object if the value is found in the set of values.
+        from_key(cls, key): Returns an Enum object if the key is found in the set of values.
+    """
     def __init_subclass__(cls, **kwargs) -> None:
+        """
+        Ensure that the child class is iterable.
+
+        Args:
+            **kwargs: Arbitrary keyword arguments.
+
+        Raises:
+            TypeError: If the child class is not iterable.
+        """
         if not hasattr(cls, '__iter__'):
             raise TypeError(f"Child class {cls.__name__} is not iterable")
     
     @classmethod
     @lru_cache(maxsize=None)
     def from_value(cls, value: str) -> Enum:
-        """A class method that takes a value argument of type str and returns 
-        an Enum object if the value is found in the set of values in key:value
-        pairs of the Enum object."""
+        """
+        Return an Enum object if the value is found in the set of values.
+
+        Args:
+            value (str): The value to look up.
+
+        Returns:
+            Enum: The Enum object corresponding to the value.
+
+        Raises:
+            KeyError: If the value is not found.
+        """
         try:
             item = cls._value2member_map_[value]
         except KeyError as exc:
@@ -45,9 +72,18 @@ class EnumGetterMixin:
 
     @classmethod
     def from_key(cls, key: str) -> Enum:
-        """A class method that takes a key argument of type str and returns 
-        an Enum object if the key is found in the set of values in key:value
-        pairs of the Enum object."""
+        """
+        Return an Enum object if the key is found in the set of keys.
+
+        Args:
+            key (str): The key to look up.
+
+        Returns:
+            Enum: The Enum object corresponding to the key.
+
+        Raises:
+            KeyError: If the key is not found.
+        """
         try:
             item = cls[key]
         except KeyError as exc:
@@ -58,7 +94,7 @@ class EnumGetterMixin:
 
 
 if __name__ == "__main__":
-    """Run an example usage example"""
+    """Run an example example"""
     
     class ExampleEnum(EnumGetterMixin, Enum):
         """Example enumeration type custom mixin class"""
