@@ -1,4 +1,74 @@
-"""Simulation/calculation wrapper for GHG emission models."""
+"""
+Simulation/calculation wrapper for GHG emission models.
+
+This module is designed to handle a variety of inputs, configure settings for different calculation 
+methods, and produce detailed emission reports.
+
+The main components of this module include:
+
+1. **Configurations**:
+    - The module reads configurations from a file to set default calculation methods and other options.
+    - Configuration options are read from `config/config.ini` and include methods for retention coefficient 
+      calculation, phosphorus export calculation, and nitrous oxide emission calculation.
+
+2. **Inputs Handling**:
+    - The `Inputs` class is used to manage and validate input data required for the simulations.
+    - This includes catchment data, reservoir data, monthly temperature data, and other relevant parameters.
+
+3. **Temperature Calculations**:
+    - The `MonthlyTemperature` class is used to handle monthly temperature data which is crucial for estimating 
+      gas emissions.
+    - Effective temperature calculations are performed for different gases such as CO2, CH4, and N2O.
+
+4. **Emissions Calculations**:
+    - Separate classes for each gas (`CarbonDioxideEmission`, `MethaneEmission`, `NitrousOxideEmission`) handle 
+      the specific calculations for each type of emission.
+    - These classes utilize the inputs and configurations to compute emission profiles, total emissions, 
+      diffusion fluxes, and other relevant metrics.
+
+5. **Presenter and Writer**:
+    - The `Presenter` class is responsible for formatting and presenting the results of the calculations.
+    - Multiple writers can be added to the presenter to output data in different formats (e.g., CSV, JSON).
+
+6. **Utility Functions**:
+    - Utility functions such as `create_exec_dictionary` help in organizing and managing the execution of various 
+      emission calculations.
+    - Functions for adding presenters and saving results streamline the workflow for generating and exporting reports.
+
+This module is designed to be flexible and extensible, allowing for easy integration of new calculation methods, 
+input types, and output formats. It supports detailed logging and error handling to facilitate debugging and 
+ensure robust performance.
+
+Typical usage involves:
+    1. Creating an `EmissionModel` object with appropriate inputs and configurations.
+    2. Running the `calculate` method to perform the emissions calculations.
+    3. Adding a presenter with desired output formats.
+    4. Saving the results to specified files.
+
+**Example:**
+
+.. code-block:: Python
+    
+    from reemission import EmissionModel, Inputs, Writer
+
+    # Initialize inputs
+    inputs = Inputs(input_data)
+
+    # Create emission model
+    model = EmissionModel(inputs=inputs, config='path/to/config.yaml')
+
+    # Calculate emissions
+    model.calculate()
+
+    # Add presenters for output
+    model.add_presenter(writers=[Writer], output_files=['output.csv'])
+
+    # Save results
+    model.save_results()
+
+Note:
+    Ensure the configuration file and input data are properly formatted and validated before running the calculations.
+"""
 import configparser
 from dataclasses import dataclass, field
 from typing import Type, Dict, Tuple, Union, Optional, List
@@ -34,19 +104,20 @@ FALSES = [False, 'false', 'False', 'no', 'off', 'null']
 
 @dataclass
 class EmissionModel:
-    """Calculates emissions for a reservoir or a numver of reservoirs.
+    """
+    Calculates emissions for a reservoir or a number of reservoirs.
 
-    Atrributes:
-        inputs: Inputs object with input data.
-        config: dictionary with configuration data.
-        outputs: Emission calculation outputs in a dictionary structure.
-        author: Author's name
-        report_title: Title of output report / GHG emission estimation study
-        ret_coeff: Reservoir retention coefficient calculation model
-        p_model: P export calculation method
-        n2o_model: Nitroux Oxide calculation method
-        presenter: Presenter object for presenting input and output data
-            in various formats.
+    Attributes:
+        inputs (Inputs): Inputs object with input data.
+        config (Union[Dict, pathlib.Path, str]): Dictionary with configuration data or path to config file.
+        outputs (Dict): Emission calculation outputs in a dictionary structure.
+        internal (Dict): Internal variables for calculations.
+        author (str): Author's name.
+        report_title (str): Title of output report / GHG emission estimation study.
+        ret_coeff (str): Reservoir retention coefficient calculation model.
+        p_model (str): P export calculation method.
+        n2o_model (str): Nitrous Oxide calculation method.
+        presenter (Optional[Presenter]): Presenter object for presenting input and output data in various formats.
     """
     inputs: Inputs
     config: Union[Dict, pathlib.Path, str]
@@ -73,15 +144,16 @@ class EmissionModel:
         years: Tuple[int, ...] = (1, 5, 10, 20, 30, 40, 50, 100),
     ) -> Dict:
         """
-        Create a dictionary with function references and arguments for
-        calculating gas emissions.
+        Create a dictionary with function references and arguments for calculating gas emissions.
 
         Args:
-            co2_em: emissions.CarbonDioxideEmission object.
-            ch4_em: emissions.MethaneEmission object.
-            n2o_em: emissions.NitrousOxideEmission object.
-            years: vector of years for which the emission profiles are
-                calculated.
+            co2_em (Union[CarbonDioxideEmission, None]): CarbonDioxideEmission object.
+            ch4_em (Union[MethaneEmission, None]): MethaneEmission object.
+            n2o_em (Union[NitrousOxideEmission, None]): NitrousOxideEmission object.
+            years (Tuple[int, ...]): Vector of years for which the emission profiles are calculated.
+
+        Returns:
+            Dict: Dictionary with function references and arguments for gas emissions calculations.
         """
         co2_exec, ch4_exec, n2o_exec = {}, {}, {}
         if co2_em:
@@ -156,12 +228,12 @@ class EmissionModel:
     def add_presenter(
             self, writers: List[Type[Writer]], output_files: List[str]) \
             -> None:
-        """Instantiates a presenter class to the emission model for data
-        output formatting.
+        """
+        Instantiate a presenter class to the emission model for data output formatting.
 
         Args:
-            writers: List of presenter.Writer objects
-            output_files: Paths to output files, one per writer.
+            writers (List[Type[Writer]]): List of presenter.Writer objects.
+            output_files (List[str]): Paths to output files, one per writer.
         """
         self.presenter = Presenter(
             inputs=self.inputs, 
