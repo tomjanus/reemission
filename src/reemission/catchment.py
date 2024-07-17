@@ -1,11 +1,30 @@
-"""Catchment-related processes."""
+"""
+Catchment-related processes.
+
+This module provides functionalities for calculating various catchment-related metrics, 
+including phosphorus and nitrogen loads, using different methodologies.
+
+Attributes:
+    INI_FILE (str): Path to the configuration file.
+    TABLES (str): Path to the parameters directory.
+    tn_coeff_table (dict): TN coefficient table loaded from YAML.
+    tp_coeff_table (dict): TP coefficient table loaded from YAML.
+    p_loads_pop (dict): Phosphorus loads population table loaded from YAML.
+    p_exports (dict): Phosphorus exports table loaded from YAML.
+    config (configparser.ConfigParser): Loaded configuration settings.
+    internals_config (dict): Internal variables configuration loaded from YAML.
+    EPS (float): Margin of error for the sum of land use fractions.
+    
+.. _G-Res Technical Documentation: https://www.hydropower.org/publications/the-ghg-reservoir-tool-g-res-technical-documentation
+.. _Praire2021: https://www.sciencedirect.com/science/article/pii/S1364815221001602
+.. _G-Res: https://www.grestool.org/
+"""
 import inspect
 import configparser
 import logging
-import pathlib
 import math
 from dataclasses import dataclass
-from typing import Dict, List, Optional, TypeVar, Type
+from typing import List, Optional, TypeVar, Type
 from reemission.utils import (
     read_table, find_enum_index, read_config, save_return, get_package_file, load_yaml)
 from reemission.biogenic import BiogenicFactors
@@ -44,28 +63,28 @@ CatchmentType = TypeVar('CatchmentType', bound='Catchment')
 
 @dataclass
 class Catchment:
-    """Class representing a generic catchment.
+    """
+    Representation of a generic catchment area.
 
-    Attrributes:
-        area: Catchment area, km2
-        riv_length: River length before impoundment, km
-        runoff: Mean annual runoff, mm/year
-        population: Population in the catchment, capita
-        slope: Catchment mean slope, %
-        precip: Mean annual precipitation, mm/year
-        etransp: Mean annual evapotranspiration, mm/year
-        soil_wetness: Soil wetness in mm over profile
-        mean_olsen: Mean P content in soil, kg ha-1
-        area_fractions: List of fractions of land representing different
-            land uses.
-        biogenic_factors: biogenic.BiogenicFactor object with categorical
-            descriptors used in the determination of the trophic status of the
-            reservoir.
+    Attributes:
+        area (float): Catchment area in km$^2$.
+        riv_length (float): River length before impoundment in km.
+        runoff (float): Mean annual runoff in mm/year.
+        population (int): Population in the catchment.
+        slope (float): Catchment mean slope in %.
+        precip (float): Mean annual precipitation in mm/year.
+        etransp (float): Mean annual evapotranspiration in mm/year.
+        soil_wetness (float): Soil wetness in mm over profile.
+        mean_olsen (float): Mean P content in soil in kg/ha.
+        area_fractions (List[float]): List of fractions of land representing different land uses.
+        biogenic_factors (BiogenicFactors): BiogenicFactors object with categorical descriptors used 
+            in the determination of the trophic status of the reservoir.
+        name (str): Name of the catchment (default "n/a").
+
     Raises:
-        WrongAreaFractionsException if number of area fractions in the list
-            not equal to the number of land uses.
-        WrongSumAreasException if area fractions do not sum to 1 +/-
-            acurracy coefficient EPS.
+        WrongAreaFractionsException: If number of area fractions in the list is not equal to 
+            the number of land uses.
+        WrongSumOfAreasException: If area fractions do not sum to 1 ± accuracy coefficient EPS.
     """
 
     area: float
@@ -82,10 +101,10 @@ class Catchment:
     name: str = "n/a"
 
     def __post_init__(self) -> None:
-        """Check if the provided list of landuse fractions has the same
-        length as the list of landuses.
+        """Validates the provided list of land use fractions.
 
-        If False, set area_fractions to None.
+        Note:
+            If False, set area_fractions to None.
         """
         try:
             assert len(self.area_fractions) == len(Landuse)
@@ -112,66 +131,115 @@ class Catchment:
     @classmethod
     def from_dict(cls: Type[CatchmentType], parameters: dict,
                   **kwargs) -> CatchmentType:
-        """Initializes the class from a dictionary. Skips keys that are not
-        featured as class's attribiutes."""
+        """
+        Initializes the class from a dictionary. Skips keys that are not featured as class's attributes.
+
+        Args:
+            cls (Type[CatchmentType]): The class type.
+            parameters (dict): The dictionary of parameters.
+            **kwargs: Additional keyword arguments.
+
+        Returns:
+            CatchmentType: An instance of the Catchment class.
+        """
         return cls(**{
             k: v for k, v in parameters.items()
             if k in inspect.signature(cls).parameters}, **kwargs)
 
     @property
     def population_density(self) -> float:
-        """Derive population density from catchment population and catchment
-        area. [capita/km2]. From Eq. A.25. in Praire2021.
+        """
+        Calculates the population density.
+        
+        Note:
+            Population density is derived from catchment population and catchment
+            area. [capita/km$^2$]. From Eq. A.25. in Praire2021_.
+
+        Returns:
+            float: Population density in capita/km$^2$.
         """
         return self.population/self.area
 
     @property
     def area_ha(self) -> float:
-        """Get area in ha from area in [km2]."""
+        """
+        Converts area from km$^2$ to hectares.
+
+        Returns:
+            float: Area in hectares.
+        """
         return self.area * 100.0
 
     def landuse_area(self, landuse_fraction: float) -> float:
-        """Return landuse area [km2] from catchment area and landuse
-        fraction.
+        """
+        Calculates land use area from catchment area and land use fraction.
+
+        Args:
+            landuse_fraction (float): Fraction of land use.
+
+        Returns:
+            float: Land use area in km$^2$.
         """
         return self.area * landuse_fraction
 
     def landuse_area_ha(self, landuse_fraction: float) -> float:
-        """Return landuse area [ha] from catchment area and landuse
-        fraction."""
+        """
+        Calculates land use area in hectares from catchment area and land use fraction.
+
+        Args:
+            landuse_fraction (float): Fraction of land use.
+
+        Returns:
+            float: Land use area in hectares.
+        """
         return self.area_ha * landuse_fraction
 
     @property
     def discharge(self) -> float:
-        """Calculate mean annual discharge in [m3/year] from runoff in
-        [mm/year] and area in [km2]."""
+        """
+        Calculates mean annual discharge.
+        
+        Note:
+            mean annual discharge in m$^3$/year is calculated from runoff in
+            mm/year and area in km$^2$
+
+        Returns:
+            float: Mean annual discharge in m$^3$/year.
+        """
         return 1_000 * self.runoff * self.area
 
     @property
     def discharge_cumecs(self) -> float:
-        """Return mean annual discharge in m3/sec."""
+        """
+        Returns mean annual discharge in cubic meters per second.
+
+        Returns:
+            float: Mean annual discharge in m$^3$/s.
+        """
         return self.discharge/(365.25*24*60*60)
 
     def river_area_before_impoundment(
             self, river_width: Optional[float] = None) -> float:
-        r"""Calculates the area taken up by the river in the impounded
-        (reservoir) area prior to impoundement.
+        r"""
+        Calculates the area taken up by the river in the impounded area prior to impoundment.
 
+        Args:
+            river_width (Optional[float]): River width in meters. If None, a default allometric 
+                formula is used.
+                
+        **Formula:**
+        
         .. math::
-            :nowrap:
             \begin{equation}
                 A_{pre} = 5.9 \, 10^{-6} \, L_{river} \, A_{catchment}^{0.32}
             \end{equation}
         where:
-            :math:`A_{pre}`: pre-inundation area, [km2]
-            :math:`A_{catchment}`: catchment area, [km2]
-            :math: `L_{river}`: lentgh of the river prior to impoundment, [km]
-
-        Args:
-            river_width: River width in m
+            * $A_{pre}$ : pre-inundation area, [km$^2$]
+            * $A_{catchment}$ : catchment area, [km$^2$]
+            * $L_{river}$ : lentgh of the river prior to impoundment, [km]
 
         Returns:
-            River area in km2
+            float: River area in km$^2$.
         """
         if river_width is None:
             # Use simple allometric formula of Whipple et al. 2013 (G-Res)
@@ -179,10 +247,14 @@ class Catchment:
         return 1E-3 * river_width * self.riv_length
 
     def p_human_input_gres(self) -> float:
-        """Return phosphorus load/input in [kgP yr-1] from human activity from
-        population and the level of wastewater treament.
-        Follows the methodology applied in G-Res
-        https://g-res.hydropower.org/.
+        """
+        Calculates phosphorus load/input from human activity and level of wastewater treatment.
+
+        Note:
+            Follows the methodology applied in G-Res_
+
+        Returns:
+            float: Phosphorus load in kgP/year.
         """
         treatment_factor = self.biogenic_factors.treatment_factor
         load = 0.002 * 365.25 * self.population * \
@@ -190,11 +262,16 @@ class Catchment:
         return load
 
     def p_land_input_gres(self) -> float:
-        """Calculate phosphorus load/iput from land in the catchment,
-        considering differences in P emissions across different landuse types.
-        Phosphorus load returned in [kgP yr-1].
-        Follows the methodology applied in G-Res:
-        https://g-res.hydropower.org/."""
+        """
+        Calculates phosphorus load/input from land in the catchment.
+
+        Note:
+            Considers differences in P emissions across different landuse types
+            Follows the methodology applied in G-Res_
+
+        Returns:
+            float: Phosphorus load in kgP/year.
+        """
         intensity = self.biogenic_factors.landuse_intensity
         landuse_names = [landuse.value for landuse in Landuse]
         # Area marging below which the output is output as zero
@@ -205,8 +282,16 @@ class Catchment:
         # table additionally depend on the catchment area and hence, are not
         # constant
         def fun_exp(area_fraction: float, fun_name: str) -> float:
-            """Regression vs area fraction for P export from crops and
-            forest."""
+            """
+            Regression function for P export from crops and forest.
+
+            Args:
+                area_fraction (float): Fraction of land use area.
+                fun_name (str): Name of the function.
+
+            Returns:
+                float: Phosphorus export coefficient.
+            """
             if fun_name == 'crop export':
                 reg_coeffs = (1.818, 0.227)
             elif fun_name == 'forest export':
@@ -242,19 +327,34 @@ class Catchment:
         return load
 
     def p_input_gres(self) -> float:
-        """Return annual input of P from catchment to the reservoir in
-        [kg P yr-1] using g-res approach."""
+        """
+        Calculates annual input of phosphorus from catchment to the reservoir.
+
+        Note:
+            Follows the G-Res_ approach.
+
+        Returns:
+            float: Annual phosphorus input in kgP/year.
+        """
         return self.p_human_input_gres() + self.p_land_input_gres()
 
     def p_input_mcdowell(self) -> float:
-        """Calculate annual input of P from catchment to the reservoir
-        in [kg P yr-1] using McDowell regression."""
+        """
+        Calculates annual input of phosphorus from catchment to the reservoir using McDowell regression.
+
+        Returns:
+            float: Annual phosphorus input in kgP/year.
+        """
         # 1e-6 converts mg/m3 to kg/m3; discharge is given in m3/year
         return 1e-6 * self.inflow_p_conc_mcdowell() * self.discharge
 
     def inflow_p_conc_mcdowell(self) -> float:
-        """Calculate influent phosphorus concetration to the reservoir
-        in micrograms/L using regression model of McDowell 2020."""
+        """
+        Calculates influent phosphorus concentration to the reservoir using McDowell2020 regression model.
+
+        Returns:
+            float: Influent phosphorus concentration in $\mu$g/L.
+        """
         biome = self.biogenic_factors.biome
         # Calculate natural logarithm of total phosphorus conc. in mg/L
         # Find percentage of catchment area allocated to crops
@@ -289,8 +389,12 @@ class Catchment:
         return inflow_tp()
 
     def inflow_p_conc_gres(self) -> float:
-        """Calculate influent phosphorus concentration to the reservoir
-        in [micrograms/L] following the G-Res approach."""
+        """
+        Calculates influent phosphorus concentration to the reservoir following the G-Res_ approach.
+
+        Returns:
+            float: Influent phosphorus concentration in micrograms/L.
+        """
         load_pop = self.p_human_input_gres()
         load_land = self.p_land_input_gres()
         load_total = load_pop + load_land
@@ -298,8 +402,15 @@ class Catchment:
 
     @save_return(internal, internals_config['inflow_p_conc']['include'])
     def inflow_p_conc(self, method: str) -> float:
-        """Calculate median influent total phosphorus concentration in
-        [micrograms/L] entering the reservoir with runoff."""
+        """
+        Calculates median influent total phosphorus concentration.
+
+        Args:
+            method (str): Method to use for calculation ("g-res" or "mcdowell").
+
+        Returns:
+            float: Median influent total phosphorus concentration in micrograms/L.
+        """
         if method == "g-res":
             output = self.inflow_p_conc_gres()
         elif method == "mcdowell":
@@ -313,10 +424,13 @@ class Catchment:
 
     @save_return(internal, internals_config['inflow_n_conc']['include'])
     def inflow_n_conc(self) -> float:
-        """Calculate median influent total N concentration in [micrograms/L]
-        entering the reservoir with runoff.
+        """
+        Calculates median influent total nitrogen concentration.
 
-        Contrary to Phosphorus, no other method than McDowell is available for.
+        Attention:
+            Contrary to Phosphorus, no other method than McDowell is available.
+        Returns:
+            float: Median influent total nitrogen concentration in micrograms/L.
         """
         biome = self.biogenic_factors.biome
         intercept = tn_coeff_table['intercept']['coeff']
@@ -343,19 +457,27 @@ class Catchment:
 
     @save_return(internal, internals_config['nitrogen_load']['include'])
     def nitrogen_load(self) -> float:
-        """Calculate total nitrogen (TN) load in kg N yr-1 entering the
-        reservoir with catchment runoff."""
+        """
+        Calculates total nitrogen load entering the reservoir with catchment runoff.
+
+        Returns:
+            float: Total nitrogen load in kgN/year.
+        """
         inflow_n = self.inflow_n_conc()
         # 1e-6 converts mg/m3 (microgram/L) to kg/m3
         return 1e-6 * self.discharge * inflow_n
 
     @save_return(internal, internals_config['phosphorus_load']['include'])
     def phosphorus_load(self, method: str) -> float:
-        """Calculate total phosphorus (TP) load in kg P yr-1 entering the
-        reservoir with catchment runoff.
+        """
+        Calculates total phosphorus load entering the reservoir with catchment runoff.
 
         Args:
-            method: P export calculation method: g-res/mcdowell"""
+            method (str): P export calculation method: "g-res" or "mcdowell".
+
+        Returns:
+            float: Total phosphorus load in kgP/year.
+        """
         inflow_p = self.inflow_p_conc(method)
         # 1e-6 converts mg/m3 (microgram/L) to kg/m3
         return 1e-6 * self.discharge * inflow_p
