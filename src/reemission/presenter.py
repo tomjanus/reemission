@@ -1,4 +1,34 @@
-"""Output result presentation layer for the GHG emissions computation engine.
+"""
+Presenter Module
+
+This module provides classes and functions for presenting GHG (Greenhouse Gas) emissions computation results
+in various output formats such as Excel, JSON, and LaTeX.
+
+**Classes:**
+    - **ExcelWriter**: Formats and writes data to an Excel file.
+    - **JSONWriter**: Formats and writes data to a JSON file.
+    - **LatexWriter**: Formats and writes data to a LaTeX file using PyLaTeX.
+    - **Presenter**: Reads and processes GHG emission calculation results and outputs them using various writers.
+
+Each writer class (**ExcelWriter**, **JSONWriter**, **LatexWriter**) is designed to handle specific output formats,
+ensuring the presentation of inputs, outputs, and internal variables in a structured manner.
+All writers inherit from an abstract base class **Writer** which implements the following static methods:
+  * ``def round_parameter(number: Union[float, list], number_decimals: int) -> Union[float, list]``
+  * ``def rollout(var_name: str, var_vector: Union[Sequence, Dict]) -> Iterator[Tuple[str, Any]]``
+  * ``def write_par_to_dict(input_name: str, parameter: Any, par_dict: Dict, reservoir_name: str, precision: int = 3) -> Dict``
+
+and enforces implementation of the ``write`` method.
+
+**Functions:**
+    - ``enforce_unity_sum``: Ensures the sum of values in a vector is approximately 1.0 within a given epsilon tolerance.
+    - ``landcover_pie``: Creates a pie chart of land cover composition using matplotlib.
+    - ``parse_landcover_composition``: Parses a vector representing land cover composition into a standardized format.
+    - ``write_par_to_dict``: Writes a parameter to a dictionary of parameter name-value pairs.
+    - ``rollout``: Creates variable names and values from a sequence or dictionary.
+    - ``round_parameter``: Rounds a number or each element in a list to the specified number of decimals.
+
+**Usage:**
+    [To be Added later]
 """
 import collections.abc
 from collections.abc import Iterable
@@ -89,7 +119,19 @@ app_config: Dict = load_yaml(
 clean_tex = app_config['latex']['clean_tex']
 compilations = app_config['latex']['compilations']
 def _get_latex_compiler() -> str:
-    """ """
+    """
+    Retrieves the LaTeX compiler to be used based on application configuration.
+
+    Returns:
+        str: The LaTeX compiler to be used. Defaults to 'pdflatex' if no specific compiler
+             is configured or if the configured compiler is not recognized.
+
+    Note:
+        This function reads the LaTeX compiler setting from the application configuration
+        (app_config['latex']['compiler']). If the configured compiler is 'pdflatex' or 'latexmk',
+        it returns that compiler. Otherwise, it falls back to the default compiler 'pdflatex'.
+
+    """
     default_compiler = 'pdflatex'
     try:
         latex_options = app_config['latex']
@@ -103,14 +145,32 @@ def _get_latex_compiler() -> str:
 
 
 def parse_landcover_composition(vector: List[float]) -> List[float]:
-    """ """
+    """
+    Parses a vector representing land cover composition into a standardized format.
+
+    Args:
+        vector (List[float]): A vector representing land cover composition. 
+                              It should be either a 9-element vector or a 27-element vector.
+
+    Returns:
+        List[float]: A 9-element vector representing the parsed land cover composition.
+
+    Raises:
+        ValueError: If the provided vector does not have a length of 9 or 27.
+
+    Note:
+        - If the input vector length is 9, it is returned as-is.
+        - If the input vector length is 27, it is split into three equal parts,
+          each part is summed element-wise, resulting in a 9-element vector.
+    """
     vector_length = len(vector)
     supported_vector_lengths = (9,27)
     try:
         assert vector_length in supported_vector_lengths
     except AssertionError:
         vector_sizes: str = ", ".join(map(str, supported_vector_lengths))
-        raise ValueError(f"Supported vector sizes: {vector_sizes}. Provided vector has size {vector_length}")
+        raise ValueError(
+            f"Supported vector sizes: {vector_sizes}. Provided vector has size {vector_length}")
     if vector_length == 9:
         return vector
     # Fold the 27x1 vector into three parts and sum the 9x1 vectors
@@ -125,14 +185,27 @@ def parse_landcover_composition(vector: List[float]) -> List[float]:
 
 
 def enforce_unity_sum(vector: List[float], epsilon: float = 0.001) -> List[float]:
-    """Makes sure the sum of values in the vector are 1.0 +/- epsilon.
-    In case they're not, rescales the values so that the sum is equal to 1
+    """
+    Ensures the sum of values in the vector is approximately 1.0 within a given epsilon tolerance.
+
+    Args:
+        vector (List[float]): The input vector of float values to be normalized.
+        epsilon (float, optional): Tolerance level around 1.0 within which the sum of the vector
+                                   should lie. Defaults to 0.001.
+
+    Returns:
+        List[float]: A normalized vector where the sum of values is approximately 1.0.
+
+    Note:
+        - If the sum of values in the input vector is not within the range [1.0 - epsilon, 1.0 + epsilon],
+          the vector is normalized by dividing each element by the current sum of the vector.
+
     """
     if not 1.0 - epsilon <= sum(vector) <= 1.0 + epsilon:
         # TODO: Add warning, maybe to a logger.
         return [value/sum(vector) for value in vector]
     return vector
-    
+
 
 landcover_cmap = plt.get_cmap('Spectral')
 landcover_colors = [landcover_cmap(i) for i in np.linspace(0, 1, 9)]
@@ -141,7 +214,27 @@ landcover_colors = [landcover_cmap(i) for i in np.linspace(0, 1, 9)]
 def landcover_pie(
         axis: plt.Axes, values: List[float], labels: List[str], colors: List[Any],
         title: str | None = None, show_legend: bool = False) -> None:
-    """ """
+    """
+    Creates a pie chart of land cover composition.
+
+    Args:
+        axis (plt.Axes): The matplotlib axis object where the pie chart will be drawn.
+        values (List[float]): List of float values representing the proportions of each land cover type.
+        labels (List[str]): List of strings representing labels for each land cover type.
+        colors (List[Any]): List of colors corresponding to each land cover type.
+        title (str, optional): Title of the pie chart. Defaults to None.
+        show_legend (bool, optional): Whether to display the legend. Defaults to False.
+
+    Returns:
+        None
+
+    Note:
+        - The function creates a pie chart using matplotlib on the provided axis (`axis`).
+        - Only land cover types with non-zero values (`values > 0`) are included in the chart.
+        - The pie is exploded to highlight the land cover type with the highest proportion.
+        - Labels and percentages are formatted and positioned for readability.
+
+    """
     explode_offset: float = 0.05
     labels_tr = [label for label, value in zip(labels, values) if value >0]
     values_tr = [value for value in values if value >0]
@@ -151,7 +244,7 @@ def landcover_pie(
     one_hot_list = [0] * len(values_tr)
     one_hot_list[max_value_index] = 1
     explode = [explode_offset * item for item in one_hot_list]
-    
+
     axis.pie(values_tr, 
         labels=labels_tr, 
         explode=explode,
@@ -173,17 +266,25 @@ def landcover_pie(
             text.set_fontstyle("italic")
             text.set_fontsize(8)
 
-
 @dataclass  # type: ignore[misc]
 class Writer(ABC):
-    """Abstract base class for all writers."""
+    """
+    Abstract base class for all writers.
+    """
 
     @staticmethod
     def round_parameter(
             number: Union[float, list],
             number_decimals: int) -> Union[float, list]:
         """
-        Rounds number to the number of decimals provided in number_decimals.
+        Rounds a number or each element in a list to the specified number of decimals.
+
+        Args:
+            number (Union[float, list]): The number or list of numbers to round.
+            number_decimals (int): Number of decimal places to round to.
+
+        Returns:
+            Union[float, list]: Rounded number or list of rounded numbers.
         """
         try:
             if isinstance(number, list):
@@ -198,9 +299,18 @@ class Writer(ABC):
     def rollout(
             var_name: str,
             var_vector: Union[Sequence, Dict]) -> Iterator[Tuple[str, Any]]:
-        """Creates names of variables given as items in a variable that is
-        a sequence, e.g. a list or a tuple.
-        e.g. a variable var = [3,4,5] becomes: ('var_0', 3), ('var_1', 4),
+        """
+        Creates variable names and values from a sequence or dictionary.
+
+        Args:
+            var_name (str): Base name for the variables.
+            var_vector (Union[Sequence, Dict]): Sequence or dictionary containing variable values.
+
+        Yields:
+            Iterator[Tuple[str, Any]]: Iterator yielding tuples of variable names and values.
+            
+        Example:
+            a variable var = [3,4,5] becomes: ('var_0', 3), ('var_1', 4),
             ('var_2', 5).
         """
         if isinstance(var_vector, Sequence):
@@ -210,15 +320,18 @@ class Writer(ABC):
     @staticmethod
     def write_par_to_dict(input_name: str, parameter: Any, par_dict: Dict,
                           reservoir_name: str, precision: int = 3) -> Dict:
-        """Writes a parameter to a dictionary of par_name: par_value pairs.
+        """
+        Writes a parameter to a dictionary of parameter name-value pairs.
+
         Args:
-            input_name: Name of the input parameter.
-            parameter: Parameter data. It can be a single value or a sequence.
-            par_dict: Dictionary of parameter names and values that follows
-                the structure: {reservoir_name: {par_name: par_values}}
-            reservoir_name: Name of the reservoir for which tha parameter is to
-                be added.
-            precision: Number of decimal points for the parameter.
+            input_name (str): Name of the input parameter.
+            parameter (Any): Parameter data. It can be a single value, sequence, or nested sequence.
+            par_dict (Dict): Dictionary of parameter names and values in the form {reservoir_name: {par_name: par_values}}.
+            reservoir_name (str): Name of the reservoir for which the parameter is to be added.
+            precision (int, optional): Number of decimal points for the parameter. Defaults to 3.
+
+        Returns:
+            Dict: Updated dictionary of parameter names and values.
         """
         if isinstance(parameter, str):
             param_dict = {input_name: parameter}
@@ -243,28 +356,31 @@ class Writer(ABC):
 
     @abstractmethod
     def write(self) -> None:
-        """Writes outputs to the format of choice."""
+        """
+        Writes outputs to the format of choice.
+        """
 
 
 @dataclass  # type: ignore[misc]
 class ExcelWriter(Writer):
-    """Formats and write data to an Excel file.
+    """
+    Formats and writes data to an Excel file.
 
     Attributes:
-        inputs: Inputs object with input data.
-        outputs: Outputs dictionary.
-        intern_vars: Internal variables dictionary.
-        output_file_path: Path where the output file is to be saved/written to.
-        output_config: Configuration file with formatting settings.
-        input_config: Configuration file with formatting settings.
-        intern_vars_config: Configuration dictionary with formatting settings.
-        parameter_config: Configuration file with formatting settings.
-        config_ini: Global parameter configuration file.
-        author: Author of the document.
-        title: Title of the document.
-
-        output_df: pandas.DataFrame with model outputs.
-        input_df: pandas.DataFrame with model inputs.
+        inputs (Inputs): Inputs object containing input data.
+        outputs (Dict): Outputs dictionary.
+        intern_vars (Dict): Internal variables dictionary.
+        output_file_path (str): Path where the output Excel file will be saved.
+        output_config (Dict): Configuration file with formatting settings for outputs.
+        input_config (Dict): Configuration file with formatting settings for inputs.
+        intern_vars_config (Dict): Configuration dictionary with formatting settings for internal variables.
+        parameter_config (Dict): Configuration file with formatting settings for parameters.
+        config_ini (configparser.ConfigParser): Global parameter configuration file.
+        author (str): Author of the Excel document.
+        title (str): Title of the Excel document.
+        output_df (pd.DataFrame): DataFrame containing model outputs.
+        input_df (pd.DataFrame): DataFrame containing model inputs.
+        intern_vars_df (pd.DataFrame): DataFrame containing internal variables.
     """
 
     inputs: Inputs
@@ -287,14 +403,20 @@ class ExcelWriter(Writer):
     intern_vars_df: pd.DataFrame = field(init=False)
 
     def __post_init__(self):
-        """Initialize output dataframe which will be output as Excel file."""
+        """
+        Initialize output DataFrames which will be output as Excel sheets.
+        """
         self.output_df = pd.DataFrame()
         self.input_df = pd.DataFrame()
         self.intern_vars_df = pd.DataFrame()
 
     def add_inputs(self, reservoir_name: str) -> None:
-        """Create an inputs dictionary for a given reservoir and append to
-        a pandas DataFrame."""
+        """
+        Create an inputs DataFrame for a given reservoir and append it to the main input DataFrame.
+
+        Args:
+            reservoir_name (str): Name of the reservoir for which inputs are to be added.
+        """
         input_data = self.inputs.inputs[reservoir_name].data
         input_dict: Dict = {reservoir_name: {}}
 
@@ -375,7 +497,18 @@ class ExcelWriter(Writer):
     def dict_data_to_df(
             self, id: str, data: Dict, config: Dict, 
             index_name: str = 'Name') -> pd.DataFrame:
-        """Parse data in a dictionary format into pandas dataframe format"""
+        """
+        Parse data in a dictionary format into pandas DataFrame format.
+
+        Args:
+            id (str): Identifier for the data (e.g., reservoir name).
+            data (Dict): Dictionary containing data to be parsed into DataFrame.
+            config (Dict): Configuration dictionary specifying which parameters to include.
+            index_name (str, optional): Name of the index column in the DataFrame. Defaults to 'Name'.
+
+        Returns:
+            pd.DataFrame: DataFrame containing parsed data.
+        """
         output: Dict = {id: {}}
         for parameter, parameter_value in data.items():
             # Add parameter if the parameter is marked for presentation
@@ -398,7 +531,12 @@ class ExcelWriter(Writer):
         return output_df
     
     def add_outputs(self, reservoir_name: str) -> None:
-        """Add outputs selected for presentation, for a given reservoir."""
+        """
+        Add outputs selected for presentation for a given reservoir.
+
+        Args:
+            reservoir_name (str): Name of the reservoir for which outputs are to be added.
+        """
         config = self.output_config['outputs']
         data = self.outputs[reservoir_name]
         reservoir_df = self.dict_data_to_df(
@@ -409,7 +547,12 @@ class ExcelWriter(Writer):
             self.output_df = pd.concat([self.output_df, reservoir_df])
 
     def add_internals(self, reservoir_name: str) -> None:
-        """Add internal variables selected for presentation, for a given reservoir."""
+        """
+        Add internal variables selected for presentation for a given reservoir.
+
+        Args:
+            reservoir_name (str): Name of the reservoir.
+        """
         config = self.intern_vars_config
         data=self.intern_vars[reservoir_name]
         reservoir_df = self.dict_data_to_df(
@@ -420,7 +563,9 @@ class ExcelWriter(Writer):
             self.intern_vars_df = pd.concat([self.intern_vars_df, reservoir_df])
 
     def write(self) -> None:
-        """Write input/output data (all reservoirs) to an excel file."""
+        """
+        Write input/output data (all reservoirs) to an Excel file.
+        """
         if not bool(self.outputs):
             log.error("Attempting to write before generating outputs")
             return None
@@ -438,46 +583,50 @@ class ExcelWriter(Writer):
 
 @dataclass  # type: ignore[misc]
 class JSONWriter(Writer):
-    """Format and write data to a JSON file.
+    """
+    Format and write data to a JSON file.
 
     Attributes:
-        inputs: Inputs object with input data.
-        outputs: Outputs dictionary.
-        intern_vars: Internal variables dictionary.
-        output_file_path: Path where the output file is to be saved/written to.
-        output_config: Configuration dictionary with formatting settings.
-        input_config: Configuration dictionary with formatting settings.
-        intern_vars_config: Configuration dictionary with formatting settings.
-        parameter_config: Configuration file with formatting settings.
-        config_ini: Global parameter configuration file.
-        author: Author of the document.
-        title: Title of the document.
-        json_dict: Output dictionary save to the output JSON file.
+        inputs (Inputs): Inputs object with input data.
+        outputs (Dict): Outputs dictionary.
+        intern_vars (Dict): Internal variables dictionary.
+        output_file_path (str): Path where the output file is to be saved/written to.
+        output_config (Dict): Configuration dictionary with formatting settings for outputs.
+        input_config (Dict): Configuration dictionary with formatting settings for inputs.
+        intern_vars_config (Dict): Configuration dictionary with formatting settings for internal variables.
+        parameter_config (Dict): Configuration file with formatting settings for parameters.
+        config_ini (configparser.ConfigParser): Global parameter configuration file.
+        author (str): Author of the document.
+        title (str): Title of the document.
+        json_dict (Dict): Output dictionary saved to the output JSON file. Automatically initialized.
     """
 
     inputs: Inputs
     outputs: Dict
     intern_vars: Dict
-
     output_file_path: str
-
     output_config: Dict
     input_config: Dict
     intern_vars_config: Dict
     parameter_config: Dict
     config_ini: configparser.ConfigParser
-
     author: str
     title: str
     json_dict: Dict = field(init=False)
 
     def __post_init__(self):
-        """Initialie output_dict which will be output as JSON"""
+        """
+        Initialize json_dict which will be output as JSON.
+        """
         self.json_dict = {}
 
     def add_inputs(self, reservoir_name: str) -> None:
-        """Create inputs dictionary for a given reservoir and append to
-        json_dict."""
+        """
+        Add inputs selected for presentation for a given reservoir to json_dict.
+
+        Args:
+            reservoir_name (str): Name of the reservoir.
+        """
         input_data = self.inputs.inputs[reservoir_name].data
         input_dict: dict = {'inputs': {}}
         # Find out which inputs to include in the presentation
@@ -565,7 +714,17 @@ class JSONWriter(Writer):
             self.json_dict[reservoir_name] = input_dict
 
     def parse_dict_data(self, config: Dict, data: Dict, item_names: Tuple) -> Dict:
-        """ """
+        """
+        Parse data dictionary into a structured format based on configuration.
+
+        Args:
+            config (Dict): Configuration dictionary indicating which parameters to include.
+            data (Dict): Dictionary containing data to be parsed.
+            item_names (Tuple): Tuple of item names to include in the parsed output.
+
+        Returns:
+            Dict: Parsed dictionary data.
+        """
         output_dict: Dict = {}
         for parameter, parameter_value in data.items():
             if config[parameter]['include']:
@@ -579,8 +738,12 @@ class JSONWriter(Writer):
         return output_dict
             
     def add_outputs(self, reservoir_name: str) -> None:
-        """Create an outputs dictionary for a given reservoir and append to
-        json_dict."""
+        """
+        Add outputs selected for presentation for a given reservoir to `json_dict`.
+
+        Args:
+            reservoir_name (str): Name of the reservoir.
+        """
         config = self.output_config['outputs']
         data = self.outputs[reservoir_name]
         parsed_data = self.parse_dict_data(
@@ -592,8 +755,12 @@ class JSONWriter(Writer):
             self.json_dict[reservoir_name] = {'outputs': parsed_data}
 
     def add_internals(self, reservoir_name: str) -> None:
-        """Create an internal variables dictionary for a given reservoir and 
-        append to json_dict."""
+        """
+        Add internal variables selected for presentation for a given reservoir to `json_dict`.
+
+        Args:
+            reservoir_name (str): Name of the reservoir.
+        """
         config = self.intern_vars_config
         data = self.intern_vars[reservoir_name]
         parsed_data = self.parse_dict_data(
@@ -605,7 +772,9 @@ class JSONWriter(Writer):
             self.json_dict[reservoir_name] = {'intern_vars': parsed_data}
 
     def write(self) -> None:
-        """Write output data (all reservoirs) to a JSON file."""
+        """
+        Write output data (all reservoirs) to a JSON file.
+        """
         if not bool(self.outputs):
             log.error("Attempting to write before generating outputs.")
             return None
@@ -622,46 +791,47 @@ class JSONWriter(Writer):
 
 @dataclass  # type: ignore[misc]
 class LatexWriter(Writer):
-    """Format and write data to a latex file using PyLaTeX.
+    """Format and write data to a LaTeX file using PyLaTeX.
 
-    Attrributes:
-        inputs: Inputs object with input data.
-        outputs: Outputs dictionary.
-        intern_vars: Internal variables dictionary.
-        output_file_path: Path where the output file is to be saved/written to.
-        output_config: Configuration file with formatting settings.
-        input_config: Configuration file with formatting settings.
-        intern_vars_config: Configuration dictionary with formatting settings.
-        parameter_config: Configuration file with formatting settings.
-        config_ini: Global parameter configuration file.
-        author: Author of the document.
-        title: Title of the document.
-
-        document: pylatex Document object.
+    Attributes:
+        inputs (Inputs): Inputs object with input data.
+        outputs (Dict): Outputs dictionary.
+        intern_vars (Dict): Internal variables dictionary.
+        output_file_path (str): Path where the output file is to be saved/written to.
+        output_config (Dict): Configuration file with formatting settings.
+        input_config (Dict): Configuration file with formatting settings.
+        intern_vars_config (Dict): Configuration dictionary with formatting settings.
+        parameter_config (Dict): Configuration file with formatting settings.
+        config_ini (configparser.ConfigParser): Global parameter configuration file.
+        author (str): Author of the document.
+        title (str): Title of the document.
+        document (Document): PyLaTeX Document object.
     """
 
     inputs: Inputs
     outputs: Dict
     intern_vars: Dict
-
     output_file_path: str
-
     output_config: Dict
     input_config: Dict
     intern_vars_config: Dict
     parameter_config: Dict
     config_ini: configparser.ConfigParser
-
     author: str
     title: str
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
+        """Initialize the PyLaTeX document with specified geometry."""
         path_no_ext = os.path.splitext(self.output_file_path)[0]
         self.document = Document(path_no_ext, geometry_options=self.geometry())
 
     @staticmethod
     def geometry() -> Dict:
-        """Create document geometry structure."""
+        """Create document geometry structure.
+
+        Returns:
+            Dict: Dictionary containing the document geometry options.
+        """
         document_geometry = {
             "head": "0.0in", "margin": "0.75in", "top": "0.55in",
             "bottom": "0.55in", "includeheadfoot": True}
@@ -672,10 +842,10 @@ class LatexWriter(Writer):
         """Plot an emission profile using matplotlib.
 
         Args:
-            axis: matplotlib axes object.
-            emission: name of the gas/emision to plot.
-            output_name: name of the output/reservoir.
-            annotate: Flag setting whether emission values are added to plot.
+            axis (plt.Axes): Matplotlib axes object.
+            emission (str): Name of the gas/emission to plot.
+            output_name (str): Name of the output/reservoir.
+            annotate (bool): Flag setting whether emission values are added to plot. Default is True.
         """
         plot_options = {'linewidth': 1.0, 'axiswidth': 2, 'tickwidth': 2,
                         'labelpad': 5, 'titlepad': 15,
@@ -738,14 +908,12 @@ class LatexWriter(Writer):
                     fontsize=plot_options['annotation_fontsize'])
 
     def plot_emission_bars(self, axis: plt.Axes, output_name: str) -> None:
-        """Visualise total emissions (unit x surface area) for the
-        calculated gases.
+        """Visualize total emissions (unit x surface area) for the calculated gases.
 
         Args:
-            axis: matplotlib axes object.
-            output_name: name of the output/reservoir.
+            axis (plt.Axes): Matplotlib axes object.
+            output_name (str): Name of the output/reservoir.
         """
-
         plot_options = {'linewidth': 1.0, 'axiswidth': 2, 'tickwidth': 2,
                         'labelpad': 5, 'titlepad': 15,
                         'label_fontsize': LABEL_FONTSIZE,
@@ -783,8 +951,11 @@ class LatexWriter(Writer):
 
 
     def plot_landcover_piecharts(self, axes: np.ndarray, output_name: str) -> None:
-        """ 
-        axes: np.ndarray of plt.Axes objects
+        """Plot pie charts of landcover compositions for reservoir and catchment.
+
+        Args:
+            axes (np.ndarray): Array of matplotlib axes objects.
+            output_name (str): Name of the output/reservoir.
         """
         #data = self.inputs.data[output_name]
         input_data = self.inputs.inputs[output_name]
@@ -809,13 +980,12 @@ class LatexWriter(Writer):
 
     def add_plots(self, output_name: str, plot_fraction: float = 0.75,
                   dpi: int = 300) -> None:
-        """Checks the number of plots to be produced and plots them in
-        subfigures.
+        """Generate and add emission plots to the document.
 
         Args:
-            output_name: Name of the output / reservoir.
-            plot_fraction: Fraction of text width the plot takes on the page.
-            dpi: Resolution of the created figure within PDF.
+            output_name (str): Name of the output/reservoir.
+            plot_fraction (float): Fraction of text width the plot takes on the page. Default is 0.75.
+            dpi (int): Resolution of the created figure within PDF. Default is 300.
         """
         profile_plots = bool(self.output_config['global']['plot_profiles'])
         bar_plot = bool(self.output_config['global']['plot_emission_bars'])
@@ -860,7 +1030,13 @@ class LatexWriter(Writer):
         
     def add_landcover_charts(self, output_name: str, plot_fraction: float = 0.95,
                   dpi: int = 300) -> None:
-        """Adds pie-charts with land-cover proportions for reservoir and catchment """
+        """Add pie charts with landcover proportions for reservoir and catchment.
+
+        Args:
+            output_name (str): Name of the output/reservoir.
+            plot_fraction (float): Fraction of text width the plot takes on the page. Default is 0.95.
+            dpi (int): Resolution of the created figure within PDF. Default is 300.
+        """
         plot_piecharts = bool(self.output_config['global']['plot_landcover_piecharts'])
         if not plot_piecharts: # Playing the non-indent guy.
             return None
@@ -876,12 +1052,11 @@ class LatexWriter(Writer):
         
         
     def add_parameters(self, precision: int = 4) -> None:
-        """Adds information about model parameters such as conversion factors
-        and other information that might be useful to report alongside
-        calculation results.
+        """Add information about model parameters such as conversion factors
+        and other useful details to the report.
 
         Args:
-            precision: Number of decimal points in output parameters.
+            precision (int): Number of decimal points in output parameters. Default is 4.
         """
         round_options = {'round-precision': precision,
                          'round-mode': 'figures'}
@@ -943,11 +1118,11 @@ class LatexWriter(Writer):
                     pass
 
     def add_intern_vars_table(self, output_name: str, precision: int = 4) -> None:
-        """Adds internal variables table to latex source code.
+        """Adds internal variables table to the LaTeX document.
 
         Args:
-            output_name: Name of the intenral variable/reservoir.
-            precision: Number of decimal points in the output input values.
+            output_name (str): Name of the internal variable/reservoir.
+            precision (int): Number of decimal points in the output values.
         """
         round_options = {'round-precision': precision,
                          'round-mode': 'figures'}
@@ -977,11 +1152,11 @@ class LatexWriter(Writer):
                         data_table.add_row(row)
 
     def add_outputs_table(self, output_name: str, precision: int = 4) -> None:
-        """Adds outputs table to latex source code.
+        """Adds outputs table to the LaTeX document.
 
         Args:
-            output_name: Name of the output/reservoir.
-            precision: Number of decimal points in the output input values.
+            output_name (str): Name of the output/reservoir.
+            precision (int): Number of decimal points in the output values.
         """
         round_options = {'round-precision': precision,
                          'round-mode': 'figures'}
@@ -1052,8 +1227,8 @@ class LatexWriter(Writer):
         """Add information with model inputs (for each reservoir).
 
         Args:
-            output_name: Name of the output/reservoir.
-            precision: Number of decimal points in the output input values.
+            output_name (str): Name of the output/reservoir.
+            precision (int): Number of decimal points in the output input values.
         """
         round_options = {'round-precision': precision,
                          'round-mode': 'figures'}
@@ -1220,7 +1395,15 @@ class LatexWriter(Writer):
         return None
 
     def add_header(self, header_title: str = "GHG emission estimation results") -> None:
-        """Adds a header to latex document source code."""
+        """
+        Adds a header to the LaTeX document source code.
+
+        Args:
+            header_title (str): The title to be added in the header. Defaults to "GHG emission estimation results".
+
+        Returns:
+            None
+        """
         header = PageStyle("header")
         # Create center header
         with header.create(Head("C")):
@@ -1232,7 +1415,16 @@ class LatexWriter(Writer):
         self.document.change_document_style("header")
 
     def add_title_section(self, title: str, author: str) -> None:
-        """Writes title to latex document source code."""
+        """
+        Writes the title section to the LaTeX document source code.
+
+        Args:
+            title (str): The title of the document.
+            author (str): The author of the document.
+
+        Returns:
+            None
+        """
         self.document.preamble.append(Command('title', title))
         self.document.preamble.append(Command('author', author))
         self.document.preamble.append(Command('date', NoEscape(r'\today')))
@@ -1240,20 +1432,42 @@ class LatexWriter(Writer):
 
     def add_parameters_section(self) -> None:
         """
-        Writes model parameter information to latex document source code.
+        Writes model parameter information to the LaTeX document source code.
+
+        Args:
+            None
+
+        Returns:
+            None
         """
         with self.document.create(Section('Global parameters')):
             self.add_parameters()
         self.document.append(NoEscape(r'\pagebreak'))
 
     def add_inputs_subsection(self, reservoir_name: str) -> None:
-        """Writes inputs information to latex document source code."""
+        """
+        Writes inputs information to the LaTeX document source code.
+
+        Args:
+            reservoir_name (str): The name of the reservoir.
+
+        Returns:
+            None
+        """
         # Add inputs section to the document
         with self.document.create(Subsection('Inputs')):
             self.add_inputs_table(output_name=reservoir_name)
 
     def add_outputs_subsection(self, reservoir_name: str) -> None:
-        """Writes outputs information to latex document source code."""
+        """
+        Writes outputs information to the LaTeX document source code.
+
+        Args:
+            reservoir_name (str): The name of the reservoir.
+
+        Returns:
+            None
+        """
         plot_fraction = 0.75
         # Add inputs section to the document
         with self.document.create(Subsection('Outputs')):
@@ -1262,12 +1476,28 @@ class LatexWriter(Writer):
                            plot_fraction=plot_fraction)
             
     def add_intern_var_subsection(self, reservoir_name: str) -> None:
-        """Writes internal varaibel information to latex document source code"""
+        """
+        Writes internal variable information to the LaTeX document source code.
+
+        Args:
+            reservoir_name (str): The name of the reservoir.
+
+        Returns:
+            None
+        """
         with self.document.create(Subsection('Intermediate variables')):
             self.add_intern_vars_table(output_name=reservoir_name)
 
     def write(self) -> None:
-        """Writes output data (all reservoir) to a tex and pdf files."""
+        """
+        Writes output data (all reservoirs) to .tex and .pdf files.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         if not bool(self.outputs):
             # If outputs are None or an empty dictionary.
             return None
@@ -1283,9 +1513,6 @@ class LatexWriter(Writer):
                     self.add_outputs_subsection(reservoir_name=reservoir_name)
                     self.add_intern_var_subsection(reservoir_name=reservoir_name)
             # Generate a PDF (requires a LaTeX compiler present in the system)
-            print(clean_tex, type(clean_tex))
-            print(_get_latex_compiler(), type(_get_latex_compiler()))
-            print(compilations, type(compilations))
             BatchCompiler(self.document).generate_pdf(
                 clean_tex=clean_tex, compiler=_get_latex_compiler(), 
                 compilations=compilations)
@@ -1302,13 +1529,13 @@ class Presenter:
     """Reads and processes results of GHG emission calculations and outputs
     them in different formats.
 
-    Atrributes:
-        inputs: inputs.Inputs object.
-        outputs: Model outputs dictionary.
-        intern_vars: Dictionary of internal variables.
-        writers: a list of Writer objects.
-        author: Author name.
-        title: Document title.
+    Attributes:
+        inputs (Inputs): An instance of Inputs class containing input data.
+        outputs (Dict): Dictionary containing model outputs.
+        intern_vars (Dict): Dictionary of internal variables.
+        writers (Optional[List[Writer]]): Optional list of Writer objects for output.
+        author (str): Name of the author. Default is 'Anonymous'.
+        title (str): Title of the document. Default is 'Results'.
     """
 
     inputs: Inputs
@@ -1316,11 +1543,21 @@ class Presenter:
     intern_vars: Dict
     writers: Optional[List[Writer]] = field(default=None)
     author: str = field(default='Anonymous')
-    title: str = field(default='HEET Results')
+    title: str = field(default='Results')
 
     @classmethod
     def fromfiles(cls, input_file: str, output_file: str, interns_file: str, **kwargs):
-        """Load outputs dictionary from json file."""
+        """Creates an instance of Presenter from JSON files.
+
+        Args:
+            input_file (str): Path to JSON file containing input data.
+            output_file (str): Path to JSON file containing model outputs.
+            interns_file (str): Path to JSON file containing internal variables.
+            **kwargs: Additional keyword arguments for customization.
+
+        Returns:
+            Presenter: An instance of Presenter initialized with data loaded from files.
+        """
         inputs = Inputs.fromfile(input_file)
         with open(output_file, 'r', encoding='utf-8') as json_file:
             output_dict = json.load(json_file)
@@ -1330,7 +1567,7 @@ class Presenter:
             inputs=inputs, outputs=output_dict, intern_vars=intern_dict, **kwargs)
 
     def __post_init__(self):
-        """Load configuration dictionaries from provided yaml files."""
+        """Loads configuration files after instance initialization."""
         self.input_config = load_yaml(INPUT_CONFIG_PATH)
         self.output_config = load_yaml(OUTPUT_CONFIG_PATH)
         self.intern_vars_config = load_yaml(INTERN_VARS_CONFIG_PATH)
@@ -1339,7 +1576,15 @@ class Presenter:
         self.config_ini = read_config(CONFIG_INI_PATH)
 
     def add_writer(self, writer: Type[Writer], output_file: str) -> None:
-        """Insantiates writer object and appends it to self.writers."""
+        """Adds a Writer object to the list of writers.
+
+        Args:
+            writer (Type[Writer]): Type of Writer to instantiate.
+            output_file (str): Path to the output file for the Writer.
+
+        Returns:
+            None
+        """
         if self.writers is None:
             self.writers = []
         self.writers.append(
@@ -1359,7 +1604,7 @@ class Presenter:
         )
 
     def output(self) -> None:
-        """Present GHG emission calculation results using writers."""
+        """Outputs GHG emission calculation results using writers."""
         if self.writers is None:
             log.info("No writers specified. Results could not be output.")
             return None
