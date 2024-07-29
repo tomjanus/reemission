@@ -11,6 +11,6 @@ sphinxcontrib-htmlhelp==2.0.5
 sphinxcontrib-jquery==4.1
 sphinxcontrib-jsmath==1.0.1
 sphinxcontrib-napoleon==0.7
-sphinxcontrib-pdfembed==0.1
+sphinxcontrib-pdfembed
 sphinxcontrib-qthelp==1.0.7
 sphinxcontrib-serializinghtml==1.1.10
