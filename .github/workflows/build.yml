@@ -3,8 +3,8 @@ name: "RE-Emission Build"
 on: [push, pull_request, workflow_dispatch]
 
 env:
-  # Only build on Python 3.7+
-  CIBW_BUILD: cp37-* cp38-* cp39-* cp310-*
+  # Only build on Python 3.8+
+  CIBW_BUILD: cp38-* cp39-* cp310-*
   SERVICEACCOUNT: ${{ secrets.SERVICEACCOUNT }}
   SERVICEACCOUNT_EMAIL: ${{ secrets.SERVICEACCOUNT_EMAIL }}
   
@@ -24,12 +24,13 @@ jobs:
       - uses: actions/setup-python@v2
         name: Install Python
         with:
-          python-version: '3.9'
+          python-version: '3.11'
 
       - name: Build docs
         # lpsolve doesn't compile on Ubuntu without building the library from source - disable for the time being.
         # This doesn't really matter for the documentation builds.
         run: |
+          pip install --upgrade pip
           pip install -e .
           pip install -r requirements_doc.txt
           pip install https://github.com/SuperKogito/sphinxcontrib-pdfembed/archive/master.zip
