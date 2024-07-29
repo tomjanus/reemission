@@ -5,6 +5,8 @@ on: [push, pull_request, workflow_dispatch]
 env:
   # Only build on Python 3.7+
   CIBW_BUILD: cp37-* cp38-* cp39-* cp310-*
+  SERVICEACCOUNT: ${{ secrets.SERVICEACCOUNT }}
+  SERVICEACCOUNT_EMAIL: ${{ secrets.SERVICEACCOUNT_EMAIL }}
   
 permissions:
   contents: write
@@ -30,7 +32,7 @@ jobs:
         run: |
           pip install -e .
           pip install -r requirements_doc.txt
-          pip install git+git://github.com/SuperKogito/sphinxcontrib-pdfembed
+          pip install https://github.com/SuperKogito/sphinxcontrib-pdfembed/archive/master.zip
           cd docs
           make html
 
