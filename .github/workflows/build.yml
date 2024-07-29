@@ -30,6 +30,7 @@ jobs:
         run: |
           pip install -e .
           pip install -r requirements_doc.txt
+          pip install git+git://github.com/SuperKogito/sphinxcontrib-pdfembed
           cd docs
           make html
 
