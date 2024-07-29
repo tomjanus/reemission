@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+
+<html :class="{'dark': darkMode === 'dark' || (darkMode === 'system' &amp;&amp; window.matchMedia('(prefers-color-scheme: dark)').matches)}" class="scroll-smooth" data-content_root="../" lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') || localStorage.setItem('darkMode', 'system'), activeSection: '' }" x-init="$watch('darkMode', val =&gt; localStorage.setItem('darkMode', val))">
+<head>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta charset="utf-8"/>
+<meta content="white" media="(prefers-color-scheme: light)" name="theme-color"/>
+<meta content="black" media="(prefers-color-scheme: dark)" name="theme-color"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Presenter | ReEmission 1.0.0 documentation</title>
+<meta content="Presenter | ReEmission 1.0.0 documentation" property="og:title"/>
+<meta content="Presenter | ReEmission 1.0.0 documentation" name="twitter:title"/>
+<link href="../_static/pygments.css?v=c842c44c" rel="stylesheet" type="text/css"/>
+<link href="../_static/theme.css?v=ecdfb4fc" rel="stylesheet" type="text/css"/>
+<link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/tabs.css?v=a5c4661c" rel="stylesheet" type="text/css"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="reemission.utils.html" rel="next" title="Utility functions"/>
+<link href="reemission.profile.html" rel="prev" title="Emission Profile Calculator"/>
+<script>
+    <!-- Prevent Flash of wrong theme -->
+      const userPreference = localStorage.getItem('darkMode');
+      let mode;
+      if (userPreference === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        mode = 'dark';
+        document.documentElement.classList.add('dark');
+      } else {
+        mode = 'light';
+      }
+      if (!userPreference) {localStorage.setItem('darkMode', mode)}
+    </script>
+</head>
+<body :class="{ 'overflow-hidden': showSidebar }" class="min-h-screen font-sans antialiased bg-background text-foreground" x-data="{ showSidebar: false }">
+<div @click.self="showSidebar = false" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" x-cloak="" x-show="showSidebar"></div><div class="relative flex flex-col min-h-screen" id="page"><a class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100" href="#content">
+      Skip to content
+    </a><header class="sticky top-0 z-40 w-full border-b shadow-sm border-border supports-backdrop-blur:bg-background/60 bg-background/95 backdrop-blur"><div class="container flex items-center h-14">
+<div class="hidden mr-4 md:flex">
+<a class="flex items-center mr-6" href="../index.html"><span class="hidden font-bold sm:inline-block text-clip whitespace-nowrap">ReEmission 1.0.0 documentation</span>
+</a></div><button @click="showSidebar = true" class="inline-flex items-center justify-center h-10 px-0 py-2 mr-2 text-base font-medium transition-colors rounded-md hover:text-accent-foreground hover:bg-transparent md:hidden" type="button">
+<svg aria-hidden="true" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M152.587 825.087q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440Zm0-203.587q-19.152 0-32.326-13.174T107.087 576q0-19.152 13.174-32.326t32.326-13.174h320q19.152 0 32.326 13.174T518.087 576q0 19.152-13.174 32.326T472.587 621.5h-320Zm0-203.587q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440ZM708.913 576l112.174 112.174q12.674 12.674 12.674 31.826t-12.674 31.826Q808.413 764.5 789.261 764.5t-31.826-12.674l-144-144Q600 594.391 600 576t13.435-31.826l144-144q12.674-12.674 31.826-12.674t31.826 12.674q12.674 12.674 12.674 31.826t-12.674 31.826L708.913 576Z"></path>
+</svg>
+<span class="sr-only">Toggle navigation menu</span>
+</button>
+<div class="flex items-center justify-between flex-1 space-x-2 sm:space-x-4 md:justify-end">
+<div class="flex-1 w-full md:w-auto md:flex-none"><form @keydown.k.window.meta="$refs.search.focus()" action="../search.html" class="relative flex items-center group" id="searchbox" method="get">
+<input aria-label="Search the docs" class="inline-flex items-center font-medium transition-colors bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background border border-input hover:bg-accent focus:bg-accent hover:text-accent-foreground focus:text-accent-foreground hover:placeholder-accent-foreground py-2 px-4 relative h-9 w-full justify-start rounded-[0.5rem] text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64" id="search-input" name="q" placeholder="Search ..." type="search" x-ref="search"/>
+<kbd class="pointer-events-none absolute right-1.5 top-2 hidden h-5 select-none text-muted-foreground items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex group-hover:bg-accent group-hover:text-accent-foreground">
+<span class="text-xs">⌘</span>
+    K
+  </kbd>
+</form>
+</div>
+<nav class="flex items-center space-x-1">
+<button @click="darkMode = darkMode === 'light' ? 'dark' : 'light'" aria-label="Color theme switcher" class="relative inline-flex items-center justify-center px-0 text-sm font-medium transition-colors rounded-md hover:bg-accent hover:text-accent-foreground h-9 w-9" type="button">
+<svg class="absolute transition-all scale-100 rotate-0 dark:-rotate-90 dark:scale-0" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 685q45.456 0 77.228-31.772Q589 621.456 589 576q0-45.456-31.772-77.228Q525.456 467 480 467q-45.456 0-77.228 31.772Q371 530.544 371 576q0 45.456 31.772 77.228Q434.544 685 480 685Zm0 91q-83 0-141.5-58.5T280 576q0-83 58.5-141.5T480 376q83 0 141.5 58.5T680 576q0 83-58.5 141.5T480 776ZM80 621.5q-19.152 0-32.326-13.174T34.5 576q0-19.152 13.174-32.326T80 530.5h80q19.152 0 32.326 13.174T205.5 576q0 19.152-13.174 32.326T160 621.5H80Zm720 0q-19.152 0-32.326-13.174T754.5 576q0-19.152 13.174-32.326T800 530.5h80q19.152 0 32.326 13.174T925.5 576q0 19.152-13.174 32.326T880 621.5h-80Zm-320-320q-19.152 0-32.326-13.174T434.5 256v-80q0-19.152 13.174-32.326T480 130.5q19.152 0 32.326 13.174T525.5 176v80q0 19.152-13.174 32.326T480 301.5Zm0 720q-19.152 0-32.326-13.17Q434.5 995.152 434.5 976v-80q0-19.152 13.174-32.326T480 850.5q19.152 0 32.326 13.174T525.5 896v80q0 19.152-13.174 32.33-13.174 13.17-32.326 13.17ZM222.174 382.065l-43-42Q165.5 327.391 166 308.239t13.174-33.065q13.435-13.674 32.587-13.674t32.065 13.674l42.239 43q12.674 13.435 12.555 31.706-.12 18.272-12.555 31.946-12.674 13.674-31.445 13.413-18.772-.261-32.446-13.174Zm494 494.761-42.239-43q-12.674-13.435-12.674-32.087t12.674-31.565Q686.609 756.5 705.38 757q18.772.5 32.446 13.174l43 41.761Q794.5 824.609 794 843.761t-13.174 33.065Q767.391 890.5 748.239 890.5t-32.065-13.674Zm-42-494.761Q660.5 369.391 661 350.62q.5-18.772 13.174-32.446l41.761-43Q728.609 261.5 747.761 262t33.065 13.174q13.674 13.435 13.674 32.587t-13.674 32.065l-43 42.239q-13.435 12.674-31.706 12.555-18.272-.12-31.946-12.555Zm-495 494.761Q165.5 863.391 165.5 844.239t13.674-32.065l43-42.239q13.435-12.674 32.087-12.674t31.565 12.674Q299.5 782.609 299 801.38q-.5 18.772-13.174 32.446l-41.761 43Q231.391 890.5 212.239 890t-33.065-13.174ZM480 576Z"></path>
+</svg>
+<svg class="absolute transition-all scale-0 rotate-90 dark:rotate-0 dark:scale-100" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 936q-151 0-255.5-104.5T120 576q0-138 90-239.5T440 218q25-3 39 18t-1 44q-17 26-25.5 55t-8.5 61q0 90 63 153t153 63q31 0 61.5-9t54.5-25q21-14 43-1.5t19 39.5q-14 138-117.5 229T480 936Zm0-80q88 0 158-48.5T740 681q-20 5-40 8t-40 3q-123 0-209.5-86.5T364 396q0-20 3-40t8-40q-78 32-126.5 102T200 576q0 116 82 198t198 82Zm-10-270Z"></path>
+</svg>
+</button>
+</nav>
+</div>
+</div>
+</header>
+<div class="flex-1"><div class="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10"><aside :aria-hidden="!showSidebar" :class="{ 'translate-x-0': showSidebar }" class="fixed inset-y-0 left-0 md:top-14 z-50 md:z-30 bg-background md:bg-transparent transition-all duration-100 -translate-x-full md:translate-x-0 ml-0 p-6 md:p-0 md:-ml-2 md:h-[calc(100vh-3.5rem)] w-5/6 md:w-full shrink-0 overflow-y-auto border-r border-border md:sticky" id="left-sidebar">
+<a class="!justify-start text-sm md:!hidden bg-background" href="../index.html"><span class="font-bold text-clip whitespace-nowrap">ReEmission 1.0.0 documentation</span>
+</a>
+<div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
+<div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">About the Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Theoretical Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installing RE-Emission</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../demo.html">Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../json.html">JSON file format description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting.html">Reporting Calculation Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../geocaret_integration.html">Integration with GeoCARET</a></li>
+<li class="toctree-l1 current" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="reemission.html">Python API reference<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul class="current" x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="reemission.model.html">Model (Main)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.input.html">Input Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.reservoir.html">Reservoir Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.catchment.html">Catchment Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.ns_catchment.html">Post-impoundment catchment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.emissions.html">Emissions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.temperature.html">MonthlyTemperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.biogenic.html">Biogenic Factors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.profile.html">Emission Profile Calculator</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Presenter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.utils.html">Utility functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.auxiliary.html">Auxiliary functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.constants.html">Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.mixins.html">Mixins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.document_compiler.html">Document <span class="math notranslate nohighlight">\(\LaTeX\)</span> Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.exceptions.html">Custom Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.app_logger.html">App Logger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.download.html">External Data Downloader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.globals.html">Global variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.main.html">Main</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+</nav>
+</div>
+</div>
+<button @click="showSidebar = false" class="absolute md:hidden right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100" type="button">
+<svg class="h-4 w-4" fill="currentColor" height="24" stroke="none" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 632 284 828q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536 576l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480 632Z"></path>
+</svg>
+</button>
+</aside>
+<main class="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
+<div class="w-full min-w-0 mx-auto">
+<nav aria-label="breadcrumbs" class="flex items-center mb-4 space-x-1 text-sm text-muted-foreground">
+<a class="overflow-hidden text-ellipsis whitespace-nowrap hover:text-foreground" href="../index.html">
+<span class="hidden md:inline">ReEmission 1.0.0 documentation</span>
+<svg aria-label="Home" class="md:hidden" fill="currentColor" height="18" stroke="none" viewbox="0 96 960 960" width="18" xmlns="http://www.w3.org/2000/svg">
+<path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z"></path>
+</svg>
+</a>
+<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap" href="reemission.html">ReEmission reference documentation.</a>
+<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">Presenter</span>
+</nav>
+<div id="content" role="main">
+<section id="presenter">
+<h1>Presenter</h1>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+</tbody>
+</table>
+<p id="module-reemission.presenter">Presenter Module</p>
+<p>This module provides classes and functions for presenting GHG (Greenhouse Gas) emissions computation results
+in various output formats such as Excel, JSON, and LaTeX.</p>
+<dl class="simple">
+<dt><strong>Classes:</strong></dt><dd><ul class="simple">
+<li><p><strong>ExcelWriter</strong>: Formats and writes data to an Excel file.</p></li>
+<li><p><strong>JSONWriter</strong>: Formats and writes data to a JSON file.</p></li>
+<li><p><strong>LatexWriter</strong>: Formats and writes data to a LaTeX file using PyLaTeX.</p></li>
+<li><p><strong>Presenter</strong>: Reads and processes GHG emission calculation results and outputs them using various writers.</p></li>
+</ul>
+</dd>
+<dt>Each writer class (<strong>ExcelWriter</strong>, <strong>JSONWriter</strong>, <strong>LatexWriter</strong>) is designed to handle specific output formats, ensuring the presentation of inputs, outputs, and internal variables in a structured manner. All writers inherit from an abstract base class <strong>Writer</strong> which implements the following static methods:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">round_parameter(number:</span> <span class="pre">Union[float,</span> <span class="pre">list],</span> <span class="pre">number_decimals:</span> <span class="pre">int)</span> <span class="pre">-&gt;</span> <span class="pre">Union[float,</span> <span class="pre">list]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">rollout(var_name:</span> <span class="pre">str,</span> <span class="pre">var_vector:</span> <span class="pre">Union[Sequence,</span> <span class="pre">Dict])</span> <span class="pre">-&gt;</span> <span class="pre">Iterator[Tuple[str,</span> <span class="pre">Any]]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">write_par_to_dict(input_name:</span> <span class="pre">str,</span> <span class="pre">parameter:</span> <span class="pre">Any,</span> <span class="pre">par_dict:</span> <span class="pre">Dict,</span> <span class="pre">reservoir_name:</span> <span class="pre">str,</span> <span class="pre">precision:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">3)</span> <span class="pre">-&gt;</span> <span class="pre">Dict</span></code></p></li>
+</ul>
+</dd>
+</dl>
+<p>and enforces implementation of the <code class="docutils literal notranslate"><span class="pre">write</span></code> method.</p>
+<dl class="simple">
+<dt><strong>Functions:</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">enforce_unity_sum</span></code>: Ensures the sum of values in a vector is approximately 1.0 within a given epsilon tolerance.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">landcover_pie</span></code>: Creates a pie chart of land cover composition using matplotlib.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">parse_landcover_composition</span></code>: Parses a vector representing land cover composition into a standardized format.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">write_par_to_dict</span></code>: Writes a parameter to a dictionary of parameter name-value pairs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rollout</span></code>: Creates variable names and values from a sequence or dictionary.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">round_parameter</span></code>: Rounds a number or each element in a list to the specified number of decimals.</p></li>
+</ul>
+</dd>
+<dt><strong>Usage:</strong></dt><dd><p>[To be Added later]</p>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="reemission.presenter.ExcelWriter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.presenter.</span></span><span class="sig-name descname"><span class="pre">ExcelWriter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="reemission.input.html#reemission.input.Inputs" title="reemission.input.Inputs"><span class="pre">Inputs</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intern_vars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intern_vars_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_ini</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ConfigParser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">author</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/presenter.html#ExcelWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Formats and writes data to an Excel file.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.ExcelWriter.inputs">
+<span class="sig-name descname"><span class="pre">inputs</span></span></dt>
+<dd><p>Inputs object containing input data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="reemission.input.html#reemission.input.Inputs" title="reemission.input.Inputs">Inputs</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.ExcelWriter.outputs">
+<span class="sig-name descname"><span class="pre">outputs</span></span></dt>
+<dd><p>Outputs dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.ExcelWriter.intern_vars">
+<span class="sig-name descname"><span class="pre">intern_vars</span></span></dt>
+<dd><p>Internal variables dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.ExcelWriter.output_file_path">
+<span class="sig-name descname"><span class="pre">output_file_path</span></span></dt>
+<dd><p>Path where the output Excel file will be saved.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.ExcelWriter.output_config">
+<span class="sig-name descname"><span class="pre">output_config</span></span></dt>
+<dd><p>Configuration file with formatting settings for outputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.ExcelWriter.input_config">
+<span class="sig-name descname"><span class="pre">input_config</span></span></dt>
+<dd><p>Configuration file with formatting settings for inputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.ExcelWriter.intern_vars_config">
+<span class="sig-name descname"><span class="pre">intern_vars_config</span></span></dt>
+<dd><p>Configuration dictionary with formatting settings for internal variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.ExcelWriter.parameter_config">
+<span class="sig-name descname"><span class="pre">parameter_config</span></span></dt>
+<dd><p>Configuration file with formatting settings for parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.ExcelWriter.config_ini">
+<span class="sig-name descname"><span class="pre">config_ini</span></span></dt>
+<dd><p>Global parameter configuration file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>configparser.ConfigParser</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.ExcelWriter.author">
+<span class="sig-name descname"><span class="pre">author</span></span></dt>
+<dd><p>Author of the Excel document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.ExcelWriter.title">
+<span class="sig-name descname"><span class="pre">title</span></span></dt>
+<dd><p>Title of the Excel document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.ExcelWriter.output_df">
+<span class="sig-name descname"><span class="pre">output_df</span></span></dt>
+<dd><p>DataFrame containing model outputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.ExcelWriter.input_df">
+<span class="sig-name descname"><span class="pre">input_df</span></span></dt>
+<dd><p>DataFrame containing model inputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.ExcelWriter.intern_vars_df">
+<span class="sig-name descname"><span class="pre">intern_vars_df</span></span></dt>
+<dd><p>DataFrame containing internal variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.ExcelWriter.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/presenter.html#ExcelWriter.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Initialize output DataFrames which will be output as Excel sheets.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.ExcelWriter.add_inputs">
+<span class="sig-name descname"><span class="pre">add_inputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reservoir_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#ExcelWriter.add_inputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Create an inputs DataFrame for a given reservoir and append it to the main input DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reservoir_name</strong> (<em>str</em>) – Name of the reservoir for which inputs are to be added.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.ExcelWriter.add_internals">
+<span class="sig-name descname"><span class="pre">add_internals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reservoir_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#ExcelWriter.add_internals"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add internal variables selected for presentation for a given reservoir.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reservoir_name</strong> (<em>str</em>) – Name of the reservoir.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.ExcelWriter.add_outputs">
+<span class="sig-name descname"><span class="pre">add_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reservoir_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#ExcelWriter.add_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add outputs selected for presentation for a given reservoir.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reservoir_name</strong> (<em>str</em>) – Name of the reservoir for which outputs are to be added.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">author</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">config_ini</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ConfigParser</span></em></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.ExcelWriter.dict_data_to_df">
+<span class="sig-name descname"><span class="pre">dict_data_to_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Name'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#ExcelWriter.dict_data_to_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Parse data in a dictionary format into pandas DataFrame format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – Identifier for the data (e.g., reservoir name).</p></li>
+<li><p><strong>data</strong> (<em>Dict</em>) – Dictionary containing data to be parsed into DataFrame.</p></li>
+<li><p><strong>config</strong> (<em>Dict</em>) – Configuration dictionary specifying which parameters to include.</p></li>
+<li><p><strong>index_name</strong> (<em>str</em><em>, </em><em>optional</em>) – Name of the index column in the DataFrame. Defaults to ‘Name’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>DataFrame containing parsed data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">input_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">input_df</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">DataFrame</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">inputs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="reemission.input.html#reemission.input.Inputs" title="reemission.input.Inputs"><span class="pre">Inputs</span></a></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">intern_vars</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">intern_vars_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">intern_vars_df</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">DataFrame</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">output_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id9">
+<span class="sig-name descname"><span class="pre">output_df</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">DataFrame</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id10">
+<span class="sig-name descname"><span class="pre">output_file_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id11">
+<span class="sig-name descname"><span class="pre">outputs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id12">
+<span class="sig-name descname"><span class="pre">parameter_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id13">
+<span class="sig-name descname"><span class="pre">title</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.ExcelWriter.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#ExcelWriter.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Write input/output data (all reservoirs) to an Excel file.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="reemission.presenter.JSONWriter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.presenter.</span></span><span class="sig-name descname"><span class="pre">JSONWriter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="reemission.input.html#reemission.input.Inputs" title="reemission.input.Inputs"><span class="pre">Inputs</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intern_vars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intern_vars_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_ini</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ConfigParser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">author</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/presenter.html#JSONWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Format and write data to a JSON file.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.JSONWriter.inputs">
+<span class="sig-name descname"><span class="pre">inputs</span></span></dt>
+<dd><p>Inputs object with input data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="reemission.input.html#reemission.input.Inputs" title="reemission.input.Inputs">Inputs</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.JSONWriter.outputs">
+<span class="sig-name descname"><span class="pre">outputs</span></span></dt>
+<dd><p>Outputs dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.JSONWriter.intern_vars">
+<span class="sig-name descname"><span class="pre">intern_vars</span></span></dt>
+<dd><p>Internal variables dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.JSONWriter.output_file_path">
+<span class="sig-name descname"><span class="pre">output_file_path</span></span></dt>
+<dd><p>Path where the output file is to be saved/written to.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.JSONWriter.output_config">
+<span class="sig-name descname"><span class="pre">output_config</span></span></dt>
+<dd><p>Configuration dictionary with formatting settings for outputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.JSONWriter.input_config">
+<span class="sig-name descname"><span class="pre">input_config</span></span></dt>
+<dd><p>Configuration dictionary with formatting settings for inputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.JSONWriter.intern_vars_config">
+<span class="sig-name descname"><span class="pre">intern_vars_config</span></span></dt>
+<dd><p>Configuration dictionary with formatting settings for internal variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.JSONWriter.parameter_config">
+<span class="sig-name descname"><span class="pre">parameter_config</span></span></dt>
+<dd><p>Configuration file with formatting settings for parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.JSONWriter.config_ini">
+<span class="sig-name descname"><span class="pre">config_ini</span></span></dt>
+<dd><p>Global parameter configuration file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>configparser.ConfigParser</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.JSONWriter.author">
+<span class="sig-name descname"><span class="pre">author</span></span></dt>
+<dd><p>Author of the document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.JSONWriter.title">
+<span class="sig-name descname"><span class="pre">title</span></span></dt>
+<dd><p>Title of the document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.JSONWriter.json_dict">
+<span class="sig-name descname"><span class="pre">json_dict</span></span></dt>
+<dd><p>Output dictionary saved to the output JSON file. Automatically initialized.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.JSONWriter.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/presenter.html#JSONWriter.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Initialize json_dict which will be output as JSON.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.JSONWriter.add_inputs">
+<span class="sig-name descname"><span class="pre">add_inputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reservoir_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#JSONWriter.add_inputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add inputs selected for presentation for a given reservoir to json_dict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reservoir_name</strong> (<em>str</em>) – Name of the reservoir.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.JSONWriter.add_internals">
+<span class="sig-name descname"><span class="pre">add_internals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reservoir_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#JSONWriter.add_internals"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add internal variables selected for presentation for a given reservoir to <cite>json_dict</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reservoir_name</strong> (<em>str</em>) – Name of the reservoir.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.JSONWriter.add_outputs">
+<span class="sig-name descname"><span class="pre">add_outputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reservoir_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#JSONWriter.add_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add outputs selected for presentation for a given reservoir to <cite>json_dict</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reservoir_name</strong> (<em>str</em>) – Name of the reservoir.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id14">
+<span class="sig-name descname"><span class="pre">author</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id15">
+<span class="sig-name descname"><span class="pre">config_ini</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ConfigParser</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id16">
+<span class="sig-name descname"><span class="pre">input_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id17">
+<span class="sig-name descname"><span class="pre">inputs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="reemission.input.html#reemission.input.Inputs" title="reemission.input.Inputs"><span class="pre">Inputs</span></a></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id18">
+<span class="sig-name descname"><span class="pre">intern_vars</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id19">
+<span class="sig-name descname"><span class="pre">intern_vars_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id20">
+<span class="sig-name descname"><span class="pre">json_dict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id21">
+<span class="sig-name descname"><span class="pre">output_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id22">
+<span class="sig-name descname"><span class="pre">output_file_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id23">
+<span class="sig-name descname"><span class="pre">outputs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id24">
+<span class="sig-name descname"><span class="pre">parameter_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.JSONWriter.parse_dict_data">
+<span class="sig-name descname"><span class="pre">parse_dict_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">item_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#JSONWriter.parse_dict_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Parse data dictionary into a structured format based on configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<em>Dict</em>) – Configuration dictionary indicating which parameters to include.</p></li>
+<li><p><strong>data</strong> (<em>Dict</em>) – Dictionary containing data to be parsed.</p></li>
+<li><p><strong>item_names</strong> (<em>Tuple</em>) – Tuple of item names to include in the parsed output.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Parsed dictionary data.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id25">
+<span class="sig-name descname"><span class="pre">title</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.JSONWriter.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#JSONWriter.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Write output data (all reservoirs) to a JSON file.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.presenter.</span></span><span class="sig-name descname"><span class="pre">LatexWriter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="reemission.input.html#reemission.input.Inputs" title="reemission.input.Inputs"><span class="pre">Inputs</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intern_vars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intern_vars_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_ini</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ConfigParser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">author</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/presenter.html#LatexWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Format and write data to a LaTeX file using PyLaTeX.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.inputs">
+<span class="sig-name descname"><span class="pre">inputs</span></span></dt>
+<dd><p>Inputs object with input data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="reemission.input.html#reemission.input.Inputs" title="reemission.input.Inputs">Inputs</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.outputs">
+<span class="sig-name descname"><span class="pre">outputs</span></span></dt>
+<dd><p>Outputs dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.intern_vars">
+<span class="sig-name descname"><span class="pre">intern_vars</span></span></dt>
+<dd><p>Internal variables dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.output_file_path">
+<span class="sig-name descname"><span class="pre">output_file_path</span></span></dt>
+<dd><p>Path where the output file is to be saved/written to.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.output_config">
+<span class="sig-name descname"><span class="pre">output_config</span></span></dt>
+<dd><p>Configuration file with formatting settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.input_config">
+<span class="sig-name descname"><span class="pre">input_config</span></span></dt>
+<dd><p>Configuration file with formatting settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.intern_vars_config">
+<span class="sig-name descname"><span class="pre">intern_vars_config</span></span></dt>
+<dd><p>Configuration dictionary with formatting settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.parameter_config">
+<span class="sig-name descname"><span class="pre">parameter_config</span></span></dt>
+<dd><p>Configuration file with formatting settings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.config_ini">
+<span class="sig-name descname"><span class="pre">config_ini</span></span></dt>
+<dd><p>Global parameter configuration file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>configparser.ConfigParser</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.author">
+<span class="sig-name descname"><span class="pre">author</span></span></dt>
+<dd><p>Author of the document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.title">
+<span class="sig-name descname"><span class="pre">title</span></span></dt>
+<dd><p>Title of the document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.document">
+<span class="sig-name descname"><span class="pre">document</span></span></dt>
+<dd><p>PyLaTeX Document object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Document</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#LatexWriter.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Initialize the PyLaTeX document with specified geometry.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.add_header">
+<span class="sig-name descname"><span class="pre">add_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">header_title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'GHG</span> <span class="pre">emission</span> <span class="pre">estimation</span> <span class="pre">results'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#LatexWriter.add_header"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Adds a header to the LaTeX document source code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>header_title</strong> (<em>str</em>) – The title to be added in the header. Defaults to “GHG emission estimation results”.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.add_inputs_subsection">
+<span class="sig-name descname"><span class="pre">add_inputs_subsection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reservoir_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#LatexWriter.add_inputs_subsection"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Writes inputs information to the LaTeX document source code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reservoir_name</strong> (<em>str</em>) – The name of the reservoir.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.add_inputs_table">
+<span class="sig-name descname"><span class="pre">add_inputs_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#LatexWriter.add_inputs_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add information with model inputs (for each reservoir).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_name</strong> (<em>str</em>) – Name of the output/reservoir.</p></li>
+<li><p><strong>precision</strong> (<em>int</em>) – Number of decimal points in the output input values.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.add_intern_var_subsection">
+<span class="sig-name descname"><span class="pre">add_intern_var_subsection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reservoir_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#LatexWriter.add_intern_var_subsection"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Writes internal variable information to the LaTeX document source code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reservoir_name</strong> (<em>str</em>) – The name of the reservoir.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.add_intern_vars_table">
+<span class="sig-name descname"><span class="pre">add_intern_vars_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#LatexWriter.add_intern_vars_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Adds internal variables table to the LaTeX document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_name</strong> (<em>str</em>) – Name of the internal variable/reservoir.</p></li>
+<li><p><strong>precision</strong> (<em>int</em>) – Number of decimal points in the output values.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.add_landcover_charts">
+<span class="sig-name descname"><span class="pre">add_landcover_charts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_fraction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.95</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">300</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#LatexWriter.add_landcover_charts"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add pie charts with landcover proportions for reservoir and catchment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_name</strong> (<em>str</em>) – Name of the output/reservoir.</p></li>
+<li><p><strong>plot_fraction</strong> (<em>float</em>) – Fraction of text width the plot takes on the page. Default is 0.95.</p></li>
+<li><p><strong>dpi</strong> (<em>int</em>) – Resolution of the created figure within PDF. Default is 300.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.add_outputs_subsection">
+<span class="sig-name descname"><span class="pre">add_outputs_subsection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reservoir_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#LatexWriter.add_outputs_subsection"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Writes outputs information to the LaTeX document source code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reservoir_name</strong> (<em>str</em>) – The name of the reservoir.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.add_outputs_table">
+<span class="sig-name descname"><span class="pre">add_outputs_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#LatexWriter.add_outputs_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Adds outputs table to the LaTeX document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_name</strong> (<em>str</em>) – Name of the output/reservoir.</p></li>
+<li><p><strong>precision</strong> (<em>int</em>) – Number of decimal points in the output values.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.add_parameters">
+<span class="sig-name descname"><span class="pre">add_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#LatexWriter.add_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add information about model parameters such as conversion factors
+and other useful details to the report.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>precision</strong> (<em>int</em>) – Number of decimal points in output parameters. Default is 4.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.add_parameters_section">
+<span class="sig-name descname"><span class="pre">add_parameters_section</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#LatexWriter.add_parameters_section"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Writes model parameter information to the LaTeX document source code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>None</strong></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.add_plots">
+<span class="sig-name descname"><span class="pre">add_plots</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_fraction</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.75</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">300</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#LatexWriter.add_plots"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Generate and add emission plots to the document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_name</strong> (<em>str</em>) – Name of the output/reservoir.</p></li>
+<li><p><strong>plot_fraction</strong> (<em>float</em>) – Fraction of text width the plot takes on the page. Default is 0.75.</p></li>
+<li><p><strong>dpi</strong> (<em>int</em>) – Resolution of the created figure within PDF. Default is 300.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.add_title_section">
+<span class="sig-name descname"><span class="pre">add_title_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">author</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#LatexWriter.add_title_section"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Writes the title section to the LaTeX document source code.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>title</strong> (<em>str</em>) – The title of the document.</p></li>
+<li><p><strong>author</strong> (<em>str</em>) – The author of the document.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id26">
+<span class="sig-name descname"><span class="pre">author</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id27">
+<span class="sig-name descname"><span class="pre">config_ini</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ConfigParser</span></em></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.geometry">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">geometry</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#LatexWriter.geometry"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Create document geometry structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary containing the document geometry options.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id28">
+<span class="sig-name descname"><span class="pre">input_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id29">
+<span class="sig-name descname"><span class="pre">inputs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="reemission.input.html#reemission.input.Inputs" title="reemission.input.Inputs"><span class="pre">Inputs</span></a></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id30">
+<span class="sig-name descname"><span class="pre">intern_vars</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id31">
+<span class="sig-name descname"><span class="pre">intern_vars_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id32">
+<span class="sig-name descname"><span class="pre">output_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id33">
+<span class="sig-name descname"><span class="pre">output_file_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id34">
+<span class="sig-name descname"><span class="pre">outputs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id35">
+<span class="sig-name descname"><span class="pre">parameter_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.plot_emission_bars">
+<span class="sig-name descname"><span class="pre">plot_emission_bars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#LatexWriter.plot_emission_bars"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Visualize total emissions (unit x surface area) for the calculated gases.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>axis</strong> (<em>plt.Axes</em>) – Matplotlib axes object.</p></li>
+<li><p><strong>output_name</strong> (<em>str</em>) – Name of the output/reservoir.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.plot_landcover_piecharts">
+<span class="sig-name descname"><span class="pre">plot_landcover_piecharts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#LatexWriter.plot_landcover_piecharts"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plot pie charts of landcover compositions for reservoir and catchment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>axes</strong> (<em>np.ndarray</em>) – Array of matplotlib axes objects.</p></li>
+<li><p><strong>output_name</strong> (<em>str</em>) – Name of the output/reservoir.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.plot_profile">
+<span class="sig-name descname"><span class="pre">plot_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emission</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#LatexWriter.plot_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plot an emission profile using matplotlib.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>axis</strong> (<em>plt.Axes</em>) – Matplotlib axes object.</p></li>
+<li><p><strong>emission</strong> (<em>str</em>) – Name of the gas/emission to plot.</p></li>
+<li><p><strong>output_name</strong> (<em>str</em>) – Name of the output/reservoir.</p></li>
+<li><p><strong>annotate</strong> (<em>bool</em>) – Flag setting whether emission values are added to plot. Default is True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id36">
+<span class="sig-name descname"><span class="pre">title</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.LatexWriter.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#LatexWriter.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Writes output data (all reservoirs) to .tex and .pdf files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>None</strong></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="reemission.presenter.Presenter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.presenter.</span></span><span class="sig-name descname"><span class="pre">Presenter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="reemission.input.html#reemission.input.Inputs" title="reemission.input.Inputs"><span class="pre">Inputs</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intern_vars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#reemission.presenter.Writer" title="reemission.presenter.Writer"><span class="pre">Writer</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">author</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Anonymous'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Results'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/presenter.html#Presenter"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Reads and processes results of GHG emission calculations and outputs
+them in different formats.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.Presenter.inputs">
+<span class="sig-name descname"><span class="pre">inputs</span></span></dt>
+<dd><p>An instance of Inputs class containing input data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="reemission.input.html#reemission.input.Inputs" title="reemission.input.Inputs">Inputs</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.Presenter.outputs">
+<span class="sig-name descname"><span class="pre">outputs</span></span></dt>
+<dd><p>Dictionary containing model outputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.Presenter.intern_vars">
+<span class="sig-name descname"><span class="pre">intern_vars</span></span></dt>
+<dd><p>Dictionary of internal variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.Presenter.writers">
+<span class="sig-name descname"><span class="pre">writers</span></span></dt>
+<dd><p>Optional list of Writer objects for output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[List[<a class="reference internal" href="#reemission.presenter.Writer" title="reemission.presenter.Writer">Writer</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.Presenter.author">
+<span class="sig-name descname"><span class="pre">author</span></span></dt>
+<dd><p>Name of the author. Default is ‘Anonymous’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.Presenter.title">
+<span class="sig-name descname"><span class="pre">title</span></span></dt>
+<dd><p>Title of the document. Default is ‘Results’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.Presenter.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/presenter.html#Presenter.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Loads configuration files after instance initialization.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.Presenter.add_writer">
+<span class="sig-name descname"><span class="pre">add_writer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">writer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#reemission.presenter.Writer" title="reemission.presenter.Writer"><span class="pre">Writer</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#Presenter.add_writer"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Adds a Writer object to the list of writers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>writer</strong> (<em>Type</em><em>[</em><a class="reference internal" href="#reemission.presenter.Writer" title="reemission.presenter.Writer"><em>Writer</em></a><em>]</em>) – Type of Writer to instantiate.</p></li>
+<li><p><strong>output_file</strong> (<em>str</em>) – Path to the output file for the Writer.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id37">
+<span class="sig-name descname"><span class="pre">author</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Anonymous'</span></em></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.Presenter.fromfiles">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fromfiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interns_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/presenter.html#Presenter.fromfiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Creates an instance of Presenter from JSON files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_file</strong> (<em>str</em>) – Path to JSON file containing input data.</p></li>
+<li><p><strong>output_file</strong> (<em>str</em>) – Path to JSON file containing model outputs.</p></li>
+<li><p><strong>interns_file</strong> (<em>str</em>) – Path to JSON file containing internal variables.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword arguments for customization.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of Presenter initialized with data loaded from files.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#reemission.presenter.Presenter" title="reemission.presenter.Presenter">Presenter</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id38">
+<span class="sig-name descname"><span class="pre">inputs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="reemission.input.html#reemission.input.Inputs" title="reemission.input.Inputs"><span class="pre">Inputs</span></a></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id39">
+<span class="sig-name descname"><span class="pre">intern_vars</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.Presenter.output">
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#Presenter.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Outputs GHG emission calculation results using writers.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id40">
+<span class="sig-name descname"><span class="pre">outputs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id41">
+<span class="sig-name descname"><span class="pre">title</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Results'</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id42">
+<span class="sig-name descname"><span class="pre">writers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#reemission.presenter.Writer" title="reemission.presenter.Writer"><span class="pre">Writer</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="reemission.presenter.Writer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.presenter.</span></span><span class="sig-name descname"><span class="pre">Writer</span></span><a class="reference internal" href="../_modules/reemission/presenter.html#Writer"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Abstract base class for all writers.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.Writer.rollout">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rollout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">var_vector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#Writer.rollout"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Creates variable names and values from a sequence or dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>var_name</strong> (<em>str</em>) – Base name for the variables.</p></li>
+<li><p><strong>var_vector</strong> (<em>Union</em><em>[</em><em>Sequence</em><em>, </em><em>Dict</em><em>]</em>) – Sequence or dictionary containing variable values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Iterator[Tuple[str, Any]]</em> – Iterator yielding tuples of variable names and values.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>a variable var = [3,4,5] becomes: (‘var_0’, 3), (‘var_1’, 4),
+(‘var_2’, 5).</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.Writer.round_parameter">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">round_parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_decimals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#Writer.round_parameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Rounds a number or each element in a list to the specified number of decimals.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>number</strong> (<em>Union</em><em>[</em><em>float</em><em>, </em><em>list</em><em>]</em>) – The number or list of numbers to round.</p></li>
+<li><p><strong>number_decimals</strong> (<em>int</em>) – Number of decimal places to round to.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Rounded number or list of rounded numbers.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Union[float, list]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.Writer.write">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#Writer.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Writes outputs to the format of choice.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.Writer.write_par_to_dict">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">write_par_to_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">par_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reservoir_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#Writer.write_par_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Writes a parameter to a dictionary of parameter name-value pairs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_name</strong> (<em>str</em>) – Name of the input parameter.</p></li>
+<li><p><strong>parameter</strong> (<em>Any</em>) – Parameter data. It can be a single value, sequence, or nested sequence.</p></li>
+<li><p><strong>par_dict</strong> (<em>Dict</em>) – Dictionary of parameter names and values in the form {reservoir_name: {par_name: par_values}}.</p></li>
+<li><p><strong>reservoir_name</strong> (<em>str</em>) – Name of the reservoir for which the parameter is to be added.</p></li>
+<li><p><strong>precision</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of decimal points for the parameter. Defaults to 3.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Updated dictionary of parameter names and values.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="reemission.presenter.enforce_unity_sum">
+<span class="sig-prename descclassname"><span class="pre">reemission.presenter.</span></span><span class="sig-name descname"><span class="pre">enforce_unity_sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#enforce_unity_sum"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Ensures the sum of values in the vector is approximately 1.0 within a given epsilon tolerance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vector</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – The input vector of float values to be normalized.</p></li>
+<li><p><strong>epsilon</strong> (<em>float</em><em>, </em><em>optional</em>) – Tolerance level around 1.0 within which the sum of the vector
+should lie. Defaults to 0.001.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A normalized vector where the sum of values is approximately 1.0.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[float]</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>If the sum of values in the input vector is not within the range [1.0 - epsilon, 1.0 + epsilon],
+the vector is normalized by dividing each element by the current sum of the vector.</p></li>
+</ul>
+</div>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="reemission.presenter.landcover_pie">
+<span class="sig-prename descclassname"><span class="pre">reemission.presenter.</span></span><span class="sig-name descname"><span class="pre">landcover_pie</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_legend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#landcover_pie"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Creates a pie chart of land cover composition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>axis</strong> (<em>plt.Axes</em>) – The matplotlib axis object where the pie chart will be drawn.</p></li>
+<li><p><strong>values</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – List of float values representing the proportions of each land cover type.</p></li>
+<li><p><strong>labels</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – List of strings representing labels for each land cover type.</p></li>
+<li><p><strong>colors</strong> (<em>List</em><em>[</em><em>Any</em><em>]</em>) – List of colors corresponding to each land cover type.</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – Title of the pie chart. Defaults to None.</p></li>
+<li><p><strong>show_legend</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to display the legend. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The function creates a pie chart using matplotlib on the provided axis (<cite>axis</cite>).</p></li>
+<li><p>Only land cover types with non-zero values (<cite>values &gt; 0</cite>) are included in the chart.</p></li>
+<li><p>The pie is exploded to highlight the land cover type with the highest proportion.</p></li>
+<li><p>Labels and percentages are formatted and positioned for readability.</p></li>
+</ul>
+</div>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="reemission.presenter.parse_landcover_composition">
+<span class="sig-prename descclassname"><span class="pre">reemission.presenter.</span></span><span class="sig-name descname"><span class="pre">parse_landcover_composition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#parse_landcover_composition"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Parses a vector representing land cover composition into a standardized format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vector</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – A vector representing land cover composition.
+It should be either a 9-element vector or a 27-element vector.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A 9-element vector representing the parsed land cover composition.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[float]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the provided vector does not have a length of 9 or 27.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>If the input vector length is 9, it is returned as-is.</p></li>
+<li><p>If the input vector length is 27, it is split into three equal parts,
+each part is summed element-wise, resulting in a 9-element vector.</p></li>
+</ul>
+</div>
+</dd></dl>
+</section>
+</div><div class="flex justify-between items-center pt-6 mt-12 border-t border-border gap-4">
+<div class="mr-auto">
+<a class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input hover:bg-accent hover:text-accent-foreground py-2 px-4" href="reemission.profile.html">
+<svg class="mr-2 h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<polyline points="15 18 9 12 15 6"></polyline>
+</svg>
+        Emission Profile Calculator
+      </a>
+</div>
+<div class="ml-auto">
+<a class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input hover:bg-accent hover:text-accent-foreground py-2 px-4" href="reemission.utils.html">
+        Utility functions
+        <svg class="ml-2 h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+</a>
+</div>
+</div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
+<div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
+<ul>
+<li><a :data-current="activeSection === '#reemission.presenter.ExcelWriter'" class="reference internal" href="#reemission.presenter.ExcelWriter"><code class="docutils literal notranslate"><span class="pre">ExcelWriter</span></code></a><ul>
+<li><a :data-current="activeSection === '#reemission.presenter.ExcelWriter.inputs'" class="reference internal" href="#reemission.presenter.ExcelWriter.inputs"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.inputs</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.ExcelWriter.outputs'" class="reference internal" href="#reemission.presenter.ExcelWriter.outputs"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.outputs</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.ExcelWriter.intern_vars'" class="reference internal" href="#reemission.presenter.ExcelWriter.intern_vars"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.intern_vars</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.ExcelWriter.output_file_path'" class="reference internal" href="#reemission.presenter.ExcelWriter.output_file_path"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.output_file_path</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.ExcelWriter.output_config'" class="reference internal" href="#reemission.presenter.ExcelWriter.output_config"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.output_config</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.ExcelWriter.input_config'" class="reference internal" href="#reemission.presenter.ExcelWriter.input_config"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.input_config</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.ExcelWriter.intern_vars_config'" class="reference internal" href="#reemission.presenter.ExcelWriter.intern_vars_config"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.intern_vars_config</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.ExcelWriter.parameter_config'" class="reference internal" href="#reemission.presenter.ExcelWriter.parameter_config"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.parameter_config</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.ExcelWriter.config_ini'" class="reference internal" href="#reemission.presenter.ExcelWriter.config_ini"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.config_ini</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.ExcelWriter.author'" class="reference internal" href="#reemission.presenter.ExcelWriter.author"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.author</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.ExcelWriter.title'" class="reference internal" href="#reemission.presenter.ExcelWriter.title"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.title</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.ExcelWriter.output_df'" class="reference internal" href="#reemission.presenter.ExcelWriter.output_df"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.output_df</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.ExcelWriter.input_df'" class="reference internal" href="#reemission.presenter.ExcelWriter.input_df"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.input_df</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.ExcelWriter.intern_vars_df'" class="reference internal" href="#reemission.presenter.ExcelWriter.intern_vars_df"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.intern_vars_df</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.ExcelWriter.__post_init__'" class="reference internal" href="#reemission.presenter.ExcelWriter.__post_init__"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.__post_init__()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.ExcelWriter.add_inputs'" class="reference internal" href="#reemission.presenter.ExcelWriter.add_inputs"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.add_inputs()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.ExcelWriter.add_internals'" class="reference internal" href="#reemission.presenter.ExcelWriter.add_internals"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.add_internals()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.ExcelWriter.add_outputs'" class="reference internal" href="#reemission.presenter.ExcelWriter.add_outputs"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.add_outputs()</span></code></a></li>
+<li><a :data-current="activeSection === '#id0'" class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.author</span></code></a></li>
+<li><a :data-current="activeSection === '#id1'" class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.config_ini</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.ExcelWriter.dict_data_to_df'" class="reference internal" href="#reemission.presenter.ExcelWriter.dict_data_to_df"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.dict_data_to_df()</span></code></a></li>
+<li><a :data-current="activeSection === '#id2'" class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.input_config</span></code></a></li>
+<li><a :data-current="activeSection === '#id3'" class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.input_df</span></code></a></li>
+<li><a :data-current="activeSection === '#id4'" class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.inputs</span></code></a></li>
+<li><a :data-current="activeSection === '#id5'" class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.intern_vars</span></code></a></li>
+<li><a :data-current="activeSection === '#id6'" class="reference internal" href="#id6"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.intern_vars_config</span></code></a></li>
+<li><a :data-current="activeSection === '#id7'" class="reference internal" href="#id7"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.intern_vars_df</span></code></a></li>
+<li><a :data-current="activeSection === '#id8'" class="reference internal" href="#id8"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.output_config</span></code></a></li>
+<li><a :data-current="activeSection === '#id9'" class="reference internal" href="#id9"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.output_df</span></code></a></li>
+<li><a :data-current="activeSection === '#id10'" class="reference internal" href="#id10"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.output_file_path</span></code></a></li>
+<li><a :data-current="activeSection === '#id11'" class="reference internal" href="#id11"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.outputs</span></code></a></li>
+<li><a :data-current="activeSection === '#id12'" class="reference internal" href="#id12"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.parameter_config</span></code></a></li>
+<li><a :data-current="activeSection === '#id13'" class="reference internal" href="#id13"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.title</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.ExcelWriter.write'" class="reference internal" href="#reemission.presenter.ExcelWriter.write"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.write()</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#reemission.presenter.JSONWriter'" class="reference internal" href="#reemission.presenter.JSONWriter"><code class="docutils literal notranslate"><span class="pre">JSONWriter</span></code></a><ul>
+<li><a :data-current="activeSection === '#reemission.presenter.JSONWriter.inputs'" class="reference internal" href="#reemission.presenter.JSONWriter.inputs"><code class="docutils literal notranslate"><span class="pre">JSONWriter.inputs</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.JSONWriter.outputs'" class="reference internal" href="#reemission.presenter.JSONWriter.outputs"><code class="docutils literal notranslate"><span class="pre">JSONWriter.outputs</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.JSONWriter.intern_vars'" class="reference internal" href="#reemission.presenter.JSONWriter.intern_vars"><code class="docutils literal notranslate"><span class="pre">JSONWriter.intern_vars</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.JSONWriter.output_file_path'" class="reference internal" href="#reemission.presenter.JSONWriter.output_file_path"><code class="docutils literal notranslate"><span class="pre">JSONWriter.output_file_path</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.JSONWriter.output_config'" class="reference internal" href="#reemission.presenter.JSONWriter.output_config"><code class="docutils literal notranslate"><span class="pre">JSONWriter.output_config</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.JSONWriter.input_config'" class="reference internal" href="#reemission.presenter.JSONWriter.input_config"><code class="docutils literal notranslate"><span class="pre">JSONWriter.input_config</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.JSONWriter.intern_vars_config'" class="reference internal" href="#reemission.presenter.JSONWriter.intern_vars_config"><code class="docutils literal notranslate"><span class="pre">JSONWriter.intern_vars_config</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.JSONWriter.parameter_config'" class="reference internal" href="#reemission.presenter.JSONWriter.parameter_config"><code class="docutils literal notranslate"><span class="pre">JSONWriter.parameter_config</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.JSONWriter.config_ini'" class="reference internal" href="#reemission.presenter.JSONWriter.config_ini"><code class="docutils literal notranslate"><span class="pre">JSONWriter.config_ini</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.JSONWriter.author'" class="reference internal" href="#reemission.presenter.JSONWriter.author"><code class="docutils literal notranslate"><span class="pre">JSONWriter.author</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.JSONWriter.title'" class="reference internal" href="#reemission.presenter.JSONWriter.title"><code class="docutils literal notranslate"><span class="pre">JSONWriter.title</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.JSONWriter.json_dict'" class="reference internal" href="#reemission.presenter.JSONWriter.json_dict"><code class="docutils literal notranslate"><span class="pre">JSONWriter.json_dict</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.JSONWriter.__post_init__'" class="reference internal" href="#reemission.presenter.JSONWriter.__post_init__"><code class="docutils literal notranslate"><span class="pre">JSONWriter.__post_init__()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.JSONWriter.add_inputs'" class="reference internal" href="#reemission.presenter.JSONWriter.add_inputs"><code class="docutils literal notranslate"><span class="pre">JSONWriter.add_inputs()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.JSONWriter.add_internals'" class="reference internal" href="#reemission.presenter.JSONWriter.add_internals"><code class="docutils literal notranslate"><span class="pre">JSONWriter.add_internals()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.JSONWriter.add_outputs'" class="reference internal" href="#reemission.presenter.JSONWriter.add_outputs"><code class="docutils literal notranslate"><span class="pre">JSONWriter.add_outputs()</span></code></a></li>
+<li><a :data-current="activeSection === '#id14'" class="reference internal" href="#id14"><code class="docutils literal notranslate"><span class="pre">JSONWriter.author</span></code></a></li>
+<li><a :data-current="activeSection === '#id15'" class="reference internal" href="#id15"><code class="docutils literal notranslate"><span class="pre">JSONWriter.config_ini</span></code></a></li>
+<li><a :data-current="activeSection === '#id16'" class="reference internal" href="#id16"><code class="docutils literal notranslate"><span class="pre">JSONWriter.input_config</span></code></a></li>
+<li><a :data-current="activeSection === '#id17'" class="reference internal" href="#id17"><code class="docutils literal notranslate"><span class="pre">JSONWriter.inputs</span></code></a></li>
+<li><a :data-current="activeSection === '#id18'" class="reference internal" href="#id18"><code class="docutils literal notranslate"><span class="pre">JSONWriter.intern_vars</span></code></a></li>
+<li><a :data-current="activeSection === '#id19'" class="reference internal" href="#id19"><code class="docutils literal notranslate"><span class="pre">JSONWriter.intern_vars_config</span></code></a></li>
+<li><a :data-current="activeSection === '#id20'" class="reference internal" href="#id20"><code class="docutils literal notranslate"><span class="pre">JSONWriter.json_dict</span></code></a></li>
+<li><a :data-current="activeSection === '#id21'" class="reference internal" href="#id21"><code class="docutils literal notranslate"><span class="pre">JSONWriter.output_config</span></code></a></li>
+<li><a :data-current="activeSection === '#id22'" class="reference internal" href="#id22"><code class="docutils literal notranslate"><span class="pre">JSONWriter.output_file_path</span></code></a></li>
+<li><a :data-current="activeSection === '#id23'" class="reference internal" href="#id23"><code class="docutils literal notranslate"><span class="pre">JSONWriter.outputs</span></code></a></li>
+<li><a :data-current="activeSection === '#id24'" class="reference internal" href="#id24"><code class="docutils literal notranslate"><span class="pre">JSONWriter.parameter_config</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.JSONWriter.parse_dict_data'" class="reference internal" href="#reemission.presenter.JSONWriter.parse_dict_data"><code class="docutils literal notranslate"><span class="pre">JSONWriter.parse_dict_data()</span></code></a></li>
+<li><a :data-current="activeSection === '#id25'" class="reference internal" href="#id25"><code class="docutils literal notranslate"><span class="pre">JSONWriter.title</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.JSONWriter.write'" class="reference internal" href="#reemission.presenter.JSONWriter.write"><code class="docutils literal notranslate"><span class="pre">JSONWriter.write()</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter'" class="reference internal" href="#reemission.presenter.LatexWriter"><code class="docutils literal notranslate"><span class="pre">LatexWriter</span></code></a><ul>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.inputs'" class="reference internal" href="#reemission.presenter.LatexWriter.inputs"><code class="docutils literal notranslate"><span class="pre">LatexWriter.inputs</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.outputs'" class="reference internal" href="#reemission.presenter.LatexWriter.outputs"><code class="docutils literal notranslate"><span class="pre">LatexWriter.outputs</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.intern_vars'" class="reference internal" href="#reemission.presenter.LatexWriter.intern_vars"><code class="docutils literal notranslate"><span class="pre">LatexWriter.intern_vars</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.output_file_path'" class="reference internal" href="#reemission.presenter.LatexWriter.output_file_path"><code class="docutils literal notranslate"><span class="pre">LatexWriter.output_file_path</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.output_config'" class="reference internal" href="#reemission.presenter.LatexWriter.output_config"><code class="docutils literal notranslate"><span class="pre">LatexWriter.output_config</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.input_config'" class="reference internal" href="#reemission.presenter.LatexWriter.input_config"><code class="docutils literal notranslate"><span class="pre">LatexWriter.input_config</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.intern_vars_config'" class="reference internal" href="#reemission.presenter.LatexWriter.intern_vars_config"><code class="docutils literal notranslate"><span class="pre">LatexWriter.intern_vars_config</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.parameter_config'" class="reference internal" href="#reemission.presenter.LatexWriter.parameter_config"><code class="docutils literal notranslate"><span class="pre">LatexWriter.parameter_config</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.config_ini'" class="reference internal" href="#reemission.presenter.LatexWriter.config_ini"><code class="docutils literal notranslate"><span class="pre">LatexWriter.config_ini</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.author'" class="reference internal" href="#reemission.presenter.LatexWriter.author"><code class="docutils literal notranslate"><span class="pre">LatexWriter.author</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.title'" class="reference internal" href="#reemission.presenter.LatexWriter.title"><code class="docutils literal notranslate"><span class="pre">LatexWriter.title</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.document'" class="reference internal" href="#reemission.presenter.LatexWriter.document"><code class="docutils literal notranslate"><span class="pre">LatexWriter.document</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.__post_init__'" class="reference internal" href="#reemission.presenter.LatexWriter.__post_init__"><code class="docutils literal notranslate"><span class="pre">LatexWriter.__post_init__()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.add_header'" class="reference internal" href="#reemission.presenter.LatexWriter.add_header"><code class="docutils literal notranslate"><span class="pre">LatexWriter.add_header()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.add_inputs_subsection'" class="reference internal" href="#reemission.presenter.LatexWriter.add_inputs_subsection"><code class="docutils literal notranslate"><span class="pre">LatexWriter.add_inputs_subsection()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.add_inputs_table'" class="reference internal" href="#reemission.presenter.LatexWriter.add_inputs_table"><code class="docutils literal notranslate"><span class="pre">LatexWriter.add_inputs_table()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.add_intern_var_subsection'" class="reference internal" href="#reemission.presenter.LatexWriter.add_intern_var_subsection"><code class="docutils literal notranslate"><span class="pre">LatexWriter.add_intern_var_subsection()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.add_intern_vars_table'" class="reference internal" href="#reemission.presenter.LatexWriter.add_intern_vars_table"><code class="docutils literal notranslate"><span class="pre">LatexWriter.add_intern_vars_table()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.add_landcover_charts'" class="reference internal" href="#reemission.presenter.LatexWriter.add_landcover_charts"><code class="docutils literal notranslate"><span class="pre">LatexWriter.add_landcover_charts()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.add_outputs_subsection'" class="reference internal" href="#reemission.presenter.LatexWriter.add_outputs_subsection"><code class="docutils literal notranslate"><span class="pre">LatexWriter.add_outputs_subsection()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.add_outputs_table'" class="reference internal" href="#reemission.presenter.LatexWriter.add_outputs_table"><code class="docutils literal notranslate"><span class="pre">LatexWriter.add_outputs_table()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.add_parameters'" class="reference internal" href="#reemission.presenter.LatexWriter.add_parameters"><code class="docutils literal notranslate"><span class="pre">LatexWriter.add_parameters()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.add_parameters_section'" class="reference internal" href="#reemission.presenter.LatexWriter.add_parameters_section"><code class="docutils literal notranslate"><span class="pre">LatexWriter.add_parameters_section()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.add_plots'" class="reference internal" href="#reemission.presenter.LatexWriter.add_plots"><code class="docutils literal notranslate"><span class="pre">LatexWriter.add_plots()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.add_title_section'" class="reference internal" href="#reemission.presenter.LatexWriter.add_title_section"><code class="docutils literal notranslate"><span class="pre">LatexWriter.add_title_section()</span></code></a></li>
+<li><a :data-current="activeSection === '#id26'" class="reference internal" href="#id26"><code class="docutils literal notranslate"><span class="pre">LatexWriter.author</span></code></a></li>
+<li><a :data-current="activeSection === '#id27'" class="reference internal" href="#id27"><code class="docutils literal notranslate"><span class="pre">LatexWriter.config_ini</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.geometry'" class="reference internal" href="#reemission.presenter.LatexWriter.geometry"><code class="docutils literal notranslate"><span class="pre">LatexWriter.geometry()</span></code></a></li>
+<li><a :data-current="activeSection === '#id28'" class="reference internal" href="#id28"><code class="docutils literal notranslate"><span class="pre">LatexWriter.input_config</span></code></a></li>
+<li><a :data-current="activeSection === '#id29'" class="reference internal" href="#id29"><code class="docutils literal notranslate"><span class="pre">LatexWriter.inputs</span></code></a></li>
+<li><a :data-current="activeSection === '#id30'" class="reference internal" href="#id30"><code class="docutils literal notranslate"><span class="pre">LatexWriter.intern_vars</span></code></a></li>
+<li><a :data-current="activeSection === '#id31'" class="reference internal" href="#id31"><code class="docutils literal notranslate"><span class="pre">LatexWriter.intern_vars_config</span></code></a></li>
+<li><a :data-current="activeSection === '#id32'" class="reference internal" href="#id32"><code class="docutils literal notranslate"><span class="pre">LatexWriter.output_config</span></code></a></li>
+<li><a :data-current="activeSection === '#id33'" class="reference internal" href="#id33"><code class="docutils literal notranslate"><span class="pre">LatexWriter.output_file_path</span></code></a></li>
+<li><a :data-current="activeSection === '#id34'" class="reference internal" href="#id34"><code class="docutils literal notranslate"><span class="pre">LatexWriter.outputs</span></code></a></li>
+<li><a :data-current="activeSection === '#id35'" class="reference internal" href="#id35"><code class="docutils literal notranslate"><span class="pre">LatexWriter.parameter_config</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.plot_emission_bars'" class="reference internal" href="#reemission.presenter.LatexWriter.plot_emission_bars"><code class="docutils literal notranslate"><span class="pre">LatexWriter.plot_emission_bars()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.plot_landcover_piecharts'" class="reference internal" href="#reemission.presenter.LatexWriter.plot_landcover_piecharts"><code class="docutils literal notranslate"><span class="pre">LatexWriter.plot_landcover_piecharts()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.plot_profile'" class="reference internal" href="#reemission.presenter.LatexWriter.plot_profile"><code class="docutils literal notranslate"><span class="pre">LatexWriter.plot_profile()</span></code></a></li>
+<li><a :data-current="activeSection === '#id36'" class="reference internal" href="#id36"><code class="docutils literal notranslate"><span class="pre">LatexWriter.title</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.LatexWriter.write'" class="reference internal" href="#reemission.presenter.LatexWriter.write"><code class="docutils literal notranslate"><span class="pre">LatexWriter.write()</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#reemission.presenter.Presenter'" class="reference internal" href="#reemission.presenter.Presenter"><code class="docutils literal notranslate"><span class="pre">Presenter</span></code></a><ul>
+<li><a :data-current="activeSection === '#reemission.presenter.Presenter.inputs'" class="reference internal" href="#reemission.presenter.Presenter.inputs"><code class="docutils literal notranslate"><span class="pre">Presenter.inputs</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.Presenter.outputs'" class="reference internal" href="#reemission.presenter.Presenter.outputs"><code class="docutils literal notranslate"><span class="pre">Presenter.outputs</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.Presenter.intern_vars'" class="reference internal" href="#reemission.presenter.Presenter.intern_vars"><code class="docutils literal notranslate"><span class="pre">Presenter.intern_vars</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.Presenter.writers'" class="reference internal" href="#reemission.presenter.Presenter.writers"><code class="docutils literal notranslate"><span class="pre">Presenter.writers</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.Presenter.author'" class="reference internal" href="#reemission.presenter.Presenter.author"><code class="docutils literal notranslate"><span class="pre">Presenter.author</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.Presenter.title'" class="reference internal" href="#reemission.presenter.Presenter.title"><code class="docutils literal notranslate"><span class="pre">Presenter.title</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.Presenter.__post_init__'" class="reference internal" href="#reemission.presenter.Presenter.__post_init__"><code class="docutils literal notranslate"><span class="pre">Presenter.__post_init__()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.Presenter.add_writer'" class="reference internal" href="#reemission.presenter.Presenter.add_writer"><code class="docutils literal notranslate"><span class="pre">Presenter.add_writer()</span></code></a></li>
+<li><a :data-current="activeSection === '#id37'" class="reference internal" href="#id37"><code class="docutils literal notranslate"><span class="pre">Presenter.author</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.Presenter.fromfiles'" class="reference internal" href="#reemission.presenter.Presenter.fromfiles"><code class="docutils literal notranslate"><span class="pre">Presenter.fromfiles()</span></code></a></li>
+<li><a :data-current="activeSection === '#id38'" class="reference internal" href="#id38"><code class="docutils literal notranslate"><span class="pre">Presenter.inputs</span></code></a></li>
+<li><a :data-current="activeSection === '#id39'" class="reference internal" href="#id39"><code class="docutils literal notranslate"><span class="pre">Presenter.intern_vars</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.Presenter.output'" class="reference internal" href="#reemission.presenter.Presenter.output"><code class="docutils literal notranslate"><span class="pre">Presenter.output()</span></code></a></li>
+<li><a :data-current="activeSection === '#id40'" class="reference internal" href="#id40"><code class="docutils literal notranslate"><span class="pre">Presenter.outputs</span></code></a></li>
+<li><a :data-current="activeSection === '#id41'" class="reference internal" href="#id41"><code class="docutils literal notranslate"><span class="pre">Presenter.title</span></code></a></li>
+<li><a :data-current="activeSection === '#id42'" class="reference internal" href="#id42"><code class="docutils literal notranslate"><span class="pre">Presenter.writers</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#reemission.presenter.Writer'" class="reference internal" href="#reemission.presenter.Writer"><code class="docutils literal notranslate"><span class="pre">Writer</span></code></a><ul>
+<li><a :data-current="activeSection === '#reemission.presenter.Writer.rollout'" class="reference internal" href="#reemission.presenter.Writer.rollout"><code class="docutils literal notranslate"><span class="pre">Writer.rollout()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.Writer.round_parameter'" class="reference internal" href="#reemission.presenter.Writer.round_parameter"><code class="docutils literal notranslate"><span class="pre">Writer.round_parameter()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.Writer.write'" class="reference internal" href="#reemission.presenter.Writer.write"><code class="docutils literal notranslate"><span class="pre">Writer.write()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.Writer.write_par_to_dict'" class="reference internal" href="#reemission.presenter.Writer.write_par_to_dict"><code class="docutils literal notranslate"><span class="pre">Writer.write_par_to_dict()</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#reemission.presenter.enforce_unity_sum'" class="reference internal" href="#reemission.presenter.enforce_unity_sum"><code class="docutils literal notranslate"><span class="pre">enforce_unity_sum()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.landcover_pie'" class="reference internal" href="#reemission.presenter.landcover_pie"><code class="docutils literal notranslate"><span class="pre">landcover_pie()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.parse_landcover_composition'" class="reference internal" href="#reemission.presenter.parse_landcover_composition"><code class="docutils literal notranslate"><span class="pre">parse_landcover_composition()</span></code></a></li>
+</ul>
+</div>
+</aside>
+</main>
+</div>
+</div><footer class="py-6 border-t border-border md:py-0">
+<div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+<div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
+<p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2024, Tomasz Janus, University of Manchester, United Kingdom Built with <a class="font-medium underline underline-offset-4" href="https://www.sphinx-doc.org" rel="noreferrer">Sphinx 7.3.7</a></p>
+</div>
+</div>
+</footer>
+</div>
+<script src="../_static/documentation_options.js?v=8d563738"></script>
+<script src="../_static/doctools.js?v=9a2dae69"></script>
+<script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../_static/copybutton.js?v=f281be69"></script>
+<script src="../_static/toggleprompt.js?v=5801b3bb"></script>
+<script defer="defer" src="../_static/theme.js?v=e82a16a3"></script>
+<script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+</body>
+</html>

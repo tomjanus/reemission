@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en"
+      data-content_root="../../"
+      x-data="{ darkMode: localStorage.getItem('darkMode') || localStorage.setItem('darkMode', 'system'), activeSection: '' }"
+      x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))"
+      class="scroll-smooth"
+      :class="{'dark': darkMode === 'dark' || (darkMode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)}"
+>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="white" />
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="black" />
+  
+    <title>reemission.model | ReEmission 1.0.0 documentation</title>
+    <meta property="og:title" content="reemission.model | ReEmission 1.0.0 documentation" />
+    <meta name="twitter:title" content="reemission.model | ReEmission 1.0.0 documentation" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=c842c44c" />
+      <link rel="stylesheet" type="text/css" href="../../_static/theme.css?v=ecdfb4fc" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=a5c4661c" />
+        <link rel="search" title="Search" href="../../search.html" />
+        <link rel="index" title="Index" href="../../genindex.html" />
+
+    <script>
+    <!-- Prevent Flash of wrong theme -->
+      const userPreference = localStorage.getItem('darkMode');
+      let mode;
+      if (userPreference === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        mode = 'dark';
+        document.documentElement.classList.add('dark');
+      } else {
+        mode = 'light';
+      }
+      if (!userPreference) {localStorage.setItem('darkMode', mode)}
+    </script>
+</head>
+<body x-data="{ showSidebar: false }" class="min-h-screen font-sans antialiased bg-background text-foreground" :class="{ 'overflow-hidden': showSidebar }">
+    <div x-cloak x-show="showSidebar" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" @click.self="showSidebar = false"></div><div id="page" class="relative flex flex-col min-h-screen"><a href="#content" class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100">
+      Skip to content
+    </a><header
+  class="sticky top-0 z-40 w-full border-b shadow-sm border-border supports-backdrop-blur:bg-background/60 bg-background/95 backdrop-blur"><div class="container flex items-center h-14">
+    <div class="hidden mr-4 md:flex">
+      <a href="../../index.html" class="flex items-center mr-6"><span class="hidden font-bold sm:inline-block text-clip whitespace-nowrap">ReEmission 1.0.0 documentation</span>
+      </a></div><button
+      class="inline-flex items-center justify-center h-10 px-0 py-2 mr-2 text-base font-medium transition-colors rounded-md hover:text-accent-foreground hover:bg-transparent md:hidden"
+      type="button" @click="showSidebar = true">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 96 960 960" aria-hidden="true"
+        fill="currentColor">
+        <path
+          d="M152.587 825.087q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440Zm0-203.587q-19.152 0-32.326-13.174T107.087 576q0-19.152 13.174-32.326t32.326-13.174h320q19.152 0 32.326 13.174T518.087 576q0 19.152-13.174 32.326T472.587 621.5h-320Zm0-203.587q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440ZM708.913 576l112.174 112.174q12.674 12.674 12.674 31.826t-12.674 31.826Q808.413 764.5 789.261 764.5t-31.826-12.674l-144-144Q600 594.391 600 576t13.435-31.826l144-144q12.674-12.674 31.826-12.674t31.826 12.674q12.674 12.674 12.674 31.826t-12.674 31.826L708.913 576Z" />
+      </svg>
+      <span class="sr-only">Toggle navigation menu</span>
+    </button>
+    <div class="flex items-center justify-between flex-1 space-x-2 sm:space-x-4 md:justify-end">
+      <div class="flex-1 w-full md:w-auto md:flex-none"><form id="searchbox"
+      action="../../search.html"
+      method="get"
+      class="relative flex items-center group"
+      @keydown.k.window.meta="$refs.search.focus()">
+  <input x-ref="search"
+          name="q"
+          id="search-input"
+          type="search"
+          aria-label="Search the docs"
+          placeholder="Search ..."
+          class="inline-flex items-center font-medium transition-colors bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background border border-input hover:bg-accent focus:bg-accent hover:text-accent-foreground focus:text-accent-foreground hover:placeholder-accent-foreground py-2 px-4 relative h-9 w-full justify-start rounded-[0.5rem] text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64" />
+  <kbd class="pointer-events-none absolute right-1.5 top-2 hidden h-5 select-none text-muted-foreground items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex group-hover:bg-accent group-hover:text-accent-foreground">
+    <span class="text-xs">⌘</span>
+    K
+  </kbd>
+</form>
+      </div>
+      <nav class="flex items-center space-x-1">
+        <button @click="darkMode = darkMode === 'light' ? 'dark' : 'light'"
+          class="relative inline-flex items-center justify-center px-0 text-sm font-medium transition-colors rounded-md hover:bg-accent hover:text-accent-foreground h-9 w-9"
+          type="button"
+          aria-label="Color theme switcher">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 96 960 960" fill="currentColor"
+            class="absolute transition-all scale-100 rotate-0 dark:-rotate-90 dark:scale-0">
+            <path
+              d="M480 685q45.456 0 77.228-31.772Q589 621.456 589 576q0-45.456-31.772-77.228Q525.456 467 480 467q-45.456 0-77.228 31.772Q371 530.544 371 576q0 45.456 31.772 77.228Q434.544 685 480 685Zm0 91q-83 0-141.5-58.5T280 576q0-83 58.5-141.5T480 376q83 0 141.5 58.5T680 576q0 83-58.5 141.5T480 776ZM80 621.5q-19.152 0-32.326-13.174T34.5 576q0-19.152 13.174-32.326T80 530.5h80q19.152 0 32.326 13.174T205.5 576q0 19.152-13.174 32.326T160 621.5H80Zm720 0q-19.152 0-32.326-13.174T754.5 576q0-19.152 13.174-32.326T800 530.5h80q19.152 0 32.326 13.174T925.5 576q0 19.152-13.174 32.326T880 621.5h-80Zm-320-320q-19.152 0-32.326-13.174T434.5 256v-80q0-19.152 13.174-32.326T480 130.5q19.152 0 32.326 13.174T525.5 176v80q0 19.152-13.174 32.326T480 301.5Zm0 720q-19.152 0-32.326-13.17Q434.5 995.152 434.5 976v-80q0-19.152 13.174-32.326T480 850.5q19.152 0 32.326 13.174T525.5 896v80q0 19.152-13.174 32.33-13.174 13.17-32.326 13.17ZM222.174 382.065l-43-42Q165.5 327.391 166 308.239t13.174-33.065q13.435-13.674 32.587-13.674t32.065 13.674l42.239 43q12.674 13.435 12.555 31.706-.12 18.272-12.555 31.946-12.674 13.674-31.445 13.413-18.772-.261-32.446-13.174Zm494 494.761-42.239-43q-12.674-13.435-12.674-32.087t12.674-31.565Q686.609 756.5 705.38 757q18.772.5 32.446 13.174l43 41.761Q794.5 824.609 794 843.761t-13.174 33.065Q767.391 890.5 748.239 890.5t-32.065-13.674Zm-42-494.761Q660.5 369.391 661 350.62q.5-18.772 13.174-32.446l41.761-43Q728.609 261.5 747.761 262t33.065 13.174q13.674 13.435 13.674 32.587t-13.674 32.065l-43 42.239q-13.435 12.674-31.706 12.555-18.272-.12-31.946-12.555Zm-495 494.761Q165.5 863.391 165.5 844.239t13.674-32.065l43-42.239q13.435-12.674 32.087-12.674t31.565 12.674Q299.5 782.609 299 801.38q-.5 18.772-13.174 32.446l-41.761 43Q231.391 890.5 212.239 890t-33.065-13.174ZM480 576Z" />
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 96 960 960" fill="currentColor"
+            class="absolute transition-all scale-0 rotate-90 dark:rotate-0 dark:scale-100">
+            <path
+              d="M480 936q-151 0-255.5-104.5T120 576q0-138 90-239.5T440 218q25-3 39 18t-1 44q-17 26-25.5 55t-8.5 61q0 90 63 153t153 63q31 0 61.5-9t54.5-25q21-14 43-1.5t19 39.5q-14 138-117.5 229T480 936Zm0-80q88 0 158-48.5T740 681q-20 5-40 8t-40 3q-123 0-209.5-86.5T364 396q0-20 3-40t8-40q-78 32-126.5 102T200 576q0 116 82 198t198 82Zm-10-270Z" />
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </div>
+</header>
+
+    <div class="flex-1"><div class="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10"><aside id="left-sidebar"
+  class="fixed inset-y-0 left-0 md:top-14 z-50 md:z-30 bg-background md:bg-transparent transition-all duration-100 -translate-x-full md:translate-x-0 ml-0 p-6 md:p-0 md:-ml-2 md:h-[calc(100vh-3.5rem)] w-5/6 md:w-full shrink-0 overflow-y-auto border-r border-border md:sticky"
+  :aria-hidden="!showSidebar" :class="{ 'translate-x-0': showSidebar }">
+
+    <a href="../../index.html" class="!justify-start text-sm md:!hidden bg-background"><span class="font-bold text-clip whitespace-nowrap">ReEmission 1.0.0 documentation</span>
+    </a>
+
+    <div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
+      <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">About the Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html">Theoretical Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installing RE-Emission</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../demo.html">Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../json.html">JSON file format description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reporting.html">Reporting Calculation Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../geocaret_integration.html">Integration with GeoCARET</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/reemission.html">Python API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.model.html">Model (Main)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.input.html">Input Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.reservoir.html">Reservoir Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.catchment.html">Catchment Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.ns_catchment.html">Post-impoundment catchment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.emissions.html">Emissions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.temperature.html">MonthlyTemperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.biogenic.html">Biogenic Factors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.profile.html">Emission Profile Calculator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.presenter.html">Presenter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.utils.html">Utility functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.auxiliary.html">Auxiliary functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.constants.html">Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.mixins.html">Mixins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.document_compiler.html">Document <span class="math notranslate nohighlight">\(\LaTeX\)</span> Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.exceptions.html">Custom Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.app_logger.html">App Logger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.download.html">External Data Downloader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.globals.html">Global variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.main.html">Main</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+</nav>
+      </div>
+    </div>
+    <button type="button" @click="showSidebar = false"
+      class="absolute md:hidden right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 96 960 960" fill="currentColor"
+        stroke="none" class="h-4 w-4">
+        <path
+          d="M480 632 284 828q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536 576l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480 632Z" />
+      </svg>
+    </button>
+  </aside>
+        <main class="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
+<div class="w-full min-w-0 mx-auto">
+<nav aria-label="breadcrumbs"
+     class="flex items-center mb-4 space-x-1 text-sm text-muted-foreground">
+  <a class="overflow-hidden text-ellipsis whitespace-nowrap hover:text-foreground"
+     href="../../index.html">
+    <span class="hidden md:inline">ReEmission 1.0.0 documentation</span>
+    <svg xmlns="http://www.w3.org/2000/svg"
+         height="18"
+         width="18"
+         viewBox="0 96 960 960"
+         aria-label="Home"
+         fill="currentColor"
+         stroke="none"
+         class="md:hidden">
+      <path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z" />
+    </svg>
+  </a>
+  
+<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap"
+       href="../index.html">Module code</a>
+    
+<div class="mr-1">/</div><span aria-current="page"
+        class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">reemission.model</span>
+</nav>
+
+    <div id="content" role="main">
+      <h1>Source code for reemission.model</h1><div class="highlight"><pre>
+<span></span><code><span id="line-1"><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-2"><span class="sd">Simulation/calculation wrapper for GHG emission models.</span>
+</span><span id="line-3">
+</span><span id="line-4"><span class="sd">This module is designed to handle a variety of inputs, configure settings for different calculation </span>
+</span><span id="line-5"><span class="sd">methods, and produce detailed emission reports.</span>
+</span><span id="line-6">
+</span><span id="line-7"><span class="sd">The main components of this module include:</span>
+</span><span id="line-8">
+</span><span id="line-9"><span class="sd">1. **Configurations**:</span>
+</span><span id="line-10"><span class="sd">    - The module reads configurations from a file to set default calculation methods and other options.</span>
+</span><span id="line-11"><span class="sd">    - Configuration options are read from `config/config.ini` and include methods for retention coefficient </span>
+</span><span id="line-12"><span class="sd">      calculation, phosphorus export calculation, and nitrous oxide emission calculation.</span>
+</span><span id="line-13">
+</span><span id="line-14"><span class="sd">2. **Inputs Handling**:</span>
+</span><span id="line-15"><span class="sd">    - The `Inputs` class is used to manage and validate input data required for the simulations.</span>
+</span><span id="line-16"><span class="sd">    - This includes catchment data, reservoir data, monthly temperature data, and other relevant parameters.</span>
+</span><span id="line-17">
+</span><span id="line-18"><span class="sd">3. **Temperature Calculations**:</span>
+</span><span id="line-19"><span class="sd">    - The `MonthlyTemperature` class is used to handle monthly temperature data which is crucial for estimating </span>
+</span><span id="line-20"><span class="sd">      gas emissions.</span>
+</span><span id="line-21"><span class="sd">    - Effective temperature calculations are performed for different gases such as CO2, CH4, and N2O.</span>
+</span><span id="line-22">
+</span><span id="line-23"><span class="sd">4. **Emissions Calculations**:</span>
+</span><span id="line-24"><span class="sd">    - Separate classes for each gas (`CarbonDioxideEmission`, `MethaneEmission`, `NitrousOxideEmission`) handle </span>
+</span><span id="line-25"><span class="sd">      the specific calculations for each type of emission.</span>
+</span><span id="line-26"><span class="sd">    - These classes utilize the inputs and configurations to compute emission profiles, total emissions, </span>
+</span><span id="line-27"><span class="sd">      diffusion fluxes, and other relevant metrics.</span>
+</span><span id="line-28">
+</span><span id="line-29"><span class="sd">5. **Presenter and Writer**:</span>
+</span><span id="line-30"><span class="sd">    - The `Presenter` class is responsible for formatting and presenting the results of the calculations.</span>
+</span><span id="line-31"><span class="sd">    - Multiple writers can be added to the presenter to output data in different formats (e.g., CSV, JSON).</span>
+</span><span id="line-32">
+</span><span id="line-33"><span class="sd">6. **Utility Functions**:</span>
+</span><span id="line-34"><span class="sd">    - Utility functions such as `create_exec_dictionary` help in organizing and managing the execution of various </span>
+</span><span id="line-35"><span class="sd">      emission calculations.</span>
+</span><span id="line-36"><span class="sd">    - Functions for adding presenters and saving results streamline the workflow for generating and exporting reports.</span>
+</span><span id="line-37">
+</span><span id="line-38"><span class="sd">This module is designed to be flexible and extensible, allowing for easy integration of new calculation methods, </span>
+</span><span id="line-39"><span class="sd">input types, and output formats. It supports detailed logging and error handling to facilitate debugging and </span>
+</span><span id="line-40"><span class="sd">ensure robust performance.</span>
+</span><span id="line-41">
+</span><span id="line-42"><span class="sd">Typical usage involves:</span>
+</span><span id="line-43"><span class="sd">    1. Creating an `EmissionModel` object with appropriate inputs and configurations.</span>
+</span><span id="line-44"><span class="sd">    2. Running the `calculate` method to perform the emissions calculations.</span>
+</span><span id="line-45"><span class="sd">    3. Adding a presenter with desired output formats.</span>
+</span><span id="line-46"><span class="sd">    4. Saving the results to specified files.</span>
+</span><span id="line-47">
+</span><span id="line-48"><span class="sd">**Example:**</span>
+</span><span id="line-49">
+</span><span id="line-50"><span class="sd">.. code-block:: Python</span>
+</span><span id="line-51"><span class="sd">    </span>
+</span><span id="line-52"><span class="sd">    from reemission import EmissionModel, Inputs, Writer</span>
+</span><span id="line-53">
+</span><span id="line-54"><span class="sd">    # Initialize inputs</span>
+</span><span id="line-55"><span class="sd">    inputs = Inputs(input_data)</span>
+</span><span id="line-56">
+</span><span id="line-57"><span class="sd">    # Create emission model</span>
+</span><span id="line-58"><span class="sd">    model = EmissionModel(inputs=inputs, config=&#39;path/to/config.yaml&#39;)</span>
+</span><span id="line-59">
+</span><span id="line-60"><span class="sd">    # Calculate emissions</span>
+</span><span id="line-61"><span class="sd">    model.calculate()</span>
+</span><span id="line-62">
+</span><span id="line-63"><span class="sd">    # Add presenters for output</span>
+</span><span id="line-64"><span class="sd">    model.add_presenter(writers=[Writer], output_files=[&#39;output.csv&#39;])</span>
+</span><span id="line-65">
+</span><span id="line-66"><span class="sd">    # Save results</span>
+</span><span id="line-67"><span class="sd">    model.save_results()</span>
+</span><span id="line-68">
+</span><span id="line-69"><span class="sd">Note:</span>
+</span><span id="line-70"><span class="sd">    Ensure the configuration file and input data are properly formatted and validated before running the calculations.</span>
+</span><span id="line-71"><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-72"><span class="kn">import</span> <span class="nn">configparser</span>
+</span><span id="line-73"><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+</span><span id="line-74"><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
+</span><span id="line-75"><span class="kn">import</span> <span class="nn">pathlib</span>
+</span><span id="line-76"><span class="kn">import</span> <span class="nn">logging</span>
+</span><span id="line-77"><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
+</span><span id="line-78"><span class="kn">from</span> <span class="nn">reemission.utils</span> <span class="kn">import</span> <span class="n">read_config</span><span class="p">,</span> <span class="n">get_package_file</span><span class="p">,</span> <span class="n">load_yaml</span>
+</span><span id="line-79"><span class="kn">from</span> <span class="nn">reemission.globals</span> <span class="kn">import</span> <span class="n">internal</span>
+</span><span id="line-80"><span class="kn">from</span> <span class="nn">reemission.input</span> <span class="kn">import</span> <span class="n">Inputs</span>
+</span><span id="line-81"><span class="kn">from</span> <span class="nn">reemission.temperature</span> <span class="kn">import</span> <span class="n">MonthlyTemperature</span>
+</span><span id="line-82"><span class="kn">from</span> <span class="nn">reemission.catchment</span> <span class="kn">import</span> <span class="n">Catchment</span>
+</span><span id="line-83"><span class="kn">from</span> <span class="nn">reemission.reservoir</span> <span class="kn">import</span> <span class="n">Reservoir</span>
+</span><span id="line-84"><span class="kn">from</span> <span class="nn">reemission.emissions</span> <span class="kn">import</span> <span class="p">(</span>
+</span><span id="line-85">    <span class="n">CarbonDioxideEmission</span><span class="p">,</span> <span class="n">NitrousOxideEmission</span><span class="p">,</span> <span class="n">MethaneEmission</span><span class="p">)</span>
+</span><span id="line-86"><span class="kn">from</span> <span class="nn">reemission.presenter</span> <span class="kn">import</span> <span class="n">Presenter</span><span class="p">,</span> <span class="n">Writer</span>
+</span><span id="line-87">
+</span><span id="line-88"><span class="c1"># Set up module logger</span>
+</span><span id="line-89"><span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+</span><span id="line-90"><span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+</span><span id="line-91">
+</span><span id="line-92"><span class="c1"># Derive default calculation options from config</span>
+</span><span id="line-93"><span class="n">config</span><span class="p">:</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span> <span class="o">=</span> <span class="n">read_config</span><span class="p">(</span>
+</span><span id="line-94">    <span class="n">get_package_file</span><span class="p">(</span><span class="s2">&quot;config/config.ini&quot;</span><span class="p">))</span>
+</span><span id="line-95"><span class="n">ret_coeff_method</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;CALCULATIONS&quot;</span><span class="p">,</span> <span class="s2">&quot;ret_coeff_method&quot;</span><span class="p">)</span>
+</span><span id="line-96"><span class="n">p_export_cal</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;CALCULATIONS&quot;</span><span class="p">,</span> <span class="s2">&quot;p_export_cal&quot;</span><span class="p">)</span>
+</span><span id="line-97"><span class="n">nitrous_oxide_model</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;CALCULATIONS&quot;</span><span class="p">,</span> <span class="s2">&quot;nitrous_oxide_model&quot;</span><span class="p">)</span>
+</span><span id="line-98">
+</span><span id="line-99"><span class="c1">#  TODO: potential problems in Python &lt;= 3.6 because dicts are not ordered</span>
+</span><span id="line-100"><span class="c1">#       pay attention</span>
+</span><span id="line-101"><span class="n">TRUTHS</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;true&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="s1">&#39;yes&#39;</span><span class="p">,</span> <span class="s1">&#39;on&#39;</span><span class="p">]</span>
+</span><span id="line-102"><span class="n">FALSES</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;false&#39;</span><span class="p">,</span> <span class="s1">&#39;False&#39;</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">,</span> <span class="s1">&#39;off&#39;</span><span class="p">,</span> <span class="s1">&#39;null&#39;</span><span class="p">]</span>
+</span><span id="line-103">
+</span><span id="line-104">
+<div class="viewcode-block" id="EmissionModel">
+<a class="viewcode-back" href="../../api/reemission.model.html#reemission.model.EmissionModel">[docs]</a>
+</span><span id="line-105"><span class="nd">@dataclass</span>
+</span><span id="line-106"><span class="k">class</span> <span class="nc">EmissionModel</span><span class="p">:</span>
+</span><span id="line-107"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-108"><span class="sd">    Calculates emissions for a reservoir or a number of reservoirs.</span>
+</span><span id="line-109">
+</span><span id="line-110"><span class="sd">    Attributes:</span>
+</span><span id="line-111"><span class="sd">        inputs (Inputs): Inputs object with input data.</span>
+</span><span id="line-112"><span class="sd">        config (Union[Dict, pathlib.Path, str]): Dictionary with configuration data or path to config file.</span>
+</span><span id="line-113"><span class="sd">        outputs (Dict): Emission calculation outputs in a dictionary structure.</span>
+</span><span id="line-114"><span class="sd">        internal (Dict): Internal variables for calculations.</span>
+</span><span id="line-115"><span class="sd">        author (str): Author&#39;s name.</span>
+</span><span id="line-116"><span class="sd">        report_title (str): Title of output report / GHG emission estimation study.</span>
+</span><span id="line-117"><span class="sd">        ret_coeff (str): Reservoir retention coefficient calculation model.</span>
+</span><span id="line-118"><span class="sd">        p_model (str): P export calculation method.</span>
+</span><span id="line-119"><span class="sd">        n2o_model (str): Nitrous Oxide calculation method.</span>
+</span><span id="line-120"><span class="sd">        presenter (Optional[Presenter]): Presenter object for presenting input and output data in various formats.</span>
+</span><span id="line-121"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="line-122">    <span class="n">inputs</span><span class="p">:</span> <span class="n">Inputs</span>
+</span><span id="line-123">    <span class="n">config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+</span><span id="line-124">    <span class="n">outputs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+</span><span id="line-125">    <span class="n">internal</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+</span><span id="line-126">    <span class="n">author</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+</span><span id="line-127">    <span class="n">report_title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;Results&quot;</span><span class="p">)</span>
+</span><span id="line-128">    <span class="n">ret_coeff</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">ret_coeff_method</span><span class="p">)</span>
+</span><span id="line-129">    <span class="n">p_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">p_export_cal</span><span class="p">)</span>
+</span><span id="line-130">    <span class="n">n2o_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">nitrous_oxide_model</span><span class="p">)</span>
+</span><span id="line-131">    <span class="n">presenter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Presenter</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span><span id="line-132">
+<div class="viewcode-block" id="EmissionModel.__post_init__">
+<a class="viewcode-back" href="../../api/reemission.model.html#reemission.model.EmissionModel.__post_init__">[docs]</a>
+</span><span id="line-133">    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-134"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize outputs dict an load config file if config is a path.&quot;&quot;&quot;</span>
+</span><span id="line-135">        <span class="n">internal</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="line-136">        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
+</span><span id="line-137">            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">load_yaml</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">))</span></div>
+
+</span><span id="line-138">
+<div class="viewcode-block" id="EmissionModel.create_exec_dictionary">
+<a class="viewcode-back" href="../../api/reemission.model.html#reemission.model.EmissionModel.create_exec_dictionary">[docs]</a>
+</span><span id="line-139">    <span class="nd">@staticmethod</span>
+</span><span id="line-140">    <span class="k">def</span> <span class="nf">create_exec_dictionary</span><span class="p">(</span>
+</span><span id="line-141">        <span class="n">co2_em</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">CarbonDioxideEmission</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+</span><span id="line-142">        <span class="n">ch4_em</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">MethaneEmission</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+</span><span id="line-143">        <span class="n">n2o_em</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">NitrousOxideEmission</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+</span><span id="line-144">        <span class="n">years</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+</span><span id="line-145">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+</span><span id="line-146"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-147"><span class="sd">        Create a dictionary with function references and arguments for calculating gas emissions.</span>
+</span><span id="line-148">
+</span><span id="line-149"><span class="sd">        Args:</span>
+</span><span id="line-150"><span class="sd">            co2_em (Union[CarbonDioxideEmission, None]): CarbonDioxideEmission object.</span>
+</span><span id="line-151"><span class="sd">            ch4_em (Union[MethaneEmission, None]): MethaneEmission object.</span>
+</span><span id="line-152"><span class="sd">            n2o_em (Union[NitrousOxideEmission, None]): NitrousOxideEmission object.</span>
+</span><span id="line-153"><span class="sd">            years (Tuple[int, ...]): Vector of years for which the emission profiles are calculated.</span>
+</span><span id="line-154">
+</span><span id="line-155"><span class="sd">        Returns:</span>
+</span><span id="line-156"><span class="sd">            Dict: Dictionary with function references and arguments for gas emissions calculations.</span>
+</span><span id="line-157"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-158">        <span class="n">co2_exec</span><span class="p">,</span> <span class="n">ch4_exec</span><span class="p">,</span> <span class="n">n2o_exec</span> <span class="o">=</span> <span class="p">{},</span> <span class="p">{},</span> <span class="p">{}</span>
+</span><span id="line-159">        <span class="k">if</span> <span class="n">co2_em</span><span class="p">:</span>
+</span><span id="line-160">            <span class="n">co2_exec</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="line-161">                <span class="s1">&#39;co2_diffusion&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-162">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">co2_em</span><span class="o">.</span><span class="n">diffusion_flux_int</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{}},</span>
+</span><span id="line-163">                <span class="s1">&#39;co2_diffusion_nonanthro&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-164">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">co2_em</span><span class="o">.</span><span class="n">diffusion_flux_nonanthro</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{}},</span>
+</span><span id="line-165">                <span class="s1">&#39;co2_preimp&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-166">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">co2_em</span><span class="o">.</span><span class="n">pre_impoundment</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{}},</span>
+</span><span id="line-167">                <span class="s1">&#39;co2_minus_nonanthro&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-168">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">co2_em</span><span class="o">.</span><span class="n">net_total</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{}},</span>
+</span><span id="line-169">                <span class="s1">&#39;co2_net&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-170">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">co2_em</span><span class="o">.</span><span class="n">factor</span><span class="p">,</span>
+</span><span id="line-171">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;number_of_years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
+</span><span id="line-172">                <span class="s1">&#39;co2_total_per_year&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-173">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">co2_em</span><span class="o">.</span><span class="n">total_emission_per_year</span><span class="p">,</span>
+</span><span id="line-174">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;number_of_years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
+</span><span id="line-175">                <span class="s1">&#39;co2_total_lifetime&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-176">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">co2_em</span><span class="o">.</span><span class="n">total_lifetime_emission</span><span class="p">,</span>
+</span><span id="line-177">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;number_of_years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
+</span><span id="line-178">                <span class="s1">&#39;co2_profile&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-179">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">co2_em</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">}},</span>
+</span><span id="line-180">            <span class="p">}</span>
+</span><span id="line-181">        <span class="k">if</span> <span class="n">ch4_em</span><span class="p">:</span>
+</span><span id="line-182">            <span class="n">ch4_exec</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="line-183">                <span class="s1">&#39;ch4_diffusion&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-184">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">ch4_em</span><span class="o">.</span><span class="n">diffusion_flux_int</span><span class="p">,</span>
+</span><span id="line-185">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;time_horizon&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
+</span><span id="line-186">                <span class="s1">&#39;ch4_ebullition&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-187">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">ch4_em</span><span class="o">.</span><span class="n">ebullition_flux_int</span><span class="p">,</span>
+</span><span id="line-188">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;time_horizon&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
+</span><span id="line-189">                <span class="s1">&#39;ch4_degassing&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-190">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">ch4_em</span><span class="o">.</span><span class="n">degassing_flux_int</span><span class="p">,</span>
+</span><span id="line-191">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;time_horizon&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
+</span><span id="line-192">                <span class="s1">&#39;ch4_preimp&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-193">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">ch4_em</span><span class="o">.</span><span class="n">pre_impoundment</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{}},</span>
+</span><span id="line-194">                <span class="s1">&#39;ch4_net&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-195">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">ch4_em</span><span class="o">.</span><span class="n">factor</span><span class="p">,</span>
+</span><span id="line-196">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;number_of_years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
+</span><span id="line-197">                <span class="s1">&#39;ch4_total_per_year&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-198">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">ch4_em</span><span class="o">.</span><span class="n">total_emission_per_year</span><span class="p">,</span>
+</span><span id="line-199">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;number_of_years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
+</span><span id="line-200">                <span class="s1">&#39;ch4_total_lifetime&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-201">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">ch4_em</span><span class="o">.</span><span class="n">total_lifetime_emission</span><span class="p">,</span>
+</span><span id="line-202">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;number_of_years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
+</span><span id="line-203">                <span class="s1">&#39;ch4_profile&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-204">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">ch4_em</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">}},</span>
+</span><span id="line-205">            <span class="p">}</span>
+</span><span id="line-206">        <span class="k">if</span> <span class="n">n2o_em</span><span class="p">:</span>
+</span><span id="line-207">            <span class="n">n2o_exec</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="line-208">                <span class="s1">&#39;n2o_methodA&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-209">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">n2o_em</span><span class="o">.</span><span class="n">factor</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="s1">&#39;model_1&#39;</span><span class="p">}},</span>
+</span><span id="line-210">                <span class="s1">&#39;n2o_methodB&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-211">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">n2o_em</span><span class="o">.</span><span class="n">factor</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="s1">&#39;model_2&#39;</span><span class="p">}},</span>
+</span><span id="line-212">                <span class="s1">&#39;n2o_mean&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-213">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">n2o_em</span><span class="o">.</span><span class="n">factor</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;mean&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}},</span>
+</span><span id="line-214">                <span class="s1">&#39;n2o_total_per_year&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-215">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">n2o_em</span><span class="o">.</span><span class="n">total_emission_per_year</span><span class="p">,</span>
+</span><span id="line-216">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;number_of_years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
+</span><span id="line-217">                <span class="s1">&#39;n2o_total_lifetime&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-218">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">n2o_em</span><span class="o">.</span><span class="n">total_lifetime_emission</span><span class="p">,</span>
+</span><span id="line-219">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;number_of_years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
+</span><span id="line-220">                <span class="s1">&#39;n2o_profile&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-221">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">n2o_em</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">}},</span>
+</span><span id="line-222">            <span class="p">}</span>
+</span><span id="line-223">        <span class="n">exec_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+</span><span id="line-224">            <span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span>
+</span><span id="line-225">                <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="p">(</span><span class="n">co2_exec</span><span class="p">,</span> <span class="n">ch4_exec</span><span class="p">,</span> <span class="n">n2o_exec</span><span class="p">)))</span>
+</span><span id="line-226">        <span class="k">return</span> <span class="n">exec_dict</span></div>
+
+</span><span id="line-227">
+<div class="viewcode-block" id="EmissionModel.add_presenter">
+<a class="viewcode-back" href="../../api/reemission.model.html#reemission.model.EmissionModel.add_presenter">[docs]</a>
+</span><span id="line-228">    <span class="k">def</span> <span class="nf">add_presenter</span><span class="p">(</span>
+</span><span id="line-229">            <span class="bp">self</span><span class="p">,</span> <span class="n">writers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Writer</span><span class="p">]],</span> <span class="n">output_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> \
+</span><span id="line-230">            <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-231"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-232"><span class="sd">        Instantiate a presenter class to the emission model for data output formatting.</span>
+</span><span id="line-233">
+</span><span id="line-234"><span class="sd">        Args:</span>
+</span><span id="line-235"><span class="sd">            writers (List[Type[Writer]]): List of presenter.Writer objects.</span>
+</span><span id="line-236"><span class="sd">            output_files (List[str]): Paths to output files, one per writer.</span>
+</span><span id="line-237"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-238">        <span class="bp">self</span><span class="o">.</span><span class="n">presenter</span> <span class="o">=</span> <span class="n">Presenter</span><span class="p">(</span>
+</span><span id="line-239">            <span class="n">inputs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> 
+</span><span id="line-240">            <span class="n">outputs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">,</span> 
+</span><span id="line-241">            <span class="n">intern_vars</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">internal</span><span class="p">,</span>
+</span><span id="line-242">            <span class="n">author</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">author</span><span class="p">,</span> 
+</span><span id="line-243">            <span class="n">title</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">report_title</span><span class="p">)</span>
+</span><span id="line-244">        <span class="k">try</span><span class="p">:</span>
+</span><span id="line-245">            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">writers</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">output_files</span><span class="p">)</span>
+</span><span id="line-246">        <span class="k">except</span> <span class="ne">AssertionError</span><span class="p">:</span>
+</span><span id="line-247">            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Number of writers not equal to the number of files.&quot;</span><span class="p">)</span>
+</span><span id="line-248">            <span class="k">return</span> <span class="kc">None</span>
+</span><span id="line-249">        <span class="k">for</span> <span class="n">writer</span><span class="p">,</span> <span class="n">output_file</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">writers</span><span class="p">,</span> <span class="n">output_files</span><span class="p">):</span>
+</span><span id="line-250">            <span class="bp">self</span><span class="o">.</span><span class="n">presenter</span><span class="o">.</span><span class="n">add_writer</span><span class="p">(</span><span class="n">writer</span><span class="o">=</span><span class="n">writer</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="n">output_file</span><span class="p">)</span>
+</span><span id="line-251">        <span class="k">return</span> <span class="kc">None</span></div>
+
+</span><span id="line-252">
+<div class="viewcode-block" id="EmissionModel.save_results">
+<a class="viewcode-back" href="../../api/reemission.model.html#reemission.model.EmissionModel.save_results">[docs]</a>
+</span><span id="line-253">    <span class="k">def</span> <span class="nf">save_results</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-254"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Save results using presenters defined in the presenters list.&quot;&quot;&quot;</span>
+</span><span id="line-255">        <span class="k">if</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">):</span>
+</span><span id="line-256">            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+</span><span id="line-257">                <span class="s2">&quot;Output dictionary empty. Run calculations first and &quot;</span> <span class="o">+</span>
+</span><span id="line-258">                <span class="s2">&quot; try again.&quot;</span><span class="p">)</span>
+</span><span id="line-259">            <span class="k">return</span> <span class="kc">None</span>
+</span><span id="line-260">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">presenter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-261">            <span class="bp">self</span><span class="o">.</span><span class="n">presenter</span><span class="o">.</span><span class="n">output</span><span class="p">()</span>
+</span><span id="line-262">        <span class="k">else</span><span class="p">:</span>
+</span><span id="line-263">            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Presenter not defined.&quot;</span><span class="p">)</span>
+</span><span id="line-264">        <span class="k">return</span> <span class="kc">None</span></div>
+
+</span><span id="line-265">
+<div class="viewcode-block" id="EmissionModel.calculate">
+<a class="viewcode-back" href="../../api/reemission.model.html#reemission.model.EmissionModel.calculate">[docs]</a>
+</span><span id="line-266">    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-267"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate emissions for a number of variables defined in config.&quot;&quot;&quot;</span>
+</span><span id="line-268">        <span class="c1"># Check the calculation options given in input arguments.</span>
+</span><span id="line-269">        <span class="n">avail_p_calc_methods</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;g-res&#39;</span><span class="p">,</span> <span class="s1">&#39;mcdowell&#39;</span><span class="p">)</span>
+</span><span id="line-270">        <span class="n">avail_n2o_models</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;model_1&#39;</span><span class="p">,</span> <span class="s1">&#39;model_2&#39;</span><span class="p">)</span>
+</span><span id="line-271">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_model</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">avail_p_calc_methods</span><span class="p">:</span>
+</span><span id="line-272">            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+</span><span id="line-273">                <span class="s2">&quot;Invalid P calculation method. Expected: </span><span class="si">%s</span><span class="s2">. &quot;</span> <span class="o">+</span>
+</span><span id="line-274">                <span class="s2">&quot;Using default g-res method.&quot;</span><span class="p">,</span>
+</span><span id="line-275">                <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">avail_p_calc_methods</span><span class="p">))</span>
+</span><span id="line-276">            <span class="bp">self</span><span class="o">.</span><span class="n">p_model</span> <span class="o">=</span> <span class="s1">&#39;g-res&#39;</span>
+</span><span id="line-277">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n2o_model</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">avail_n2o_models</span><span class="p">:</span>
+</span><span id="line-278">            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+</span><span id="line-279">                <span class="s2">&quot;Invalid total N2O emission model. Expected: </span><span class="si">%s</span><span class="s2">. &quot;</span> <span class="o">+</span>
+</span><span id="line-280">                <span class="s2">&quot;Using default model 1.&quot;</span><span class="p">,</span>
+</span><span id="line-281">                <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">avail_n2o_models</span><span class="p">))</span>
+</span><span id="line-282">            <span class="bp">self</span><span class="o">.</span><span class="n">n2o_model</span> <span class="o">=</span> <span class="s1">&#39;model_1&#39;</span>
+</span><span id="line-283">
+</span><span id="line-284">        <span class="c1"># Iterate through each set of inputs and output results in a dict</span>
+</span><span id="line-285">        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">model_input</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span><span id="line-286">            <span class="n">monthly_temp</span> <span class="o">=</span> <span class="n">MonthlyTemperature</span><span class="p">(</span>
+</span><span id="line-287">                <span class="n">model_input</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;monthly_temps&#39;</span><span class="p">])</span>
+</span><span id="line-288">            <span class="c1"># Instantiate Catchment and Reservoir objects</span>
+</span><span id="line-289">            <span class="n">catchment_data</span> <span class="o">=</span> <span class="n">model_input</span><span class="o">.</span><span class="n">catchment_data</span>
+</span><span id="line-290">            <span class="n">reservoir_data</span> <span class="o">=</span> <span class="n">model_input</span><span class="o">.</span><span class="n">reservoir_data</span>
+</span><span id="line-291">            <span class="k">if</span> <span class="n">catchment_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">reservoir_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-292">                <span class="n">catchment</span> <span class="o">=</span> <span class="n">Catchment</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
+</span><span id="line-293">                    <span class="n">parameters</span><span class="o">=</span><span class="n">catchment_data</span><span class="p">,</span>
+</span><span id="line-294">                    <span class="n">name</span><span class="o">=</span><span class="n">model_input</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</span><span id="line-295">                <span class="n">reservoir</span> <span class="o">=</span> <span class="n">Reservoir</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
+</span><span id="line-296">                    <span class="n">parameters</span><span class="o">=</span><span class="n">reservoir_data</span><span class="p">,</span>
+</span><span id="line-297">                    <span class="n">temperature</span><span class="o">=</span><span class="n">monthly_temp</span><span class="p">,</span>
+</span><span id="line-298">                    <span class="n">coordinates</span><span class="o">=</span><span class="n">model_input</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;coordinates&quot;</span><span class="p">],</span>
+</span><span id="line-299">                    <span class="n">inflow_rate</span><span class="o">=</span><span class="n">catchment</span><span class="o">.</span><span class="n">discharge</span><span class="p">,</span>
+</span><span id="line-300">                    <span class="n">name</span><span class="o">=</span><span class="n">model_input</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</span><span id="line-301">            <span class="k">else</span><span class="p">:</span>
+</span><span id="line-302">                <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Catchment or Reservoir data absent.&quot;</span><span class="p">)</span>
+</span><span id="line-303">                <span class="k">return</span> <span class="kc">None</span>
+</span><span id="line-304">            
+</span><span id="line-305">            <span class="c1"># Run calculations of internal variables that we might want to output</span>
+</span><span id="line-306">            <span class="c1"># but which are not called during GHG estimation</span>
+</span><span id="line-307">            <span class="c1">#1. Trophic status</span>
+</span><span id="line-308">            <span class="n">_</span> <span class="o">=</span> <span class="n">reservoir</span><span class="o">.</span><span class="n">trophic_status</span><span class="p">(</span>
+</span><span id="line-309">                <span class="n">tp_inflow_conc</span><span class="o">=</span><span class="n">catchment</span><span class="o">.</span><span class="n">inflow_p_conc</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p_model</span><span class="p">))</span>
+</span><span id="line-310">
+</span><span id="line-311">            <span class="c1"># Calculate gas emissions</span>
+</span><span id="line-312">            <span class="k">if</span> <span class="s2">&quot;co2&quot;</span> <span class="ow">in</span> <span class="n">model_input</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;gasses&#39;</span><span class="p">]:</span>
+</span><span id="line-313">                <span class="n">em_co2</span> <span class="o">=</span> <span class="n">CarbonDioxideEmission</span><span class="p">(</span>
+</span><span id="line-314">                    <span class="n">catchment</span><span class="o">=</span><span class="n">catchment</span><span class="p">,</span>
+</span><span id="line-315">                    <span class="n">reservoir</span><span class="o">=</span><span class="n">reservoir</span><span class="p">,</span>
+</span><span id="line-316">                    <span class="n">eff_temp</span><span class="o">=</span><span class="n">monthly_temp</span><span class="o">.</span><span class="n">eff_temp</span><span class="p">(</span><span class="n">gas</span><span class="o">=</span><span class="s1">&#39;co2&#39;</span><span class="p">),</span>
+</span><span id="line-317">                    <span class="n">p_calc_method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p_model</span><span class="p">)</span>
+</span><span id="line-318">                
+</span><span id="line-319">                <span class="c1">#2. Reservoir TN concentration</span>
+</span><span id="line-320">                <span class="n">_</span> <span class="o">=</span> <span class="n">em_co2</span><span class="o">.</span><span class="n">reservoir_tn</span>
+</span><span id="line-321">
+</span><span id="line-322">            <span class="k">else</span><span class="p">:</span>
+</span><span id="line-323">                <span class="n">em_co2</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="line-324">            <span class="k">if</span> <span class="s2">&quot;ch4&quot;</span> <span class="ow">in</span> <span class="n">model_input</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;gasses&#39;</span><span class="p">]:</span>
+</span><span id="line-325">                <span class="n">em_ch4</span> <span class="o">=</span> <span class="n">MethaneEmission</span><span class="p">(</span>
+</span><span id="line-326">                    <span class="n">catchment</span><span class="o">=</span><span class="n">catchment</span><span class="p">,</span>
+</span><span id="line-327">                    <span class="n">reservoir</span><span class="o">=</span><span class="n">reservoir</span><span class="p">,</span>
+</span><span id="line-328">                    <span class="n">monthly_temp</span><span class="o">=</span><span class="n">monthly_temp</span><span class="p">)</span>
+</span><span id="line-329">            <span class="k">else</span><span class="p">:</span>
+</span><span id="line-330">                <span class="n">em_ch4</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="line-331">
+</span><span id="line-332">            <span class="k">if</span> <span class="s2">&quot;n2o&quot;</span> <span class="ow">in</span> <span class="n">model_input</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;gasses&#39;</span><span class="p">]:</span>
+</span><span id="line-333">                <span class="n">em_n2o</span> <span class="o">=</span> <span class="n">NitrousOxideEmission</span><span class="p">(</span>
+</span><span id="line-334">                    <span class="n">catchment</span><span class="o">=</span><span class="n">catchment</span><span class="p">,</span>
+</span><span id="line-335">                    <span class="n">reservoir</span><span class="o">=</span><span class="n">reservoir</span><span class="p">,</span>
+</span><span id="line-336">                    <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n2o_model</span><span class="p">,</span>
+</span><span id="line-337">                    <span class="n">p_export_model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p_model</span><span class="p">)</span>
+</span><span id="line-338">            <span class="k">else</span><span class="p">:</span>
+</span><span id="line-339">                <span class="n">em_n2o</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="line-340">
+</span><span id="line-341">            <span class="n">exec_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_exec_dictionary</span><span class="p">(</span>
+</span><span id="line-342">                <span class="n">co2_em</span><span class="o">=</span><span class="n">em_co2</span><span class="p">,</span>
+</span><span id="line-343">                <span class="n">ch4_em</span><span class="o">=</span><span class="n">em_ch4</span><span class="p">,</span>
+</span><span id="line-344">                <span class="n">n2o_em</span><span class="o">=</span><span class="n">em_n2o</span><span class="p">,</span>
+</span><span id="line-345">                <span class="n">years</span><span class="o">=</span><span class="n">model_input</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;year_vector&#39;</span><span class="p">])</span>
+</span><span id="line-346">
+</span><span id="line-347">            <span class="n">output</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="line-348">            <span class="c1"># Iterate through all emission components and record those that</span>
+</span><span id="line-349">            <span class="c1"># are marked for outputting</span>
+</span><span id="line-350">            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+</span><span id="line-351">                <span class="k">for</span> <span class="n">emission</span><span class="p">,</span> <span class="n">em_config</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span><span id="line-352">                    <span class="k">if</span> <span class="n">emission</span> <span class="ow">in</span> <span class="n">exec_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> \
+</span><span id="line-353">                            <span class="n">em_config</span><span class="p">[</span><span class="s1">&#39;include&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">TRUTHS</span><span class="p">:</span>
+</span><span id="line-354">                        <span class="n">output</span><span class="p">[</span><span class="n">emission</span><span class="p">]</span> <span class="o">=</span> <span class="n">exec_dict</span><span class="p">[</span><span class="n">emission</span><span class="p">][</span><span class="s1">&#39;ref&#39;</span><span class="p">](</span>
+</span><span id="line-355">                            <span class="o">**</span><span class="n">exec_dict</span><span class="p">[</span><span class="n">emission</span><span class="p">][</span><span class="s1">&#39;args&#39;</span><span class="p">])</span>
+</span><span id="line-356">                <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="n">model_input</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">output</span>
+</span><span id="line-357">                <span class="c1"># WARNING - COULD RUN INTO ISSUES IF CONFIG CHANGES IN BETWEEN RESERVOIRS</span>
+</span><span id="line-358">                <span class="c1"># BECAUSE THE `INTERNAL` GLOBAL VAR IS NOT RESET IN BETWEEN CONSECUTIVE</span>
+</span><span id="line-359">                <span class="c1"># RESERVOIR GHG EMISSION CALCULATIONS</span>
+</span><span id="line-360">                <span class="bp">self</span><span class="o">.</span><span class="n">internal</span><span class="p">[</span><span class="n">model_input</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">internal</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span id="line-361">            <span class="k">else</span><span class="p">:</span>
+</span><span id="line-362">                <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+</span><span id="line-363">                    <span class="s2">&quot;Output/Input configuration file not instantiated.&quot;</span><span class="p">)</span>
+</span><span id="line-364">        <span class="k">return</span> <span class="kc">None</span></div>
+</div>
+
+</span></code></pre></div>
+    </div><div class="flex justify-between items-center pt-6 mt-12 border-t border-border gap-4">
+</div></div>
+        </main>
+      </div>
+    </div><footer class="py-6 border-t border-border md:py-0">
+    <div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+      <div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
+        <p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2024, Tomasz Janus, University of Manchester, United Kingdom&nbsp;Built with <a class="font-medium underline underline-offset-4"
+    href="https://www.sphinx-doc.org"
+    rel="noreferrer">Sphinx 7.3.7</a></p>
+</div>
+</div>
+</footer>
+  </div>
+  
+    <script src="../../_static/documentation_options.js?v=8d563738"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/toggleprompt.js?v=5801b3bb"></script>
+    <script src="../../_static/tabs.js?v=3030b3cb"></script>
+    <script defer="defer" src="../../_static/theme.js?v=e82a16a3"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+  
+</body>
+</html>

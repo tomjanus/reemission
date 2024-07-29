@@ -1,0 +1,1666 @@
+<!DOCTYPE html>
+<html lang="en"
+      data-content_root="./"
+      x-data="{ darkMode: localStorage.getItem('darkMode') || localStorage.setItem('darkMode', 'system'), activeSection: '' }"
+      x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val))"
+      class="scroll-smooth"
+      :class="{'dark': darkMode === 'dark' || (darkMode === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)}"
+>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="white" />
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="black" />
+  
+    <title>Index | ReEmission 1.0.0 documentation</title>
+    <meta property="og:title" content="Index | ReEmission 1.0.0 documentation" />
+    <meta name="twitter:title" content="Index | ReEmission 1.0.0 documentation" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=c842c44c" />
+      <link rel="stylesheet" type="text/css" href="_static/theme.css?v=ecdfb4fc" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
+      <link rel="stylesheet" type="text/css" href="_static/tabs.css?v=a5c4661c" />
+        <link rel="search" title="Search" href="search.html" />
+        <link rel="index" title="Index" href="#" />
+
+    <script>
+    <!-- Prevent Flash of wrong theme -->
+      const userPreference = localStorage.getItem('darkMode');
+      let mode;
+      if (userPreference === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        mode = 'dark';
+        document.documentElement.classList.add('dark');
+      } else {
+        mode = 'light';
+      }
+      if (!userPreference) {localStorage.setItem('darkMode', mode)}
+    </script>
+</head>
+<body x-data="{ showSidebar: false }" class="min-h-screen font-sans antialiased bg-background text-foreground" :class="{ 'overflow-hidden': showSidebar }">
+    <div x-cloak x-show="showSidebar" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" @click.self="showSidebar = false"></div><div id="page" class="relative flex flex-col min-h-screen"><a href="#content" class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100">
+      Skip to content
+    </a><header
+  class="sticky top-0 z-40 w-full border-b shadow-sm border-border supports-backdrop-blur:bg-background/60 bg-background/95 backdrop-blur"><div class="container flex items-center h-14">
+    <div class="hidden mr-4 md:flex">
+      <a href="index.html" class="flex items-center mr-6"><span class="hidden font-bold sm:inline-block text-clip whitespace-nowrap">ReEmission 1.0.0 documentation</span>
+      </a></div><button
+      class="inline-flex items-center justify-center h-10 px-0 py-2 mr-2 text-base font-medium transition-colors rounded-md hover:text-accent-foreground hover:bg-transparent md:hidden"
+      type="button" @click="showSidebar = true">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 96 960 960" aria-hidden="true"
+        fill="currentColor">
+        <path
+          d="M152.587 825.087q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440Zm0-203.587q-19.152 0-32.326-13.174T107.087 576q0-19.152 13.174-32.326t32.326-13.174h320q19.152 0 32.326 13.174T518.087 576q0 19.152-13.174 32.326T472.587 621.5h-320Zm0-203.587q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440ZM708.913 576l112.174 112.174q12.674 12.674 12.674 31.826t-12.674 31.826Q808.413 764.5 789.261 764.5t-31.826-12.674l-144-144Q600 594.391 600 576t13.435-31.826l144-144q12.674-12.674 31.826-12.674t31.826 12.674q12.674 12.674 12.674 31.826t-12.674 31.826L708.913 576Z" />
+      </svg>
+      <span class="sr-only">Toggle navigation menu</span>
+    </button>
+    <div class="flex items-center justify-between flex-1 space-x-2 sm:space-x-4 md:justify-end">
+      <div class="flex-1 w-full md:w-auto md:flex-none"><form id="searchbox"
+      action="search.html"
+      method="get"
+      class="relative flex items-center group"
+      @keydown.k.window.meta="$refs.search.focus()">
+  <input x-ref="search"
+          name="q"
+          id="search-input"
+          type="search"
+          aria-label="Search the docs"
+          placeholder="Search ..."
+          class="inline-flex items-center font-medium transition-colors bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background border border-input hover:bg-accent focus:bg-accent hover:text-accent-foreground focus:text-accent-foreground hover:placeholder-accent-foreground py-2 px-4 relative h-9 w-full justify-start rounded-[0.5rem] text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64" />
+  <kbd class="pointer-events-none absolute right-1.5 top-2 hidden h-5 select-none text-muted-foreground items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex group-hover:bg-accent group-hover:text-accent-foreground">
+    <span class="text-xs">⌘</span>
+    K
+  </kbd>
+</form>
+      </div>
+      <nav class="flex items-center space-x-1">
+        <button @click="darkMode = darkMode === 'light' ? 'dark' : 'light'"
+          class="relative inline-flex items-center justify-center px-0 text-sm font-medium transition-colors rounded-md hover:bg-accent hover:text-accent-foreground h-9 w-9"
+          type="button"
+          aria-label="Color theme switcher">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 96 960 960" fill="currentColor"
+            class="absolute transition-all scale-100 rotate-0 dark:-rotate-90 dark:scale-0">
+            <path
+              d="M480 685q45.456 0 77.228-31.772Q589 621.456 589 576q0-45.456-31.772-77.228Q525.456 467 480 467q-45.456 0-77.228 31.772Q371 530.544 371 576q0 45.456 31.772 77.228Q434.544 685 480 685Zm0 91q-83 0-141.5-58.5T280 576q0-83 58.5-141.5T480 376q83 0 141.5 58.5T680 576q0 83-58.5 141.5T480 776ZM80 621.5q-19.152 0-32.326-13.174T34.5 576q0-19.152 13.174-32.326T80 530.5h80q19.152 0 32.326 13.174T205.5 576q0 19.152-13.174 32.326T160 621.5H80Zm720 0q-19.152 0-32.326-13.174T754.5 576q0-19.152 13.174-32.326T800 530.5h80q19.152 0 32.326 13.174T925.5 576q0 19.152-13.174 32.326T880 621.5h-80Zm-320-320q-19.152 0-32.326-13.174T434.5 256v-80q0-19.152 13.174-32.326T480 130.5q19.152 0 32.326 13.174T525.5 176v80q0 19.152-13.174 32.326T480 301.5Zm0 720q-19.152 0-32.326-13.17Q434.5 995.152 434.5 976v-80q0-19.152 13.174-32.326T480 850.5q19.152 0 32.326 13.174T525.5 896v80q0 19.152-13.174 32.33-13.174 13.17-32.326 13.17ZM222.174 382.065l-43-42Q165.5 327.391 166 308.239t13.174-33.065q13.435-13.674 32.587-13.674t32.065 13.674l42.239 43q12.674 13.435 12.555 31.706-.12 18.272-12.555 31.946-12.674 13.674-31.445 13.413-18.772-.261-32.446-13.174Zm494 494.761-42.239-43q-12.674-13.435-12.674-32.087t12.674-31.565Q686.609 756.5 705.38 757q18.772.5 32.446 13.174l43 41.761Q794.5 824.609 794 843.761t-13.174 33.065Q767.391 890.5 748.239 890.5t-32.065-13.674Zm-42-494.761Q660.5 369.391 661 350.62q.5-18.772 13.174-32.446l41.761-43Q728.609 261.5 747.761 262t33.065 13.174q13.674 13.435 13.674 32.587t-13.674 32.065l-43 42.239q-13.435 12.674-31.706 12.555-18.272-.12-31.946-12.555Zm-495 494.761Q165.5 863.391 165.5 844.239t13.674-32.065l43-42.239q13.435-12.674 32.087-12.674t31.565 12.674Q299.5 782.609 299 801.38q-.5 18.772-13.174 32.446l-41.761 43Q231.391 890.5 212.239 890t-33.065-13.174ZM480 576Z" />
+          </svg>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 96 960 960" fill="currentColor"
+            class="absolute transition-all scale-0 rotate-90 dark:rotate-0 dark:scale-100">
+            <path
+              d="M480 936q-151 0-255.5-104.5T120 576q0-138 90-239.5T440 218q25-3 39 18t-1 44q-17 26-25.5 55t-8.5 61q0 90 63 153t153 63q31 0 61.5-9t54.5-25q21-14 43-1.5t19 39.5q-14 138-117.5 229T480 936Zm0-80q88 0 158-48.5T740 681q-20 5-40 8t-40 3q-123 0-209.5-86.5T364 396q0-20 3-40t8-40q-78 32-126.5 102T200 576q0 116 82 198t198 82Zm-10-270Z" />
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </div>
+</header>
+
+    <div class="flex-1"><div class="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10"><aside id="left-sidebar"
+  class="fixed inset-y-0 left-0 md:top-14 z-50 md:z-30 bg-background md:bg-transparent transition-all duration-100 -translate-x-full md:translate-x-0 ml-0 p-6 md:p-0 md:-ml-2 md:h-[calc(100vh-3.5rem)] w-5/6 md:w-full shrink-0 overflow-y-auto border-r border-border md:sticky"
+  :aria-hidden="!showSidebar" :class="{ 'translate-x-0': showSidebar }">
+
+    <a href="index.html" class="!justify-start text-sm md:!hidden bg-background"><span class="font-bold text-clip whitespace-nowrap">ReEmission 1.0.0 documentation</span>
+    </a>
+
+    <div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
+      <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">About the Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Theoretical Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installing RE-Emission</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demo.html">Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="json.html">JSON file format description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reporting.html">Reporting Calculation Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geocaret_integration.html">Integration with GeoCARET</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/reemission.html">Python API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.model.html">Model (Main)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.input.html">Input Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.reservoir.html">Reservoir Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.catchment.html">Catchment Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.ns_catchment.html">Post-impoundment catchment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.emissions.html">Emissions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.temperature.html">MonthlyTemperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.biogenic.html">Biogenic Factors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.profile.html">Emission Profile Calculator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.presenter.html">Presenter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.utils.html">Utility functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.auxiliary.html">Auxiliary functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.constants.html">Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.mixins.html">Mixins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.document_compiler.html">Document <span class="math notranslate nohighlight">\(\LaTeX\)</span> Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.exceptions.html">Custom Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.app_logger.html">App Logger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.download.html">External Data Downloader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.globals.html">Global variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.main.html">Main</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+</ul>
+
+</nav>
+      </div>
+    </div>
+    <button type="button" @click="showSidebar = false"
+      class="absolute md:hidden right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 96 960 960" fill="currentColor"
+        stroke="none" class="h-4 w-4">
+        <path
+          d="M480 632 284 828q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536 576l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480 632Z" />
+      </svg>
+    </button>
+  </aside>
+        <main class="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
+<div class="w-full min-w-0 mx-auto">
+<nav aria-label="breadcrumbs"
+     class="flex items-center mb-4 space-x-1 text-sm text-muted-foreground">
+  <a class="overflow-hidden text-ellipsis whitespace-nowrap hover:text-foreground"
+     href="index.html">
+    <span class="hidden md:inline">ReEmission 1.0.0 documentation</span>
+    <svg xmlns="http://www.w3.org/2000/svg"
+         height="18"
+         width="18"
+         viewBox="0 96 960 960"
+         aria-label="Home"
+         fill="currentColor"
+         stroke="none"
+         class="md:hidden">
+      <path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z" />
+    </svg>
+  </a>
+  
+<div class="mr-1">/</div><span aria-current="page"
+        class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">Index</span>
+</nav>
+
+<div id="content" role="main">
+
+  <h1 id="index">Index</h1>
+  <h2 id="_">_</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.__abstractmethods__">__abstractmethods__ (reemission.emissions.CarbonDioxideEmission attribute)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.emissions.html#reemission.emissions.Emission.__abstractmethods__">(reemission.emissions.Emission attribute)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.__abstractmethods__">(reemission.emissions.MethaneEmission attribute)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission.__abstractmethods__">(reemission.emissions.NitrousOxideEmission attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.__annotations__">__annotations__ (reemission.emissions.CarbonDioxideEmission attribute)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.emissions.html#reemission.emissions.Emission.__annotations__">(reemission.emissions.Emission attribute)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.__annotations__">(reemission.emissions.MethaneEmission attribute)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission.__annotations__">(reemission.emissions.NitrousOxideEmission attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.download.html#reemission.download.GDriveCachedFileDownloader.__call__">__call__() (reemission.download.GDriveCachedFileDownloader method)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.download.html#reemission.download.GDriveDirDownloader.__call__">(reemission.download.GDriveDirDownloader method)</a>
+</li>
+        <li><a href="api/reemission.download.html#reemission.download.GDriveFileDownloader.__call__">(reemission.download.GDriveFileDownloader method)</a>
+</li>
+        <li><a href="api/reemission.download.html#reemission.download.URL_Downloader.__call__">(reemission.download.URL_Downloader method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.__dataclass_fields__">__dataclass_fields__ (reemission.emissions.CarbonDioxideEmission attribute)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.emissions.html#reemission.emissions.Emission.__dataclass_fields__">(reemission.emissions.Emission attribute)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.__dataclass_fields__">(reemission.emissions.MethaneEmission attribute)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission.__dataclass_fields__">(reemission.emissions.NitrousOxideEmission attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.__dataclass_params__">__dataclass_params__ (reemission.emissions.CarbonDioxideEmission attribute)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.emissions.html#reemission.emissions.Emission.__dataclass_params__">(reemission.emissions.Emission attribute)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.__dataclass_params__">(reemission.emissions.MethaneEmission attribute)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission.__dataclass_params__">(reemission.emissions.NitrousOxideEmission attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.Emission.__dict__">__dict__ (reemission.emissions.Emission attribute)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.__eq__">__eq__() (reemission.emissions.CarbonDioxideEmission method)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.emissions.html#reemission.emissions.Emission.__eq__">(reemission.emissions.Emission method)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.__eq__">(reemission.emissions.MethaneEmission method)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission.__eq__">(reemission.emissions.NitrousOxideEmission method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.__hash__">__hash__ (reemission.emissions.CarbonDioxideEmission attribute)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.emissions.html#reemission.emissions.Emission.__hash__">(reemission.emissions.Emission attribute)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.__hash__">(reemission.emissions.MethaneEmission attribute)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission.__hash__">(reemission.emissions.NitrousOxideEmission attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.__init__">__init__() (reemission.emissions.CarbonDioxideEmission method)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.emissions.html#reemission.emissions.Emission.__init__">(reemission.emissions.Emission method)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.__init__">(reemission.emissions.MethaneEmission method)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission.__init__">(reemission.emissions.NitrousOxideEmission method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.mixins.html#reemission.mixins.EnumGetterMixin.__init_subclass__">__init_subclass__() (reemission.mixins.EnumGetterMixin class method)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.__match_args__">__match_args__ (reemission.emissions.CarbonDioxideEmission attribute)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.emissions.html#reemission.emissions.Emission.__match_args__">(reemission.emissions.Emission attribute)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.__match_args__">(reemission.emissions.MethaneEmission attribute)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission.__match_args__">(reemission.emissions.NitrousOxideEmission attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.__module__">__module__ (reemission.emissions.CarbonDioxideEmission attribute)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.emissions.html#reemission.emissions.Emission.__module__">(reemission.emissions.Emission attribute)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.__module__">(reemission.emissions.MethaneEmission attribute)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission.__module__">(reemission.emissions.NitrousOxideEmission attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.Catchment.__post_init__">__post_init__() (reemission.catchment.Catchment method)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.input.html#reemission.input.Input.__post_init__">(reemission.input.Input method)</a>
+</li>
+        <li><a href="api/reemission.model.html#reemission.model.EmissionModel.__post_init__">(reemission.model.EmissionModel method)</a>
+</li>
+        <li><a href="api/reemission.presenter.html#reemission.presenter.ExcelWriter.__post_init__">(reemission.presenter.ExcelWriter method)</a>
+</li>
+        <li><a href="api/reemission.presenter.html#reemission.presenter.JSONWriter.__post_init__">(reemission.presenter.JSONWriter method)</a>
+</li>
+        <li><a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.__post_init__">(reemission.presenter.LatexWriter method)</a>
+</li>
+        <li><a href="api/reemission.presenter.html#reemission.presenter.Presenter.__post_init__">(reemission.presenter.Presenter method)</a>
+</li>
+        <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.__post_init__">(reemission.reservoir.Reservoir method)</a>
+</li>
+        <li><a href="api/reemission.temperature.html#reemission.temperature.MonthlyTemperature.__post_init__">(reemission.temperature.MonthlyTemperature method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.biogenic.html#reemission.biogenic.BiogenicFactors.__repr__">__repr__() (reemission.biogenic.BiogenicFactors method)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.__repr__">(reemission.emissions.CarbonDioxideEmission method)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.Emission.__repr__">(reemission.emissions.Emission method)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.__repr__">(reemission.emissions.MethaneEmission method)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission.__repr__">(reemission.emissions.NitrousOxideEmission method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.Emission.__weakref__">__weakref__ (reemission.emissions.Emission attribute)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission._abc_impl">_abc_impl (reemission.emissions.CarbonDioxideEmission attribute)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.emissions.html#reemission.emissions.Emission._abc_impl">(reemission.emissions.Emission attribute)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission._abc_impl">(reemission.emissions.MethaneEmission attribute)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission._abc_impl">(reemission.emissions.NitrousOxideEmission attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission._degassing_flux_profile">_degassing_flux_profile() (reemission.emissions.MethaneEmission method)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission._diffusion_flux_profile">_diffusion_flux_profile() (reemission.emissions.CarbonDioxideEmission method)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission._diffusion_flux_profile">(reemission.emissions.MethaneEmission method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission._ebullition_flux_profile">_ebullition_flux_profile() (reemission.emissions.MethaneEmission method)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission._n2o_denitrification_m1">_n2o_denitrification_m1() (reemission.emissions.NitrousOxideEmission method)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission._n2o_denitrification_m2">_n2o_denitrification_m2() (reemission.emissions.NitrousOxideEmission method)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission._n2o_emission_m1_co2">_n2o_emission_m1_co2() (reemission.emissions.NitrousOxideEmission method)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission._n2o_emission_m2_co2">_n2o_emission_m2_co2() (reemission.emissions.NitrousOxideEmission method)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission._n2o_emission_m2_n">_n2o_emission_m2_n() (reemission.emissions.NitrousOxideEmission method)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission._n2o_nitrification_m1">_n2o_nitrification_m1() (reemission.emissions.NitrousOxideEmission method)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission._n2o_nitrification_m2">_n2o_nitrification_m2() (reemission.emissions.NitrousOxideEmission method)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.Emission._par_from_config">_par_from_config() (reemission.emissions.Emission method)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission._total_to_unit">_total_to_unit() (reemission.emissions.NitrousOxideEmission method)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission._unit_n2o_emission_m2">_unit_n2o_emission_m2() (reemission.emissions.NitrousOxideEmission method)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission._unit_to_total">_unit_to_total() (reemission.emissions.NitrousOxideEmission method)</a>
+</li>
+  </ul></td>
+  </tr>
+      </table>
+  
+  <h2 id="A">A</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.exceptions.html#reemission.exceptions.WrongSumOfAreasException.accuracy">accuracy (reemission.exceptions.WrongSumOfAreasException attribute)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.add_header">add_header() (reemission.presenter.LatexWriter method)</a>
+</li>
+      <li><a href="api/reemission.input.html#reemission.input.Inputs.add_input">add_input() (reemission.input.Inputs method)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.ExcelWriter.add_inputs">add_inputs() (reemission.presenter.ExcelWriter method)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.presenter.html#reemission.presenter.JSONWriter.add_inputs">(reemission.presenter.JSONWriter method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.add_inputs_subsection">add_inputs_subsection() (reemission.presenter.LatexWriter method)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.add_inputs_table">add_inputs_table() (reemission.presenter.LatexWriter method)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.add_intern_var_subsection">add_intern_var_subsection() (reemission.presenter.LatexWriter method)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.add_intern_vars_table">add_intern_vars_table() (reemission.presenter.LatexWriter method)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.ExcelWriter.add_internals">add_internals() (reemission.presenter.ExcelWriter method)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.presenter.html#reemission.presenter.JSONWriter.add_internals">(reemission.presenter.JSONWriter method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.add_landcover_charts">add_landcover_charts() (reemission.presenter.LatexWriter method)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.ExcelWriter.add_outputs">add_outputs() (reemission.presenter.ExcelWriter method)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.presenter.html#reemission.presenter.JSONWriter.add_outputs">(reemission.presenter.JSONWriter method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.add_outputs_subsection">add_outputs_subsection() (reemission.presenter.LatexWriter method)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.add_outputs_table">add_outputs_table() (reemission.presenter.LatexWriter method)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.add_parameters">add_parameters() (reemission.presenter.LatexWriter method)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.add_parameters_section">add_parameters_section() (reemission.presenter.LatexWriter method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.add_plots">add_plots() (reemission.presenter.LatexWriter method)</a>
+</li>
+      <li><a href="api/reemission.model.html#reemission.model.EmissionModel.add_presenter">add_presenter() (reemission.model.EmissionModel method)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.add_title_section">add_title_section() (reemission.presenter.LatexWriter method)</a>
+</li>
+      <li><a href="api/reemission.utils.html#reemission.utils.add_version">add_version() (in module reemission.utils)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.Presenter.add_writer">add_writer() (reemission.presenter.Presenter method)</a>
+</li>
+      <li><a href="api/reemission.auxiliary.html#reemission.auxiliary.air_density">air_density() (in module reemission.auxiliary)</a>
+</li>
+      <li><a href="api/reemission.exceptions.html#reemission.exceptions.append_message">append_message() (in module reemission.exceptions)</a>
+</li>
+      <li><a href="api/reemission.catchment.html#id0">area (reemission.catchment.Catchment attribute)</a>, <a href="api/reemission.catchment.html#reemission.catchment.Catchment.area">[1]</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.reservoir.html#id0">(reemission.reservoir.Reservoir attribute)</a>, <a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.area">[1]</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.catchment.html#id1">area_fractions (reemission.catchment.Catchment attribute)</a>, <a href="api/reemission.catchment.html#reemission.catchment.Catchment.area_fractions">[1]</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.reservoir.html#id1">(reemission.reservoir.Reservoir attribute)</a>, <a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.area_fractions">[1]</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.Catchment.area_ha">area_ha (reemission.catchment.Catchment property)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.AssetConstructionStage">AssetConstructionStage (class in reemission.constants)</a>
+</li>
+      <li><a href="api/reemission.model.html#id0">author (reemission.model.EmissionModel attribute)</a>, <a href="api/reemission.model.html#reemission.model.EmissionModel.author">[1]</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.presenter.html#id0">(reemission.presenter.ExcelWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.ExcelWriter.author">[1]</a>
+</li>
+        <li><a href="api/reemission.presenter.html#id14">(reemission.presenter.JSONWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.JSONWriter.author">[1]</a>
+</li>
+        <li><a href="api/reemission.presenter.html#id26">(reemission.presenter.LatexWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.author">[1]</a>
+</li>
+        <li><a href="api/reemission.presenter.html#id37">(reemission.presenter.Presenter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.Presenter.author">[1]</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.emissions.html#id10">available_models (reemission.emissions.NitrousOxideEmission attribute)</a>, <a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission.available_models">[1]</a>
+</li>
+  </ul></td>
+  </tr>
+      </table>
+  
+  <h2 id="B">B</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.constants.html#reemission.constants.Landuse.BARE">BARE (reemission.constants.Landuse attribute)</a>
+</li>
+      <li><a href="api/reemission.document_compiler.html#reemission.document_compiler.BatchCompiler">BatchCompiler (class in reemission.document_compiler)</a>
+</li>
+      <li><a href="api/reemission.catchment.html#id2">biogenic_factors (reemission.catchment.Catchment attribute)</a>, <a href="api/reemission.catchment.html#reemission.catchment.Catchment.biogenic_factors">[1]</a>
+</li>
+      <li><a href="api/reemission.biogenic.html#reemission.biogenic.BiogenicFactors">BiogenicFactors (class in reemission.biogenic)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.Biome">Biome (class in reemission.constants)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.biogenic.html#id0">biome (reemission.biogenic.BiogenicFactors attribute)</a>, <a href="api/reemission.biogenic.html#reemission.biogenic.BiogenicFactors.biome">[1]</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.Climate.BOREAL">BOREAL (reemission.constants.Climate attribute)</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.bottom_density">bottom_density() (reemission.reservoir.Reservoir method)</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.bottom_temperature">bottom_temperature() (reemission.reservoir.Reservoir method)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.BuildStatus">BuildStatus (class in reemission.constants)</a>
+</li>
+  </ul></td>
+  </tr>
+      </table>
+  
+  <h2 id="C">C</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.model.html#reemission.model.EmissionModel.calculate">calculate() (reemission.model.EmissionModel method)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission">CarbonDioxideEmission (class in reemission.emissions)</a>
+</li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.Catchment">Catchment (class in reemission.catchment)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#id5">catchment (reemission.emissions.Emission attribute)</a>, <a href="api/reemission.emissions.html#reemission.emissions.Emission.catchment">[1]</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.ns_catchment.html#id0">(reemission.ns_catchment.NSCatchmentCreator attribute)</a>, <a href="api/reemission.ns_catchment.html#reemission.ns_catchment.NSCatchmentCreator.catchment">[1]</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.input.html#reemission.input.Input.catchment_data">catchment_data (reemission.input.Input property)</a>
+</li>
+      <li><a href="api/reemission.auxiliary.html#reemission.auxiliary.cd_factor">cd_factor() (in module reemission.auxiliary)</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.ch4_preemission_factor">ch4_preemission_factor() (reemission.reservoir.Reservoir method)</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.check_geometry">check_geometry() (reemission.reservoir.Reservoir method)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.check_preimpoundment_area">check_preimpoundment_area() (in module reemission.emissions)</a>
+</li>
+      <li><a href="api/reemission.utils.html#reemission.utils.clean_folder">clean_folder() (in module reemission.utils)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.Climate">Climate (class in reemission.constants)</a>
+</li>
+      <li><a href="api/reemission.biogenic.html#id1">climate (reemission.biogenic.BiogenicFactors attribute)</a>, <a href="api/reemission.biogenic.html#reemission.biogenic.BiogenicFactors.climate">[1]</a>
+</li>
+      <li><a href="api/reemission.temperature.html#reemission.temperature.MonthlyTemperature.coldest">coldest (reemission.temperature.MonthlyTemperature property)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.compare_mean_depth">compare_mean_depth() (reemission.reservoir.Reservoir method)</a>
+</li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.config">config (in module reemission.catchment)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.emissions.html#id6">(reemission.emissions.Emission attribute)</a>, <a href="api/reemission.emissions.html#reemission.emissions.Emission.config">[1]</a>
+</li>
+        <li><a href="api/reemission.model.html#id1">(reemission.model.EmissionModel attribute)</a>, <a href="api/reemission.model.html#reemission.model.EmissionModel.config">[1]</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.presenter.html#id1">config_ini (reemission.presenter.ExcelWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.ExcelWriter.config_ini">[1]</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.presenter.html#id15">(reemission.presenter.JSONWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.JSONWriter.config_ini">[1]</a>
+</li>
+        <li><a href="api/reemission.presenter.html#id27">(reemission.presenter.LatexWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.config_ini">[1]</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.exceptions.html#reemission.exceptions.ConversionMethodUnknownException.conversion_method">conversion_method (reemission.exceptions.ConversionMethodUnknownException attribute)</a>
+</li>
+      <li><a href="api/reemission.exceptions.html#reemission.exceptions.ConversionMethodUnknownException">ConversionMethodUnknownException</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#id2">coordinates (reemission.reservoir.Reservoir attribute)</a>, <a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.coordinates">[1]</a>
+</li>
+      <li><a href="api/reemission.download.html#reemission.download.create_directory_tree">create_directory_tree() (in module reemission.download)</a>
+</li>
+      <li><a href="api/reemission.model.html#reemission.model.EmissionModel.create_exec_dictionary">create_exec_dictionary() (reemission.model.EmissionModel static method)</a>
+</li>
+      <li><a href="api/reemission.app_logger.html#reemission.app_logger.create_logger">create_logger() (in module reemission.app_logger)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.Landuse.CROPS">CROPS (reemission.constants.Landuse attribute)</a>
+</li>
+  </ul></td>
+  </tr>
+      </table>
+  
+  <h2 id="D">D</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.input.html#id0">data (reemission.input.Input attribute)</a>, <a href="api/reemission.input.html#reemission.input.Input.data">[1]</a>
+</li>
+      <li><a href="api/reemission.utils.html#reemission.utils.debug_on_exception">debug_on_exception() (in module reemission.utils)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.degassing_flux">degassing_flux() (reemission.emissions.MethaneEmission method)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.degassing_flux_int">degassing_flux_int() (reemission.emissions.MethaneEmission method)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.Biome.DESERTS">DESERTS (reemission.constants.Biome attribute)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.ExcelWriter.dict_data_to_df">dict_data_to_df() (reemission.presenter.ExcelWriter method)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.diffusion_flux">diffusion_flux() (reemission.emissions.CarbonDioxideEmission method)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.diffusion_flux">(reemission.emissions.MethaneEmission method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.diffusion_flux_int">diffusion_flux_int() (reemission.emissions.CarbonDioxideEmission method)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.diffusion_flux_int">(reemission.emissions.MethaneEmission method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.diffusion_flux_nonanthro">diffusion_flux_nonanthro() (reemission.emissions.CarbonDioxideEmission method)</a>
+</li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.Catchment.discharge">discharge (reemission.catchment.Catchment property)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.discharge">(reemission.reservoir.Reservoir property)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.Catchment.discharge_cumecs">discharge_cumecs (reemission.catchment.Catchment property)</a>
+</li>
+      <li><a href="api/reemission.document_compiler.html#reemission.document_compiler.BatchCompiler.document">document (reemission.document_compiler.BatchCompiler attribute)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.document">(reemission.presenter.LatexWriter attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.download.html#reemission.download.download_from_url">download_from_url() (in module reemission.download)</a>
+</li>
+  </ul></td>
+  </tr>
+      </table>
+  
+  <h2 id="E">E</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.ebullition_flux">ebullition_flux() (reemission.emissions.MethaneEmission method)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.ebullition_flux_int">ebullition_flux_int() (reemission.emissions.MethaneEmission method)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#id0">eff_temp (reemission.emissions.CarbonDioxideEmission attribute)</a>, <a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.eff_temp">[1]</a>
+</li>
+      <li><a href="api/reemission.temperature.html#reemission.temperature.MonthlyTemperature.eff_temp">eff_temp() (reemission.temperature.MonthlyTemperature method)</a>
+</li>
+      <li><a href="api/reemission.temperature.html#id0">eff_temp_coeffs (reemission.temperature.MonthlyTemperature attribute)</a>, <a href="api/reemission.temperature.html#reemission.temperature.MonthlyTemperature.eff_temp_coeffs">[1]</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.Emission">Emission (class in reemission.emissions)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.emission_factor">emission_factor() (reemission.emissions.MethaneEmission method)</a>
+</li>
+      <li><a href="api/reemission.model.html#reemission.model.EmissionModel">EmissionModel (class in reemission.model)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.enforce_unity_sum">enforce_unity_sum() (in module reemission.presenter)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.input.html#id1">enum_load_method (reemission.input.Input attribute)</a>, <a href="api/reemission.input.html#reemission.input.Input.enum_load_method">[1]</a>
+</li>
+      <li><a href="api/reemission.mixins.html#reemission.mixins.EnumGetterMixin">EnumGetterMixin (class in reemission.mixins)</a>
+</li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.EPS">EPS (in module reemission.catchment)</a>
+</li>
+      <li><a href="api/reemission.catchment.html#id3">etransp (reemission.catchment.Catchment attribute)</a>, <a href="api/reemission.catchment.html#reemission.catchment.Catchment.etransp">[1]</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.TrophicStatus.EUTROPHIC">EUTROPHIC (reemission.constants.TrophicStatus attribute)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.ExcelWriter">ExcelWriter (class in reemission.presenter)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.AssetConstructionStage.EXISTING">EXISTING (reemission.constants.AssetConstructionStage attribute)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.constants.html#reemission.constants.BuildStatus.EXISTING">(reemission.constants.BuildStatus attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.download.html#reemission.download.GDriveCachedFileDownloader.extract">extract (reemission.download.GDriveCachedFileDownloader attribute)</a>
+</li>
+  </ul></td>
+  </tr>
+      </table>
+  
+  <h2 id="F">F</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.factor">factor() (reemission.emissions.CarbonDioxideEmission method)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.emissions.html#reemission.emissions.Emission.factor">(reemission.emissions.Emission method)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.factor">(reemission.emissions.MethaneEmission method)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission.factor">(reemission.emissions.NitrousOxideEmission method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.download.html#reemission.download.file_valid">file_valid() (in module reemission.download)</a>
+</li>
+      <li><a href="api/reemission.utils.html#reemission.utils.find_enum_index">find_enum_index() (in module reemission.utils)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.ReservoirType.FLOOD_CONTROL">FLOOD_CONTROL (reemission.constants.ReservoirType attribute)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.Landuse.FOREST">FOREST (reemission.constants.Landuse attribute)</a>
+</li>
+      <li><a href="api/reemission.exceptions.html#reemission.exceptions.WrongSumOfAreasException.fractions">fractions (reemission.exceptions.WrongSumOfAreasException attribute)</a>
+</li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.Catchment.from_dict">from_dict() (reemission.catchment.Catchment class method)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.from_dict">(reemission.reservoir.Reservoir class method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.mixins.html#id0">from_key() (reemission.mixins.EnumGetterMixin class method)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.mixins.html#reemission.mixins.EnumGetterMixin.from_key">(reemission.mixins.EnumGetterMixin method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.mixins.html#id1">from_value() (reemission.mixins.EnumGetterMixin class method)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.mixins.html#reemission.mixins.EnumGetterMixin.from_value">(reemission.mixins.EnumGetterMixin method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.biogenic.html#reemission.biogenic.BiogenicFactors.fromdict">fromdict() (reemission.biogenic.BiogenicFactors class method)</a>
+</li>
+      <li><a href="api/reemission.input.html#reemission.input.Input.fromfile">fromfile() (reemission.input.Input class method)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.input.html#reemission.input.Inputs.fromfile">(reemission.input.Inputs class method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.Presenter.fromfiles">fromfiles() (reemission.presenter.Presenter class method)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.AssetConstructionStage.FUTURE">FUTURE (reemission.constants.AssetConstructionStage attribute)</a>
+</li>
+      <li><a href="api/reemission.download.html#reemission.download.GDriveFileDownloader.fuzzy">fuzzy (reemission.download.GDriveFileDownloader attribute)</a>
+</li>
+  </ul></td>
+  </tr>
+      </table>
+  
+  <h2 id="G">G</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.exceptions.html#reemission.exceptions.GasNotRecognizedException">GasNotRecognizedException</a>
+</li>
+      <li><a href="api/reemission.input.html#reemission.input.Input.gasses">gasses (reemission.input.Input property)</a>
+</li>
+      <li><a href="api/reemission.download.html#reemission.download.GDriveCachedFileDownloader">GDriveCachedFileDownloader (class in reemission.download)</a>
+</li>
+      <li><a href="api/reemission.download.html#reemission.download.GDriveDirDownloader">GDriveDirDownloader (class in reemission.download)</a>
+</li>
+      <li><a href="api/reemission.download.html#reemission.download.GDriveFileDownloader">GDriveFileDownloader (class in reemission.download)</a>
+</li>
+      <li><a href="api/reemission.document_compiler.html#reemission.document_compiler.BatchCompiler.generate_pdf">generate_pdf() (reemission.document_compiler.BatchCompiler method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.geometry">geometry() (reemission.presenter.LatexWriter static method)</a>
+</li>
+      <li><a href="api/reemission.biogenic.html#reemission.biogenic.BiogenicFactors.get_attributes">get_attributes() (reemission.biogenic.BiogenicFactors method)</a>
+</li>
+      <li><a href="api/reemission.ns_catchment.html#reemission.ns_catchment.NSCatchmentCreator.get_catchment">get_catchment() (reemission.ns_catchment.NSCatchmentCreator method)</a>
+</li>
+      <li><a href="api/reemission.utils.html#reemission.utils.get_folder_size">get_folder_size() (in module reemission.utils)</a>
+</li>
+      <li><a href="api/reemission.utils.html#reemission.utils.get_package_file">get_package_file() (in module reemission.utils)</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.global_radiance">global_radiance() (reemission.reservoir.Reservoir method)</a>
+</li>
+  </ul></td>
+  </tr>
+      </table>
+  
+  <h2 id="H">H</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.constants.html#reemission.constants.LanduseIntensity.HIGH">HIGH (reemission.constants.LanduseIntensity attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.constants.html#reemission.constants.ReservoirType.HP">HP (reemission.constants.ReservoirType attribute)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.TrophicStatus.HYPER_EUTROPHIC">HYPER_EUTROPHIC (reemission.constants.TrophicStatus attribute)</a>
+</li>
+  </ul></td>
+  </tr>
+      </table>
+  
+  <h2 id="I">I</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.catchment.html#reemission.catchment.Catchment.inflow_n_conc">inflow_n_conc() (reemission.catchment.Catchment method)</a>
+</li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.Catchment.inflow_p_conc">inflow_p_conc() (reemission.catchment.Catchment method)</a>
+</li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.Catchment.inflow_p_conc_gres">inflow_p_conc_gres() (reemission.catchment.Catchment method)</a>
+</li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.Catchment.inflow_p_conc_mcdowell">inflow_p_conc_mcdowell() (reemission.catchment.Catchment method)</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#id3">inflow_rate (reemission.reservoir.Reservoir attribute)</a>, <a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.inflow_rate">[1]</a>
+</li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.INI_FILE">INI_FILE (in module reemission.catchment)</a>
+</li>
+      <li><a href="api/reemission.input.html#reemission.input.Input">Input (class in reemission.input)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#id2">input_config (reemission.presenter.ExcelWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.ExcelWriter.input_config">[1]</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.presenter.html#id16">(reemission.presenter.JSONWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.JSONWriter.input_config">[1]</a>
+</li>
+        <li><a href="api/reemission.presenter.html#id28">(reemission.presenter.LatexWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.input_config">[1]</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.presenter.html#id3">input_df (reemission.presenter.ExcelWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.ExcelWriter.input_df">[1]</a>
+</li>
+      <li><a href="api/reemission.input.html#reemission.input.Inputs">Inputs (class in reemission.input)</a>
+</li>
+      <li><a href="api/reemission.input.html#id3">inputs (reemission.input.Inputs attribute)</a>, <a href="api/reemission.input.html#reemission.input.Inputs.inputs">[1]</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.model.html#id2">(reemission.model.EmissionModel attribute)</a>, <a href="api/reemission.model.html#reemission.model.EmissionModel.inputs">[1]</a>
+</li>
+        <li><a href="api/reemission.presenter.html#id4">(reemission.presenter.ExcelWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.ExcelWriter.inputs">[1]</a>
+</li>
+        <li><a href="api/reemission.presenter.html#id17">(reemission.presenter.JSONWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.JSONWriter.inputs">[1]</a>
+</li>
+        <li><a href="api/reemission.presenter.html#id29">(reemission.presenter.LatexWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.inputs">[1]</a>
+</li>
+        <li><a href="api/reemission.presenter.html#id38">(reemission.presenter.Presenter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.Presenter.inputs">[1]</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.presenter.html#id5">intern_vars (reemission.presenter.ExcelWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.ExcelWriter.intern_vars">[1]</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.presenter.html#id18">(reemission.presenter.JSONWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.JSONWriter.intern_vars">[1]</a>
+</li>
+        <li><a href="api/reemission.presenter.html#id30">(reemission.presenter.LatexWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.intern_vars">[1]</a>
+</li>
+        <li><a href="api/reemission.presenter.html#id39">(reemission.presenter.Presenter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.Presenter.intern_vars">[1]</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.presenter.html#id6">intern_vars_config (reemission.presenter.ExcelWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.ExcelWriter.intern_vars_config">[1]</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.presenter.html#id19">(reemission.presenter.JSONWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.JSONWriter.intern_vars_config">[1]</a>
+</li>
+        <li><a href="api/reemission.presenter.html#id31">(reemission.presenter.LatexWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.intern_vars_config">[1]</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.presenter.html#id7">intern_vars_df (reemission.presenter.ExcelWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.ExcelWriter.intern_vars_df">[1]</a>
+</li>
+      <li><a href="api/reemission.model.html#id3">internal (reemission.model.EmissionModel attribute)</a>, <a href="api/reemission.model.html#reemission.model.EmissionModel.internal">[1]</a>
+</li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.internals_config">internals_config (in module reemission.catchment)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.ReservoirType.IRRIGATION">IRRIGATION (reemission.constants.ReservoirType attribute)</a>
+</li>
+      <li><a href="api/reemission.utils.html#reemission.utils.is_directory">is_directory() (in module reemission.utils)</a>
+</li>
+      <li><a href="api/reemission.utils.html#reemission.utils.is_latex_installed">is_latex_installed() (in module reemission.utils)</a>
+</li>
+  </ul></td>
+  </tr>
+      </table>
+  
+  <h2 id="J">J</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.presenter.html#id20">json_dict (reemission.presenter.JSONWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.JSONWriter.json_dict">[1]</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.presenter.html#reemission.presenter.JSONWriter">JSONWriter (class in reemission.presenter)</a>
+</li>
+  </ul></td>
+  </tr>
+      </table>
+  
+  <h2 id="L">L</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.presenter.html#reemission.presenter.landcover_pie">landcover_pie() (in module reemission.presenter)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.Landuse">Landuse (class in reemission.constants)</a>
+</li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.Catchment.landuse_area">landuse_area() (reemission.catchment.Catchment method)</a>
+</li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.Catchment.landuse_area_ha">landuse_area_ha() (reemission.catchment.Catchment method)</a>
+</li>
+      <li><a href="api/reemission.biogenic.html#id2">landuse_intensity (reemission.biogenic.BiogenicFactors attribute)</a>, <a href="api/reemission.biogenic.html#reemission.biogenic.BiogenicFactors.landuse_intensity">[1]</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.LanduseIntensity">LanduseIntensity (class in reemission.constants)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.LatexWriter">LatexWriter (class in reemission.presenter)</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.latitude">latitude (reemission.reservoir.Reservoir property)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.littoral_area_frac">littoral_area_frac() (reemission.reservoir.Reservoir method)</a>
+</li>
+      <li><a href="api/reemission.utils.html#reemission.utils.load_csv">load_csv() (in module reemission.utils)</a>
+</li>
+      <li><a href="api/reemission.utils.html#reemission.utils.load_geojson">load_geojson() (in module reemission.utils)</a>
+</li>
+      <li><a href="api/reemission.utils.html#reemission.utils.load_json">load_json() (in module reemission.utils)</a>
+</li>
+      <li><a href="api/reemission.utils.html#reemission.utils.load_shape">load_shape() (in module reemission.utils)</a>
+</li>
+      <li><a href="api/reemission.utils.html#reemission.utils.load_toml">load_toml() (in module reemission.utils)</a>
+</li>
+      <li><a href="api/reemission.utils.html#reemission.utils.load_yaml">load_yaml() (in module reemission.utils)</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.longitude">longitude (reemission.reservoir.Reservoir property)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.LanduseIntensity.LOW">LOW (reemission.constants.LanduseIntensity attribute)</a>
+</li>
+  </ul></td>
+  </tr>
+      </table>
+  
+  <h2 id="M">M</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.reservoir.html#id4">max_depth (reemission.reservoir.Reservoir attribute)</a>, <a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.max_depth">[1]</a>
+</li>
+      <li><a href="api/reemission.download.html#reemission.download.GDriveCachedFileDownloader.md5">md5 (reemission.download.GDriveCachedFileDownloader attribute)</a>
+</li>
+      <li><a href="api/reemission.utils.html#reemission.utils.md5">md5() (in module reemission.utils)</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#id5">mean_depth (reemission.reservoir.Reservoir attribute)</a>, <a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.mean_depth">[1]</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.mean_ir">mean_ir (reemission.emissions.MethaneEmission attribute)</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#id6">mean_monthly_windspeed (reemission.reservoir.Reservoir attribute)</a>, <a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.mean_monthly_windspeed">[1]</a>
+</li>
+      <li><a href="api/reemission.catchment.html#id4">mean_olsen (reemission.catchment.Catchment attribute)</a>, <a href="api/reemission.catchment.html#reemission.catchment.Catchment.mean_olsen">[1]</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#id7">mean_radiance (reemission.reservoir.Reservoir attribute)</a>, <a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.mean_radiance">[1]</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.mean_radiance_lat">mean_radiance_lat() (reemission.reservoir.Reservoir method)</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#id8">mean_radiance_may_sept (reemission.reservoir.Reservoir attribute)</a>, <a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.mean_radiance_may_sept">[1]</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#id9">mean_radiance_nov_mar (reemission.reservoir.Reservoir attribute)</a>, <a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.mean_radiance_nov_mar">[1]</a>
+</li>
+      <li><a href="api/reemission.temperature.html#reemission.temperature.MonthlyTemperature.mean_warmest">mean_warmest() (reemission.temperature.MonthlyTemperature method)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.Biome.MEDFORESTS">MEDFORESTS (reemission.constants.Biome attribute)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.TrophicStatus.MESOTROPHIC">MESOTROPHIC (reemission.constants.TrophicStatus attribute)</a>
+</li>
+      <li><a href="api/reemission.exceptions.html#reemission.exceptions.GasNotRecognizedException.message">message (reemission.exceptions.GasNotRecognizedException attribute)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.exceptions.html#reemission.exceptions.WrongN2OModelError.message">(reemission.exceptions.WrongN2OModelError attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission">MethaneEmission (class in reemission.emissions)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.SoilType.MINERAL">MINERAL (reemission.constants.SoilType attribute)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#id11">model (reemission.emissions.NitrousOxideEmission attribute)</a>, <a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission.model">[1]</a>
+</li>
+      <li>
+    module
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.app_logger.html#module-reemission.app_logger">reemission.app_logger</a>
+</li>
+        <li><a href="api/reemission.auxiliary.html#module-reemission.auxiliary">reemission.auxiliary</a>
+</li>
+        <li><a href="api/reemission.biogenic.html#module-reemission.biogenic">reemission.biogenic</a>
+</li>
+        <li><a href="api/reemission.catchment.html#module-reemission.catchment">reemission.catchment</a>
+</li>
+        <li><a href="api/reemission.constants.html#module-reemission.constants">reemission.constants</a>
+</li>
+        <li><a href="api/reemission.document_compiler.html#module-reemission.document_compiler">reemission.document_compiler</a>
+</li>
+        <li><a href="api/reemission.download.html#module-reemission.download">reemission.download</a>
+</li>
+        <li><a href="api/reemission.emissions.html#module-reemission.emissions">reemission.emissions</a>
+</li>
+        <li><a href="api/reemission.exceptions.html#module-reemission.exceptions">reemission.exceptions</a>
+</li>
+        <li><a href="api/reemission.globals.html#module-reemission.globals">reemission.globals</a>
+</li>
+        <li><a href="api/reemission.input.html#module-reemission.input">reemission.input</a>
+</li>
+        <li><a href="api/reemission.main.html#module-reemission.main">reemission.main</a>
+</li>
+        <li><a href="api/reemission.mixins.html#module-reemission.mixins">reemission.mixins</a>
+</li>
+        <li><a href="api/reemission.model.html#module-reemission.model">reemission.model</a>
+</li>
+        <li><a href="api/reemission.ns_catchment.html#module-reemission.ns_catchment">reemission.ns_catchment</a>
+</li>
+        <li><a href="api/reemission.presenter.html#module-reemission.presenter">reemission.presenter</a>
+</li>
+        <li><a href="api/reemission.reservoir.html#module-reemission.reservoir">reemission.reservoir</a>
+</li>
+        <li><a href="api/reemission.temperature.html#module-reemission.temperature">reemission.temperature</a>
+</li>
+        <li><a href="api/reemission.utils.html#module-reemission.utils">reemission.utils</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.constants.html#reemission.constants.Biome.MONTANEGRASSLANDS">MONTANEGRASSLANDS (reemission.constants.Biome attribute)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#id9">monthly_temp (reemission.emissions.MethaneEmission attribute)</a>, <a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.monthly_temp">[1]</a>
+</li>
+      <li><a href="api/reemission.input.html#reemission.input.Input.monthly_temps">monthly_temps (reemission.input.Input property)</a>
+</li>
+      <li><a href="api/reemission.temperature.html#reemission.temperature.MonthlyTemperature">MonthlyTemperature (class in reemission.temperature)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.ReservoirType.MULTI">MULTI (reemission.constants.ReservoirType attribute)</a>
+</li>
+  </ul></td>
+  </tr>
+      </table>
+  
+  <h2 id="N">N</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.model.html#id4">n2o_model (reemission.model.EmissionModel attribute)</a>, <a href="api/reemission.model.html#reemission.model.EmissionModel.n2o_model">[1]</a>
+</li>
+      <li><a href="api/reemission.catchment.html#id5">name (reemission.catchment.Catchment attribute)</a>, <a href="api/reemission.catchment.html#reemission.catchment.Catchment.name">[1]</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.input.html#id2">(reemission.input.Input attribute)</a>, <a href="api/reemission.input.html#reemission.input.Input.name">[1]</a>
+</li>
+        <li><a href="api/reemission.reservoir.html#id10">(reemission.reservoir.Reservoir attribute)</a>, <a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.name">[1]</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.net_total">net_total() (reemission.emissions.CarbonDioxideEmission method)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission.nitrogen_downstream_conc">nitrogen_downstream_conc() (reemission.emissions.NitrousOxideEmission method)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission.nitrogen_downstream_load">nitrogen_downstream_load() (reemission.emissions.NitrousOxideEmission method)</a>
+</li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.Catchment.nitrogen_load">nitrogen_load() (reemission.catchment.Catchment method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission">NitrousOxideEmission (class in reemission.emissions)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.Landuse.NODATA">NODATA (reemission.constants.Landuse attribute)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.constants.html#reemission.constants.SoilType.NODATA">(reemission.constants.SoilType attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.constants.html#reemission.constants.TreatmentFactor.NONE">NONE (reemission.constants.TreatmentFactor attribute)</a>
+</li>
+      <li><a href="api/reemission.ns_catchment.html#reemission.ns_catchment.NSCatchmentCreator.ns_catchment_area">ns_catchment_area (reemission.ns_catchment.NSCatchmentCreator property)</a>
+</li>
+      <li><a href="api/reemission.ns_catchment.html#reemission.ns_catchment.NSCatchmentCreator">NSCatchmentCreator (class in reemission.ns_catchment)</a>
+</li>
+      <li><a href="api/reemission.temperature.html#reemission.temperature.MonthlyTemperature.number_months_above">number_months_above() (reemission.temperature.MonthlyTemperature method)</a>
+</li>
+      <li><a href="api/reemission.exceptions.html#reemission.exceptions.WrongAreaFractionsException.number_of_fractions">number_of_fractions (reemission.exceptions.WrongAreaFractionsException attribute)</a>
+</li>
+      <li><a href="api/reemission.exceptions.html#reemission.exceptions.WrongAreaFractionsException.number_of_landuses">number_of_landuses (reemission.exceptions.WrongAreaFractionsException attribute)</a>
+</li>
+  </ul></td>
+  </tr>
+      </table>
+  
+  <h2 id="O">O</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.constants.html#reemission.constants.TrophicStatus.OLIGOTROPHIC">OLIGOTROPHIC (reemission.constants.TrophicStatus attribute)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.SoilType.ORGANIC">ORGANIC (reemission.constants.SoilType attribute)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.Presenter.output">output() (reemission.presenter.Presenter method)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#id8">output_config (reemission.presenter.ExcelWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.ExcelWriter.output_config">[1]</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.presenter.html#id21">(reemission.presenter.JSONWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.JSONWriter.output_config">[1]</a>
+</li>
+        <li><a href="api/reemission.presenter.html#id32">(reemission.presenter.LatexWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.output_config">[1]</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.presenter.html#id9">output_df (reemission.presenter.ExcelWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.ExcelWriter.output_df">[1]</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.presenter.html#id10">output_file_path (reemission.presenter.ExcelWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.ExcelWriter.output_file_path">[1]</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.presenter.html#id22">(reemission.presenter.JSONWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.JSONWriter.output_file_path">[1]</a>
+</li>
+        <li><a href="api/reemission.presenter.html#id33">(reemission.presenter.LatexWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.output_file_path">[1]</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.model.html#id5">outputs (reemission.model.EmissionModel attribute)</a>, <a href="api/reemission.model.html#reemission.model.EmissionModel.outputs">[1]</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.presenter.html#id11">(reemission.presenter.ExcelWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.ExcelWriter.outputs">[1]</a>
+</li>
+        <li><a href="api/reemission.presenter.html#id23">(reemission.presenter.JSONWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.JSONWriter.outputs">[1]</a>
+</li>
+        <li><a href="api/reemission.presenter.html#id34">(reemission.presenter.LatexWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.outputs">[1]</a>
+</li>
+        <li><a href="api/reemission.presenter.html#id40">(reemission.presenter.Presenter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.Presenter.outputs">[1]</a>
+</li>
+      </ul></li>
+  </ul></td>
+  </tr>
+      </table>
+  
+  <h2 id="P">P</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.emissions.html#id1">p_calc_method (reemission.emissions.CarbonDioxideEmission attribute)</a>, <a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.p_calc_method">[1]</a>
+</li>
+      <li><a href="api/reemission.emissions.html#id12">p_export_model (reemission.emissions.NitrousOxideEmission attribute)</a>, <a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission.p_export_model">[1]</a>
+</li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.p_exports">p_exports (in module reemission.catchment)</a>
+</li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.Catchment.p_human_input_gres">p_human_input_gres() (reemission.catchment.Catchment method)</a>
+</li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.Catchment.p_input_gres">p_input_gres() (reemission.catchment.Catchment method)</a>
+</li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.Catchment.p_input_mcdowell">p_input_mcdowell() (reemission.catchment.Catchment method)</a>
+</li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.Catchment.p_land_input_gres">p_land_input_gres() (reemission.catchment.Catchment method)</a>
+</li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.p_loads_pop">p_loads_pop (in module reemission.catchment)</a>
+</li>
+      <li><a href="api/reemission.model.html#id6">p_model (reemission.model.EmissionModel attribute)</a>, <a href="api/reemission.model.html#reemission.model.EmissionModel.p_model">[1]</a>
+</li>
+      <li><a href="api/reemission.emissions.html#id2">par (reemission.emissions.CarbonDioxideEmission attribute)</a>, <a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.par">[1]</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.par">(reemission.emissions.MethaneEmission attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.presenter.html#id12">parameter_config (reemission.presenter.ExcelWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.ExcelWriter.parameter_config">[1]</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.presenter.html#id24">(reemission.presenter.JSONWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.JSONWriter.parameter_config">[1]</a>
+</li>
+        <li><a href="api/reemission.presenter.html#id35">(reemission.presenter.LatexWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.parameter_config">[1]</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.JSONWriter.parse_dict_data">parse_dict_data() (reemission.presenter.JSONWriter method)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.parse_landcover_composition">parse_landcover_composition() (in module reemission.presenter)</a>
+</li>
+      <li><a href="api/reemission.exceptions.html#reemission.exceptions.GasNotRecognizedException.permitted_gases">permitted_gases (reemission.exceptions.GasNotRecognizedException attribute)</a>
+</li>
+      <li><a href="api/reemission.exceptions.html#reemission.exceptions.WrongN2OModelError.permitted_models">permitted_models (reemission.exceptions.WrongN2OModelError attribute)</a>
+</li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.Catchment.phosphorus_load">phosphorus_load() (reemission.catchment.Catchment method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.constants.html#reemission.constants.BuildStatus.PLANNED">PLANNED (reemission.constants.BuildStatus attribute)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.plot_emission_bars">plot_emission_bars() (reemission.presenter.LatexWriter method)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.plot_landcover_piecharts">plot_landcover_piecharts() (reemission.presenter.LatexWriter method)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.plot_profile">plot_profile() (reemission.presenter.LatexWriter method)</a>
+</li>
+      <li><a href="api/reemission.catchment.html#id6">population (reemission.catchment.Catchment attribute)</a>, <a href="api/reemission.catchment.html#reemission.catchment.Catchment.population">[1]</a>
+</li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.Catchment.population_density">population_density (reemission.catchment.Catchment property)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.ReservoirType.POTABLE">POTABLE (reemission.constants.ReservoirType attribute)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.pre_impoundment">pre_impoundment() (reemission.emissions.CarbonDioxideEmission method)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.pre_impoundment">(reemission.emissions.MethaneEmission method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.emissions.html#id3">pre_impoundment_table (reemission.emissions.CarbonDioxideEmission attribute)</a>, <a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.pre_impoundment_table">[1]</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.pre_impoundment_table">(reemission.emissions.MethaneEmission attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.catchment.html#id7">precip (reemission.catchment.Catchment attribute)</a>, <a href="api/reemission.catchment.html#reemission.catchment.Catchment.precip">[1]</a>
+</li>
+      <li><a href="api/reemission.emissions.html#id7">preinund_area (reemission.emissions.Emission attribute)</a>, <a href="api/reemission.emissions.html#reemission.emissions.Emission.preinund_area">[1]</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.Presenter">Presenter (class in reemission.presenter)</a>
+</li>
+      <li><a href="api/reemission.model.html#id7">presenter (reemission.model.EmissionModel attribute)</a>, <a href="api/reemission.model.html#reemission.model.EmissionModel.presenter">[1]</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.TreatmentFactor.PRIMARY">PRIMARY (reemission.constants.TreatmentFactor attribute)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.profile">profile() (reemission.emissions.CarbonDioxideEmission method)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.emissions.html#reemission.emissions.Emission.profile">(reemission.emissions.Emission method)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.profile">(reemission.emissions.MethaneEmission method)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission.profile">(reemission.emissions.NitrousOxideEmission method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  </tr>
+      </table>
+  
+  <h2 id="Q">Q</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.q_bath_shape">q_bath_shape() (reemission.reservoir.Reservoir method)</a>
+</li>
+      <li><a href="api/reemission.download.html#reemission.download.GDriveCachedFileDownloader.quiet">quiet (reemission.download.GDriveCachedFileDownloader attribute)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.download.html#reemission.download.GDriveDirDownloader.quiet">(reemission.download.GDriveDirDownloader attribute)</a>
+</li>
+        <li><a href="api/reemission.download.html#reemission.download.GDriveFileDownloader.quiet">(reemission.download.GDriveFileDownloader attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  </tr>
+      </table>
+  
+  <h2 id="R">R</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.utils.html#reemission.utils.read_config">read_config() (in module reemission.utils)</a>
+</li>
+      <li><a href="api/reemission.utils.html#reemission.utils.read_table">read_table() (in module reemission.utils)</a>
+</li>
+      <li>
+    reemission.app_logger
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.app_logger.html#module-reemission.app_logger">module</a>
+</li>
+      </ul></li>
+      <li>
+    reemission.auxiliary
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.auxiliary.html#module-reemission.auxiliary">module</a>
+</li>
+      </ul></li>
+      <li>
+    reemission.biogenic
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.biogenic.html#module-reemission.biogenic">module</a>
+</li>
+      </ul></li>
+      <li>
+    reemission.catchment
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.catchment.html#module-reemission.catchment">module</a>
+</li>
+      </ul></li>
+      <li>
+    reemission.constants
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.constants.html#module-reemission.constants">module</a>
+</li>
+      </ul></li>
+      <li>
+    reemission.document_compiler
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.document_compiler.html#module-reemission.document_compiler">module</a>
+</li>
+      </ul></li>
+      <li>
+    reemission.download
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.download.html#module-reemission.download">module</a>
+</li>
+      </ul></li>
+      <li>
+    reemission.emissions
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.emissions.html#module-reemission.emissions">module</a>
+</li>
+      </ul></li>
+      <li>
+    reemission.exceptions
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.exceptions.html#module-reemission.exceptions">module</a>
+</li>
+      </ul></li>
+      <li>
+    reemission.globals
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.globals.html#module-reemission.globals">module</a>
+</li>
+      </ul></li>
+      <li>
+    reemission.input
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.input.html#module-reemission.input">module</a>
+</li>
+      </ul></li>
+      <li>
+    reemission.main
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.main.html#module-reemission.main">module</a>
+</li>
+      </ul></li>
+      <li>
+    reemission.mixins
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.mixins.html#module-reemission.mixins">module</a>
+</li>
+      </ul></li>
+      <li>
+    reemission.model
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.model.html#module-reemission.model">module</a>
+</li>
+      </ul></li>
+      <li>
+    reemission.ns_catchment
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.ns_catchment.html#module-reemission.ns_catchment">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li>
+    reemission.presenter
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.presenter.html#module-reemission.presenter">module</a>
+</li>
+      </ul></li>
+      <li>
+    reemission.reservoir
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.reservoir.html#module-reemission.reservoir">module</a>
+</li>
+      </ul></li>
+      <li>
+    reemission.temperature
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.temperature.html#module-reemission.temperature">module</a>
+</li>
+      </ul></li>
+      <li>
+    reemission.utils
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.utils.html#module-reemission.utils">module</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.download.html#reemission.download.GDriveDirDownloader.remaining_ok">remaining_ok (reemission.download.GDriveDirDownloader attribute)</a>
+</li>
+      <li><a href="api/reemission.exceptions.html#reemission.exceptions.replace_message">replace_message() (in module reemission.exceptions)</a>
+</li>
+      <li><a href="api/reemission.model.html#id8">report_title (reemission.model.EmissionModel attribute)</a>, <a href="api/reemission.model.html#reemission.model.EmissionModel.report_title">[1]</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir">Reservoir (class in reemission.reservoir)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#id8">reservoir (reemission.emissions.Emission attribute)</a>, <a href="api/reemission.emissions.html#reemission.emissions.Emission.reservoir">[1]</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.ns_catchment.html#id1">(reemission.ns_catchment.NSCatchmentCreator attribute)</a>, <a href="api/reemission.ns_catchment.html#reemission.ns_catchment.NSCatchmentCreator.reservoir">[1]</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.reservoir_conc">reservoir_conc() (reemission.reservoir.Reservoir method)</a>
+</li>
+      <li><a href="api/reemission.input.html#reemission.input.Input.reservoir_data">reservoir_data (reemission.input.Input property)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.reservoir_tn">reservoir_tn (reemission.emissions.CarbonDioxideEmission property)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.reservoir_tp">reservoir_tp (reemission.emissions.CarbonDioxideEmission property)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.ReservoirType">ReservoirType (class in reemission.constants)</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.residence_time">residence_time (reemission.reservoir.Reservoir property)</a>
+</li>
+      <li><a href="api/reemission.download.html#reemission.download.GDriveFileDownloader.resume">resume (reemission.download.GDriveFileDownloader attribute)</a>
+</li>
+      <li><a href="api/reemission.model.html#id9">ret_coeff (reemission.model.EmissionModel attribute)</a>, <a href="api/reemission.model.html#reemission.model.EmissionModel.ret_coeff">[1]</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.retention_coeff">retention_coeff() (reemission.reservoir.Reservoir method)</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.retention_coeff_emp">retention_coeff_emp (reemission.reservoir.Reservoir property)</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.retention_coeff_larsen">retention_coeff_larsen (reemission.reservoir.Reservoir property)</a>
+</li>
+      <li><a href="api/reemission.catchment.html#id8">riv_length (reemission.catchment.Catchment attribute)</a>, <a href="api/reemission.catchment.html#reemission.catchment.Catchment.riv_length">[1]</a>
+</li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.Catchment.river_area_before_impoundment">river_area_before_impoundment() (reemission.catchment.Catchment method)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.Writer.rollout">rollout() (reemission.presenter.Writer static method)</a>
+</li>
+      <li><a href="api/reemission.auxiliary.html#reemission.auxiliary.rollout_nested_list">rollout_nested_list() (in module reemission.auxiliary)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.Writer.round_parameter">round_parameter() (reemission.presenter.Writer static method)</a>
+</li>
+      <li><a href="api/reemission.main.html#reemission.main.run_emissions">run_emissions() (in module reemission.main)</a>
+</li>
+      <li><a href="api/reemission.catchment.html#id9">runoff (reemission.catchment.Catchment attribute)</a>, <a href="api/reemission.catchment.html#reemission.catchment.Catchment.runoff">[1]</a>
+</li>
+  </ul></td>
+  </tr>
+      </table>
+  
+  <h2 id="S">S</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.model.html#reemission.model.EmissionModel.save_results">save_results() (reemission.model.EmissionModel method)</a>
+</li>
+      <li><a href="api/reemission.utils.html#reemission.utils.save_return">save_return() (in module reemission.utils)</a>
+</li>
+      <li><a href="api/reemission.utils.html#reemission.utils.save_to_json">save_to_json() (in module reemission.utils)</a>
+</li>
+      <li><a href="api/reemission.auxiliary.html#reemission.auxiliary.scale_windspeed">scale_windspeed() (in module reemission.auxiliary)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.TreatmentFactor.SECONDARY">SECONDARY (reemission.constants.TreatmentFactor attribute)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.Landuse.SHRUBS">SHRUBS (reemission.constants.Landuse attribute)</a>
+</li>
+      <li><a href="api/reemission.catchment.html#id10">slope (reemission.catchment.Catchment attribute)</a>, <a href="api/reemission.catchment.html#reemission.catchment.Catchment.slope">[1]</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.Landuse.SNOW_ICE">SNOW_ICE (reemission.constants.Landuse attribute)</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#id11">soil_carbon (reemission.reservoir.Reservoir attribute)</a>, <a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.soil_carbon">[1]</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.biogenic.html#id3">soil_type (reemission.biogenic.BiogenicFactors attribute)</a>, <a href="api/reemission.biogenic.html#reemission.biogenic.BiogenicFactors.soil_type">[1]</a>
+</li>
+      <li><a href="api/reemission.catchment.html#id11">soil_wetness (reemission.catchment.Catchment attribute)</a>, <a href="api/reemission.catchment.html#reemission.catchment.Catchment.soil_wetness">[1]</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.SoilType">SoilType (class in reemission.constants)</a>
+</li>
+      <li><a href="api/reemission.utils.html#reemission.utils.split_path">split_path() (in module reemission.utils)</a>
+</li>
+      <li><a href="api/reemission.utils.html#reemission.utils.strip_double_quotes">strip_double_quotes() (in module reemission.utils)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.Climate.SUBTROPICAL">SUBTROPICAL (reemission.constants.Climate attribute)</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.surface_ch4_conc">surface_ch4_conc() (reemission.reservoir.Reservoir method)</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.surface_density">surface_density() (reemission.reservoir.Reservoir method)</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.surface_temperature">surface_temperature() (reemission.reservoir.Reservoir method)</a>
+</li>
+  </ul></td>
+  </tr>
+      </table>
+  
+  <h2 id="T">T</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.exceptions.html#reemission.exceptions.TableNotReadException.table">table (reemission.exceptions.TableNotReadException attribute)</a>
+</li>
+      <li><a href="api/reemission.exceptions.html#reemission.exceptions.TableNotReadException">TableNotReadException</a>
+</li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.TABLES">TABLES (in module reemission.catchment)</a>
+</li>
+      <li><a href="api/reemission.temperature.html#id1">temp_profile (reemission.temperature.MonthlyTemperature attribute)</a>, <a href="api/reemission.temperature.html#reemission.temperature.MonthlyTemperature.temp_profile">[1]</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.Climate.TEMPERATE">TEMPERATE (reemission.constants.Climate attribute)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.Biome.TEMPERATEBROADLEAFANDMIXED">TEMPERATEBROADLEAFANDMIXED (reemission.constants.Biome attribute)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.Biome.TEMPERATECONIFER">TEMPERATECONIFER (reemission.constants.Biome attribute)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.Biome.TEMPERATEGRASSLANDS">TEMPERATEGRASSLANDS (reemission.constants.Biome attribute)</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#id12">temperature (reemission.reservoir.Reservoir attribute)</a>, <a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.temperature">[1]</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.TreatmentFactor.TERTIARY">TERTIARY (reemission.constants.TreatmentFactor attribute)</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.thermocline_depth">thermocline_depth() (reemission.reservoir.Reservoir method)</a>
+</li>
+      <li><a href="api/reemission.utils.html#reemission.utils.timeit">timeit() (in module reemission.utils)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#id13">title (reemission.presenter.ExcelWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.ExcelWriter.title">[1]</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.presenter.html#id25">(reemission.presenter.JSONWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.JSONWriter.title">[1]</a>
+</li>
+        <li><a href="api/reemission.presenter.html#id36">(reemission.presenter.LatexWriter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.title">[1]</a>
+</li>
+        <li><a href="api/reemission.presenter.html#id41">(reemission.presenter.Presenter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.Presenter.title">[1]</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.tn_coeff_table">tn_coeff_table (in module reemission.catchment)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission.tn_fixation_load">tn_fixation_load() (reemission.emissions.NitrousOxideEmission method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.biogenic.html#reemission.biogenic.BiogenicFactors.todict">todict() (reemission.biogenic.BiogenicFactors method)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.total_emission_per_year">total_emission_per_year() (reemission.emissions.CarbonDioxideEmission method)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.emissions.html#reemission.emissions.Emission.total_emission_per_year">(reemission.emissions.Emission method)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.total_emission_per_year">(reemission.emissions.MethaneEmission method)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission.total_emission_per_year">(reemission.emissions.NitrousOxideEmission method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.total_lifetime_emission">total_lifetime_emission() (reemission.emissions.CarbonDioxideEmission method)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.emissions.html#reemission.emissions.Emission.total_lifetime_emission">(reemission.emissions.Emission method)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.MethaneEmission.total_lifetime_emission">(reemission.emissions.MethaneEmission method)</a>
+</li>
+        <li><a href="api/reemission.emissions.html#reemission.emissions.NitrousOxideEmission.total_lifetime_emission">(reemission.emissions.NitrousOxideEmission method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/reemission.catchment.html#reemission.catchment.tp_coeff_table">tp_coeff_table (in module reemission.catchment)</a>
+</li>
+      <li><a href="api/reemission.biogenic.html#id4">treatment_factor (reemission.biogenic.BiogenicFactors attribute)</a>, <a href="api/reemission.biogenic.html#reemission.biogenic.BiogenicFactors.treatment_factor">[1]</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.TreatmentFactor">TreatmentFactor (class in reemission.constants)</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.trophic_status">trophic_status() (reemission.reservoir.Reservoir method)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.TrophicStatus">TrophicStatus (class in reemission.constants)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.Climate.TROPICAL">TROPICAL (reemission.constants.Climate attribute)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.Biome.TROPICALDRYBROADFLEAF">TROPICALDRYBROADFLEAF (reemission.constants.Biome attribute)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.Biome.TROPICALGRASSLANDS">TROPICALGRASSLANDS (reemission.constants.Biome attribute)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.Biome.TROPICALMOISTBROADLEAF">TROPICALMOISTBROADLEAF (reemission.constants.Biome attribute)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.Biome.TUNDRA">TUNDRA (reemission.constants.Biome attribute)</a>
+</li>
+  </ul></td>
+  </tr>
+      </table>
+  
+  <h2 id="U">U</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.constants.html#reemission.constants.Climate.UNKNOWN">UNKNOWN (reemission.constants.Climate attribute)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.constants.html#reemission.constants.ReservoirType.UNKNOWN">(reemission.constants.ReservoirType attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.constants.html#reemission.constants.Landuse.URBAN">URBAN (reemission.constants.Landuse attribute)</a>
+</li>
+      <li><a href="api/reemission.download.html#reemission.download.URL_Downloader">URL_Downloader (class in reemission.download)</a>
+</li>
+      <li><a href="api/reemission.emissions.html#id4">use_red_area (reemission.emissions.CarbonDioxideEmission attribute)</a>, <a href="api/reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.use_red_area">[1]</a>
+</li>
+  </ul></td>
+  </tr>
+      </table>
+  
+  <h2 id="V">V</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.utils.html#reemission.utils.validate">validate() (in module reemission.utils)</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.validate_attributes">validate_attributes() (reemission.reservoir.Reservoir method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.reservoir.html#id13">volume (reemission.reservoir.Reservoir attribute)</a>, <a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.volume">[1]</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.volume_km3">volume_km3 (reemission.reservoir.Reservoir property)</a>
+</li>
+  </ul></td>
+  </tr>
+      </table>
+  
+  <h2 id="W">W</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.wat_area_frac_pre">wat_area_frac_pre (reemission.reservoir.Reservoir property)</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.Landuse.WATER">WATER (reemission.constants.Landuse attribute)</a>
+</li>
+      <li><a href="api/reemission.auxiliary.html#reemission.auxiliary.water_density">water_density() (in module reemission.auxiliary)</a>
+</li>
+      <li><a href="api/reemission.reservoir.html#id14">water_intake_depth (reemission.reservoir.Reservoir attribute)</a>, <a href="api/reemission.reservoir.html#reemission.reservoir.Reservoir.water_intake_depth">[1]</a>
+</li>
+      <li><a href="api/reemission.constants.html#reemission.constants.Landuse.WETLANDS">WETLANDS (reemission.constants.Landuse attribute)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.ExcelWriter.write">write() (reemission.presenter.ExcelWriter method)</a>
+
+      <ul style="list-style-type:none">
+        <li><a href="api/reemission.presenter.html#reemission.presenter.JSONWriter.write">(reemission.presenter.JSONWriter method)</a>
+</li>
+        <li><a href="api/reemission.presenter.html#reemission.presenter.LatexWriter.write">(reemission.presenter.LatexWriter method)</a>
+</li>
+        <li><a href="api/reemission.presenter.html#reemission.presenter.Writer.write">(reemission.presenter.Writer method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.presenter.html#reemission.presenter.Writer.write_par_to_dict">write_par_to_dict() (reemission.presenter.Writer static method)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#reemission.presenter.Writer">Writer (class in reemission.presenter)</a>
+</li>
+      <li><a href="api/reemission.presenter.html#id42">writers (reemission.presenter.Presenter attribute)</a>, <a href="api/reemission.presenter.html#reemission.presenter.Presenter.writers">[1]</a>
+</li>
+      <li><a href="api/reemission.exceptions.html#reemission.exceptions.WrongAreaFractionsException">WrongAreaFractionsException</a>
+</li>
+      <li><a href="api/reemission.exceptions.html#reemission.exceptions.WrongN2OModelError">WrongN2OModelError</a>
+</li>
+      <li><a href="api/reemission.exceptions.html#reemission.exceptions.WrongSumOfAreasException">WrongSumOfAreasException</a>
+</li>
+  </ul></td>
+  </tr>
+      </table>
+  
+  <h2 id="Y">Y</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul style="margin-left:0;list-style-type:none">
+      <li><a href="api/reemission.input.html#reemission.input.Input.year_vector">year_vector (reemission.input.Input property)</a>
+</li>
+  </ul></td>
+  </tr>
+      </table>
+  
+
+</div><div class="flex justify-between items-center pt-6 mt-12 border-t border-border gap-4">
+</div></div>
+<aside id="right-sidebar" class="hidden text-sm xl:block">
+<div class="sticky top-16 -mt-10 max-h-[calc(var(--vh)-4rem)] overflow-y-auto pt-6 space-y-2">
+<a class="pt-2 block text-muted-foreground no-underline transition-colors hover:text-foreground focus-visible:outline-offset-[-1px]" href="#_">_</a><a class="pt-2 block text-muted-foreground no-underline transition-colors hover:text-foreground focus-visible:outline-offset-[-1px]" href="#A">A</a><a class="pt-2 block text-muted-foreground no-underline transition-colors hover:text-foreground focus-visible:outline-offset-[-1px]" href="#B">B</a><a class="pt-2 block text-muted-foreground no-underline transition-colors hover:text-foreground focus-visible:outline-offset-[-1px]" href="#C">C</a><a class="pt-2 block text-muted-foreground no-underline transition-colors hover:text-foreground focus-visible:outline-offset-[-1px]" href="#D">D</a><a class="pt-2 block text-muted-foreground no-underline transition-colors hover:text-foreground focus-visible:outline-offset-[-1px]" href="#E">E</a><a class="pt-2 block text-muted-foreground no-underline transition-colors hover:text-foreground focus-visible:outline-offset-[-1px]" href="#F">F</a><a class="pt-2 block text-muted-foreground no-underline transition-colors hover:text-foreground focus-visible:outline-offset-[-1px]" href="#G">G</a><a class="pt-2 block text-muted-foreground no-underline transition-colors hover:text-foreground focus-visible:outline-offset-[-1px]" href="#H">H</a><a class="pt-2 block text-muted-foreground no-underline transition-colors hover:text-foreground focus-visible:outline-offset-[-1px]" href="#I">I</a><a class="pt-2 block text-muted-foreground no-underline transition-colors hover:text-foreground focus-visible:outline-offset-[-1px]" href="#J">J</a><a class="pt-2 block text-muted-foreground no-underline transition-colors hover:text-foreground focus-visible:outline-offset-[-1px]" href="#L">L</a><a class="pt-2 block text-muted-foreground no-underline transition-colors hover:text-foreground focus-visible:outline-offset-[-1px]" href="#M">M</a><a class="pt-2 block text-muted-foreground no-underline transition-colors hover:text-foreground focus-visible:outline-offset-[-1px]" href="#N">N</a><a class="pt-2 block text-muted-foreground no-underline transition-colors hover:text-foreground focus-visible:outline-offset-[-1px]" href="#O">O</a><a class="pt-2 block text-muted-foreground no-underline transition-colors hover:text-foreground focus-visible:outline-offset-[-1px]" href="#P">P</a><a class="pt-2 block text-muted-foreground no-underline transition-colors hover:text-foreground focus-visible:outline-offset-[-1px]" href="#Q">Q</a><a class="pt-2 block text-muted-foreground no-underline transition-colors hover:text-foreground focus-visible:outline-offset-[-1px]" href="#R">R</a><a class="pt-2 block text-muted-foreground no-underline transition-colors hover:text-foreground focus-visible:outline-offset-[-1px]" href="#S">S</a><a class="pt-2 block text-muted-foreground no-underline transition-colors hover:text-foreground focus-visible:outline-offset-[-1px]" href="#T">T</a><a class="pt-2 block text-muted-foreground no-underline transition-colors hover:text-foreground focus-visible:outline-offset-[-1px]" href="#U">U</a><a class="pt-2 block text-muted-foreground no-underline transition-colors hover:text-foreground focus-visible:outline-offset-[-1px]" href="#V">V</a><a class="pt-2 block text-muted-foreground no-underline transition-colors hover:text-foreground focus-visible:outline-offset-[-1px]" href="#W">W</a><a class="pt-2 block text-muted-foreground no-underline transition-colors hover:text-foreground focus-visible:outline-offset-[-1px]" href="#Y">Y</a>
+</div>
+</aside>
+        </main>
+      </div>
+    </div><footer class="py-6 border-t border-border md:py-0">
+    <div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+      <div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
+        <p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2024, Tomasz Janus, University of Manchester, United Kingdom&nbsp;Built with <a class="font-medium underline underline-offset-4"
+    href="https://www.sphinx-doc.org"
+    rel="noreferrer">Sphinx 7.3.7</a></p>
+</div>
+</div>
+</footer>
+  </div>
+  
+    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/toggleprompt.js?v=5801b3bb"></script>
+    <script src="_static/tabs.js?v=3030b3cb"></script>
+    <script defer="defer" src="_static/theme.js?v=e82a16a3"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+  
+</body>
+</html>

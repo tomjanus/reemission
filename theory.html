@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html :class="{'dark': darkMode === 'dark' || (darkMode === 'system' &amp;&amp; window.matchMedia('(prefers-color-scheme: dark)').matches)}" class="scroll-smooth" data-content_root="./" lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') || localStorage.setItem('darkMode', 'system'), activeSection: '' }" x-init="$watch('darkMode', val =&gt; localStorage.setItem('darkMode', val))">
+<head>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta charset="utf-8"/>
+<meta content="white" media="(prefers-color-scheme: light)" name="theme-color"/>
+<meta content="black" media="(prefers-color-scheme: dark)" name="theme-color"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Theoretical Background | ReEmission 1.0.0 documentation</title>
+<meta content="Theoretical Background | ReEmission 1.0.0 documentation" property="og:title"/>
+<meta content="Theoretical Background | ReEmission 1.0.0 documentation" name="twitter:title"/>
+<link href="_static/pygments.css?v=c842c44c" rel="stylesheet" type="text/css"/>
+<link href="_static/theme.css?v=ecdfb4fc" rel="stylesheet" type="text/css"/>
+<link href="_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="_static/plot_directive.css" rel="stylesheet" type="text/css"/>
+<link href="_static/tabs.css?v=a5c4661c" rel="stylesheet" type="text/css"/>
+<link href="search.html" rel="search" title="Search"/>
+<link href="genindex.html" rel="index" title="Index"/>
+<link href="install.html" rel="next" title="Installing RE-Emission"/>
+<link href="introduction.html" rel="prev" title="About the Library"/>
+<script>
+    <!-- Prevent Flash of wrong theme -->
+      const userPreference = localStorage.getItem('darkMode');
+      let mode;
+      if (userPreference === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        mode = 'dark';
+        document.documentElement.classList.add('dark');
+      } else {
+        mode = 'light';
+      }
+      if (!userPreference) {localStorage.setItem('darkMode', mode)}
+    </script>
+</head>
+<body :class="{ 'overflow-hidden': showSidebar }" class="min-h-screen font-sans antialiased bg-background text-foreground" x-data="{ showSidebar: false }">
+<div @click.self="showSidebar = false" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" x-cloak="" x-show="showSidebar"></div><div class="relative flex flex-col min-h-screen" id="page"><a class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100" href="#content">
+      Skip to content
+    </a><header class="sticky top-0 z-40 w-full border-b shadow-sm border-border supports-backdrop-blur:bg-background/60 bg-background/95 backdrop-blur"><div class="container flex items-center h-14">
+<div class="hidden mr-4 md:flex">
+<a class="flex items-center mr-6" href="index.html"><span class="hidden font-bold sm:inline-block text-clip whitespace-nowrap">ReEmission 1.0.0 documentation</span>
+</a></div><button @click="showSidebar = true" class="inline-flex items-center justify-center h-10 px-0 py-2 mr-2 text-base font-medium transition-colors rounded-md hover:text-accent-foreground hover:bg-transparent md:hidden" type="button">
+<svg aria-hidden="true" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M152.587 825.087q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440Zm0-203.587q-19.152 0-32.326-13.174T107.087 576q0-19.152 13.174-32.326t32.326-13.174h320q19.152 0 32.326 13.174T518.087 576q0 19.152-13.174 32.326T472.587 621.5h-320Zm0-203.587q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440ZM708.913 576l112.174 112.174q12.674 12.674 12.674 31.826t-12.674 31.826Q808.413 764.5 789.261 764.5t-31.826-12.674l-144-144Q600 594.391 600 576t13.435-31.826l144-144q12.674-12.674 31.826-12.674t31.826 12.674q12.674 12.674 12.674 31.826t-12.674 31.826L708.913 576Z"></path>
+</svg>
+<span class="sr-only">Toggle navigation menu</span>
+</button>
+<div class="flex items-center justify-between flex-1 space-x-2 sm:space-x-4 md:justify-end">
+<div class="flex-1 w-full md:w-auto md:flex-none"><form @keydown.k.window.meta="$refs.search.focus()" action="search.html" class="relative flex items-center group" id="searchbox" method="get">
+<input aria-label="Search the docs" class="inline-flex items-center font-medium transition-colors bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background border border-input hover:bg-accent focus:bg-accent hover:text-accent-foreground focus:text-accent-foreground hover:placeholder-accent-foreground py-2 px-4 relative h-9 w-full justify-start rounded-[0.5rem] text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64" id="search-input" name="q" placeholder="Search ..." type="search" x-ref="search"/>
+<kbd class="pointer-events-none absolute right-1.5 top-2 hidden h-5 select-none text-muted-foreground items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex group-hover:bg-accent group-hover:text-accent-foreground">
+<span class="text-xs">⌘</span>
+    K
+  </kbd>
+</form>
+</div>
+<nav class="flex items-center space-x-1">
+<button @click="darkMode = darkMode === 'light' ? 'dark' : 'light'" aria-label="Color theme switcher" class="relative inline-flex items-center justify-center px-0 text-sm font-medium transition-colors rounded-md hover:bg-accent hover:text-accent-foreground h-9 w-9" type="button">
+<svg class="absolute transition-all scale-100 rotate-0 dark:-rotate-90 dark:scale-0" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 685q45.456 0 77.228-31.772Q589 621.456 589 576q0-45.456-31.772-77.228Q525.456 467 480 467q-45.456 0-77.228 31.772Q371 530.544 371 576q0 45.456 31.772 77.228Q434.544 685 480 685Zm0 91q-83 0-141.5-58.5T280 576q0-83 58.5-141.5T480 376q83 0 141.5 58.5T680 576q0 83-58.5 141.5T480 776ZM80 621.5q-19.152 0-32.326-13.174T34.5 576q0-19.152 13.174-32.326T80 530.5h80q19.152 0 32.326 13.174T205.5 576q0 19.152-13.174 32.326T160 621.5H80Zm720 0q-19.152 0-32.326-13.174T754.5 576q0-19.152 13.174-32.326T800 530.5h80q19.152 0 32.326 13.174T925.5 576q0 19.152-13.174 32.326T880 621.5h-80Zm-320-320q-19.152 0-32.326-13.174T434.5 256v-80q0-19.152 13.174-32.326T480 130.5q19.152 0 32.326 13.174T525.5 176v80q0 19.152-13.174 32.326T480 301.5Zm0 720q-19.152 0-32.326-13.17Q434.5 995.152 434.5 976v-80q0-19.152 13.174-32.326T480 850.5q19.152 0 32.326 13.174T525.5 896v80q0 19.152-13.174 32.33-13.174 13.17-32.326 13.17ZM222.174 382.065l-43-42Q165.5 327.391 166 308.239t13.174-33.065q13.435-13.674 32.587-13.674t32.065 13.674l42.239 43q12.674 13.435 12.555 31.706-.12 18.272-12.555 31.946-12.674 13.674-31.445 13.413-18.772-.261-32.446-13.174Zm494 494.761-42.239-43q-12.674-13.435-12.674-32.087t12.674-31.565Q686.609 756.5 705.38 757q18.772.5 32.446 13.174l43 41.761Q794.5 824.609 794 843.761t-13.174 33.065Q767.391 890.5 748.239 890.5t-32.065-13.674Zm-42-494.761Q660.5 369.391 661 350.62q.5-18.772 13.174-32.446l41.761-43Q728.609 261.5 747.761 262t33.065 13.174q13.674 13.435 13.674 32.587t-13.674 32.065l-43 42.239q-13.435 12.674-31.706 12.555-18.272-.12-31.946-12.555Zm-495 494.761Q165.5 863.391 165.5 844.239t13.674-32.065l43-42.239q13.435-12.674 32.087-12.674t31.565 12.674Q299.5 782.609 299 801.38q-.5 18.772-13.174 32.446l-41.761 43Q231.391 890.5 212.239 890t-33.065-13.174ZM480 576Z"></path>
+</svg>
+<svg class="absolute transition-all scale-0 rotate-90 dark:rotate-0 dark:scale-100" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 936q-151 0-255.5-104.5T120 576q0-138 90-239.5T440 218q25-3 39 18t-1 44q-17 26-25.5 55t-8.5 61q0 90 63 153t153 63q31 0 61.5-9t54.5-25q21-14 43-1.5t19 39.5q-14 138-117.5 229T480 936Zm0-80q88 0 158-48.5T740 681q-20 5-40 8t-40 3q-123 0-209.5-86.5T364 396q0-20 3-40t8-40q-78 32-126.5 102T200 576q0 116 82 198t198 82Zm-10-270Z"></path>
+</svg>
+</button>
+</nav>
+</div>
+</div>
+</header>
+<div class="flex-1"><div class="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10"><aside :aria-hidden="!showSidebar" :class="{ 'translate-x-0': showSidebar }" class="fixed inset-y-0 left-0 md:top-14 z-50 md:z-30 bg-background md:bg-transparent transition-all duration-100 -translate-x-full md:translate-x-0 ml-0 p-6 md:p-0 md:-ml-2 md:h-[calc(100vh-3.5rem)] w-5/6 md:w-full shrink-0 overflow-y-auto border-r border-border md:sticky" id="left-sidebar">
+<a class="!justify-start text-sm md:!hidden bg-background" href="index.html"><span class="font-bold text-clip whitespace-nowrap">ReEmission 1.0.0 documentation</span>
+</a>
+<div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
+<div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">About the Library</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Theoretical Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installing RE-Emission</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demo.html">Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="json.html">JSON file format description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reporting.html">Reporting Calculation Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geocaret_integration.html">Integration with GeoCARET</a></li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="api/reemission.html">Python API reference<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.model.html">Model (Main)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.input.html">Input Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.reservoir.html">Reservoir Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.catchment.html">Catchment Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.ns_catchment.html">Post-impoundment catchment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.emissions.html">Emissions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.temperature.html">MonthlyTemperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.biogenic.html">Biogenic Factors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.profile.html">Emission Profile Calculator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.presenter.html">Presenter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.utils.html">Utility functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.auxiliary.html">Auxiliary functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.constants.html">Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.mixins.html">Mixins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.document_compiler.html">Document <span class="math notranslate nohighlight">\(\LaTeX\)</span> Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.exceptions.html">Custom Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.app_logger.html">App Logger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.download.html">External Data Downloader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.globals.html">Global variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.main.html">Main</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+</ul>
+</nav>
+</div>
+</div>
+<button @click="showSidebar = false" class="absolute md:hidden right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100" type="button">
+<svg class="h-4 w-4" fill="currentColor" height="24" stroke="none" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 632 284 828q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536 576l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480 632Z"></path>
+</svg>
+</button>
+</aside>
+<main class="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
+<div class="w-full min-w-0 mx-auto">
+<nav aria-label="breadcrumbs" class="flex items-center mb-4 space-x-1 text-sm text-muted-foreground">
+<a class="overflow-hidden text-ellipsis whitespace-nowrap hover:text-foreground" href="index.html">
+<span class="hidden md:inline">ReEmission 1.0.0 documentation</span>
+<svg aria-label="Home" class="md:hidden" fill="currentColor" height="18" stroke="none" viewbox="0 96 960 960" width="18" xmlns="http://www.w3.org/2000/svg">
+<path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z"></path>
+</svg>
+</a>
+<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">Theoretical Background</span>
+</nav>
+<div id="content" role="main">
+<section id="theoretical-background">
+<h1>Theoretical Background</h1>
+<section id="contribution-of-reservoirs-to-global-emissions">
+<span id="id1"></span><h2>Contribution of Reservoirs to Global Emissions</h2>
+<p>Reservoirs contribute significantly to the global emissions of carbon dioxide (CO<span class="math notranslate nohighlight">\(_2\)</span>), methane (CH<span class="math notranslate nohighlight">\(_4\)</span>), and nitrous oxide (N<span class="math notranslate nohighlight">\(_2\)</span>O).
+Recent estimates place global reservoir greenhouse gas (GHG) emissions at approximately ∼1.076 PgCO<span class="math notranslate nohighlight">\(_{2e}\)</span>/year (<span id="id2">Harrison <em>et al.</em> [<a class="reference internal" href="#id20" title="John A. Harrison, Yves T. Prairie, Sara Mercier-Blais, and Cynthia Soued. Year-2020 Global Distribution and Pathways of Reservoir Methane and Carbon Dioxide Emissions According to the Greenhouse Gas From Reservoirs (G-res) Model. Global Biogeochemical Cycles, 35(6):e2020GB006888, 2021. e2020GB006888 2020GB006888. URL: https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2020GB006888, arXiv:https://agupubs.onlinelibrary.wiley.com/doi/pdf/10.1029/2020GB006888, doi:https://doi.org/10.1029/2020GB006888.">1</a>]</span>) - a third of the emissions of the whole of the European Union in 2022.
+According to <span id="id3">Soued <em>et al.</em> [<a class="reference internal" href="#id25" title="Cynthia Soued, John A. Harrison, Sara Mercier-Blais, and Yves T. Prairie. Reservoir CO2 and CH4 emissions and their climate impact over the period 1900–2060. Nature Geoscience, 15(9):700-705, Sep 2022. URL: https://doi.org/10.1038/s41561-022-01004-2, doi:10.1038/s41561-022-01004-2.">2</a>]</span>, reservoirs accounted for 5.2% of CH<span class="math notranslate nohighlight">\(_4\)</span> and 0.2% of CO<span class="math notranslate nohighlight">\(_2\)</span> anthropogenic emissions in 2022, with a climate impact comparable to the aviation sector and about <strong>2% of global man-made greenhouse gas emissions</strong>.</p>
+</section>
+<section id="global-carbon-cycle">
+<span id="id4"></span><h2>Global Carbon Cycle</h2>
+<p>The Global Carbon Cycle describes the pathways of greenhouse gas (GHG) fluxes between different parts of the land, water, man-made infrastructure, and the atmosphere. These fluxes determine the equilibrium concentrations of GHGs in the atmosphere, which in turn drive the Earth’s climate.</p>
+<p>Reservoirs are integral to the Global Carbon Cycle and are interlinked with other components involved in carbon production and sequestration, such as natural landscapes, including moving and standing water bodies, and landscapes transformed by human activity. The latter includes land use changes due to agriculture, farming, urbanization, and more. These interconnections make it challenging to quantify reservoir emissions, as distinguishing between emissions directly attributable to reservoir creation (<span id="id5">Prairie <em>et al.</em> [<a class="reference internal" href="#id22" title="Yves T. Prairie, Jukka Alm, Jake Beaulieu, Nathan Barros, Tom Battin, Jonathan Cole, Paul del Giorgio, Tonya DelSontro, Frédéric Guérin, Atle Harby, John Harrison, Sara Mercier-Blais, Dominique Serça, Sebastian Sobek, and Dominic Vachon. Greenhouse Gas Emissions from Freshwater Reservoirs: What Does the Atmosphere See? Ecosystems, 21(5):1058-1071, Aug 2018. URL: https://doi.org/10.1007/s10021-017-0198-9, doi:10.1007/s10021-017-0198-9.">3</a>]</span>) and the natural emissions of the landscape is intrinsicly difficult. It is also challenging to quantify the portion of emissions elevated by human activity, such as nutrient exports to aquatic systems, specifically linked to reservoir creation versus what would have occurred in unaltered water bodies, albeit over different time scales and distances (see <a class="reference internal" href="#displaced-emissions">Displaced Emissions</a>).</p>
+<p>Understanding the natural and anthropogenic GHG fluxes of reservoirs is essential for appropriate quantification of the Global Carbon Cycle driving the climate change.</p>
+<a class="reference internal image-reference" href="_images/CarbonCycle_Revised_1200px.jpg"><img alt="Global Carbon Cycle" src="_images/CarbonCycle_Revised_1200px.jpg" style="width: 100%;"/>
+</a>
+<p><strong>Global Carbon Cycle</strong>, Source: <a class="reference external" href="https://www.usgs.gov/media/images/usgs-carbon-cycle">https://www.usgs.gov/media/images/usgs-carbon-cycle</a>, Created by: Alison Mims</p>
+</section>
+<section id="why-reservoirs-emit-greenhouse-gases">
+<h2>Why Reservoirs Emit Greenhouse Gases</h2>
+<p>Reservoirs alter the carbon cycle of the natural landscape, directly leading to net greenhouse gas (GHG) emissions.</p>
+<p>Following the impoundment, the river is transformed into a standing pool of water with a longer residence time and greater depth. This allows various biochemical and physical processes to occur within the reservoir, leading to the production of greenhouse gases.</p>
+<p>When a landscape is flooded, the natural emissions and pre-impoundment state are replaced by a body of water containing organic matter from the flooded soil and vegetation. This organic matter decomposes more rapidly in the aquatic environment, increasing the GHG stock in the water column, which is then released into the atmosphere through various physicochemical mechanisms - see <a class="reference internal" href="#reservoir-emission-pathways">Reservoir Emission Pathways</a>.</p>
+<p>Reservoirs often stratify into layers (strata) with different physicochemical properties, such as oxygen or nutrient concentrations and temperature levels. This stratification creates conditions that support various biochemical processes, creating an organic carbon cycle within the reservoir. The bottom layers lack molecular oxygen, leading to anoxic and anaerobic conditions that support methanogenesis, the production of methane (CH<span class="math notranslate nohighlight">\(_4\)</span>). The organic matter fueling methane production in these deeper layers comes from flooded soils and sediments entering the reservoir via rivers and surface runoff.</p>
+<p>Methane produced in the reservoir’s deeper regions may remain at lower depths or move to the upper layers as bubbles, diffuse, or be transported by plants, eventually reaching the atmosphere.
+Some CH<span class="math notranslate nohighlight">\(_4\)</span> is converted to carbon dioxide (CO<span class="math notranslate nohighlight">\(_2\)</span>) by methane-oxidizing bacteria (MOBs), which can be aerobic (oxygen-driven) or anaerobic (nitrite- and nitrate-driven).
+Methane pools in the lower reservoir regions can persist for long periods or be released to the atmosphere during water drawdowns or when water from deeper areas is released downstream via outlets positioned at the dam’s lower parts.
+In the latter case, CH<span class="math notranslate nohighlight">\(_4\)</span> emissions occur in the river sections downstream of the reservoir through a process called <em>degassing</em>.</p>
+<p id="displaced-emissions">Carbon dioxide (CO<span class="math notranslate nohighlight">\(_2\)</span>) emissions result from the mineralization of organic matter, primarily soluble but also particulate, entering the reservoir from the upstream catchment. This process mainly occurs via diffusion and macrophytes. While the reservoir provides conditions that support greater mineralization by offering longer residence times, a large portion of this organic matter would have been mineralized in natural aquatic systems regardless of the reservoir’s presence. In this case, reservoirs alter the carbon cycle by <strong>displacing emissions</strong> from downstream to upstream in the catchment rather than significantly increasing overall emissions.</p>
+<p>The alterations in the carbon cycle due to impoundment lead to new (net) GHG emissions, which vary over time. These emissions are most intense in the first years following reservoir construction and decrease as the reservoir ages, with the most significant reduction occurring in the initial 5-10 years after impoundment.</p>
+<p>The total emissions from a reservoir over its lifetime and their evolution depend on various factors, including reservoir characteristics, catchment properties, and climatic conditions, which influence the emissions of individual gases (CH<span class="math notranslate nohighlight">\(_4\)</span>, CO<span class="math notranslate nohighlight">\(_2\)</span> and N<span class="math notranslate nohighlight">\(_2\)</span>O) and their specific emission pathways.</p>
+<p>The transformation of landscape from <em>pre-impoundment</em> to <em>post-impoundment</em> and the major emission routes for CO<span class="math notranslate nohighlight">\(_2\)</span> and CH<span class="math notranslate nohighlight">\(_4\)</span> in the reservoir are visualised in the figure below.</p>
+<a class="reference internal image-reference" href="_images/reservoir_emissions.png"><img alt="Net Emissions from Reservoirs" src="_images/reservoir_emissions.png" style="width: 100%;"/>
+</a>
+<p><strong>Landscape transformation from a river to a reservoir.</strong> Source: <span id="id6">Prairie <em>et al.</em> [<a class="reference internal" href="#id22" title="Yves T. Prairie, Jukka Alm, Jake Beaulieu, Nathan Barros, Tom Battin, Jonathan Cole, Paul del Giorgio, Tonya DelSontro, Frédéric Guérin, Atle Harby, John Harrison, Sara Mercier-Blais, Dominique Serça, Sebastian Sobek, and Dominic Vachon. Greenhouse Gas Emissions from Freshwater Reservoirs: What Does the Atmosphere See? Ecosystems, 21(5):1058-1071, Aug 2018. URL: https://doi.org/10.1007/s10021-017-0198-9, doi:10.1007/s10021-017-0198-9.">3</a>]</span>.</p>
+</section>
+<section id="the-g-res-emissions-model">
+<h2>The G-Res Emissions Model</h2>
+<p>For the estimation of CO<span class="math notranslate nohighlight">\(_2\)</span> and CH<span class="math notranslate nohighlight">\(_4\)</span> emissions we use the <a class="reference external" href="https://www.hydropower.org/publications/the-ghg-reservoir-tool-g-res-technical-documentation">G-Res</a> model (<span id="id7">Prairie <em>et al.</em> [<a class="reference internal" href="#id26" title="YT Prairie, J. Alm, A. Harby, S. Mercier-Blais, and R. Nahas. The GHG Reservoir Tool (G-res) Technical documentation v2.1 (2019-08-21). Technical Report, UNESCO/IHA research project on the GHG status of freshwater reservoirs. Joint publication of the UNESCO Chair in Global Environmental Change and the International Hydropower Association, 2017. 76 pages.">4</a>], Prairie <em>et al.</em> [<a class="reference internal" href="#id23" title="Yves T. Prairie, Sara Mercier-Blais, John A. Harrison, Cynthia Soued, Paul del Giorgio, Atle Harby, Jukka Alm, Vincent Chanudet, and Roy Nahas. A new modelling framework to assess biogenic GHG emissions from reservoirs: The G-res tool. Environmental Modelling &amp; Software, 143:105117, 2021. URL: https://www.sciencedirect.com/science/article/pii/S1364815221001602, doi:https://doi.org/10.1016/j.envsoft.2021.105117.">5</a>]</span>).
+<a class="reference external" href="https://www.hydropower.org/publications/the-ghg-reservoir-tool-g-res-technical-documentation">G-Res</a> is based on a number of statistical regression models, each estimating emission flux via a single emission pathway - see <a class="reference internal" href="#reservoir-emission-pathways">Reservoir Emission Pathways</a>.
+The regressions use information about the landscape, the geomorphological properties of the reservoir and the averaged climatic conditions in the catchment.
+This data can be sourced from publicly available geospatial data hence avoiding the need for field measurements at individual reservoir locations.</p>
+<p>The unique characteristic of <a class="reference external" href="https://www.hydropower.org/publications/the-ghg-reservoir-tool-g-res-technical-documentation">G-Res</a> lies in its ability to discern the true <em>net</em> GHG footprint resulting from the conversion of a
+river to a reservoir. For this purpose it calculates the following GHG emission mass balances:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Pre-impoundment GHG footprint of the landscape, i.e. the catchment, the reservoir area and the impounded river area.</p></li>
+<li><p>Reservoir emissions rates for each gas and each of its emission pathways as functions of various environmental settings of the reservoir, i.e. climatic, geographic, edaphic and hydrologic.</p></li>
+<li><p>The evolution of emission fluxes for each gas and each emission pathway over the lifetime of the reservoir.</p></li>
+<li><p>Displaced emissions, i.e. emissions that would have occurred in other parts of the aquatic environment irrespective of the presence of the reservoir.</p></li>
+<li><p>Emissions in the reservoir related to human activity in the catchment, i.e. resulting from increased emissions due to additional nutrients and organic matter entering the reservoir from athropogenic sources, aka. <strong>Unrelated anthropogenic sources</strong>.</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="the-n-2-o-emissions-model">
+<h2>The N<span class="math notranslate nohighlight">\(_2\)</span>O Emissions Model</h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Modelling of nitrous oxide emissions is at an experimental stage.
+We are working on establishing the state-of-the-art models and verifying that all the calculations are correct.
+We shall update this section as soon as we are confident that the predictions from our software align with the values reported in the literature.</p>
+</div>
+</section>
+<section id="reservoir-emission-pathways-for-co-2-and-ch-4">
+<span id="reservoir-emission-pathways"></span><h2>Reservoir Emission Pathways for CO<span class="math notranslate nohighlight">\(_2\)</span> and CH<span class="math notranslate nohighlight">\(_4\)</span></h2>
+<p>The figure below, included in the IPCC 2007 report, illustrates the pathways of greenhouse gas (GHG) emissions in reservoirs.
+It shows that organic matter (OM) can be either fluvial, consisting of dissolved organic matter (DOM) or particulate organic matter (POM), or originate from flooded vegetation and soils.
+The figure distinguishes five emission pathways: (1) methane (CH<span class="math notranslate nohighlight">\(_4\)</span>) bubbling, (2) carbon dioxide (CO<span class="math notranslate nohighlight">\(_2\)</span>) and CH<span class="math notranslate nohighlight">\(_4\)</span> diffusion within the reservoir, (3) CO<span class="math notranslate nohighlight">\(_2\)</span> and CH<span class="math notranslate nohighlight">\(_4\)</span> flux through macrophytes, (4) CO<span class="math notranslate nohighlight">\(_2\)</span> and CH<span class="math notranslate nohighlight">\(_4\)</span> degassing downstream of the reservoir, and (5) CO<span class="math notranslate nohighlight">\(_2\)</span> and CH<span class="math notranslate nohighlight">\(_4\)</span> diffusion downstream of the reservoir.
+It highlights methanogenesis in the benthic zone and aerobic CH<span class="math notranslate nohighlight">\(_4\)</span> oxidation in the upper aerobic layers of the reservoir.
+Macrophytes facilitate CO<span class="math notranslate nohighlight">\(_2\)</span> and CH<span class="math notranslate nohighlight">\(_4\)</span> fluxes into the atmosphere and contribute to carbon and nutrient sources for methanogenesis when they die and decompose.</p>
+<p>Other pathways and processes not included in this illustration also contribute to GHG emissions.
+For instance, emissions can result from the drying and rewetting of sediments in the littoral areas of the reservoir due to water abstraction, as discussed by <span id="id8">Keller <em>et al.</em> [<a class="reference internal" href="#id85" title="Philipp S. Keller, Rafael Marcé, Biel Obrador, and Matthias Koschorreck. Global carbon budget of reservoirs is overturned by the quantification of drawdown areas. Nature Geoscience, 14(6):402-408, Jun 2021. URL: https://doi.org/10.1038/s41561-021-00734-z, doi:10.1038/s41561-021-00734-z.">6</a>], Marcé <em>et al.</em> [<a class="reference internal" href="#id86" title="Rafael Marcé, Biel Obrador, Lluís Gómez-Gener, Núria Catalán, Matthias Koschorreck, María Isabel Arce, Gabriel Singer, and Daniel von Schiller. Emissions from dry inland waters are a blind spot in the global carbon cycle. Earth-Science Reviews, 188:240-248, 2019. URL: https://www.sciencedirect.com/science/article/pii/S0012825218301971, doi:https://doi.org/10.1016/j.earscirev.2018.11.012.">7</a>], Kosten <em>et al.</em> [<a class="reference internal" href="#id87" title="Sarian Kosten, Sanne van den Berg, Raquel Mendonca, Jose R. Paranaiba, Fabio Roland, Sebastian Sobek, Jamon Van Den Hoek, and Nathan Barros. Extreme drought boosts co2 and ch4 emissions from reservoir drawdown areas. Inland Waters, 8(3):329–340, 2018. URL: https://doi.org/10.1080/20442041.2018.1483126, arXiv:https://doi.org/10.1080/20442041.2018.1483126, doi:10.1080/20442041.2018.1483126.">8</a>]</span>.</p>
+<p>However, many known emission pathways are still not well understood due to the complexities of the fundamental processes governing them, the availability of measurements for model calibration and validation and uncertainties and difficulties associated with measuring emissions and various environmental parameters in water bodies.
+Given the current limitations in scientific understanding and data availability, the <a class="reference external" href="https://www.hydropower.org/publications/the-ghg-reservoir-tool-g-res-technical-documentation">G-Res</a> model is currently the most comprehensive emissions model.
+It describes the following emission pathways: (1) diffusive CO<span class="math notranslate nohighlight">\(_2\)</span> emissions, (2) diffusive CH<span class="math notranslate nohighlight">\(_4\)</span> emissions, (3) CH<span class="math notranslate nohighlight">\(_4\)</span> emissions due to ebullition (bubbling), and (4) CH<span class="math notranslate nohighlight">\(_4\)</span> emissions due to degassing.</p>
+<a class="reference internal image-reference" href="_images/Pathways-of-GHG-Emissions-from-a-Reservoir-IPCC-2007_W640.jpg"><img alt="Pathways of GHG Emissions from a Reservoir" src="_images/Pathways-of-GHG-Emissions-from-a-Reservoir-IPCC-2007_W640.jpg" style="width: 100%;"/>
+</a>
+<p><strong>Pathways of GHG Emissions from a Reservoir.</strong> Source: IPCC 2007.</p>
+</section>
+<section id="why-is-it-important-to-estimate-ghg-emissions-from-reservoirs">
+<h2>Why is it important to estimate GHG emissions from reservoirs?</h2>
+<p>As highlighted in the sections <a class="reference internal" href="#contribution-of-reservoirs-to-global-emissions">Contribution of Reservoirs to Global Emissions</a> and <a class="reference internal" href="#global-carbon-cycle">Global Carbon Cycle</a> reservoir emissions are significant on a global scale and, therefore, have a non-negligible impact on the Earth’s climate.
+Accurate quantification of these emissions worldwide is necessary to estimate the total anthropogenic GHG emissions, which are used to determine the current climate and its future projections.</p>
+<p>On a national level, estimating reservoir emissions can support climate planning instruments, such as Nationally Determined Contributions (NDCs), and in the assessment of GHG budgets for entire countries, regions, and companies.
+For example, the <a class="reference external" href="https://www.epa.gov/ghgreporting">Greenhouse Gas Reporting Program (GGRP)</a> of the United States Environmental Protection Agency is one such initiative.
+These and other efforts can aid in policy and technological planning related to climate adaptation.</p>
+<p>Finally, estimating the GHG emissions of planned reservoirs is crucial for designing carbon-efficient reservoir infrastructure investments.
+Studies, such as <span id="id9">Hansen <em>et al.</em> [<a class="reference internal" href="#id63" title="Carly Hansen, Rachel Pilla, Paul Matson, Bailey Skinner, Natalie Griffiths, and Henriette Jager. Variability in modelled reservoir greenhouse gas emissions: comparison of select us hydropower reservoirs against global estimates. Environmental Research Communications, 4(12):121008, jan 2023. URL: https://dx.doi.org/10.1088/2515-7620/acae24, doi:10.1088/2515-7620/acae24.">9</a>]</span>, have shown that reservoirs can emit vastly different amounts of GHGs depending on their location.
+Therefore, to avoid construction of polluting reservoirs, reservoir emissions should be considered during strategic reservoir planning alongside other economic, technical, and environmental objectives.</p>
+</section>
+<section id="literature">
+<h2>Literature</h2>
+<div class="docutils container" id="id10">
+<div class="citation-list" role="list">
+<div class="citation" id="id20" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a href="#id2" role="doc-backlink">1</a><span class="fn-bracket">]</span></span>
+<p>John A. Harrison, Yves T. Prairie, Sara Mercier-Blais, and Cynthia Soued. Year-2020 Global Distribution and Pathways of Reservoir Methane and Carbon Dioxide Emissions According to the Greenhouse Gas From Reservoirs (G-res) Model. <em>Global Biogeochemical Cycles</em>, 35(6):e2020GB006888, 2021. e2020GB006888 2020GB006888. URL: <a class="reference external" href="https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2020GB006888">https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2020GB006888</a>, <a class="reference external" href="https://arxiv.org/abs/https://agupubs.onlinelibrary.wiley.com/doi/pdf/10.1029/2020GB006888">arXiv:https://agupubs.onlinelibrary.wiley.com/doi/pdf/10.1029/2020GB006888</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1029/2020GB006888">doi:https://doi.org/10.1029/2020GB006888</a>.</p>
+</div>
+<div class="citation" id="id25" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a href="#id3" role="doc-backlink">2</a><span class="fn-bracket">]</span></span>
+<p>Cynthia Soued, John A. Harrison, Sara Mercier-Blais, and Yves T. Prairie. Reservoir CO2 and CH4 emissions and their climate impact over the period 1900–2060. <em>Nature Geoscience</em>, 15(9):700–705, Sep 2022. URL: <a class="reference external" href="https://doi.org/10.1038/s41561-022-01004-2">https://doi.org/10.1038/s41561-022-01004-2</a>, <a class="reference external" href="https://doi.org/10.1038/s41561-022-01004-2">doi:10.1038/s41561-022-01004-2</a>.</p>
+</div>
+<div class="citation" id="id22" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a href="#id5" role="doc-backlink">1</a>,<a href="#id6" role="doc-backlink">2</a>)</span>
+<p>Yves T. Prairie, Jukka Alm, Jake Beaulieu, Nathan Barros, Tom Battin, Jonathan Cole, Paul del Giorgio, Tonya DelSontro, Frédéric Guérin, Atle Harby, John Harrison, Sara Mercier-Blais, Dominique Serça, Sebastian Sobek, and Dominic Vachon. Greenhouse Gas Emissions from Freshwater Reservoirs: What Does the Atmosphere See? <em>Ecosystems</em>, 21(5):1058–1071, Aug 2018. URL: <a class="reference external" href="https://doi.org/10.1007/s10021-017-0198-9">https://doi.org/10.1007/s10021-017-0198-9</a>, <a class="reference external" href="https://doi.org/10.1007/s10021-017-0198-9">doi:10.1007/s10021-017-0198-9</a>.</p>
+</div>
+<div class="citation" id="id26" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a href="#id7" role="doc-backlink">4</a><span class="fn-bracket">]</span></span>
+<p>YT Prairie, J. Alm, A. Harby, S. Mercier-Blais, and R. Nahas. The GHG Reservoir Tool (G-res) Technical documentation v2.1 (2019-08-21). Technical Report, UNESCO/IHA research project on the GHG status of freshwater reservoirs. Joint publication of the UNESCO Chair in Global Environmental Change and the International Hydropower Association, 2017. 76 pages.</p>
+</div>
+<div class="citation" id="id23" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a href="#id7" role="doc-backlink">5</a><span class="fn-bracket">]</span></span>
+<p>Yves T. Prairie, Sara Mercier-Blais, John A. Harrison, Cynthia Soued, Paul del Giorgio, Atle Harby, Jukka Alm, Vincent Chanudet, and Roy Nahas. A new modelling framework to assess biogenic GHG emissions from reservoirs: The G-res tool. <em>Environmental Modelling &amp; Software</em>, 143:105117, 2021. URL: <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S1364815221001602">https://www.sciencedirect.com/science/article/pii/S1364815221001602</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1016/j.envsoft.2021.105117">doi:https://doi.org/10.1016/j.envsoft.2021.105117</a>.</p>
+</div>
+<div class="citation" id="id85" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a href="#id8" role="doc-backlink">6</a><span class="fn-bracket">]</span></span>
+<p>Philipp S. Keller, Rafael Marcé, Biel Obrador, and Matthias Koschorreck. Global carbon budget of reservoirs is overturned by the quantification of drawdown areas. <em>Nature Geoscience</em>, 14(6):402–408, Jun 2021. URL: <a class="reference external" href="https://doi.org/10.1038/s41561-021-00734-z">https://doi.org/10.1038/s41561-021-00734-z</a>, <a class="reference external" href="https://doi.org/10.1038/s41561-021-00734-z">doi:10.1038/s41561-021-00734-z</a>.</p>
+</div>
+<div class="citation" id="id86" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a href="#id8" role="doc-backlink">7</a><span class="fn-bracket">]</span></span>
+<p>Rafael Marcé, Biel Obrador, Lluís Gómez-Gener, Núria Catalán, Matthias Koschorreck, María Isabel Arce, Gabriel Singer, and Daniel von Schiller. Emissions from dry inland waters are a blind spot in the global carbon cycle. <em>Earth-Science Reviews</em>, 188:240–248, 2019. URL: <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0012825218301971">https://www.sciencedirect.com/science/article/pii/S0012825218301971</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1016/j.earscirev.2018.11.012">doi:https://doi.org/10.1016/j.earscirev.2018.11.012</a>.</p>
+</div>
+<div class="citation" id="id87" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a href="#id8" role="doc-backlink">8</a><span class="fn-bracket">]</span></span>
+<p>Sarian Kosten, Sanne van den Berg, Raquel Mendonca, Jose R. Paranaiba, Fabio Roland, Sebastian Sobek, Jamon Van Den Hoek, and Nathan Barros. Extreme drought boosts co2 and ch4 emissions from reservoir drawdown areas. <em>Inland Waters</em>, 8(3):329–340, 2018. URL: <a class="reference external" href="https://doi.org/10.1080/20442041.2018.1483126">https://doi.org/10.1080/20442041.2018.1483126</a>, <a class="reference external" href="https://arxiv.org/abs/https://doi.org/10.1080/20442041.2018.1483126">arXiv:https://doi.org/10.1080/20442041.2018.1483126</a>, <a class="reference external" href="https://doi.org/10.1080/20442041.2018.1483126">doi:10.1080/20442041.2018.1483126</a>.</p>
+</div>
+<div class="citation" id="id63" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a href="#id9" role="doc-backlink">9</a><span class="fn-bracket">]</span></span>
+<p>Carly Hansen, Rachel Pilla, Paul Matson, Bailey Skinner, Natalie Griffiths, and Henriette Jager. Variability in modelled reservoir greenhouse gas emissions: comparison of select us hydropower reservoirs against global estimates. <em>Environmental Research Communications</em>, 4(12):121008, jan 2023. URL: <a class="reference external" href="https://dx.doi.org/10.1088/2515-7620/acae24">https://dx.doi.org/10.1088/2515-7620/acae24</a>, <a class="reference external" href="https://doi.org/10.1088/2515-7620/acae24">doi:10.1088/2515-7620/acae24</a>.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+</div><div class="flex justify-between items-center pt-6 mt-12 border-t border-border gap-4">
+<div class="mr-auto">
+<a class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input hover:bg-accent hover:text-accent-foreground py-2 px-4" href="introduction.html">
+<svg class="mr-2 h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<polyline points="15 18 9 12 15 6"></polyline>
+</svg>
+        About the Library
+      </a>
+</div>
+<div class="ml-auto">
+<a class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input hover:bg-accent hover:text-accent-foreground py-2 px-4" href="install.html">
+        Installing RE-Emission
+        <svg class="ml-2 h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+</a>
+</div>
+</div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
+<div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
+<ul>
+<li><a :data-current="activeSection === '#contribution-of-reservoirs-to-global-emissions'" class="reference internal" href="#contribution-of-reservoirs-to-global-emissions">Contribution of Reservoirs to Global Emissions</a></li>
+<li><a :data-current="activeSection === '#global-carbon-cycle'" class="reference internal" href="#global-carbon-cycle">Global Carbon Cycle</a></li>
+<li><a :data-current="activeSection === '#why-reservoirs-emit-greenhouse-gases'" class="reference internal" href="#why-reservoirs-emit-greenhouse-gases">Why Reservoirs Emit Greenhouse Gases</a></li>
+<li><a :data-current="activeSection === '#the-g-res-emissions-model'" class="reference internal" href="#the-g-res-emissions-model">The G-Res Emissions Model</a></li>
+<li><a :data-current="activeSection === '#the-n-2-o-emissions-model'" class="reference internal" href="#the-n-2-o-emissions-model">The N<span class="math notranslate nohighlight">\(_2\)</span>O Emissions Model</a></li>
+<li><a :data-current="activeSection === '#reservoir-emission-pathways-for-co-2-and-ch-4'" class="reference internal" href="#reservoir-emission-pathways-for-co-2-and-ch-4">Reservoir Emission Pathways for CO<span class="math notranslate nohighlight">\(_2\)</span> and CH<span class="math notranslate nohighlight">\(_4\)</span></a></li>
+<li><a :data-current="activeSection === '#why-is-it-important-to-estimate-ghg-emissions-from-reservoirs'" class="reference internal" href="#why-is-it-important-to-estimate-ghg-emissions-from-reservoirs">Why is it important to estimate GHG emissions from reservoirs?</a></li>
+<li><a :data-current="activeSection === '#literature'" class="reference internal" href="#literature">Literature</a></li>
+</ul>
+</div>
+</aside>
+</main>
+</div>
+</div><footer class="py-6 border-t border-border md:py-0">
+<div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+<div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
+<p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2024, Tomasz Janus, University of Manchester, United Kingdom Built with <a class="font-medium underline underline-offset-4" href="https://www.sphinx-doc.org" rel="noreferrer">Sphinx 7.3.7</a></p>
+</div>
+</div>
+</footer>
+</div>
+<script src="_static/documentation_options.js?v=8d563738"></script>
+<script src="_static/doctools.js?v=9a2dae69"></script>
+<script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="_static/copybutton.js?v=f281be69"></script>
+<script src="_static/toggleprompt.js?v=5801b3bb"></script>
+<script defer="defer" src="_static/theme.js?v=e82a16a3"></script>
+<script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+<script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+<script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+</html>
