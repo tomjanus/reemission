@@ -1,5 +1,5 @@
 ---
-# Inputs to calculate and save for reporting of results
+# Inputs to save for reporting of results
 coordinates:
   include: True
   name: "Reservoir coordinates (lat/lon)"

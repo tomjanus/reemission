@@ -10,12 +10,10 @@ in various output formats such as Excel, JSON, and LaTeX.
     - **LatexWriter**: Formats and writes data to a LaTeX file using PyLaTeX.
     - **Presenter**: Reads and processes GHG emission calculation results and outputs them using various writers.
 
-Each writer class (**ExcelWriter**, **JSONWriter**, **LatexWriter**) is designed to handle specific output formats,
-ensuring the presentation of inputs, outputs, and internal variables in a structured manner.
-All writers inherit from an abstract base class **Writer** which implements the following static methods:
-  * ``def round_parameter(number: Union[float, list], number_decimals: int) -> Union[float, list]``
-  * ``def rollout(var_name: str, var_vector: Union[Sequence, Dict]) -> Iterator[Tuple[str, Any]]``
-  * ``def write_par_to_dict(input_name: str, parameter: Any, par_dict: Dict, reservoir_name: str, precision: int = 3) -> Dict``
+Each writer class (**ExcelWriter**, **JSONWriter**, **LatexWriter**) is designed to handle specific output formats, ensuring the presentation of inputs, outputs, and internal variables in a structured manner. All writers inherit from an abstract base class **Writer** which implements the following static methods:
+  - ``def round_parameter(number: Union[float, list], number_decimals: int) -> Union[float, list]``
+  - ``def rollout(var_name: str, var_vector: Union[Sequence, Dict]) -> Iterator[Tuple[str, Any]]``
+  - ``def write_par_to_dict(input_name: str, parameter: Any, par_dict: Dict, reservoir_name: str, precision: int = 3) -> Dict``
 
 and enforces implementation of the ``write`` method.
 
