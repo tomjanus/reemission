@@ -30,6 +30,7 @@ jobs:
         # lpsolve doesn't compile on Ubuntu without building the library from source - disable for the time being.
         # This doesn't really matter for the documentation builds.
         run: |
+          sudo apt install --no-install-recommends pandoc
           pip install --upgrade pip
           pip install -e .
           pip install -r requirements_doc.txt
