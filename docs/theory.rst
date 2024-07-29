@@ -122,7 +122,7 @@ These and other efforts can aid in policy and technological planning related to 
 
 Finally, estimating the GHG emissions of planned reservoirs is crucial for designing carbon-efficient reservoir infrastructure investments. 
 Studies, such as :cite:t:`Hansen2022`, have shown that reservoirs can emit vastly different amounts of GHGs depending on their location. 
-Therefore, to avoid construction of polluting reservoirs, reservoir emissions should be considered in strategic reservoir planning alongside other economic, technical, and environmental objectives.
+Therefore, to avoid construction of polluting reservoirs, reservoir emissions should be considered during strategic reservoir planning alongside other economic, technical, and environmental objectives.
 
 Literature
 ----------
