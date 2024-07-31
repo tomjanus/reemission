@@ -135,6 +135,8 @@ dmypy.json
 
 # Pdf files
 *.pdf
+# Exceptions - pdf output file required for documentation
+!docs/_static/demo/demo_GHG_outputs.pdf
 
 # Files created by Dask
 dask-worker-space/
