@@ -8,7 +8,7 @@ Reporting Calculation Outputs
 PDF report
 ----------
 
-:pdfembed:`src:_static/demo/demo_GHG_outputs.pdf, height:1200, width:1200, align:top, page:1`
+:pdfembed:`src: _static/demo/demo_GHG_outputs.pdf, height:1200, width:1200, align:top, page:1`
 
 Spreadsheet File
 ----------------
