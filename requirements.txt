@@ -1,5 +1,6 @@
 click
 numpy
+scipy
 pandas
 geopandas
 matplotlib
