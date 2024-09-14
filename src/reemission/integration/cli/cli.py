@@ -54,7 +54,7 @@ RE-EMISSION. \n
 GeoCARET is a general catchment and reservoir evaluation tool that uses GIS data.\n
 RE-EMISSION is a collection of methods for estimating GHG emissions from reservoirs
 
-Full documentation at : https://reemission.readthedocs.io/en/latest/.
+Full documentation at : https://tomjanus.github.io/reemission/index.html
 """
 
 @click.option("-i", "--input-files", type=click.Path(), multiple=True)

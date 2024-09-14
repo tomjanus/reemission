@@ -76,7 +76,7 @@ def main(figlet: bool = FIGLET) -> None:
 You are now using the Command line interface of RE-Emission, a Python
 toolbox for calculating greenhouse gas emissions from reservoirs..
 
-See the full documentation at : https://reemisison.readthedocs.io/en/latest/.
+See the full documentation at : https://tomjanus.github.io/reemission/index.html
 """
     if figlet:
         result = pyfiglet.figlet_format("RE-Emission")
