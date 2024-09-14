@@ -74,8 +74,14 @@ Preliminary results of our first case study (for presentation use only), are sho
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-<!-- PREREQUISITES -->
-## Prerequisites
+<!-- REQUIREMENTS -->
+## Requirements
+
+### Python Version
+
+RE-Emission requires Python 3.10 or newer.
+
+### LaTeX Installation (Optional)
 
 If you would like to generate output documents in a PDF format, you will need to install LaTeX. Without LaTeX, upon an attempt to compile the generated LaTeX source code to PDF, ```pylatex``` library implemented in this software will throw ```pylatex.errors.CompilerError```. LaTeX source file with output results will still be created but it will not be able to get compiled to PostScript or PDF.
 
