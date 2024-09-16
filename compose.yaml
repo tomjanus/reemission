@@ -1,0 +1,10 @@
+services:
+  reemission:
+    build:
+      context: .
+    image: reemission_image
+    volumes:
+      - ./examples:/home/appuser/reemission/examples
+      - ./outputs:/home/appuser/reemission/outputs
+    stdin_open: true 
+    tty: true
