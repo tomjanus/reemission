@@ -4,7 +4,7 @@ Overview
 
 Python package for calculating GHG emissions from man-made reservoirs
 
-* Free software: GPL-3.0 license
+* Free software: MIT license
 
 Installation
 ============

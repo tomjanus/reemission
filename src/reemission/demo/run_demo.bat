@@ -118,6 +118,7 @@ echo.
 REM Estimate gas emissions and save output files
 reemission calculate %OUTPUTS_FOLDER%/reemission_inputs.json -a "Default User" ^
     -t "Demo Example Results" ^
+    -o %REEMISSION_OUTPUTS_FOLDER%/demo_GHG_outputs.pdf ^
     -o %REEMISSION_OUTPUTS_FOLDER%/demo_GHG_outputs.json ^
     -o %REEMISSION_OUTPUTS_FOLDER%/demo_GHG_outputs_.xlsx
 
