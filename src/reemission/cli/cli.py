@@ -379,7 +379,6 @@ def run_demo(demo_folder: str) -> None:
         os.path.join(OUTPUTS_FOLDER, "reemission_inputs.json"),
         "-a", "Default User",
         "-t", "Demo Example Results",
-        "-o", os.path.join(REEMISSION_OUTPUTS_FOLDER, "demo_GHG_outputs.pdf"),
         "-o", os.path.join(REEMISSION_OUTPUTS_FOLDER, "demo_GHG_outputs.json"),
         "-o", os.path.join(REEMISSION_OUTPUTS_FOLDER, "demo_GHG_outputs_.xlsx")
     ]

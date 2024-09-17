@@ -183,6 +183,8 @@ class DelineationsPolyLayer(FoliumLayer):
     emission_field: ClassVar[str] = 'tot_em'
     color_scale: ClassVar[List[str]] = ["green", "yellow", "orange", "red"]
     default_scale: ClassVar[Tuple[float, float]] = (100, 3_000)
+    fill_opacity: float = 0.6
+    highlight_opacity: float = 0.8
 
     def __post_init__(self) -> None:
         self.data['r_volume_mcm'] = self.data['r_volume_m'] / 10**6
@@ -240,9 +242,9 @@ class DelineationsPolyLayer(FoliumLayer):
                 "fillColor": \
                     self.linear(feature['properties'].get(self.emission_field)),
                 "color": "black",
-                "fillOpacity": 0.95,
+                "fillOpacity": self.fill_opacity,
                 "weight": 1},
-            highlight_function=lambda x: {"fillOpacity": 1.0},
+            highlight_function=lambda x: {"fillOpacity": self.highlight_opacity},
             zoom_on_click=True
         )
 
