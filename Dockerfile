@@ -12,14 +12,26 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 # Create a non-privileged user that the app will run under.
-RUN useradd --create-home --shell /bin/bash appuser
-
-# Switch to the non-privileged user to run the application.
-USER appuser
+#RUN useradd --create-home --shell /bin/bash appuser
 
 # Create a folder for RE-Emission
 RUN mkdir -p /home/appuser/reemission
 WORKDIR /home/appuser/reemission
+
+# Set default values to avoid errors if not provided they can also be passed as build arguments (from docker-compose)
+ARG UID=1000
+ARG GID=1000
+
+# Create the group and user with specified UID and GID
+RUN groupadd -g ${GID} appuser && \
+    useradd --create-home --shell /bin/bash appuser -u ${UID} -g ${GID}&& \
+    chown -R appuser:appuser /home/appuser/reemission
+    
+# Make sure /home/appuser/ has correct ownership
+RUN chown -R appuser:appuser /home/appuser/
+
+# Switch to the non-privileged user to run the application.
+USER appuser
 
 # Copy the source code into the container.
 COPY --chown=appuser:appuser . .
