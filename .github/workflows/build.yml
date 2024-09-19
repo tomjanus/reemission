@@ -1,10 +1,19 @@
 name: "RE-Emission Build"
 
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+    branches:
+      - master
 
 env:
-  # Only build on Python 3.8+
-  CIBW_BUILD: cp38-* cp39-* cp310-*
+  # Only build on Python 3.10
+  CIBW_BUILD: cp310-*
   SERVICEACCOUNT: ${{ secrets.SERVICEACCOUNT }}
   SERVICEACCOUNT_EMAIL: ${{ secrets.SERVICEACCOUNT_EMAIL }}
   
