@@ -1,4 +1,4 @@
-name: "RE-Emission Build"
+name: "RE-Emission Documentation Build"
 
 on:
   push:
@@ -49,8 +49,8 @@ jobs:
 
       - name: Deploy docs 🚀
         uses: JamesIves/github-pages-deploy-action@3.7.1
-        # Only publish on master
-        if: github.ref == 'refs/heads/master'
+        # Only publish upon change to the release branch
+        if: github.ref == 'refs/heads/release'
         with:
           BRANCH: gh-pages # The branch the action should deploy to.
           FOLDER: docs/_build/html # The folder the action should deploy.
