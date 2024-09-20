@@ -63,10 +63,10 @@ It calculates full life-cycle emissions as well as emission profiles over time f
 * Model parameters, and presentation of outputs are fully configurable using YAML configuration files.
 * Inputs can be constructed in Python using the ```Input``` class or read from JSON files.
 * Outputs in tabular form can be presented in JSON, LaTeX and PDF formats and can be configured by changing settings in the ```outputs.yaml``` configuration file.
-* Integrates with the upstream catchment and reservoir delineation package HEET, whcih is currently in Beta version and undergoing development.
+* Integrates with the upstream catchment and reservoir delineation package GeoCARET (formerly HEET), whcih is currently in Beta version and undergoing development.
 * Combines tabular and GIS inputs from catchment delineation with gas emission outputs and visualizes the combined data in interactive maps.
 
-### A quick demo of results from RE-Emission using input data from catchment delineation tool HEET
+### A quick demo of results from RE-Emission using input data from catchment delineation tool GeoCARET
 
 Preliminary results of our first case study (for presentation use only), are shown in [https://tomjanus.github.io/mya_emissions_map/](https://tomjanus.github.io/mya_emissions_map/). The case study looks into an assessment of gas emissions from existing and planned hydroelectric reservoirs in Myanmar. A snapshot of the map is presented below. 
 <p align="center">
@@ -136,7 +136,7 @@ pprint.pprint(model.outputs)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/tomjanus/reemission/blob/master/docs/notebooks/index.ipynb)
 
 #### Using Command Line Interface (CLI)
-RE-Emission has two CLI interfaces: `reemission` for performing greenhouse gas emission calculations and `reemission-geocaret` for processing outputs obtained from an upstream reservoir and catchment delineation tool HEET and creating input files to RE-Emission.
+RE-Emission has two CLI interfaces: `reemission` for performing greenhouse gas emission calculations and `reemission-geocaret` for processing outputs obtained from an upstream reservoir and catchment delineation tool GeoCARET (formerly HEET) and creating input files to RE-Emission.
 For more information about the usage, type in Terminal/Console:
 ```bash
 reemission --help
