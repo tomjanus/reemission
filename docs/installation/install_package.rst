@@ -1,7 +1,7 @@
 Installing RE-Emission
 ======================
 
-**RE-Emission** should work on Python **3.7 (or later)** on Windows, Linux or OS X.
+**RE-Emission** should work on Python **3.10 (or later)** on Windows, Linux or OS X.
 
 Supported platforms
 -------------------
