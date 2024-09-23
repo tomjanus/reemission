@@ -27,8 +27,9 @@ Version: |version|
 
    introduction.rst
    theory.rst
-   install.rst
+   Installation <installation/index.rst>
    usage.rst
+   running_docker.rst
    Tutorials <tutorials/tutorials.rst>
    demo.rst
    json.rst

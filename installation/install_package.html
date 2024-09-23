@@ -7,17 +7,18 @@
 <meta content="white" media="(prefers-color-scheme: light)" name="theme-color"/>
 <meta content="black" media="(prefers-color-scheme: dark)" name="theme-color"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>Import the required libraries and RE-Emission classes | ReEmission 1.0.0 documentation</title>
-<meta content="Import the required libraries and RE-Emission classes | ReEmission 1.0.0 documentation" property="og:title"/>
-<meta content="Import the required libraries and RE-Emission classes | ReEmission 1.0.0 documentation" name="twitter:title"/>
+<title>Installing RE-Emission | ReEmission 1.0.0 documentation</title>
+<meta content="Installing RE-Emission | ReEmission 1.0.0 documentation" property="og:title"/>
+<meta content="Installing RE-Emission | ReEmission 1.0.0 documentation" name="twitter:title"/>
 <link href="../_static/pygments.css?v=c842c44c" rel="stylesheet" type="text/css"/>
 <link href="../_static/theme.css?v=ecdfb4fc" rel="stylesheet" type="text/css"/>
 <link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
 <link href="../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
 <link href="../_static/tabs.css?v=a5c4661c" rel="stylesheet" type="text/css"/>
-<link href="../_static/nbsphinx-code-cells.css?v=2aa19091" rel="stylesheet" type="text/css"/>
 <link href="../search.html" rel="search" title="Search"/>
 <link href="../genindex.html" rel="index" title="Index"/>
+<link href="using_docker.html" rel="next" title="About Docker"/>
+<link href="index.html" rel="prev" title="Installation Guidelines"/>
 <script>
     <!-- Prevent Flash of wrong theme -->
       const userPreference = localStorage.getItem('darkMode');
@@ -71,19 +72,19 @@
 <div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
 <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">About the Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../theory.html">Theoretical Background</a></li>
-<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="../installation/index.html">Installation<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
-<li class="toctree-l2"><a class="reference internal" href="../installation/install_package.html">Installing RE-Emission</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../installation/using_docker.html">About Docker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../installation/building_image.html">Building the ReEmission Docker Image</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../installation/using_image.html">Using the ReEmission Docker Image</a></li>
+<li class="toctree-l1 current" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="index.html">Installation<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul class="current" x-show="expanded">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Installing RE-Emission</a></li>
+<li class="toctree-l2"><a class="reference internal" href="using_docker.html">About Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="building_image.html">Building the ReEmission Docker Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="using_image.html">Using the ReEmission Docker Image</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../running_docker.html">Running the ReEmission Docker Container</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../demo.html">Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../json.html">JSON file format description</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
@@ -133,124 +134,226 @@
 <path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z"></path>
 </svg>
 </a>
-<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">Import the required libraries and RE-Emission classes</span>
+<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap" href="index.html">Installation Guidelines</a>
+<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">Installing RE-Emission</span>
 </nav>
 <div id="content" role="main">
-<div><h1 style="text-align:center"><p>This is the main repository of notebooks which demonstrate the usage of dam-emission</p>
-</h1><h3><p>This notebook demonstrates how to:</p>
-</h3><ol><li><p>Read input data and output configuration YAML file and instantiate the emission model</p>
-</li><li><p>Add LaTeX model presenter, calculate emissions and save results to TEX and PDF files</p>
-</li><li><p>Open the generated PDF document</p>
-</li></ol></div><section id="Import-the-required-libraries-and-RE-Emission-classes">
-<h1>Import the required libraries and RE-Emission classes</h1>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">[1]:
-</span></code></pre></div>
+<section id="installing-re-emission">
+<h1>Installing RE-Emission</h1>
+<p><strong>RE-Emission</strong> should work on Python <strong>3.10 (or later)</strong> on Windows, Linux or OS X.</p>
+<section id="supported-platforms">
+<h2>Supported platforms</h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Windows</p></th>
+<th class="head"><p>Linux</p></th>
+<th class="head"><p>macOS</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Supported</p></td>
+<td><p>Supported</p></td>
+<td><p>Supported</p></td>
+</tr>
+<tr class="row-odd"><td><p>1.00</p></td>
+<td><p>1.00</p></td>
+<td><p>1.00</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="dependencies">
+<h2>Dependencies</h2>
+<p><strong>RE-Emission</strong> relies on several external packages. These are specified in <strong>`setup.cfg`</strong> and <strong>`requirements.txt`</strong> and are fetched automatically during installation.</p>
+<ul class="simple">
+<li><p>click</p></li>
+<li><p>numpy</p></li>
+<li><p>pandas</p></li>
+<li><p>geopandas</p></li>
+<li><p>matplotlib</p></li>
+<li><p>pylatex</p></li>
+<li><p>notebook</p></li>
+<li><p>quantities</p></li>
+<li><p>pyfiglet</p></li>
+<li><p>openpyxl</p></li>
+<li><p>gdown</p></li>
+<li><p>PyYAML</p></li>
+<li><p>toml</p></li>
+<li><p>pydantic==1.10</p></li>
+<li><p>folium</p></li>
+<li><p>branca</p></li>
+<li><p>fpdf</p></li>
+<li><p>geojson</p></li>
+<li><p>rich-click</p></li>
+</ul>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>The code currently relies on the old version of <code class="docutils literal notranslate"><span class="pre">pydantic</span></code> and will fail if the <code class="docutils literal notranslate"><span class="pre">pydantic</span></code> version is greater than 1.10</p>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="kn">import</span> <span class="nn">os</span>
-</span><span id="line-2"><span class="kn">import</span> <span class="nn">pathlib</span>
-</span><span id="line-3"><span class="kn">import</span> <span class="nn">gdown</span>
-</span><span id="line-4"><span class="kn">import</span> <span class="nn">webbrowser</span>
-</span><span id="line-5"><span class="k">try</span><span class="p">:</span>
-</span><span id="line-6">    <span class="kn">import</span> <span class="nn">reemission</span>
-</span><span id="line-7"><span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-</span><span id="line-8">    <span class="o">%</span><span class="k">pip</span> install git+https://github.com/tomjanus/reemission.git --quiet
-</span><span id="line-9"><span class="c1"># Import package file loader</span>
-</span><span id="line-10"><span class="kn">from</span> <span class="nn">reemission.utils</span> <span class="kn">import</span> <span class="n">get_package_file</span>
-</span><span id="line-11"><span class="c1"># Import from the model module</span>
-</span><span id="line-12"><span class="kn">from</span> <span class="nn">reemission.model</span> <span class="kn">import</span> <span class="n">EmissionModel</span>
-</span><span id="line-13"><span class="c1"># Import from the input module</span>
-</span><span id="line-14"><span class="kn">from</span> <span class="nn">reemission.input</span> <span class="kn">import</span> <span class="n">Inputs</span>
-</span><span id="line-15"><span class="c1"># Import from the presenter module</span>
-</span><span id="line-16"><span class="kn">from</span> <span class="nn">reemission.presenter</span> <span class="kn">import</span> <span class="n">LatexWriter</span>
-</span></code></pre></div>
-</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>RE-Emission</strong> supports genaration of output reports in a PDF format using the <code class="docutils literal notranslate"><span class="pre">pylatex</span></code>. <code class="docutils literal notranslate"><span class="pre">pylatex</span></code> relies on a working installation of <span class="math notranslate nohighlight">\(\LaTeX\)</span>. Without it, if you attempt to compile the <span class="math notranslate nohighlight">\(\LaTeX\)</span> source code generated by <code class="docutils literal notranslate"><span class="pre">pylatex</span></code> to PDF, <code class="docutils literal notranslate"><span class="pre">pylatex.errors.CompilerError</span></code> will be thrown. For more information on installing <span class="math notranslate nohighlight">\(\LaTeX\)</span> on different operating systems, go to <a class="reference internal" href="#latex-installation-guidelines"><span class="math notranslate nohighlight">\(\LaTeX\)</span> installation guidelines</a>.</p>
 </div>
 </section>
-<section id="1.-Read-input-data-and-output-configuration-YAML-file-and-instantiate-the-emission-model">
-<h1>1. Read input data and output configuration YAML file and instantiate the emission model</h1>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">[2]:
+<section id="re-emission-installation-guidelines">
+<h2>RE-Emission Installation Guidelines</h2>
+<section id="from-pypi">
+<h3>From PyPi</h3>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>Installation from PyPi is not yet supported. Please install from source - see <a class="reference internal" href="#from-source">From Source</a>.</p>
+</div>
+<p>Use the package manager <a class="reference external" href="https://pip.pypa.io/en/stable/">pip</a> to install <code class="docutils literal notranslate"><span class="pre">`reemission`</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">pip<span class="w"> </span>install<span class="w"> </span>reemission
 </span></code></pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="s1">'./inputs.json'</span><span class="p">)):</span>
-</span><span id="line-2">    <span class="c1"># Download the required input file from an external link</span>
-</span><span id="line-3">    <span class="o">!</span>gdown<span class="w"> </span>1T9Pal8h9Ce6phw1qdPM5AkuZM_hnvBGT
-</span><span id="line-4"><span class="n">input_data</span> <span class="o">=</span> <span class="n">Inputs</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="s1">'inputs.json'</span><span class="p">)</span>
-</span><span id="line-5"><span class="n">output_config</span> <span class="o">=</span> <span class="n">get_package_file</span><span class="p">(</span><span class="s1">'config'</span><span class="p">,</span> <span class="s1">'outputs.yaml'</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
-</span><span id="line-6"><span class="n">model</span> <span class="o">=</span> <span class="n">EmissionModel</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">input_data</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">output_config</span><span class="p">,</span> <span class="n">author</span><span class="o">=</span><span class="s2">"Guest"</span><span class="p">)</span>
+<p>To install <strong>RE-Emission</strong> in-place in <em>editable</em> mode, use the <code class="docutils literal notranslate"><span class="pre">-e</span></code> flag. With this option Python will execute the source code where it was cloned. Any modifications to the source-code will be automatically reflected in the execution of the package. This option is intended for code-development and is not required for general use. More information about Python package installation can be found in the <a class="reference external" href="https://setuptools.pypa.io/en/latest/userguide/development_mode.html">SetupTools Guide</a>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">pip<span class="w"> </span>install<span class="w"> </span>reemission<span class="w"> </span>-e<span class="w"> </span>.
 </span></code></pre></div>
-</div>
 </div>
 </section>
-<section id="2.-Add-LaTeX-model-presenter,-calculate-emissions-and-save-results-to-TEX-and-PDF-files">
-<h1>2. Add LaTeX model presenter, calculate emissions and save results to TEX and PDF files</h1>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">[3]:
+<section id="from-source">
+<h3>From Source</h3>
+<section id="via-repository-cloning">
+<h4>Via repository cloning</h4>
+<ol class="arabic">
+<li><p>Clone the repository using either:</p>
+<ul class="simple">
+<li><p>HTTPS</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">git<span class="w"> </span>clone<span class="w"> </span>https://github.com/tomjanus/reemission.git
 </span></code></pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># Recent changes force the input data to contain a unique reservoir 'id' field</span>
-</span><span id="line-2"><span class="c1"># We are dynamically adding ids so that the input data conforms to the schema.</span>
-</span><span id="line-3"><span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="p">(</span><span class="n">res_name</span><span class="p">,</span> <span class="n">res_inputs</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">input_data</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-</span><span id="line-4">    <span class="n">res_inputs</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">'id'</span><span class="p">]</span> <span class="o">=</span> <span class="n">index</span>
+<ul class="simple">
+<li><p>SSH</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">git<span class="w"> </span>clone<span class="w"> </span>git@github.com:tomjanus/reemission.git
 </span></code></pre></div>
 </div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">[4]:
+</li>
+<li><p>Install from source:</p>
+<ul class="simple">
+<li><p>as a build (default)</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">pip<span class="w"> </span>install<span class="w"> </span>.
 </span></code></pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">'outputs'</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="line-2"><span class="n">model</span><span class="o">.</span><span class="n">add_presenter</span><span class="p">(</span>
-</span><span id="line-3">    <span class="n">writers</span><span class="o">=</span><span class="p">[</span><span class="n">LatexWriter</span><span class="p">],</span>
-</span><span id="line-4">    <span class="n">output_files</span><span class="o">=</span><span class="p">[</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="s1">'outputs/output.tex'</span><span class="p">)])</span>
-</span><span id="line-5"><span class="n">model</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
-</span><span id="line-6"><span class="n">model</span><span class="o">.</span><span class="n">save_results</span><span class="p">()</span>
+<ul class="simple">
+<li><p>or in <code class="docutils literal notranslate"><span class="pre">--editable</span></code> mode</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </span></code></pre></div>
 </div>
+</li>
+</ol>
+</section>
+<section id="directly-from-github">
+<h4>Directly from GitHub</h4>
+<ol class="arabic simple">
+<li><p>With SSH</p></li>
+</ol>
+<ul>
+<li><p>Either</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">pip<span class="w"> </span>install<span class="w"> </span>git+ssh://git@github.com/tomjanus/reemission.git@master
+</span></code></pre></div>
 </div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
+</li>
+<li><p>or in editable mode</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">pip<span class="w"> </span>install<span class="w"> </span>git+ssh://git@github.com/tomjanus/reemission.git@master<span class="w"> </span>-e
+</span></code></pre></div>
 </div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-ERROR:reemission.presenter:LaTeX compiler cannot be found in your environment.'.tex' and '.pdf' files could not be created.
-</pre></div></div>
+</li>
+</ul>
+<ol class="arabic simple" start="2">
+<li><p>With HTTPS</p></li>
+</ol>
+<ul>
+<li><p>Either</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">pip<span class="w"> </span>install<span class="w"> </span>git+https://git@github.com/tomjanus/reemission.git@master
+</span></code></pre></div>
+</div>
+</li>
+<li><p>or in editable mode</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">pip<span class="w"> </span>install<span class="w"> </span>git+https://git@github.com/tomjanus/reemission.git@master<span class="w"> </span>-e
+</span></code></pre></div>
+</div>
+</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="latex-installation-guidelines">
+<h2><span class="math notranslate nohighlight">\(\LaTeX\)</span> installation guidelines</h2>
+<section id="debian-based-linux-distributions">
+<h3>Debian-based Linux Distributions</h3>
+<p>For basic LaTeX version (recommended)</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>texlive
+</span></code></pre></div>
+</div>
+<p><cite>texlive</cite> requires additional manual installation of the following two packages: <code class="docutils literal notranslate"><span class="pre">type1ec.sty</span></code> and <code class="docutils literal notranslate"><span class="pre">siunitx.sty</span></code>. These two packages can be installed by issuing the following commands in the <strong>Terminal</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>cm-super<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>texlive-science
+</span></code></pre></div>
+</div>
+<p>For full <span class="math notranslate nohighlight">\(\LaTeX\)</span> version with all packages (requires around 2GB to download and 5GB free space on a local hard drive)</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>texlive-full
+</span></code></pre></div>
 </div>
 </section>
-<section id="3.-Open-the-generated-PDF-document">
-<h1>3. Open the generated PDF document</h1>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">[5]:
+<section id="mac-os">
+<h3>Mac OS</h3>
+<p><code class="docutils literal notranslate"><span class="pre">BasicTeX</span></code> (100MB) - minimum install without editor</p>
+<div class="highlight-brew notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">brew install --cask basictex
 </span></code></pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># os.getcwd(),</span>
-</span><span id="line-2"><span class="n">pdf_file</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="s1">'outputs/output.pdf'</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
-</span><span id="line-3"><span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">pdf_file</span><span class="p">):</span>
-</span><span id="line-4">    <span class="n">webbrowser</span><span class="o">.</span><span class="n">open_new</span><span class="p">(</span><span class="n">pdf_file</span><span class="p">)</span>
-</span><span id="line-5"><span class="k">else</span><span class="p">:</span>
-</span><span id="line-6">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"File: </span><span class="si">{</span><span class="n">pdf_file</span><span class="si">}</span><span class="s2"> does not exist."</span><span class="p">)</span>
+<p><code class="docutils literal notranslate"><span class="pre">MacTeX</span></code> with built-in editor (3.2GB) - uses TeXLive</p>
+<div class="highlight-brew notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">brew install --cask mactex
 </span></code></pre></div>
 </div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-File: outputs/output.pdf does not exist.
-</pre></div></div>
-</div>
-<p><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg"/></p>
+</section>
+<section id="windows">
+<h3>Windows</h3>
+<p>For easy install, download and run <a class="reference external" href="https://mirror.ctan.org/systems/texlive/tlnet/install-tl-windows.exe">install-tl-windows.exe</a>
+For more installation options, visit <a class="reference external" href="https://tug.org/texlive/windows.html">https://tug.org/texlive/windows.html</a>.</p>
+</section>
+</section>
 </section>
 </div><div class="flex justify-between items-center pt-6 mt-12 border-t border-border gap-4">
+<div class="mr-auto">
+<a class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input hover:bg-accent hover:text-accent-foreground py-2 px-4" href="index.html">
+<svg class="mr-2 h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<polyline points="15 18 9 12 15 6"></polyline>
+</svg>
+        Installation Guidelines
+      </a>
+</div>
+<div class="ml-auto">
+<a class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input hover:bg-accent hover:text-accent-foreground py-2 px-4" href="using_docker.html">
+        About Docker
+        <svg class="ml-2 h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+</a>
+</div>
 </div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
 <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
 <ul>
-<li></li>
-<li><a :data-current="activeSection === '#1.-Read-input-data-and-output-configuration-YAML-file-and-instantiate-the-emission-model'" class="reference internal" href="#1.-Read-input-data-and-output-configuration-YAML-file-and-instantiate-the-emission-model">1. Read input data and output configuration YAML file and instantiate the emission model</a></li>
-<li><a :data-current="activeSection === '#2.-Add-LaTeX-model-presenter,-calculate-emissions-and-save-results-to-TEX-and-PDF-files'" class="reference internal" href="#2.-Add-LaTeX-model-presenter,-calculate-emissions-and-save-results-to-TEX-and-PDF-files">2. Add LaTeX model presenter, calculate emissions and save results to TEX and PDF files</a></li>
-<li><a :data-current="activeSection === '#3.-Open-the-generated-PDF-document'" class="reference internal" href="#3.-Open-the-generated-PDF-document">3. Open the generated PDF document</a></li>
+<li><a :data-current="activeSection === '#supported-platforms'" class="reference internal" href="#supported-platforms">Supported platforms</a></li>
+<li><a :data-current="activeSection === '#dependencies'" class="reference internal" href="#dependencies">Dependencies</a></li>
+<li><a :data-current="activeSection === '#re-emission-installation-guidelines'" class="reference internal" href="#re-emission-installation-guidelines">RE-Emission Installation Guidelines</a><ul>
+<li><a :data-current="activeSection === '#from-pypi'" class="reference internal" href="#from-pypi">From PyPi</a></li>
+<li><a :data-current="activeSection === '#from-source'" class="reference internal" href="#from-source">From Source</a><ul>
+<li><a :data-current="activeSection === '#via-repository-cloning'" class="reference internal" href="#via-repository-cloning">Via repository cloning</a></li>
+<li><a :data-current="activeSection === '#directly-from-github'" class="reference internal" href="#directly-from-github">Directly from GitHub</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#latex-installation-guidelines'" class="reference internal" href="#latex-installation-guidelines"><span class="math notranslate nohighlight">\(\LaTeX\)</span> installation guidelines</a><ul>
+<li><a :data-current="activeSection === '#debian-based-linux-distributions'" class="reference internal" href="#debian-based-linux-distributions">Debian-based Linux Distributions</a></li>
+<li><a :data-current="activeSection === '#mac-os'" class="reference internal" href="#mac-os">Mac OS</a></li>
+<li><a :data-current="activeSection === '#windows'" class="reference internal" href="#windows">Windows</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </aside>

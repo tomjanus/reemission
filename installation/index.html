@@ -7,9 +7,9 @@
 <meta content="white" media="(prefers-color-scheme: light)" name="theme-color"/>
 <meta content="black" media="(prefers-color-scheme: dark)" name="theme-color"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>Main | ReEmission 1.0.0 documentation</title>
-<meta content="Main | ReEmission 1.0.0 documentation" property="og:title"/>
-<meta content="Main | ReEmission 1.0.0 documentation" name="twitter:title"/>
+<title>Installation Guidelines | ReEmission 1.0.0 documentation</title>
+<meta content="Installation Guidelines | ReEmission 1.0.0 documentation" property="og:title"/>
+<meta content="Installation Guidelines | ReEmission 1.0.0 documentation" name="twitter:title"/>
 <link href="../_static/pygments.css?v=c842c44c" rel="stylesheet" type="text/css"/>
 <link href="../_static/theme.css?v=ecdfb4fc" rel="stylesheet" type="text/css"/>
 <link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
@@ -17,8 +17,8 @@
 <link href="../_static/tabs.css?v=a5c4661c" rel="stylesheet" type="text/css"/>
 <link href="../search.html" rel="search" title="Search"/>
 <link href="../genindex.html" rel="index" title="Index"/>
-<link href="../license.html" rel="next" title="License"/>
-<link href="reemission.globals.html" rel="prev" title="Global variables"/>
+<link href="install_package.html" rel="next" title="Installing RE-Emission"/>
+<link href="../theory.html" rel="prev" title="Theoretical Background"/>
 <script>
     <!-- Prevent Flash of wrong theme -->
       const userPreference = localStorage.getItem('darkMode');
@@ -75,11 +75,11 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">About the Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../theory.html">Theoretical Background</a></li>
-<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="../installation/index.html">Installation<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
-<li class="toctree-l2"><a class="reference internal" href="../installation/install_package.html">Installing RE-Emission</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../installation/using_docker.html">About Docker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../installation/building_image.html">Building the ReEmission Docker Image</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../installation/using_image.html">Using the ReEmission Docker Image</a></li>
+<li class="toctree-l1 current" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="current reference internal expandable" href="#">Installation<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="install_package.html">Installing RE-Emission</a></li>
+<li class="toctree-l2"><a class="reference internal" href="using_docker.html">About Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="building_image.html">Building the ReEmission Docker Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="using_image.html">Using the ReEmission Docker Image</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
@@ -91,27 +91,27 @@
 <li class="toctree-l1"><a class="reference internal" href="../reporting.html">Reporting Calculation Outputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../visualisation.html">Visualisation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../geocaret_integration.html">Integration with GeoCARET</a></li>
-<li class="toctree-l1 current" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="reemission.html">Python API reference<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul class="current" x-show="expanded">
-<li class="toctree-l2"><a class="reference internal" href="reemission.model.html">Model (Main)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.input.html">Input Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.reservoir.html">Reservoir Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.catchment.html">Catchment Model</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.ns_catchment.html">Post-impoundment catchment</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.emissions.html">Emissions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.temperature.html">MonthlyTemperature</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.biogenic.html">Biogenic Factors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.profile.html">Emission Profile Calculator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.presenter.html">Presenter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.utils.html">Utility functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.auxiliary.html">Auxiliary functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.constants.html">Constants</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.mixins.html">Mixins</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.document_compiler.html">Document <span class="math notranslate nohighlight">\(\LaTeX\)</span> Compiler</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.exceptions.html">Custom Exceptions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.app_logger.html">App Logger</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.download.html">External Data Downloader</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.globals.html">Global variables</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Main</a></li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="../api/reemission.html">Python API reference<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.model.html">Model (Main)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.input.html">Input Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.reservoir.html">Reservoir Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.catchment.html">Catchment Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.ns_catchment.html">Post-impoundment catchment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.emissions.html">Emissions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.temperature.html">MonthlyTemperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.biogenic.html">Biogenic Factors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.profile.html">Emission Profile Calculator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.presenter.html">Presenter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.utils.html">Utility functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.auxiliary.html">Auxiliary functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.constants.html">Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.mixins.html">Mixins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.document_compiler.html">Document <span class="math notranslate nohighlight">\(\LaTeX\)</span> Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.exceptions.html">Custom Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.app_logger.html">App Logger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.download.html">External Data Downloader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.globals.html">Global variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.main.html">Main</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
@@ -134,48 +134,37 @@
 <path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z"></path>
 </svg>
 </a>
-<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap" href="reemission.html">ReEmission reference documentation.</a>
-<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">Main</span>
+<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">Installation Guidelines</span>
 </nav>
 <div id="content" role="main">
-<section id="main">
-<h1>Main</h1>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-</tbody>
-</table>
-<p id="module-reemission.main">Main caller of the toolbox functions.</p>
-<p>This module runs the main emission calculation process using dummy reservoir,
-catchment, and emission input data in JSON format. The results are output in
-LaTeX, JSON, and Excel formats.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="reemission.main.run_emissions">
-<span class="sig-prename descclassname"><span class="pre">reemission.main.</span></span><span class="sig-name descname"><span class="pre">run_emissions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="reemission.model.html#reemission.model.EmissionModel" title="reemission.model.EmissionModel"><span class="pre">EmissionModel</span></a></span></span><a class="reference internal" href="../_modules/reemission/main.html#run_emissions"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Calculate emission factors and profiles.</p>
-<p>This function uses dummy reservoir, catchment, and emission input data in JSON format to calculate
-emission factors and profiles. The results are saved in LaTeX, JSON, and Excel formats.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>An instance of the EmissionModel class with calculated emissions and results.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="reemission.model.html#reemission.model.EmissionModel" title="reemission.model.EmissionModel">EmissionModel</a></p>
-</dd>
-</dl>
-</dd></dl>
+<section id="installation-guidelines">
+<span id="id1"></span><h1>Installation Guidelines</h1>
+<section id="installation-as-a-python-package-option-1">
+<h2>Installation as a Python Package - Option 1</h2>
+<p><a class="reference external" href="https://github.com/tomjanus/reemission">ReEmission</a> is an application written in Python and has to be installed just like any Python package. The installation procedure is described in detail in <a class="reference internal" href="install_package.html"><span class="doc">Installing RE-Emission</span></a>.</p>
+</section>
+<section id="installation-using-docker-option-2">
+<h2>Installation using Docker - Option 2</h2>
+<p>We also provide an alternative installation option from a Docker image. You can find more information in <a class="reference internal" href="using_docker.html#what-is-docker"><span class="std std-ref">What is Docker?</span></a> and subseqent chapters - <a class="reference internal" href="building_image.html"><span class="doc">Building the ReEmission Docker Image</span></a> and <a class="reference internal" href="using_image.html"><span class="doc">Using the ReEmission Docker Image</span></a>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Installing <a class="reference external" href="https://github.com/tomjanus/reemission">ReEmission</a> with Docker requires prior installation of <code class="docutils literal notranslate"><span class="pre">Docker</span> <span class="pre">Desktop</span></code> or Docker Engine (Linux only) - see <a class="reference internal" href="building_image.html"><span class="doc">Building the ReEmission Docker Image</span></a> and <a class="reference internal" href="using_image.html"><span class="doc">Using the ReEmission Docker Image</span></a> for details.</p>
+</div>
+
+</section>
 </section>
 </div><div class="flex justify-between items-center pt-6 mt-12 border-t border-border gap-4">
 <div class="mr-auto">
-<a class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input hover:bg-accent hover:text-accent-foreground py-2 px-4" href="reemission.globals.html">
+<a class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input hover:bg-accent hover:text-accent-foreground py-2 px-4" href="../theory.html">
 <svg class="mr-2 h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
 <polyline points="15 18 9 12 15 6"></polyline>
 </svg>
-        Global variables
+        Theoretical Background
       </a>
 </div>
 <div class="ml-auto">
-<a class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input hover:bg-accent hover:text-accent-foreground py-2 px-4" href="../license.html">
-        License
+<a class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input hover:bg-accent hover:text-accent-foreground py-2 px-4" href="install_package.html">
+        Installing RE-Emission
         <svg class="ml-2 h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
 <polyline points="9 18 15 12 9 6"></polyline>
 </svg>
@@ -184,7 +173,8 @@ emission factors and profiles. The results are saved in LaTeX, JSON, and Excel f
 </div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
 <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
 <ul>
-<li><a :data-current="activeSection === '#reemission.main.run_emissions'" class="reference internal" href="#reemission.main.run_emissions"><code class="docutils literal notranslate"><span class="pre">run_emissions()</span></code></a></li>
+<li><a :data-current="activeSection === '#installation-as-a-python-package-option-1'" class="reference internal" href="#installation-as-a-python-package-option-1">Installation as a Python Package - Option 1</a></li>
+<li><a :data-current="activeSection === '#installation-using-docker-option-2'" class="reference internal" href="#installation-using-docker-option-2">Installation using Docker - Option 2</a></li>
 </ul>
 </div>
 </aside>
@@ -206,5 +196,7 @@ emission factors and profiles. The results are saved in LaTeX, JSON, and Excel f
 <script src="../_static/toggleprompt.js?v=5801b3bb"></script>
 <script defer="defer" src="../_static/theme.js?v=e82a16a3"></script>
 <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+<script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+<script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </body>
 </html>

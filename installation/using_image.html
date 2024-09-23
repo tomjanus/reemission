@@ -7,17 +7,18 @@
 <meta content="white" media="(prefers-color-scheme: light)" name="theme-color"/>
 <meta content="black" media="(prefers-color-scheme: dark)" name="theme-color"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>Import the required libraries and RE-Emission classes | ReEmission 1.0.0 documentation</title>
-<meta content="Import the required libraries and RE-Emission classes | ReEmission 1.0.0 documentation" property="og:title"/>
-<meta content="Import the required libraries and RE-Emission classes | ReEmission 1.0.0 documentation" name="twitter:title"/>
+<title>Using the ReEmission Docker Image | ReEmission 1.0.0 documentation</title>
+<meta content="Using the ReEmission Docker Image | ReEmission 1.0.0 documentation" property="og:title"/>
+<meta content="Using the ReEmission Docker Image | ReEmission 1.0.0 documentation" name="twitter:title"/>
 <link href="../_static/pygments.css?v=c842c44c" rel="stylesheet" type="text/css"/>
 <link href="../_static/theme.css?v=ecdfb4fc" rel="stylesheet" type="text/css"/>
 <link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
 <link href="../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
 <link href="../_static/tabs.css?v=a5c4661c" rel="stylesheet" type="text/css"/>
-<link href="../_static/nbsphinx-code-cells.css?v=2aa19091" rel="stylesheet" type="text/css"/>
 <link href="../search.html" rel="search" title="Search"/>
 <link href="../genindex.html" rel="index" title="Index"/>
+<link href="../usage.html" rel="next" title="Usage"/>
+<link href="building_image.html" rel="prev" title="Building the ReEmission Docker Image"/>
 <script>
     <!-- Prevent Flash of wrong theme -->
       const userPreference = localStorage.getItem('darkMode');
@@ -71,19 +72,19 @@
 <div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
 <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">About the Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../theory.html">Theoretical Background</a></li>
-<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="../installation/index.html">Installation<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
-<li class="toctree-l2"><a class="reference internal" href="../installation/install_package.html">Installing RE-Emission</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../installation/using_docker.html">About Docker</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../installation/building_image.html">Building the ReEmission Docker Image</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../installation/using_image.html">Using the ReEmission Docker Image</a></li>
+<li class="toctree-l1 current" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="index.html">Installation<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul class="current" x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="install_package.html">Installing RE-Emission</a></li>
+<li class="toctree-l2"><a class="reference internal" href="using_docker.html">About Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="building_image.html">Building the ReEmission Docker Image</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Using the ReEmission Docker Image</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../running_docker.html">Running the ReEmission Docker Container</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorials.html">Tutorials</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../demo.html">Demo</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../json.html">JSON file format description</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
@@ -133,124 +134,125 @@
 <path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z"></path>
 </svg>
 </a>
-<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">Import the required libraries and RE-Emission classes</span>
+<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap" href="index.html">Installation Guidelines</a>
+<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">Using the ReEmission Docker Image</span>
 </nav>
 <div id="content" role="main">
-<div><h1 style="text-align:center"><p>This is the main repository of notebooks which demonstrate the usage of dam-emission</p>
-</h1><h3><p>This notebook demonstrates how to:</p>
-</h3><ol><li><p>Read input data and output configuration YAML file and instantiate the emission model</p>
-</li><li><p>Add LaTeX model presenter, calculate emissions and save results to TEX and PDF files</p>
-</li><li><p>Open the generated PDF document</p>
-</li></ol></div><section id="Import-the-required-libraries-and-RE-Emission-classes">
-<h1>Import the required libraries and RE-Emission classes</h1>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">[1]:
+<section id="using-the-reemission-docker-image">
+<h1>Using the ReEmission Docker Image</h1>
+<p>The ReEmission Docker image is the simplest way to run ReEmission CLI and run ReEmission together with <a class="reference external" href="https://github.com/Reservoir-Research/geocaret">GeoCARET</a>. This guide will take you through the required steps:</p>
+<ol class="arabic">
+<li><p>Install Docker Desktop / Docker Engine (Linux only).</p></li>
+<li><p>Pull the ReEmission Docker image.</p></li>
+<li><p>Use Docker compose to run ReEmission.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This documentation assumes that the reader: (1) Understands how to use ReEmission CLI. See <a class="reference internal" href="../usage.html"><span class="doc">Usage</span></a>. (2) Has a basic familiarity with the shell (macOS or linux) or PowerShell (Windows).</p>
+</div>
+</li>
+</ol>
+<section id="install-docker-desktop">
+<h2>Install Docker Desktop</h2>
+<p>If you already have Docker installed on your computer then skip to the next section, <a class="reference internal" href="#pull-the-reemission-docker-image">Pull the ReEmission Docker image</a>.</p>
+<section id="installing-docker-desktop">
+<h3>Installing Docker Desktop</h3>
+<p>Docker Desktop is free and can be installed on Windows, Mac &amp; Linux computers, Please visit <a class="reference external" href="https://docs.docker.com/get-docker/">https://docs.docker.com/get-docker/</a> and follow the appropriate instructions for installing Docker Desktop on your computer. For Linux distributions, you can alternatively install <a class="reference external" href="https://docs.docker.com/engine/install/">Docker Engine</a>.
+Once installed, make sure Docker is running, and open a shell prompt (Linux/macOS) or PowerShell (Windows) and typing the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">docker<span class="w"> </span>-v
 </span></code></pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="kn">import</span> <span class="nn">os</span>
-</span><span id="line-2"><span class="kn">import</span> <span class="nn">pathlib</span>
-</span><span id="line-3"><span class="kn">import</span> <span class="nn">gdown</span>
-</span><span id="line-4"><span class="kn">import</span> <span class="nn">webbrowser</span>
-</span><span id="line-5"><span class="k">try</span><span class="p">:</span>
-</span><span id="line-6">    <span class="kn">import</span> <span class="nn">reemission</span>
-</span><span id="line-7"><span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-</span><span id="line-8">    <span class="o">%</span><span class="k">pip</span> install git+https://github.com/tomjanus/reemission.git --quiet
-</span><span id="line-9"><span class="c1"># Import package file loader</span>
-</span><span id="line-10"><span class="kn">from</span> <span class="nn">reemission.utils</span> <span class="kn">import</span> <span class="n">get_package_file</span>
-</span><span id="line-11"><span class="c1"># Import from the model module</span>
-</span><span id="line-12"><span class="kn">from</span> <span class="nn">reemission.model</span> <span class="kn">import</span> <span class="n">EmissionModel</span>
-</span><span id="line-13"><span class="c1"># Import from the input module</span>
-</span><span id="line-14"><span class="kn">from</span> <span class="nn">reemission.input</span> <span class="kn">import</span> <span class="n">Inputs</span>
-</span><span id="line-15"><span class="c1"># Import from the presenter module</span>
-</span><span id="line-16"><span class="kn">from</span> <span class="nn">reemission.presenter</span> <span class="kn">import</span> <span class="n">LatexWriter</span>
+<p>This should return the version number of the installed version of docker. If you see an error message along the lines of ‘Cannot connect to the Docker daemon’ then restart Docker Desktop and try again.</p>
+</section>
+</section>
+<section id="pull-the-reemission-docker-image">
+<span id="pulling-reemission-docker-image"></span><h2>Pull the ReEmission Docker image</h2>
+<p>Open a shell prompt (macOS/Linux) or PowerShell (Windows) and type:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">docker<span class="w"> </span>pull<span class="w"> </span>ghcr.io/tomjanus/reemission
 </span></code></pre></div>
-</div>
 </div>
 </section>
-<section id="1.-Read-input-data-and-output-configuration-YAML-file-and-instantiate-the-emission-model">
-<h1>1. Read input data and output configuration YAML file and instantiate the emission model</h1>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">[2]:
+<section id="use-docker-compose-to-run-reemission">
+<h2>Use Docker compose to run ReEmission</h2>
+<section id="prepare-your-workspace">
+<h3>Prepare your workspace</h3>
+<p>Docker compose is a tool for simplifying the execution of docker containers. We’ll use it to run ReEmission.</p>
+<p>First you’ll need to create a new (root) folder for your ReEmission workspace where you must create two sub-folders:</p>
+<ul class="simple">
+<li><p><strong>examples</strong>, which will hold your input data files and examples.</p></li>
+<li><p><strong>outputs</strong>, which will hold the analyses output files</p></li>
+</ul>
+<p>You can create this folder structure in a shell prompt (Linux or macOS), or PowerShell if on Windows, by typing:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">mkdir<span class="w"> </span>my_reemission_work_folder
+</span><span id="line-2"><span class="nb">cd</span><span class="w"> </span>my_reemission_work_folder
+</span><span id="line-3">mkdir<span class="w"> </span>examples
+</span><span id="line-4">mkdir<span class="w"> </span>outputs
 </span></code></pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="s1">'./inputs.json'</span><span class="p">)):</span>
-</span><span id="line-2">    <span class="c1"># Download the required input file from an external link</span>
-</span><span id="line-3">    <span class="o">!</span>gdown<span class="w"> </span>1T9Pal8h9Ce6phw1qdPM5AkuZM_hnvBGT
-</span><span id="line-4"><span class="n">input_data</span> <span class="o">=</span> <span class="n">Inputs</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="s1">'inputs.json'</span><span class="p">)</span>
-</span><span id="line-5"><span class="n">output_config</span> <span class="o">=</span> <span class="n">get_package_file</span><span class="p">(</span><span class="s1">'config'</span><span class="p">,</span> <span class="s1">'outputs.yaml'</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
-</span><span id="line-6"><span class="n">model</span> <span class="o">=</span> <span class="n">EmissionModel</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">input_data</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">output_config</span><span class="p">,</span> <span class="n">author</span><span class="o">=</span><span class="s2">"Guest"</span><span class="p">)</span>
+<p>You will also need to download the file <a class="reference external" href="https://github.com/tomjanus/reemission/blob/release/compose.yaml">compose.yaml</a> and save it inside your ReEmission workspace folder (e.g. <code class="docutils literal notranslate"><span class="pre">my_reemission_work_folder</span></code> in the above example). The final file structure (assuming your top folder is called <em>my_reemission_work_folder</em>)should look as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">my_reemission_work_folder
+</span><span id="line-2">├── examples
+</span><span id="line-3">├── outputs
+</span><span id="line-4">└── compose.yml
 </span></code></pre></div>
 </div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p><strong>Linux users &amp; directory permissions</strong></p>
+<p>When run on a linux host computer, the ReEmission docker image will only work if the user ID &amp; group ID (<code class="docutils literal notranslate"><span class="pre">UID:GID</span></code>) of your user account is <code class="docutils literal notranslate"><span class="pre">1000:1000</span></code>. Otherwise, ReEmission will not be able to write to the <code class="docutils literal notranslate"><span class="pre">outputs/</span></code> folder.
+If you use Linux on a personal laptop, then it is very likely your user account <code class="docutils literal notranslate"><span class="pre">UID:GID</span></code> will be <code class="docutils literal notranslate"><span class="pre">1000:1000</span></code>. However, this may not be the case if you log in to a Linux server with multiple users. To check your user account, type:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">id<span class="w"> </span>-u<span class="w">  </span><span class="c1"># print user ID (UID)</span>
+</span><span id="line-2">id<span class="w"> </span>-g<span class="w">  </span><span class="c1"># print group ID (GID)</span>
+</span></code></pre></div>
+</div>
+<p>If your user account has a different UID and/or GID then you should either change the UID or GID, respectively so that they’re <code class="docutils literal notranslate"><span class="pre">1000:1000</span></code>.</p>
 </div>
 </section>
-<section id="2.-Add-LaTeX-model-presenter,-calculate-emissions-and-save-results-to-TEX-and-PDF-files">
-<h1>2. Add LaTeX model presenter, calculate emissions and save results to TEX and PDF files</h1>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">[3]:
+<section id="test-that-reemission-works">
+<h3>Test that ReEmission works</h3>
+<p>To test everything is working correctly, you should first run the following from inside the ReEmission workspace folder you just created:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="nb">cd</span><span class="w"> </span>my_reemission_work_folder
+</span><span id="line-2">docker<span class="w"> </span>compose<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>reemission
 </span></code></pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># Recent changes force the input data to contain a unique reservoir 'id' field</span>
-</span><span id="line-2"><span class="c1"># We are dynamically adding ids so that the input data conforms to the schema.</span>
-</span><span id="line-3"><span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="p">(</span><span class="n">res_name</span><span class="p">,</span> <span class="n">res_inputs</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">input_data</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-</span><span id="line-4">    <span class="n">res_inputs</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">'id'</span><span class="p">]</span> <span class="o">=</span> <span class="n">index</span>
-</span></code></pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">[4]:
-</span></code></pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s1">'outputs'</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="line-2"><span class="n">model</span><span class="o">.</span><span class="n">add_presenter</span><span class="p">(</span>
-</span><span id="line-3">    <span class="n">writers</span><span class="o">=</span><span class="p">[</span><span class="n">LatexWriter</span><span class="p">],</span>
-</span><span id="line-4">    <span class="n">output_files</span><span class="o">=</span><span class="p">[</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="s1">'outputs/output.tex'</span><span class="p">)])</span>
-</span><span id="line-5"><span class="n">model</span><span class="o">.</span><span class="n">calculate</span><span class="p">()</span>
-</span><span id="line-6"><span class="n">model</span><span class="o">.</span><span class="n">save_results</span><span class="p">()</span>
-</span></code></pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area stderr docutils container">
-<div class="highlight"><pre>
-ERROR:reemission.presenter:LaTeX compiler cannot be found in your environment.'.tex' and '.pdf' files could not be created.
-</pre></div></div>
-</div>
+<p>You should see the output of the command line interface with usage instructions.</p>
 </section>
-<section id="3.-Open-the-generated-PDF-document">
-<h1>3. Open the generated PDF document</h1>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">[5]:
-</span></code></pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># os.getcwd(),</span>
-</span><span id="line-2"><span class="n">pdf_file</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="s1">'outputs/output.pdf'</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
-</span><span id="line-3"><span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">pdf_file</span><span class="p">):</span>
-</span><span id="line-4">    <span class="n">webbrowser</span><span class="o">.</span><span class="n">open_new</span><span class="p">(</span><span class="n">pdf_file</span><span class="p">)</span>
-</span><span id="line-5"><span class="k">else</span><span class="p">:</span>
-</span><span id="line-6">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"File: </span><span class="si">{</span><span class="n">pdf_file</span><span class="si">}</span><span class="s2"> does not exist."</span><span class="p">)</span>
-</span></code></pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-File: outputs/output.pdf does not exist.
-</pre></div></div>
-</div>
-<p><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg"/></p>
+<section id="running-reemission-with-docker-compose">
+<h3>Running ReEmission with <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">compose</span></code></h3>
+<p>To run the ReEmission Docker container, please read the instructions in <a class="reference internal" href="../running_docker.html"><span class="doc">Running the ReEmission Docker Container</span></a>.</p>
+</section>
+</section>
 </section>
 </div><div class="flex justify-between items-center pt-6 mt-12 border-t border-border gap-4">
+<div class="mr-auto">
+<a class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input hover:bg-accent hover:text-accent-foreground py-2 px-4" href="building_image.html">
+<svg class="mr-2 h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<polyline points="15 18 9 12 15 6"></polyline>
+</svg>
+        Building the ReEmission Docker Image
+      </a>
+</div>
+<div class="ml-auto">
+<a class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input hover:bg-accent hover:text-accent-foreground py-2 px-4" href="../usage.html">
+        Usage
+        <svg class="ml-2 h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+</a>
+</div>
 </div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
 <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
 <ul>
-<li></li>
-<li><a :data-current="activeSection === '#1.-Read-input-data-and-output-configuration-YAML-file-and-instantiate-the-emission-model'" class="reference internal" href="#1.-Read-input-data-and-output-configuration-YAML-file-and-instantiate-the-emission-model">1. Read input data and output configuration YAML file and instantiate the emission model</a></li>
-<li><a :data-current="activeSection === '#2.-Add-LaTeX-model-presenter,-calculate-emissions-and-save-results-to-TEX-and-PDF-files'" class="reference internal" href="#2.-Add-LaTeX-model-presenter,-calculate-emissions-and-save-results-to-TEX-and-PDF-files">2. Add LaTeX model presenter, calculate emissions and save results to TEX and PDF files</a></li>
-<li><a :data-current="activeSection === '#3.-Open-the-generated-PDF-document'" class="reference internal" href="#3.-Open-the-generated-PDF-document">3. Open the generated PDF document</a></li>
+<li><a :data-current="activeSection === '#install-docker-desktop'" class="reference internal" href="#install-docker-desktop">Install Docker Desktop</a><ul>
+<li><a :data-current="activeSection === '#installing-docker-desktop'" class="reference internal" href="#installing-docker-desktop">Installing Docker Desktop</a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#pull-the-reemission-docker-image'" class="reference internal" href="#pull-the-reemission-docker-image">Pull the ReEmission Docker image</a></li>
+<li><a :data-current="activeSection === '#use-docker-compose-to-run-reemission'" class="reference internal" href="#use-docker-compose-to-run-reemission">Use Docker compose to run ReEmission</a><ul>
+<li><a :data-current="activeSection === '#prepare-your-workspace'" class="reference internal" href="#prepare-your-workspace">Prepare your workspace</a></li>
+<li><a :data-current="activeSection === '#test-that-reemission-works'" class="reference internal" href="#test-that-reemission-works">Test that ReEmission works</a></li>
+<li><a :data-current="activeSection === '#running-reemission-with-docker-compose'" class="reference internal" href="#running-reemission-with-docker-compose">Running ReEmission with <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">compose</span></code></a></li>
+</ul>
+</li>
 </ul>
 </div>
 </aside>
@@ -272,7 +274,5 @@ File: outputs/output.pdf does not exist.
 <script src="../_static/toggleprompt.js?v=5801b3bb"></script>
 <script defer="defer" src="../_static/theme.js?v=e82a16a3"></script>
 <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-<script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-<script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </body>
 </html>
