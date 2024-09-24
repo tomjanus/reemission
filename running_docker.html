@@ -139,8 +139,8 @@
 <div id="content" role="main">
 <section id="running-the-reemission-docker-container">
 <h1>Running the ReEmission Docker Container</h1>
-<section id="run-a-geocaret-analysis">
-<h2>Run a GeoCARET analysis</h2>
+<section id="run-a-reemission-analysis">
+<h2>Run a ReEmission analysis</h2>
 <p>We can use Docker image of ReEmission to run analysis using ReEmission’s command-line tools. First, copy your input data file to the <code class="docutils literal notranslate"><span class="pre">examples</span></code> sub-folder and then start ReEmission by typing the following:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">❯<span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>reemission<span class="w"> </span>reemission<span class="w"> </span>calculate<span class="w"> </span>./examples/<span class="o">[</span>input-file.json<span class="o">]</span><span class="w"> </span>-o<span class="w"> </span>./outputs/<span class="o">[</span>output-file.json<span class="o">]</span>
 </span></code></pre></div>
@@ -150,11 +150,10 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">[input-file.json]</span></code> is the name of the input file placed in the <cite>examples</cite> folder.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[output-file.json]</span></code> is the output file name.</p></li>
 </ul>
-<p>Alternatively, you can run the analysis with the input data in one of the files in the <code class="docutils literal notranslate"><span class="pre">tests/data</span></code> folder, and assuming your project name is called <code class="docutils literal notranslate"><span class="pre">test_project</span></code>, job name is called <code class="docutils literal notranslate"><span class="pre">job01</span></code> and data is output in the <strong>standard</strong> configuration.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">$<span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>geocaret<span class="w"> </span>python<span class="w"> </span>heet_cli.py<span class="w"> </span>tests/data/dams.csv<span class="w"> </span>test_project<span class="w"> </span>job01<span class="w"> </span>standard
+<p>You can run a test analysis with the input data in one of the files in the <code class="docutils literal notranslate"><span class="pre">examples</span></code> folder.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">$<span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>reemission<span class="w"> </span>reemission<span class="w"> </span>calculate<span class="w"> </span>./examples/test_input.json<span class="w"> </span>-o<span class="w"> </span>./outputs/test_output.json
 </span></code></pre></div>
 </div>
-<p>See <span class="xref std std-doc">../ghg_emissions/input_data</span> and <span class="xref std std-doc">running_python_package</span> to read about input data file specification and about the usage of GeoCARET’s command-line interface (CLI) arguments, respectively.</p>
 </section>
 <section id="running-demo-in-the-docker-container">
 <h2>Running demo in the Docker container</h2>
@@ -184,7 +183,7 @@
 </div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
 <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
 <ul>
-<li><a :data-current="activeSection === '#run-a-geocaret-analysis'" class="reference internal" href="#run-a-geocaret-analysis">Run a GeoCARET analysis</a></li>
+<li><a :data-current="activeSection === '#run-a-reemission-analysis'" class="reference internal" href="#run-a-reemission-analysis">Run a ReEmission analysis</a></li>
 <li><a :data-current="activeSection === '#running-demo-in-the-docker-container'" class="reference internal" href="#running-demo-in-the-docker-container">Running demo in the Docker container</a></li>
 </ul>
 </div>
