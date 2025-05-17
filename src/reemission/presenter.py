@@ -60,11 +60,12 @@ from pylatex import (
     Command,
     MultiColumn,
 )
-from reemission.utils import get_package_file, is_latex_installed, load_yaml, read_config
+from reemission.utils import is_latex_installed, safe_cast
 from reemission.input import Inputs
 from reemission.constants import Landuse
 from reemission.auxiliary import rollout_nested_list
 from reemission.document_compiler import BatchCompiler
+from reemission import registry
 
 # Set up module logger
 logging.basicConfig(level=logging.INFO)
@@ -85,14 +86,6 @@ TITLE_FONTSIZE = 11
 TICK_FONTSIZE = 10
 ANNOTATION_FONTSIZE = 10
 
-# Get the file paths
-CONFIG_DIR = get_package_file('config')
-INPUT_CONFIG_PATH = CONFIG_DIR / 'inputs.yaml'
-OUTPUT_CONFIG_PATH = CONFIG_DIR / 'outputs.yaml'
-INTERN_VARS_CONFIG_PATH = CONFIG_DIR / 'internal_vars.yaml'
-PARAMETER_CONFIG_PATH = CONFIG_DIR / 'parameters.yaml'
-CONFIG_INI_PATH = CONFIG_DIR / 'config.ini'
-
 # JSONWriter parameters
 JSON_NUMBER_DECIMALS = 4
 EXCEL_NUMBER_DECIMALS = 4
@@ -112,10 +105,6 @@ FACTOR_NAMES = {
 
 landcover_names: List[str] = [landcover.value for landcover in Landuse.__dict__['_member_map_'].values()]
 
-app_config: Dict = load_yaml(
-    file_path=get_package_file("./config/app_config.yaml"))
-clean_tex = app_config['latex']['clean_tex']
-compilations = app_config['latex']['compilations']
 def _get_latex_compiler() -> str:
     """
     Retrieves the LaTeX compiler to be used based on application configuration.
@@ -131,6 +120,7 @@ def _get_latex_compiler() -> str:
 
     """
     default_compiler = 'pdflatex'
+    app_config = registry.main_config.get("app_config")
     try:
         latex_options = app_config['latex']
         compiler = latex_options['compiler']
@@ -373,7 +363,7 @@ class ExcelWriter(Writer):
         input_config (Dict): Configuration file with formatting settings for inputs.
         intern_vars_config (Dict): Configuration dictionary with formatting settings for internal variables.
         parameter_config (Dict): Configuration file with formatting settings for parameters.
-        config_ini (configparser.ConfigParser): Global parameter configuration file.
+        config_ini (Dict): Global parameter configuration dict (usually from .ini file).
         author (str): Author of the Excel document.
         title (str): Title of the Excel document.
         output_df (pd.DataFrame): DataFrame containing model outputs.
@@ -392,7 +382,7 @@ class ExcelWriter(Writer):
     intern_vars_config: Dict
 
     parameter_config: Dict
-    config_ini: configparser.ConfigParser
+    config_ini: Dict
     author: str
     title: str
 
@@ -593,7 +583,7 @@ class JSONWriter(Writer):
         input_config (Dict): Configuration dictionary with formatting settings for inputs.
         intern_vars_config (Dict): Configuration dictionary with formatting settings for internal variables.
         parameter_config (Dict): Configuration file with formatting settings for parameters.
-        config_ini (configparser.ConfigParser): Global parameter configuration file.
+        config_ini (Dict): Global parameter configuration dict (usually from .ini file).
         author (str): Author of the document.
         title (str): Title of the document.
         json_dict (Dict): Output dictionary saved to the output JSON file. Automatically initialized.
@@ -607,7 +597,7 @@ class JSONWriter(Writer):
     input_config: Dict
     intern_vars_config: Dict
     parameter_config: Dict
-    config_ini: configparser.ConfigParser
+    config_ini: Dict
     author: str
     title: str
     json_dict: Dict = field(init=False)
@@ -800,7 +790,7 @@ class LatexWriter(Writer):
         input_config (Dict): Configuration file with formatting settings.
         intern_vars_config (Dict): Configuration dictionary with formatting settings.
         parameter_config (Dict): Configuration file with formatting settings.
-        config_ini (configparser.ConfigParser): Global parameter configuration file.
+        config_ini (Dict): Global parameter configuration dict (usually from .ini file).
         author (str): Author of the document.
         title (str): Title of the document.
         document (Document): PyLaTeX Document object.
@@ -814,7 +804,7 @@ class LatexWriter(Writer):
     input_config: Dict
     intern_vars_config: Dict
     parameter_config: Dict
-    config_ini: configparser.ConfigParser
+    config_ini: Dict
     author: str
     title: str
 
@@ -1070,24 +1060,20 @@ class LatexWriter(Writer):
                     try:
                         desc.add_item(
                             NoEscape("GWP100 for CO$_2$: "),
-                            self.config_ini.getfloat('CARBON_DIOXIDE',
-                                                     'co2_gwp100'))
+                            safe_cast(self.config_ini['CARBON_DIOXIDE']['co2_gwp100'], float))
                         desc.add_item(
                             NoEscape("GWP100 for CH$_4$: "),
-                            self.config_ini.getfloat('METHANE',
-                                                     'ch4_gwp100'))
+                            safe_cast(self.config_ini['METHANE']['ch4_gwp100'], float))
                         desc.add_item(
                             NoEscape("GWP100 for N$_2$O: "),
-                            self.config_ini.getfloat('NITROUS_OXIDE',
-                                                     'nitrous_gwp100'))
+                            safe_cast(self.config_ini['NITROUS_OXIDE']['nitrous_gwp100'], float))
                     except configparser.NoSectionError:
                         pass
         if self.parameter_config['parameters']['conv_factors']['include']:
             with self.document.create(Subsection("Unit conversion factors")):
                 try:
                     with self.document.create(Description()) as desc:
-                        conv_coeff = self.config_ini.getfloat(
-                            'CARBON_DIOXIDE', 'conv_coeff')
+                        conv_coeff = safe_cast(self.config_ini['CARBON_DIOXIDE']['conv_coeff'], float)
                         desc.add_item(
                             NoEscape('Conversion from mg~CO$_2$-C~m$^{-2}$~' +
                                      'd$^{-1}$ to g~CO$_{2,eq}$~m$^{-2}$~' +
@@ -1095,8 +1081,7 @@ class LatexWriter(Writer):
                             Quantity(conv_coeff, options=round_options),
                         )
                     with self.document.create(Description()) as desc:
-                        conv_coeff = self.config_ini.getfloat(
-                            'METHANE', 'conv_coeff')
+                        conv_coeff = safe_cast(self.config_ini['METHANE']['conv_coeff'], float)
                         desc.add_item(
                             NoEscape('Conversion from mg CH$_4$~m$^{-2}$~' +
                                      'd$^{-1}$ to g~CO$_{2,eq}$~m$^{-2}$~' +
@@ -1104,8 +1089,7 @@ class LatexWriter(Writer):
                             Quantity(conv_coeff, options=round_options),
                         )
                     with self.document.create(Description()) as desc:
-                        conv_coeff = self.config_ini.getfloat(
-                            'NITROUS_OXIDE', 'conv_coeff')
+                        conv_coeff = safe_cast(self.config_ini['NITROUS_OXIDE']['conv_coeff'], float)
                         desc.add_item(
                             NoEscape('Conversion from $\\mu$g~N$_2$O~' +
                                      'm$^{-2}$~d$^{-1}$ to g~CO$_{2,eq}$~' +
@@ -1496,6 +1480,10 @@ class LatexWriter(Writer):
         Returns:
             None
         """
+        # Read data from configuration
+        app_config = registry.main_config.get("app_config")
+        clean_tex = app_config['latex']['clean_tex']
+        compilations = app_config['latex']['compilations']
         if not bool(self.outputs):
             # If outputs are None or an empty dictionary.
             return None
@@ -1566,12 +1554,11 @@ class Presenter:
 
     def __post_init__(self):
         """Loads configuration files after instance initialization."""
-        self.input_config = load_yaml(INPUT_CONFIG_PATH)
-        self.output_config = load_yaml(OUTPUT_CONFIG_PATH)
-        self.intern_vars_config = load_yaml(INTERN_VARS_CONFIG_PATH)
-        self.parameter_config = load_yaml(
-            PARAMETER_CONFIG_PATH)
-        self.config_ini = read_config(CONFIG_INI_PATH)
+        self.input_config = registry.presenter_config.get("report_inputs")
+        self.output_config = registry.presenter_config.get("report_outputs")
+        self.intern_vars_config = registry.presenter_config.get("report_internal")
+        self.parameter_config = registry.presenter_config.get("report_parameters")
+        self.config_ini = registry.main_config.get("model_config")
 
     def add_writer(self, writer: Type[Writer], output_file: str) -> None:
         """Adds a Writer object to the list of writers.

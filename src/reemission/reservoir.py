@@ -7,34 +7,28 @@
 """
 import logging
 import math
-import configparser
 import inspect
 from enum import Enum
 from dataclasses import dataclass
-from typing import List, Tuple, Optional, TypeVar, Type
+from typing import List, Tuple, Optional, TypeVar, Type, Dict
 from reemission.temperature import MonthlyTemperature
 from reemission.auxiliary import (
     water_density, cd_factor, scale_windspeed, air_density)
 from reemission.utils import (
-    read_config, save_return, get_package_file, load_yaml, debug_on_exception)
+    save_return, debug_on_exception, safe_cast)
 from reemission.constants import Landuse, TrophicStatus
 from reemission.exceptions import (
     WrongAreaFractionsException,
     WrongSumOfAreasException)
 from reemission.globals import internal
+from reemission import registry
 
 
 # Set up module logger
 log = logging.getLogger(__name__)
-config: configparser.ConfigParser = read_config(
-    get_package_file("config/config.ini"))
-
-internals_config = load_yaml(get_package_file("config/internal_vars.yaml"))
-
-# Margin for error by which the sum of landuse fractions can differ from 1.0
-EPS = config.getfloat("CALCULATIONS", "eps_reservoir_area_fractions")
 
 ReservoirType = TypeVar('ReservoirType', bound='Reservoir')
+internals_config = registry.presenter_config.get("report_internal")
 
 
 @dataclass
@@ -79,6 +73,7 @@ class Reservoir:
     mean_monthly_windspeed: float
     water_intake_depth: float
     name: str = "n/a"
+    config: Optional[Dict] = None
 
     def __post_init__(self):
         """Post-initialization checks and validations.
@@ -89,6 +84,9 @@ class Reservoir:
             WrongAreaFractionsException: If the number of area fractions is not equal to the number of land uses times three.
             WrongSumOfAreasException: If the sum of area fractions does not equal 1 +/- EPS.
         """
+        if not self.config:
+            self.config = registry.main_config.get("model_config")
+        eps = safe_cast(self.config["CALCULATIONS"]["eps_reservoir_area_fractions"], float)
         try:
             assert len(self.area_fractions) == 3 * len(Landuse)
         except AssertionError as err:
@@ -99,13 +97,13 @@ class Reservoir:
                 number_of_landuses= 3 * len(Landuse),
                 message=message) from err
         try:
-            assert 1 - EPS <= sum(self.area_fractions) <= 1 + EPS
+            assert 1 - eps <= sum(self.area_fractions) <= 1 + eps
         except AssertionError as err:
             message: str = \
                 f"Wrong values in reservoir {self.name} area fractions vector."
             raise WrongSumOfAreasException(
                 fractions=self.area_fractions,
-                accuracy=EPS,
+                accuracy=eps,
                 message=message) from err
         if isinstance(self.coordinates, list):
             self.coordinates = tuple(self.coordinates)
@@ -598,7 +596,7 @@ class Reservoir:
         # Method for calculating retention coefficient in reservoirs:
         # empirical/larsen
         if method is None:
-            method = config['CALCULATIONS']["ret_coeff_method"]
+            method = self.config['CALCULATIONS']["ret_coeff_method"]
         return float(inflow_conc * (1.0 - self.retention_coeff(method=method)))
 
 

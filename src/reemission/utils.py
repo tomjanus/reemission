@@ -1,5 +1,5 @@
 """Package-wide utility functions."""
-from typing import Union
+from typing import Callable, Union, Tuple, Optional, Dict, Any, Type
 import sys
 import os
 import configparser
@@ -10,7 +10,6 @@ import shutil
 import pathlib
 import hashlib
 import time
-from typing import Callable, Union, Tuple, Optional, Dict, Any
 from enum import Enum, EnumMeta
 from packaging import version
 import yaml
@@ -98,7 +97,8 @@ def load_toml(file_path: pathlib.Path) -> Dict:
     Returns:
         Dict: A dictionary representation of the toml file.
     """
-    return toml.load(file_path)
+    with open(file_path, 'r', encoding='utf-8') as toml_file:
+        return toml.load(toml_file)
 
 
 def load_shape(path: pathlib.Path) -> gpd.GeoDataFrame:
@@ -160,6 +160,35 @@ def get_package_file(*folders: str) -> pathlib.Path:
         pkg = importlib_resources.files(APPLICATION_NAME)
         pkg = pkg.joinpath("/".join(folders))
         return pkg
+        
+def safe_cast(value: Any, type_: Type) -> Any:
+    """Safely casts a value to a specified type.
+
+    Tries to convert the input value to the specified type. If conversion fails,
+    the original value is returned unchanged. Special handling is implemented for
+    boolean conversion from common string representations.
+
+    Args:
+        value: The value to be converted.
+        type_: The target type to cast to (e.g., bool, int, float).
+
+    Returns:
+        The converted value if casting is successful; otherwise, the original value.
+    """
+    if type_ is bool:
+        if isinstance(value, str):
+            v_lower = value.strip().lower()
+            if v_lower in ['true', 'yes', '1']:
+                return True
+            elif v_lower in ['false', 'no', '0']:
+                return False
+        elif isinstance(value, (int, float)):
+            return bool(value)
+    else:
+        try:
+            return type_(value)
+        except (ValueError, TypeError):
+            return value
 
 
 def get_folder_size(folder_path: Union[pathlib.Path, str]) -> float:
@@ -207,6 +236,23 @@ def read_config(
     config = configparser.ConfigParser()
     config.read(file_path)
     return config
+    
+    
+def read_config_dict(
+        file_path: Union[str, pathlib.Path]) -> configparser.ConfigParser:
+    """Reads the `.ini` file with global configuration parameters and returns the parsed config object.
+    
+    Args:
+        file_path: Path to the .ini file.
+    
+    Returns:
+        Dictionary containing the configuration data.
+    """
+    file_path = pathlib.Path(file_path)
+    parser = configparser.ConfigParser()
+    parser.optionxform = str  # preserve case in keys
+    parser.read(file_path)
+    return {s: dict(parser.items(s)) for s in parser.sections()}
 
 
 def read_table(

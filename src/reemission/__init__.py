@@ -7,3 +7,7 @@ try:
 except PackageNotFoundError:
     pass  # package is not installed
 
+from reemission.config_registration import register_configs
+
+# Automatically register configs at package import
+register_configs()

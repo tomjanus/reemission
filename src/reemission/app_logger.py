@@ -22,11 +22,12 @@ import os
 import sys
 from typing import Tuple, Optional, Union
 import errno
-from reemission.utils import get_package_file, load_yaml
+from reemission.utils import get_package_file
+from reemission import registry
 
+# Move this code inside create_logger
 
-APP_CONFIG = load_yaml(
-    file_path=get_package_file("./config/app_config.yaml"))
+APP_CONFIG = registry.main_config.get("app_config")
 # Set global logging settings from logging configuration
 try:
     # logging.getLogger('test').setLevel(APP_CONFIG['logging']['level'])

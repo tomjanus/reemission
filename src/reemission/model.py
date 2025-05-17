@@ -69,13 +69,12 @@ Typical usage involves:
 Note:
     Ensure the configuration file and input data are properly formatted and validated before running the calculations.
 """
-import configparser
 from dataclasses import dataclass, field
 from typing import Type, Dict, Tuple, Union, Optional, List
 import pathlib
 import logging
 from itertools import chain
-from reemission.utils import read_config, get_package_file, load_yaml
+from reemission.utils import load_yaml, read_config_dict
 from reemission.globals import internal
 from reemission.input import Inputs
 from reemission.temperature import MonthlyTemperature
@@ -84,17 +83,11 @@ from reemission.reservoir import Reservoir
 from reemission.emissions import (
     CarbonDioxideEmission, NitrousOxideEmission, MethaneEmission)
 from reemission.presenter import Presenter, Writer
+from reemission import registry
 
 # Set up module logger
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
-
-# Derive default calculation options from config
-config: configparser.ConfigParser = read_config(
-    get_package_file("config/config.ini"))
-ret_coeff_method = config.get("CALCULATIONS", "ret_coeff_method")
-p_export_cal = config.get("CALCULATIONS", "p_export_cal")
-nitrous_oxide_model = config.get("CALCULATIONS", "nitrous_oxide_model")
 
 #  TODO: potential problems in Python <= 3.6 because dicts are not ordered
 #       pay attention
@@ -109,7 +102,8 @@ class EmissionModel:
 
     Attributes:
         inputs (Inputs): Inputs object with input data.
-        config (Union[Dict, pathlib.Path, str]): Dictionary with configuration data or path to config file.
+        model_config (Union[Dict, pathlib.Path, str]): Dictionary with model configuration data or path to config file.
+        presenter_config (Union[Dict, pathlib.Path, str]): Dictionary with Presenter configuration data or path to config file.
         outputs (Dict): Emission calculation outputs in a dictionary structure.
         internal (Dict): Internal variables for calculations.
         author (str): Author's name.
@@ -120,21 +114,49 @@ class EmissionModel:
         presenter (Optional[Presenter]): Presenter object for presenting input and output data in various formats.
     """
     inputs: Inputs
-    config: Union[Dict, pathlib.Path, str]
+    model_config: Union[Dict, pathlib.Path, str] = field(default=None)
+    presenter_config: Union[Dict, pathlib.Path, str] = field(default=None)
     outputs: Dict = field(default_factory=dict)
     internal: Dict = field(default_factory=dict)
     author: str = field(default="")
     report_title: str = field(default="Results")
-    ret_coeff: str = field(default=ret_coeff_method)
-    p_model: str = field(default=p_export_cal)
-    n2o_model: str = field(default=nitrous_oxide_model)
+    ret_coeff: Optional[str] = field(default=None)
+    p_model: Optional[str] = field(default=None)
+    n2o_model: Optional[str] = field(default=None)
     presenter: Optional[Presenter] = field(default=None)
 
     def __post_init__(self) -> None:
-        """Initialize outputs dict an load config file if config is a path."""
+        """Initialize outputs dict and load presenter_config file if presenter_config is a path."""
         internal = {}
-        if isinstance(self.config, (pathlib.Path, str)):
-            self.config: dict = load_yaml(pathlib.Path(self.config))
+        if self.presenter_config is None:
+            self.presenter_config = registry.presenter_config.get("report_outputs")
+        elif isinstance(self.presenter_config, (pathlib.Path, str)):
+            self.presenter_config: dict = load_yaml(pathlib.Path(self.presenter_config))
+        if self.model_config is None:
+            self.model_config = registry.main_config.get("model_config")
+        elif isinstance(self.model_config, (pathlib.Path, str)):
+            self.model_config: dict = read_config_dict(self.model_config)
+        
+        # Option to explicitly set individual parameters in the class - perhaps of removing it and
+        # relying directly on configurations
+        if not self.ret_coeff:
+            self.ret_coeff = self.model_config["CALCULATIONS"]['ret_coeff_method']
+        if not self.p_model:
+           self.p_model = self.model_config["CALCULATIONS"]['p_export_cal']
+        if not self.n2o_model:
+            self.n2o_model = self.model_config["CALCULATIONS"]['nitrous_oxide_model']
+            
+    def get_outputs(self) -> Dict:
+        """Getter for outputs dictionary."""
+        return self.outputs
+        
+    def get_inputs(self) -> Inputs:
+        """Getter for the Inputs object"""
+        return self.inputs
+        
+    def get_internal_vars(self) -> Dict:
+        """Getter for internal (intermediate) variables"""
+        return self.internal
 
     @staticmethod
     def create_exec_dictionary(
@@ -347,16 +369,13 @@ class EmissionModel:
             output = {}
             # Iterate through all emission components and record those that
             # are marked for outputting
-            if isinstance(self.config, dict):
-                for emission, em_config in self.config['outputs'].items():
+            if isinstance(self.presenter_config, dict):
+                for emission, em_config in self.presenter_config['outputs'].items():
                     if emission in exec_dict.keys() and \
                             em_config['include'] in TRUTHS:
                         output[emission] = exec_dict[emission]['ref'](
                             **exec_dict[emission]['args'])
                 self.outputs[model_input.name] = output
-                # WARNING - COULD RUN INTO ISSUES IF CONFIG CHANGES IN BETWEEN RESERVOIRS
-                # BECAUSE THE `INTERNAL` GLOBAL VAR IS NOT RESET IN BETWEEN CONSECUTIVE
-                # RESERVOIR GHG EMISSION CALCULATIONS
                 self.internal[model_input.name] = internal.copy()
             else:
                 log.warning(

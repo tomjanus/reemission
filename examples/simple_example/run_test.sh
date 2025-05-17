@@ -1,8 +1,16 @@
 #!/bin/bash
-echo Running test calculation with RE-Emission ...
-echo ---------------------------------------------
-echo Reads input file in .json format, calculates GHG emissions for a number of reservoirs and outputs the results in three file fomrats: JSON, PDF, and XLSX. Saving ouptuts to XLSX format is still experimental.
-echo ---------------------------------------------
+
+echo "Running test calculation with RE-Emission ..."
+echo "---------------------------------------------"
+echo "Reads input file in .json format, calculates GHG emissions for a number of reservoirs."
+echo "Outputs are saved only in the formats you specify: JSON, PDF, or XLSX."
+echo "---------------------------------------------"
+
+# Ensure at least one argument was passed
+if [ "$#" -lt 1 ]; then
+    echo "Usage: $0 [output.json] [output.pdf] [output.xlsx]"
+    exit 1
+fi
 
 folder="outputs"
 
@@ -13,4 +21,25 @@ else
     echo "Folder already exists: $folder"
 fi
 
-reemission calculate test_input.json -o ./outputs/test_output.json -o ./outputs/test_output.pdf -o ./outputs/test_output.xlsx -a "RE-Emission test run" -t "Test Results" -p g-res
+# Base command
+cmd="reemission calculate test_input.json"
+
+# Add output arguments
+for output in "$@"; do
+    ext="${output##*.}"
+    case "$ext" in
+        json|pdf|xlsx)
+            cmd+=" -o ./outputs/${output}"
+            ;;
+        *)
+            echo "Warning: Unsupported output format: $ext (skipped)"
+            ;;
+    esac
+done
+
+# Add other fixed arguments
+cmd+=" -a \"RE-Emission test run\" -t \"Test Results\" -p g-res"
+
+# Run the command
+eval "$cmd"
+

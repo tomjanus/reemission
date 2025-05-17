@@ -17,7 +17,6 @@ Why does this file exist, and why not put this in __main__?
 from typing import Dict, List, Tuple
 import os
 import logging
-import configparser
 import pathlib
 import textwrap
 import rich_click as click
@@ -28,11 +27,12 @@ import reemission
 import reemission.presenter
 from reemission.app_logger import create_logger
 from reemission.utils import (
-    add_version, get_package_file, read_config, get_folder_size, 
+    add_version, get_package_file, get_folder_size, 
     clean_folder, debug_on_exception)
 from reemission.model import EmissionModel
 from reemission.input import Inputs
 from reemission.integration.cli import cli as integration_cli
+from reemission import registry
 click.rich_click.USE_MARKDOWN = True
 
 # Update this section if new writers are added to the package
@@ -48,11 +48,11 @@ ext_writer_dict = {
 log = create_logger(logger_name=__name__)
 
 FIGLET: bool = True
-INI_FILE: str = get_package_file('config', 'config.ini')
-# Derive default calculation options from config
-config: configparser.ConfigParser = read_config(INI_FILE)
-p_export_cal = config.get("CALCULATIONS", "p_export_cal")
-nitrous_oxide_model = config.get("CALCULATIONS", "nitrous_oxide_model")
+model_config = registry.main_config.get("model_config")
+# Read default parameters from config
+p_export_cal = model_config.get("CALCULATIONS", "p_export_cal")
+nitrous_oxide_model = model_config.get("CALCULATIONS", "nitrous_oxide_model")
+
 
 def run_command(command, print_result: bool = False, check: bool = False):
     #log.debug("Command: {}".format(command))
@@ -124,16 +124,19 @@ def calculate(input_file, output_files, output_config, author,
     input_data = Inputs.fromfile(input_file)
     # Use the default config file if not provided as an argument
     if not output_config:
-        output_config = get_package_file('config', 'outputs.yaml')
+        output_config = registry.presenter_config.get("report_outputs")
     model = EmissionModel(
         inputs=input_data,
-        config=output_config.as_posix(),
+        presenter_config=output_config,
         author=author,
         report_title=title,
         p_model=p_model)
     # Format all file names by converting to unicode
     input_file_str = f"{click.format_filename(input_file)}"
-    output_config_str = f"{click.format_filename(output_config)}"
+    if isinstance(output_config, str):
+        output_config_str = f"{click.format_filename(output_config)}"
+    else:
+        output_config_str = "read directly from the config registry"
     output_files_unicode = [
         f"{click.format_filename(file)}" for file in output_files]
     output_files_str = ', '.join(output_files_unicode)
@@ -217,13 +220,12 @@ def log_to_pdf() -> None:
                 pdf.cell(0, fontsize_mm, wrap, ln=1)
         # Output the PDF file
         pdf.output(filename, 'F')
-
-    app_config: Dict = reemission.utils.load_yaml(
-        file_path=get_package_file("./config/app_config.yaml"))
-    log_path = get_package_file(app_config['logging']['log_dir'])
-    log_filename = app_config['logging']['log_filename']
+    
+    log_path = registry.main_config.get("app_config")['logging']['log_dir']
+    log_filename = registry.main_config.get("app_config")['logging']['log_filename']
     log_filename_no_ext = log_filename.split(".")[0]
     log_file_path = pathlib.Path.joinpath(log_path, log_filename)
+    
     try:
         with open(log_file_path, 'r', encoding='utf-8') as file:
             text_content = file.read()

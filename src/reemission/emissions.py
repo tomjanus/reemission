@@ -61,18 +61,13 @@ from reemission.ns_catchment import NSCatchmentCreator
 from reemission.temperature import MonthlyTemperature
 from reemission.exceptions import WrongN2OModelError
 from reemission.globals import internal
-
-
-INI_FILE = get_package_file("config/config.ini")
-TABLES = get_package_file("parameters")
+from reemission import registry
 
 # Set up module logger
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
-
-internals_config = load_yaml(get_package_file("config/internal_vars.yaml"))
-
+internals_config = registry.presenter_config.get("report_internal")
 
 @lru_cache(maxsize=None)
 def check_preimpoundment_area(preimp_area: float, reservoir_area: float, reservoir_name: str) -> None:
@@ -102,7 +97,7 @@ class Emission(ABC):
         catchment (Catchment): Catchment object with catchment data and methods.
         reservoir (Reservoir): Reservoir object with reservoir data and methods.
         preinund_area (float): Pre-inundation area of a reservoir, in hectares.
-        config (configparser.ConfigParser): ConfigParser object containing configuration from an .ini file with equation constants.
+        config (dict): Configuration dictionary with model equation constants/parameters.
 
     Note:
         This class defines two generic methods that must be implemented in all emission subclasses:
@@ -112,10 +107,12 @@ class Emission(ABC):
     catchment: Catchment
     reservoir: Reservoir
     preinund_area: float
-    config: configparser.ConfigParser
+    config: Dict
 
-    def __init__(self, catchment, reservoir, preinund_area=None,
-                 config_file=INI_FILE):
+    def __init__(
+            self, catchment: Catchment, reservoir: Reservoir, 
+            preinund_area: Optional[float] = None,
+            config: Optional[Dict] = None):
         """
         Initializes the Emission object.
 
@@ -123,15 +120,24 @@ class Emission(ABC):
             catchment (Catchment): Catchment object containing catchment data and methods.
             reservoir (Reservoir): Reservoir object containing reservoir data and methods.
             preinund_area (float, optional): Pre-inundation area of the reservoir in hectares. Defaults to None.
-            config_file (str): Path to the configuration file. Defaults to ``INI_FILE``.
+            config (dict): Configuration dictionary with model equation constants/parameters. Defaults to None.
         """
         self.catchment = catchment
         self.reservoir = reservoir
-        self.config = read_config(config_file)
+        if not config:
+            self.config = registry.main_config.get("model_config")
         if preinund_area is None:
             self.preinund_area = self.catchment.river_area_before_impoundment()
         # Check if preinindation area is not larger than reservoir area
         check_preimpoundment_area(self.preinund_area, reservoir.area, reservoir.name)
+        
+    @staticmethod
+    def _try_cast_to_float(value):
+        """Attempts to cast a value to float; returns the original value on failure."""
+        try:
+            return float(value)
+        except (ValueError, TypeError):
+            return value
 
     def _par_from_config(
             self, list_of_constants: list,
@@ -146,8 +152,9 @@ class Emission(ABC):
         Returns:
             SimpleNamespace: A namespace containing the parameters read from the config file.
         """
-        const_dict = {par_name: self.config.getfloat(section_name, par_name)
-                      for par_name in list_of_constants}
+        const_dict = {
+            par_name: self._try_cast_to_float(self.config[section_name][par_name]) for
+            par_name in list_of_constants}
         return SimpleNamespace(**const_dict)
 
     @abstractmethod
@@ -228,7 +235,7 @@ class CarbonDioxideEmission(Emission):
 
     def __init__(self, catchment: Catchment, reservoir: Reservoir, eff_temp: float, 
                  p_calc_method: str, preinund_area: Optional[float] = None,
-                 config_file: pathlib.Path = INI_FILE) -> None:
+                 config: Optional[Dict] = None) -> None:
         """
         Initializes the CarbonDioxideEmission object.
 
@@ -238,11 +245,11 @@ class CarbonDioxideEmission(Emission):
             eff_temp (float): Effective temperature for CO$_2$.
             p_calc_method (str): Method used for calculating annual discharge of P from the catchment to the reservoir.
             preinund_area (Optional[float]): Pre-inundation area of the reservoir in hectares. Defaults to None.
-            config_file (pathlib.Path): Path to the configuration file. Defaults to INI_FILE.
+            config (dict): Configuration dictionary with model equation constants/parameters. Defaults to None.
         """
         super().__init__(
             catchment=catchment, reservoir=reservoir,
-            config_file=config_file, preinund_area=preinund_area)
+            config=config, preinund_area=preinund_area)
         # Initialise input data specific to carbon dioxide emissions
         self.eff_temp = eff_temp  # EFF temp CO2
         avail_p_calc_methods: Tuple[str, str] = ('g-res', 'mcdowell')
@@ -259,11 +266,9 @@ class CarbonDioxideEmission(Emission):
                                'k5_diff', 'k6_diff', 'k7_diff', 'conv_coeff',
                                'co2_gwp100', 'weight_C', 'weight_CO2'],
             section_name='CARBON_DIOXIDE')
-        self.pre_impoundment_table = read_table(
-            os.path.join(TABLES, 'Carbon_Dioxide', 'pre-impoundment.yaml'),
-            schema_file = get_package_file("schemas/pre_impoundment_schema.json"))
+        self.pre_impoundment_table = registry.tables.get("co2_preimpoundment")
         # Read from config
-        self.use_red_area = self.config.getboolean('CALCULATIONS','use_ns_catchment')
+        self.use_red_area = bool(self.config['CALCULATIONS']['use_ns_catchment'])
 
     @property
     @save_return(internal, internals_config['reservoir_tp']['include'])
@@ -570,7 +575,7 @@ class MethaneEmission(Emission):
     def __init__(self, catchment: Catchment, reservoir: Reservoir, 
                  monthly_temp: MonthlyTemperature,
                  preinund_area: Optional[float] = None, 
-                 config_file: pathlib.Path = INI_FILE):
+                 config: Optional[Dict] = None):
         """Initialize `MethaneEmission` instance.
 
         Args:
@@ -578,16 +583,14 @@ class MethaneEmission(Emission):
             reservoir (Reservoir): Reservoir object representing the reservoir.
             monthly_temp (MonthlyTemperature): MonthlyTemperature object for monthly temperature data.
             preinund_area (float, optional): Pre-inundation area in hectares.
-            config_file (pathlib.Path, optional): Path to the configuration file (default: INI_FILE).
+            config (dict): Configuration dictionary with model equation constants/parameters. Defaults to None.
         """
         self.monthly_temp = monthly_temp
-        self.pre_impoundment_table: dict = read_table(
-            os.path.join(TABLES, 'Methane', 'pre-impoundment.yaml'),
-            schema_file = get_package_file("schemas/pre_impoundment_schema.json"))
+        self.pre_impoundment_table = registry.tables.get("ch4_preimpoundment")
         super().__init__(
             catchment=catchment,
             reservoir=reservoir,
-            config_file=config_file,
+            config=config,
             preinund_area=preinund_area)
         # List of parameters required for CH4 emission calculations
         par_list = ['k1_diff', 'k2_diff', 'k3_diff', 'k4_diff',
@@ -1088,7 +1091,7 @@ class NitrousOxideEmission(Emission):
 
     def __init__(self, catchment: Catchment, reservoir: Reservoir, model: str, 
                  p_export_model: str, preinund_area: Optional[float] = None, 
-                 config_file: pathlib.Path = INI_FILE) -> None:
+                 config: Optional[Dict] = None) -> None:
         """
         Initializes a NitrousOxideEmission instance.
 
@@ -1098,14 +1101,15 @@ class NitrousOxideEmission(Emission):
             model (str): Selected N$_2$O emission model ('model_1', 'model_2').
             p_export_model (str): Model for calculating P export from catchments.
             preinund_area (Optional[float], optional): Pre-inundation area. Defaults to None.
-            config_file (pathlib.Path, optional): Path to configuration file. Defaults to `INI_FILE`.
+            config (dict): Configuration dictionary with model equation constants/parameters. Defaults to None.
         """
         if model not in self.available_models:
             log.warning('Model %s unknown. ', model)
             log.info('Initializing with default model 1')
             model = 'model_1'
-        super().__init__(catchment=catchment, reservoir=reservoir,
-                         config_file=config_file, preinund_area=preinund_area)
+        super().__init__(
+            catchment=catchment, reservoir=reservoir,
+            config=config, preinund_area=preinund_area)
         # List of parameters required for CH4 emission calculations
         par_list = ['nitrous_gwp100', 'weight_O', 'weight_P', 'weight_N']
         # Read the parameters from config

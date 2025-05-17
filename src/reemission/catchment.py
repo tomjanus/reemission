@@ -3,60 +3,28 @@ Catchment-related processes.
 
 This module provides functionalities for calculating various catchment-related metrics, 
 including phosphorus and nitrogen loads, using different methodologies.
-
-Attributes:
-    INI_FILE (str): Path to the configuration file.
-    TABLES (str): Path to the parameters directory.
-    tn_coeff_table (dict): TN coefficient table loaded from YAML.
-    tp_coeff_table (dict): TP coefficient table loaded from YAML.
-    p_loads_pop (dict): Phosphorus loads population table loaded from YAML.
-    p_exports (dict): Phosphorus exports table loaded from YAML.
-    config (configparser.ConfigParser): Loaded configuration settings.
-    internals_config (dict): Internal variables configuration loaded from YAML.
-    EPS (float): Margin of error for the sum of land use fractions.
     
 .. _G-Res Technical Documentation: https://www.hydropower.org/publications/the-ghg-reservoir-tool-g-res-technical-documentation
 .. _Praire2021: https://www.sciencedirect.com/science/article/pii/S1364815221001602
 .. _G-Res: https://www.grestool.org/
 """
 import inspect
-import configparser
 import logging
 import math
 from dataclasses import dataclass
 from typing import List, Optional, TypeVar, Type
-from reemission.utils import (
-    read_table, find_enum_index, read_config, save_return, get_package_file, load_yaml)
+from reemission.utils import find_enum_index, save_return
 from reemission.biogenic import BiogenicFactors
 from reemission.constants import Landuse
 from reemission.exceptions import WrongSumOfAreasException, WrongAreaFractionsException
 from reemission.globals import internal
+from reemission import registry
 
 
 # Set up module logger
 log = logging.getLogger(__name__)
-# Load path to Yaml tables
-INI_FILE = get_package_file("config/config.ini")
-TABLES = get_package_file("parameters")
 
-tn_coeff_table = read_table(
-    TABLES / "McDowell/landscape_TN_export.yaml", 
-    schema_file=get_package_file('schemas/landscape_TN_export_schema.json'))
-tp_coeff_table = read_table(
-    TABLES / "McDowell/landscape_TP_export.yaml",
-    schema_file=get_package_file('schemas/landscape_TP_export_schema.json'))
-p_loads_pop = read_table(
-    TABLES / "phosphorus_loads.yaml",
-    schema_file=get_package_file('schemas/phosphorus_loads_schema.json'))
-p_exports = read_table(
-    TABLES / "phosphorus_exports.yaml",
-    schema_file=get_package_file('schemas/phosphorus_exports_schema.json'))
-
-config: configparser.ConfigParser = read_config(INI_FILE)
-internals_config = load_yaml(get_package_file("config/internal_vars.yaml"))
-
-# Margin for error by which the sum of landuse fractions can differ from 1.0
-EPS = config.getfloat("CALCULATIONS", "eps_catchment_area_fractions")
+internals_config = registry.presenter_config.get("report_internal")
 
 CatchmentType = TypeVar('CatchmentType', bound='Catchment')
 
@@ -106,6 +74,8 @@ class Catchment:
         Note:
             If False, set area_fractions to None.
         """
+        config = registry.main_config.get("model_config")
+        eps = float(config['CALCULATIONS']["eps_catchment_area_fractions"])
         try:
             assert len(self.area_fractions) == len(Landuse)
         except AssertionError as err:
@@ -118,14 +88,14 @@ class Catchment:
                 message=message) from err
 
         try:
-            assert 1 - EPS <= sum(self.area_fractions) <= 1 + EPS
+            assert 1 - eps <= sum(self.area_fractions) <= 1 + eps
         except AssertionError as err:
             message = \
                 "Wrong values in the catchment area fractions vector " + \
                 f"for reservoir {self.name}."
             raise WrongSumOfAreasException(
                 fractions=self.area_fractions,
-                accuracy=EPS,
+                accuracy=eps,
                 message=message) from err
 
     @classmethod
@@ -256,6 +226,7 @@ class Catchment:
         Returns:
             float: Phosphorus load in kgP/year.
         """
+        p_loads_pop = registry.tables.get("gres_p_loads") 
         treatment_factor = self.biogenic_factors.treatment_factor
         load = 0.002 * 365.25 * self.population * \
             p_loads_pop[treatment_factor.value]
@@ -274,6 +245,7 @@ class Catchment:
         """
         intensity = self.biogenic_factors.landuse_intensity
         landuse_names = [landuse.value for landuse in Landuse]
+        p_exports = registry.tables.get("gres_p_exports") 
         # Area marging below which the output is output as zero
         EPS = 1e-6
 
@@ -361,6 +333,7 @@ class Catchment:
         crop_index = find_enum_index(enum=Landuse, to_find=Landuse.CROPS)
         crop_percent = 100.0 * self.area_fractions[crop_index]
         # Find coefficients from the McDowell table of regression coefficients
+        tp_coeff_table = registry.tables.get("mcdowell_p_exports") 
         intercept = tp_coeff_table['intercept']['coeff']
         olsen_p = tp_coeff_table['olsen_p']['coeff']
         prec_coeff = tp_coeff_table['mean_prec']['coeff']
@@ -433,6 +406,7 @@ class Catchment:
             float: Median influent total nitrogen concentration in micrograms/L.
         """
         biome = self.biogenic_factors.biome
+        tn_coeff_table = registry.tables.get("mcdowell_n_exports")
         intercept = tn_coeff_table['intercept']['coeff']
         prec_coeff = tn_coeff_table['mean_prec']['coeff']
         slope_coeff = tn_coeff_table['mean_slope']['coeff']

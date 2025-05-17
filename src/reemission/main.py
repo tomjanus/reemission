@@ -9,6 +9,7 @@ from reemission.model import EmissionModel
 from reemission.input import Inputs
 from reemission.presenter import LatexWriter, JSONWriter, ExcelWriter
 from reemission.utils import get_package_file
+from reemission import registry
 # TODO: move this to tests and change paths
 
 
@@ -23,8 +24,8 @@ def run_emissions() -> EmissionModel:
     """
     input_data = Inputs.fromfile(
         get_package_file('../../tests/test_data/inputs.json'))
-    output_config = get_package_file('config', 'outputs.yaml')
-    model = EmissionModel(inputs=input_data, config=output_config.as_posix())
+    output_config = registry.presenter_config.get("report_outputs")
+    model = EmissionModel(inputs=input_data, config=output_config)
     model.calculate()
     model.add_presenter(
         writers=[LatexWriter, JSONWriter, ExcelWriter],

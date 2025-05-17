@@ -36,8 +36,8 @@ from typing import List
 from dataclasses import dataclass
 from copy import deepcopy
 import numpy as np
-from .catchment import Catchment
-from .reservoir import Reservoir
+from reemission.catchment import Catchment
+from reemission.reservoir import Reservoir
 
 
 @dataclass
