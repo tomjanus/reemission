@@ -38,6 +38,7 @@ click.rich_click.USE_MARKDOWN = True
 # Update this section if new writers are added to the package
 ext_writer_dict = {
     '.json': reemission.presenter.JSONWriter,
+    '.html': reemission.presenter.HTMLWriter,
     '.tex': reemission.presenter.LatexWriter,
     '.pdf': reemission.presenter.LatexWriter,
     '.xls': reemission.presenter.ExcelWriter,

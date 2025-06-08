@@ -1,32 +1,48 @@
 """
 Presenter Module
 
-This module provides classes and functions for presenting GHG (Greenhouse Gas) emissions computation results
-in various output formats such as Excel, JSON, and LaTeX.
+This module provides functionality for presenting Greenhouse Gas (GHG) emissions 
+computation results in various output formats such as Excel, JSON, LaTeX, and HTML.
 
-**Classes:**
-    - **ExcelWriter**: Formats and writes data to an Excel file.
-    - **JSONWriter**: Formats and writes data to a JSON file.
-    - **LatexWriter**: Formats and writes data to a LaTeX file using PyLaTeX.
-    - **Presenter**: Reads and processes GHG emission calculation results and outputs them using various writers.
+Classes:
+    ExcelWriter:
+        Formats and writes data to an Excel file.
+    JSONWriter:
+        Formats and writes data to a JSON file.
+    LatexWriter:
+        Formats and writes data to a LaTeX file using PyLaTeX.
+    HTMLWriter:
+        Formats and writes data to an HTML file.
+    Presenter:
+        Reads and processes GHG emission calculation results and outputs them 
+        using various writers.
 
-Each writer class (**ExcelWriter**, **JSONWriter**, **LatexWriter**) is designed to handle specific output formats, ensuring the presentation of inputs, outputs, and internal variables in a structured manner. All writers inherit from an abstract base class **Writer** which implements the following static methods:
-  - ``def round_parameter(number: Union[float, list], number_decimals: int) -> Union[float, list]``
-  - ``def rollout(var_name: str, var_vector: Union[Sequence, Dict]) -> Iterator[Tuple[str, Any]]``
-  - ``def write_par_to_dict(input_name: str, parameter: Any, par_dict: Dict, reservoir_name: str, precision: int = 3) -> Dict``
+Functions:
+    enforce_unity_sum(vector: List[float], epsilon: float = 0.001) -> List[float]:
+        Ensures the sum of values in a vector is approximately 1.0 within a given epsilon tolerance.
+    landcover_pie(axis: plt.Axes, values: List[float], labels: List[str], colors: List[Any], 
+                  title: Optional[str] = None, show_legend: bool = False) -> None:
+        Creates a pie chart of land cover composition using matplotlib.
+    parse_landcover_composition(vector: List[float]) -> List[float]:
+        Parses a vector representing land cover composition into a standardized format.
+    write_par_to_dict(input_name: str, parameter: Any, par_dict: Dict, reservoir_name: str, 
+                      precision: int = 3) -> Dict:
+        Writes a parameter to a dictionary of parameter name-value pairs.
+    rollout(var_name: str, var_vector: Union[Sequence, Dict]) -> Iterator[Tuple[str, Any]]:
+        Creates variable names and values from a sequence or dictionary.
+    round_parameter(number: Union[float, list], number_decimals: int) -> Union[float, list]:
+        Rounds a number or each element in a list to the specified number of decimals.
 
-and enforces implementation of the ``write`` method.
+Notes:
+    - Each writer class (ExcelWriter, JSONWriter, LatexWriter, HTMLWriter) is designed to handle 
+      specific output formats, ensuring the presentation of inputs, outputs, and internal variables 
+      in a structured manner.
+    - All writer classes inherit from the abstract base class Writer, which enforces the implementation 
+      of the `write` method and provides utility methods such as `round_parameter`, `rollout`, and 
+      `write_par_to_dict`.
 
-**Functions:**
-    - ``enforce_unity_sum``: Ensures the sum of values in a vector is approximately 1.0 within a given epsilon tolerance.
-    - ``landcover_pie``: Creates a pie chart of land cover composition using matplotlib.
-    - ``parse_landcover_composition``: Parses a vector representing land cover composition into a standardized format.
-    - ``write_par_to_dict``: Writes a parameter to a dictionary of parameter name-value pairs.
-    - ``rollout``: Creates variable names and values from a sequence or dictionary.
-    - ``round_parameter``: Rounds a number or each element in a list to the specified number of decimals.
-
-**Usage:**
-    [To be Added later]
+Usage:
+    [To be added later]
 """
 import collections.abc
 from collections.abc import Iterable
@@ -37,9 +53,14 @@ from typing import (
 from abc import ABC, abstractmethod
 import configparser
 import os
+from io import BytesIO
+import base64
+import math
 import logging
 import json
 import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use("Agg")
 import numpy as np
 import pandas as pd
 from pylatex.utils import bold
@@ -91,9 +112,10 @@ JSON_NUMBER_DECIMALS = 4
 EXCEL_NUMBER_DECIMALS = 4
 
 # TODO: Create this list from True/False values in the input config YAML file
-INPUT_NAMES = ['coordinates', 'id', 'type', 'monthly_temps', 'biogenic_factors',
-               'year_profile', 'catchment_inputs', 'reservoir_inputs',
-               'gasses']
+INPUT_NAMES = [
+    'coordinates', 'id', 'type', 'monthly_temps', 'biogenic_factors',
+    'year_profile', 'catchment_inputs', 'reservoir_inputs',
+    'gasses']
 
 FACTOR_NAMES = {
     "biome": "Biome",
@@ -103,7 +125,8 @@ FACTOR_NAMES = {
     "landuse_intensity": "Landuse Intensity",
 }
 
-landcover_names: List[str] = [landcover.value for landcover in Landuse.__dict__['_member_map_'].values()]
+landcover_names: List[str] = [
+    landcover.value for landcover in Landuse.__dict__['_member_map_'].values()]
 
 def _get_latex_compiler() -> str:
     """
@@ -115,8 +138,9 @@ def _get_latex_compiler() -> str:
 
     Note:
         This function reads the LaTeX compiler setting from the application configuration
-        (app_config['latex']['compiler']). If the configured compiler is 'pdflatex' or 'latexmk',
-        it returns that compiler. Otherwise, it falls back to the default compiler 'pdflatex'.
+        (app_config['latex']['compiler']). If the configured compiler is 'pdflatex' or 
+        'latexmk', it returns that compiler. Otherwise, it falls back to the default 
+        compiler 'pdflatex'.
 
     """
     default_compiler = 'pdflatex'
@@ -132,16 +156,61 @@ def _get_latex_compiler() -> str:
         return 'pdflatex'
 
 
+def format_number(x) -> str:
+    """ Formats a number for display in a human-readable way.
+    Args:
+        x (Any): The number to format. It can be an int, float, or None.
+    Returns:
+        str: A string representation of the number formatted for readability.
+    Note:
+        - If `x` is None, it returns "—" (or "N/A").
+        - If `x` is an integer, it returns the integer as a string.
+        - For floats, it formats them based on their magnitude:
+            - Very large or very negative values are formatted with 1 decimal point.
+            - Moderate values are formatted with up to 5 significant digits.
+            - Very small values are formatted with 3 significant digits.
+            - Extremely small values are formatted in engineering notation.
+    """
+    if x is None:
+        return "—"  # or "N/A"
+    if isinstance(x, int):
+        return str(x)
+    if x == 0:
+        return "0"
+
+    abs_x = abs(x)
+
+    # Very large or very negative values: 1 decimal point
+    if abs_x >= 1e4:
+        return f"{x:.1f}"
+
+    # Moderate range: up to 5 significant digits
+    elif abs_x >= 1e-3:
+        return f"{x:.5g}"
+
+    # Very small values
+    elif abs_x >= 1e-5:
+        return f"{x:.3g}"
+
+    # Extremely small → engineering notation
+    else:
+        exponent = int(math.floor(math.log10(abs_x) / 3) * 3)
+        mantissa = x / (10**exponent)
+        return f"{mantissa:.3g}e{exponent:+d}"
+
+
 def parse_landcover_composition(vector: List[float]) -> List[float]:
     """
     Parses a vector representing land cover composition into a standardized format.
 
     Args:
-        vector (List[float]): A vector representing land cover composition. 
-                              It should be either a 9-element vector or a 27-element vector.
+        vector (List[float]): 
+            A vector representing land cover composition. 
+            It should be either a 9-element vector or a 27-element vector.
 
     Returns:
-        List[float]: A 9-element vector representing the parsed land cover composition.
+        List[float]: 
+            A 9-element vector representing the parsed land cover composition.
 
     Raises:
         ValueError: If the provided vector does not have a length of 9 or 27.
@@ -155,10 +224,11 @@ def parse_landcover_composition(vector: List[float]) -> List[float]:
     supported_vector_lengths = (9,27)
     try:
         assert vector_length in supported_vector_lengths
-    except AssertionError:
+    except AssertionError as exc:
         vector_sizes: str = ", ".join(map(str, supported_vector_lengths))
         raise ValueError(
-            f"Supported vector sizes: {vector_sizes}. Provided vector has size {vector_length}")
+            f"Supported vector sizes: {vector_sizes}. "
+            f"Provided vector has size {vector_length}") from exc
     if vector_length == 9:
         return vector
     # Fold the 27x1 vector into three parts and sum the 9x1 vectors
@@ -174,12 +244,14 @@ def parse_landcover_composition(vector: List[float]) -> List[float]:
 
 def enforce_unity_sum(vector: List[float], epsilon: float = 0.001) -> List[float]:
     """
-    Ensures the sum of values in the vector is approximately 1.0 within a given epsilon tolerance.
+    Ensures the sum of values in the vector is approximately 1.0 within a given epsilon 
+    tolerance.
 
     Args:
         vector (List[float]): The input vector of float values to be normalized.
-        epsilon (float, optional): Tolerance level around 1.0 within which the sum of the vector
-                                   should lie. Defaults to 0.001.
+        epsilon (float, optional): 
+            Tolerance level around 1.0 within which the sum of the vector
+            should lie. Defaults to 0.001.
 
     Returns:
         List[float]: A normalized vector where the sum of values is approximately 1.0.
@@ -253,6 +325,120 @@ def landcover_pie(
         for text in legend.get_texts():
             text.set_fontstyle("italic")
             text.set_fontsize(8)
+
+
+def emission_profile(
+        axis: plt.Axes,
+        years: List[int],
+        emissions: List[float],
+        title: str,
+        y_label: str,
+        annotate: bool = True) -> None:
+    """ Plots a profile of emissions over time.
+
+    Args:
+        axis (plt.Axes): Matplotlib axes object.
+        years (List[int]): List of years corresponding to the emissions.
+        emissions (List[float]): List of emissions corresponding to the years.
+        title (str): Title of the plot.
+        y_label (str): Label for the y-axis.
+        annotate (bool): Flag setting whether emission values are added to plot. Default is True.
+    Raises:
+        ValueError: If the lengths of years and emissions do not match, or if they contain non-numeric values.
+    """
+    plot_options = {
+        'linewidth': 1.0, 
+        'axiswidth': 2, 
+        'tickwidth': 2,
+        'labelpad': 5, 
+        'titlepad': 15,
+        'label_fontsize': LABEL_FONTSIZE,
+        'title_fontsize': TITLE_FONTSIZE,
+        'tick_fontsize': TICK_FONTSIZE,
+        'annotation_fontsize': ANNOTATION_FONTSIZE}
+
+    # Get the x and y data
+    if len(years) != len(emissions):
+        raise ValueError(
+            f"Years and emissions must have the same length, got {len(years)} and {len(emissions)}")
+    if not all(isinstance(year, (int, float)) for year in years):
+        raise ValueError("All emissions must be numeric (int or float).")
+    if not all(isinstance(emission, (int, float)) for emission in emissions):
+        raise ValueError("All emissions must be numeric (int or float).")
+    x_data = years
+    y_data = emissions
+    # Format plot
+    axis.plot(x_data, y_data, '-', color='k',
+                linewidth=plot_options['linewidth'])
+    axis.plot(x_data, y_data, marker='o', color='r')
+    axis.set_ylabel(y_label, fontsize=plot_options['label_fontsize'],
+                    labelpad=plot_options['labelpad'])
+    axis.set_xlabel('Time, years', fontsize=plot_options['label_fontsize'],
+                    labelpad=plot_options['labelpad'])
+    axis.set_title(title, fontsize=plot_options['title_fontsize'],
+                    pad=plot_options['titlepad'])
+    axis.tick_params(axis="both", labelsize=plot_options['tick_fontsize'])
+    # Make the (visible) axes thicker
+    for axis_pos in ['bottom', 'left']:
+        axis.spines[axis_pos].set_linewidth(plot_options['axiswidth'])
+    # Increase tick width
+    axis.tick_params(width=plot_options['tickwidth'])
+    axis.spines['right'].set_visible(False)
+    axis.spines['top'].set_visible(False)
+    plt.grid(True)
+    # Add emission values (numbers) to the plot
+    if annotate:
+        for x_coord, y_coord in zip(x_data, y_data):
+            axis.annotate(
+                r'${:.1f}$'.format(y_coord),
+                xy=(x_coord, y_coord),
+                xytext=(0, 5),
+                textcoords='offset points',
+                fontsize=plot_options['annotation_fontsize'])
+            
+def emission_bars(
+        axis: plt.Axes,
+        gases: List[str],
+        values: List[float],
+        output_name: str) -> None:
+    """Visualize total emissions (unit x surface area) for the calculated gases.
+
+    Args:
+        axis (plt.Axes): Matplotlib axes object.
+        gases (List[str]): List of gas names to be displayed on the y-axis.
+        values (List[float]): List of total annual emissions for each gas.
+        output_name (str): Name of the output/reservoir.
+    """
+    plot_options = {
+        'linewidth': 1.0,
+        'axiswidth': 2,
+        'tickwidth': 2,
+        'labelpad': 5, 
+        'titlepad': 15,
+        'label_fontsize': LABEL_FONTSIZE,
+        'title_fontsize': TITLE_FONTSIZE,
+        'tick_fontsize': TICK_FONTSIZE,
+        'annotation_fontsize': ANNOTATION_FONTSIZE}
+
+    y_pos = np.arange(len(gases))[::-1]
+    axis.barh(y_pos, values, color=(0.2, 0.4, 0.6, 0.6), edgecolor='blue')
+    axis.set_yticks(y_pos, gases)
+    #axis.tick_params(fontsize=plot_options['tick_fontsize'])
+    axis.tick_params(axis="both", labelsize=plot_options['tick_fontsize'])
+    axis.set_xlabel("Total annual emission, tonnes CO$_{2,eq}$ yr$^{-1}$",
+                    fontsize=plot_options['label_fontsize'])
+    axis.set_ylabel("Gas", fontsize=plot_options['label_fontsize'])
+    axis.set_title("Total annual emission, {}".format(output_name),
+                    fontsize=plot_options['title_fontsize'],
+                    pad=plot_options['titlepad'])
+    # Make the (visible) axes thicker
+    for axis_pos in ['bottom', 'left']:
+        axis.spines[axis_pos].set_linewidth(plot_options['axiswidth'])
+    # Increase tick width
+    axis.tick_params(width=plot_options['tickwidth'])
+    axis.spines['right'].set_visible(False)
+    axis.spines['top'].set_visible(False)
+
 
 @dataclass  # type: ignore[misc]
 class Writer(ABC):
@@ -484,7 +670,8 @@ class ExcelWriter(Writer):
 
     def dict_data_to_df(
             self, id: str, data: Dict, config: Dict, 
-            index_name: str = 'Name') -> pd.DataFrame:
+            index_name: str = 'Name'
+        ) -> pd.DataFrame:
         """
         Parse data in a dictionary format into pandas DataFrame format.
 
@@ -825,8 +1012,12 @@ class LatexWriter(Writer):
             "bottom": "0.55in", "includeheadfoot": True}
         return document_geometry
 
-    def plot_profile(self, axis: plt.Axes, emission: str, output_name: str,
-                     annotate: bool = True) -> None:
+    def plot_profile(
+            self, 
+            axis: plt.Axes, 
+            emission: str, 
+            output_name: str,
+            annotate: bool = True) -> None:
         """Plot an emission profile using matplotlib.
 
         Args:
@@ -835,65 +1026,28 @@ class LatexWriter(Writer):
             output_name (str): Name of the output/reservoir.
             annotate (bool): Flag setting whether emission values are added to plot. Default is True.
         """
-        plot_options = {'linewidth': 1.0, 'axiswidth': 2, 'tickwidth': 2,
-                        'labelpad': 5, 'titlepad': 15,
-                        'label_fontsize': LABEL_FONTSIZE,
-                        'title_fontsize': TITLE_FONTSIZE,
-                        'tick_fontsize': TICK_FONTSIZE,
-                        'annotation_fontsize': ANNOTATION_FONTSIZE}
-
-        emission_var = {"co2": "co2_profile",
-                        "ch4": "ch4_profile",
-                        "n2o": "n2o_profile"}
-        data = self.outputs[output_name]
-        # Create title and y_label
-        title = ", ".join((self.output_config['outputs'][
-            emission_var[emission]]['name_latex'], output_name))
+        emission_var = {
+            "co2": "co2_profile",
+            "ch4": "ch4_profile",
+            "n2o": "n2o_profile"}       
         emission_unit = self.output_config['outputs'][
             emission_var[emission]]['unit_latex']
+        data = self.outputs[output_name]
+        title = ", ".join((self.output_config['outputs'][
+            emission_var[emission]]['name_latex'], output_name))
+        # Create title and y_label
         y_label = "Emission, " + emission_unit
-
         # Get the x and y data
         try:
             y_data = data[emission_var[emission]]
             x_data = self.inputs.inputs[output_name].data["year_vector"]
         except KeyError:
-            print("WARNING: Problem with plotting emission profiles, X or Y data for emission profiles, not found. ")
-            y_data = None
-            x_data = None
-
-        # Escape the function if data not found
-        if x_data is None or y_data is None:
+            log.warning(
+                "Problem with plotting emission profiles: X or Y data for emission profiles not found.")
             return None
-
-        # Format plot
-        axis.plot(x_data, y_data, '-', color='k',
-                  linewidth=plot_options['linewidth'])
-        axis.plot(x_data, y_data, marker='o', color='r')
-        axis.set_ylabel(y_label, fontsize=plot_options['label_fontsize'],
-                        labelpad=plot_options['labelpad'])
-        axis.set_xlabel('Time, years', fontsize=plot_options['label_fontsize'],
-                        labelpad=plot_options['labelpad'])
-        axis.set_title(title, fontsize=plot_options['title_fontsize'],
-                       pad=plot_options['titlepad'])
-        axis.tick_params(axis="both", labelsize=plot_options['tick_fontsize'])
-        # Make the (visible) axes thicker
-        for axis_pos in ['bottom', 'left']:
-            axis.spines[axis_pos].set_linewidth(plot_options['axiswidth'])
-        # Increase tick width
-        axis.tick_params(width=plot_options['tickwidth'])
-        axis.spines['right'].set_visible(False)
-        axis.spines['top'].set_visible(False)
-        plt.grid(True)
-        # Add emission values (numbers) to the plot
-        if annotate:
-            for x_coord, y_coord in zip(x_data, y_data):
-                axis.annotate(
-                    r'${:.1f}$'.format(y_coord),
-                    xy=(x_coord, y_coord),
-                    xytext=(0, 5),
-                    textcoords='offset points',
-                    fontsize=plot_options['annotation_fontsize'])
+        emission_profile(
+            axis=axis, years=x_data, emissions=y_data,
+            title=title, y_label=y_label, annotate=annotate)
 
     def plot_emission_bars(self, axis: plt.Axes, output_name: str) -> None:
         """Visualize total emissions (unit x surface area) for the calculated gases.
@@ -902,13 +1056,6 @@ class LatexWriter(Writer):
             axis (plt.Axes): Matplotlib axes object.
             output_name (str): Name of the output/reservoir.
         """
-        plot_options = {'linewidth': 1.0, 'axiswidth': 2, 'tickwidth': 2,
-                        'labelpad': 5, 'titlepad': 15,
-                        'label_fontsize': LABEL_FONTSIZE,
-                        'title_fontsize': TITLE_FONTSIZE,
-                        'tick_fontsize': TICK_FONTSIZE,
-                        'annotation_fontsize': ANNOTATION_FONTSIZE}
-
         data = self.outputs[output_name]
         vars_to_plot = ('co2_net', 'ch4_net', 'n2o_mean')
         bars = [self.output_config['outputs'][var]['gas_name_latex'] for
@@ -918,24 +1065,9 @@ class LatexWriter(Writer):
             10**6
         values = [data[var] * area * 10 ** (-6) for var in vars_to_plot
                   if var in data]
-        y_pos = np.arange(len(bars))[::-1]
-        axis.barh(y_pos, values, color=(0.2, 0.4, 0.6, 0.6), edgecolor='blue')
-        axis.set_yticks(y_pos, bars)
-        #axis.tick_params(fontsize=plot_options['tick_fontsize'])
-        axis.tick_params(axis="both", labelsize=plot_options['tick_fontsize'])
-        axis.set_xlabel("Total annual emission, tonnes CO$_{2,eq}$ yr$^{-1}$",
-                        fontsize=plot_options['label_fontsize'])
-        axis.set_ylabel("Gas", fontsize=plot_options['label_fontsize'])
-        axis.set_title("Total annual emission, {}".format(output_name),
-                       fontsize=plot_options['title_fontsize'],
-                       pad=plot_options['titlepad'])
-        # Make the (visible) axes thicker
-        for axis_pos in ['bottom', 'left']:
-            axis.spines[axis_pos].set_linewidth(plot_options['axiswidth'])
-        # Increase tick width
-        axis.tick_params(width=plot_options['tickwidth'])
-        axis.spines['right'].set_visible(False)
-        axis.spines['top'].set_visible(False)
+        emission_bars(
+            axis=axis, gases=bars, values=values,
+            output_name=output_name)
 
 
     def plot_landcover_piecharts(self, axes: np.ndarray, output_name: str) -> None:
@@ -955,7 +1087,6 @@ class LatexWriter(Writer):
         # But just for the piece of mind, make an additional check
         landcovers_reservoir = enforce_unity_sum(landcovers_reservoir)
         landcovers_catchment = enforce_unity_sum(landcovers_catchment)
-
         landcover_pie(
             axis = axes[0], values=landcovers_reservoir, labels=landcover_names,
             colors=landcover_colors, 
@@ -1511,6 +1642,437 @@ class LatexWriter(Writer):
 
 
 @dataclass
+class HTMLWriter(Writer):
+    """Format and write data to an HTML file."""
+
+    inputs: Inputs
+    outputs: Dict
+    intern_vars: Dict
+    output_file_path: str
+    output_config: Dict
+    input_config: Dict
+    intern_vars_config: Dict
+    parameter_config: Dict
+    config_ini: Dict
+    author: str
+    title: str
+    html_fragments: List[str] = field(init=False, default_factory=list)
+
+    def __post_init__(self) -> None:
+        """Initialize the HTML content with a basic structure."""
+        self.html_fragments.append(f"""
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>{self.title}</title>
+                <style>
+                    :root {{
+                        --bg-color: #f9f9f9;
+                        --text-color: #333;
+                        --panel-bg: #ffffff;
+                        --border-color: #ccc;
+                        --reservoir-links-bg: #eaeaea; /* Default light mode background */
+                    }}
+                    body {{
+                        background-color: var(--bg-color);
+                        color: var(--text-color);
+                        transition: background-color 0.3s, color 0.3s;
+                    }}
+                    .dark-mode {{
+                        --bg-color: #121212;
+                        --text-color: #e0e0e0;
+                        --panel-bg: #1e1e1e;
+                        --border-color: #444;
+                        --reservoir-links-bg: #333333; /* Dark mode background */
+                    }}
+                    h1, h2, h3 {{
+                        color: var(--text-color);
+                        border-bottom: 1px solid var(--border-color);
+                        padding-bottom: 0.2em;
+                    }}
+                    h1 {{ font-size: 2.5rem; }}
+                    h2 {{ font-size: 2rem; }}
+                    h3 {{ font-size: 1.5rem; }}
+                    table td, table th {{ font-size: 1.3rem; }}
+                    table {{
+                        border-collapse: collapse;
+                        width: 100%;
+                        margin: 20px 0;
+                        background-color: #fff;
+                        box-shadow: 0 0 4px rgba(0,0,0,0.1);
+                    }}
+                    th, td {{
+                        border: 1px solid #ccc;
+                        padding: 8px 12px;
+                        text-align: left;
+                    }}
+                    th {{
+                        background-color: var(--panel-bg); /* or a slight variation */
+                        color: var(--text-color);
+                    }}
+                    figure {{
+                        margin: 20px 0;
+                        padding: 10px;
+
+                        background-color: var(--panel-bg);
+                        color: var(--text-color);
+                        border: 1px solid #ddd;
+                        border-radius: 4px;
+                        box-shadow: 0 0 4px rgba(0,0,0,0.05);
+                    }}
+                    figcaption {{
+                        margin-top: 8px;
+                        font-style: italic;
+                        color: var(--text-color);
+                        font-size: 1em;
+                    }}
+                    .export-btn {{
+                        margin-top: 10px;
+                        margin-bottom: 20px;
+                        padding: 5px 10px;
+                        background: #3498db;
+                        color: white;
+                        border: none;
+                        border-radius: 4px;
+                        cursor: pointer;
+                    }}
+                    .toggle-theme {{
+                        
+                        background: var(--text-color);
+                        color: var(--bg-color);
+                        position: fixed;
+                        top: 10px;
+                        right: 20px;
+                        z-index: 1001;
+                        cursor: pointer;
+                        padding: 6px 12px;
+                        border: none;
+                        border-radius: 4px;
+                    }}
+                    #reservoir-links {{
+                        display: flex;
+                        overflow-x: auto;
+                        white-space: nowrap;
+                        gap: 10px;
+                        padding: 10px 20px;
+                        background-color: var(--reservoir-links-bg); /* Use the CSS variable */
+                        border-bottom: 1px solid var(--border-color);
+                        position: sticky;
+                        top: 0;
+                        z-index: 500;
+                         margin-bottom: 20px;
+                    }}                    
+                    #reservoir-links a {{
+                        padding: 6px 12px;
+                        background-color: #3498db;
+                        color: white;
+                        border-radius: 4px;
+                        text-decoration: none;
+                        font-size: 0.9em;
+                        flex: 0 0 auto;
+                        transition: background-color 0.2s;
+                    }}
+                    #reservoir-links a:hover {{
+                        background-color: #217dbb;
+                    }}
+                    details {{
+                        margin-bottom: 1.5em;
+                        background-color: #ffffff;
+                        padding: 1em;
+                        border: 1px solid #ccc;
+                        border-radius: 5px;
+                    }}
+                    summary {{
+                        font-size: 1.3em;
+                        font-weight: bold;
+                        cursor: pointer;
+                    }}
+                    details,
+                    table,
+                    figure,
+                    summary,
+                    th,
+                    td,
+                    figcaption {{
+                        background-color: var(--panel-bg);
+                        color: var(--text-color);
+                        border-color: var(--border-color);
+                    }}
+                    table, th, td {{
+                        border: 1px solid var(--border-color);
+                    }}
+                    th {{
+                        background-color: rgba(255, 255, 255, 0.05); /* subtle header contrast */
+                    }}
+                    figcaption {{
+                        font-style: italic;
+                        opacity: 0.8;
+                    }}
+                </style>
+                <script>
+                function toggleTheme() {{
+                    document.body.classList.toggle('dark-mode');
+                }}
+                function exportSection(id, name) {{
+                    const el = document.getElementById(id);
+                    const blob = new Blob([el.innerHTML], {{ type: 'text/html' }});
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = name + '.html';
+                    link.click();
+                }}
+                MathJax = {{
+                    tex: {{ inlineMath: [['$', '$'], ['\\\\(', '\\\\)']] }},
+                    svg: {{ fontCache: 'global' }}
+                }};
+                </script>
+                <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+            </head>
+            <body>
+                <h1>{self.title}</h1>
+                <p><strong>Author:</strong> {self.author}</p>
+                <p><strong>Date:</strong> {self._get_current_date()}</p>
+        """)
+
+    @staticmethod
+    def _get_current_date() -> str:
+        """Get the current date in a readable format."""
+        from datetime import datetime
+        return datetime.now().strftime("%B %d, %Y")
+
+    def add_section(self, title: str) -> None:
+        """Add a section to the HTML content."""
+        self.html_fragments.append(f"<h2>{title}</h2>")
+
+    def add_subsection(self, title: str) -> None:
+        """Add a subsection to the HTML content."""
+        self.html_fragments.append(f"<h3>{title}</h3>")
+
+    def add_table(self, data: Dict, config: Dict, column_names: Tuple[str, str, str]) -> None:
+        """Add a table to the HTML content."""
+        self.html_fragments.append("<table>")
+        self.html_fragments.append("<tr>" + "".join(f"<th>{col}</th>" for col in column_names) + "</tr>")
+        for parameter, value in data.items():
+            if parameter in config and config[parameter].get('include', False):
+                name = config[parameter]['name']
+                unit = config[parameter]['unit_latex']
+                if isinstance(value, (list, tuple)):
+                    value = ", ".join(map(format_number, value))
+                if isinstance(value, str):
+                    self.html_fragments.append(f"<tr><td>{name}</td><td>{unit}</td><td>{value}</td></tr>")
+                else:
+                    # Assume that if not string, it must be numerical
+                    self.html_fragments.append(f"<tr><td>{name}</td><td>{unit}</td><td>{format_number(value)}</td></tr>")
+        self.html_fragments.append("</table>")
+
+    def add_plot(self, fig, caption: str, dpi: int = 200) -> None:
+        """Add a plot to the HTML content using PNG format for faster rendering."""
+        buffer = BytesIO()
+        fig.savefig(buffer, format="png", bbox_inches="tight", dpi=dpi)
+        buffer.seek(0)
+        encoded_image = base64.b64encode(buffer.getvalue()).decode("utf-8")
+        buffer.close()
+        self.html_fragments.append(
+            f'<figure><img src="data:image/png;base64,{encoded_image}" alt="{caption}">'
+            f'<figcaption>{caption}</figcaption></figure>'
+        )
+        plt.close(fig)
+
+    def add_inputs_table(self, output_name: str) -> None:
+        """Add information with model inputs (for each reservoir) to the HTML content."""
+        input_data = self.inputs.inputs[output_name].data
+        included_inputs = [name for name in INPUT_NAMES if self.input_config[name]['include']]
+        if not included_inputs:
+            return
+
+        self.add_subsection("Inputs")
+        self.html_fragments.append("<table>")
+        self.html_fragments.append("<tr><th>Input Name</th><th>Unit</th><th>Value(s)</th></tr>")
+
+        # Add general inputs
+        for input_name in included_inputs:
+            if input_name not in input_data:
+                continue
+            name = self.input_config[input_name]['name']
+            unit = self.input_config[input_name]['unit_latex']
+            value = input_data[input_name]
+            if isinstance(value, (list, tuple)):
+                value = ', '.join(map(str, value))
+            self.html_fragments.append(f"<tr><td>{name}</td><td>{unit}</td><td>{value}</td></tr>")
+
+        # Add biogenic factors
+        if "biogenic_factors" in included_inputs:
+            self.html_fragments.append("<tr><td colspan='3' style='text-align:center; font-weight:bold;'>Biogenic Factors</td></tr>")
+            biogenic_factors = input_data['catchment']['biogenic_factors']
+            if not isinstance(biogenic_factors, dict):
+                try:
+                    biogenic_factors = biogenic_factors.todict()
+                except AttributeError:
+                    log.error("Variable biogenic factors cannot be converted to a dictionary")
+            for factor_name, factor_value in biogenic_factors.items():
+                name = FACTOR_NAMES[factor_name]
+                unit = "-"
+                self.html_fragments.append(f"<tr><td>{name}</td><td>{unit}</td><td>{factor_value}</td></tr>")
+
+        # Add catchment inputs
+        if "catchment_inputs" in included_inputs:
+            self.html_fragments.append("<tr><td colspan='3' style='text-align:center; font-weight:bold;'>Catchment Inputs</td></tr>")
+            for input_name, input_value in input_data['catchment'].items():
+                if input_name == "biogenic_factors":
+                    continue
+                conf_input = self.input_config['catchment_inputs']['var_dict'][input_name]
+                name = conf_input['name']
+                unit = conf_input['unit_latex']
+                if isinstance(input_value, (list, tuple)):
+                    value = ', '.join(map(str, input_value))
+                else:
+                    value = str(input_value)
+                self.html_fragments.append(f"<tr><td>{name}</td><td>{unit}</td><td>{value}</td></tr>")
+
+        # Add reservoir inputs
+        if "reservoir_inputs" in included_inputs:
+            self.html_fragments.append("<tr><td colspan='3' style='text-align:center; font-weight:bold;'>Reservoir Inputs</td></tr>")
+            for input_name, input_value in input_data['reservoir'].items():
+                conf_input = self.input_config['reservoir_inputs']['var_dict'][input_name]
+                name = conf_input['name']
+                unit = conf_input['unit_latex']
+                if input_value is None:
+                    value = "N/A"
+                elif isinstance(input_value, (list, tuple)):
+                    value = ', '.join(map(str, input_value))
+                else:
+                    value = str(input_value)
+                self.html_fragments.append(f"<tr><td>{name}</td><td>{unit}</td><td>{value}</td></tr>")
+
+        self.html_fragments.append("</table>")
+
+    def add_outputs_table(self, output_name: str) -> None:
+        """Add outputs table to the HTML content."""
+        output_data = self.outputs[output_name]
+        self.add_subsection("Outputs")
+        self.add_table(output_data, self.output_config['outputs'], ("Output Name", "Unit", "Value"))
+
+    def add_intern_vars_table(self, output_name: str) -> None:
+        """Add internal variables table to the HTML content."""
+        intern_data = self.intern_vars[output_name]
+        self.add_subsection("Internal Variables")
+        self.add_table(intern_data, self.intern_vars_config, ("Variable Name", "Unit", "Value"))
+
+    def add_landcover_piecharts(self, output_name: str) -> None:
+        """Add landcover piecharts to the HTML content."""
+        input_data = self.inputs.inputs[output_name]
+        landcovers_reservoir = parse_landcover_composition(
+            input_data.data["reservoir"]["area_fractions"])
+        landcovers_catchment = parse_landcover_composition(
+            input_data.data["catchment"]["area_fractions"])
+        fig, axes = plt.subplots(1, 2, figsize=(5, 3))
+        landcover_pie(
+            axes[0], landcovers_reservoir, landcover_names, landcover_colors, 
+            title="Reservoir Landcover Composition")
+        landcover_pie(
+            axes[1], landcovers_catchment, landcover_names, landcover_colors, 
+            title="Catchment Landcover Composition")
+        fig.tight_layout()
+        self.add_plot(fig, "Landcover Composition")
+        plt.close(fig)
+
+    def add_plots(self, output_name: str) -> None:
+        """Generate and add emission plots to the HTML content."""
+        fig, axes = plt.subplots(2, 2, figsize=(7, 5))
+        axes = axes.flatten()
+        emission_var = {
+            "co2": "co2_profile",
+            "ch4": "ch4_profile",
+            "n2o": "n2o_profile"}
+                
+        for ix, gas in enumerate(emission_var.keys()):
+            if gas not in self.inputs.inputs[output_name].data["gasses"]:
+                continue
+            data = self.outputs[output_name]
+            years = self.inputs.inputs[output_name].data["year_vector"]
+            emission_unit = self.output_config['outputs'][
+                emission_var[gas]]['unit_latex']
+            data = self.outputs[output_name]
+            title = ", ".join((self.output_config['outputs'][
+                emission_var[gas]]['name_latex'], output_name))
+            # Create title and y_label
+            y_label = "Emission, " + emission_unit
+            emissions = data.get(f"{gas}_profile", [])
+            title = ", ".join((self.output_config['outputs'][
+                emission_var[gas]]['name_latex'], output_name))
+            emission_profile(
+                axes[ix],
+                years=years, 
+                emissions=emissions, 
+                title=title,
+                y_label = y_label,
+                annotate=False)
+        self.plot_emission_bars(axes[ix+1], output_name)
+        fig.tight_layout()
+        # Clear unused axes if the number of gases is less than the number of axes
+        for ax in axes[len(emission_var.keys())+1:]:
+            fig.delaxes(ax)
+        self.add_plot(fig, "Emission Profiles and Totals", dpi=175)
+        fig.clear()  # Clear all axes from the figure
+        plt.close(fig)
+        
+
+    def plot_emission_bars(self, axis: plt.Axes, output_name: str) -> None:
+        """Plot total emissions as a bar chart."""
+        data = self.outputs[output_name]
+        vars_to_plot = ('co2_net', 'ch4_net', 'n2o_mean')
+        bars = [self.output_config['outputs'][var]['gas_name_latex'] for
+                var in vars_to_plot if var in data]
+        # Get reservoir area from inputs (convert from km2 to m2)
+        area = self.inputs.inputs[output_name].data['reservoir']['area'] * \
+            10**6
+        values = [data[var] * area * 10 ** (-6) for var in vars_to_plot
+                  if var in data]
+        emission_bars(
+            axis=axis, gases=bars, values=values,
+            output_name=output_name)
+
+    def write(self) -> None:
+        """Write the HTML content to the output file."""
+        if not bool(self.outputs):
+            log.error("Attempting to write before generating outputs.")
+            return None
+        self.html_fragments.append(
+            '<button class="toggle-theme" onclick="toggleTheme()">Toggle Dark Mode</button>'
+        )
+        self.html_fragments.append('<div id="reservoir-links">')
+        for _ix, reservoir_name in enumerate(self.outputs):
+            self.html_fragments.append(
+                f'<a href="#res-{reservoir_name}" title="Jump to {reservoir_name}">{reservoir_name}</a>'
+            )
+        self.html_fragments.append('</div>')  # Close #reservoir-links container
+        
+        for _ix, reservoir_name in enumerate(self.outputs):
+            reservoir_type = self.inputs.inputs[reservoir_name].data["type"]
+            log.info(f"Adding data for reservoir: {reservoir_name}, Progress: {_ix+1} out of {len(self.outputs)}")
+            self.html_fragments.append(f'<section id="res-{reservoir_name}">')
+            self.html_fragments.append(f"<details open><summary>{reservoir_name}</summary>")
+            self.add_section(f"{reservoir_name} {reservoir_type} reservoir")
+            self.add_inputs_table(reservoir_name)
+            self.add_landcover_piecharts(reservoir_name)
+            self.add_outputs_table(reservoir_name)
+            self.add_plots(reservoir_name)
+            self.add_intern_vars_table(reservoir_name)
+            self.html_fragments.append(f'<button class="export-btn" onclick="exportSection(\'res-{reservoir_name}\', \'{reservoir_name}\')">Export</button>')
+            self.html_fragments.append("</details></section>")
+        self.html_fragments.append("</body></html>")
+        # Join all fragments into a single string
+        html_content = "".join(self.html_fragments)
+
+        with open(self.output_file_path, "w", encoding="utf-8") as file:
+            file.write(html_content)
+
+        log.info(f"Created an HTML file at {self.output_file_path}.")
+
+
+@dataclass
 class Presenter:
     """Reads and processes results of GHG emission calculations and outputs
     them in different formats.
@@ -1538,7 +2100,7 @@ class Presenter:
         Args:
             input_file (str): Path to JSON file containing input data.
             output_file (str): Path to JSON file containing model outputs.
-            interns_file (str): Path to JSON file containing internal variables.
+            interns_file (str): Path to JSON file containioutput_file_pathng internal variables.
             **kwargs: Additional keyword arguments for customization.
 
         Returns:
