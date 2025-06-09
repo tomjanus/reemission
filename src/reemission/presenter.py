@@ -1127,12 +1127,13 @@ class LatexWriter(Writer):
             fig_index = 1
             if profile_plots:
                 for gas in ['co2', 'ch4', 'n2o']:
-                    if gas in self.inputs.inputs[output_name].data['gasses']:
-                        axis = fig.add_subplot(*subplot_dim, fig_index)
-                        self.plot_profile(
-                            axis=axis, emission=gas, output_name=output_name,
-                            annotate=False)
-                        fig_index += 1
+                    if gas not in self.inputs.inputs[output_name].data['gasses']:
+                        continue
+                    axis = fig.add_subplot(*subplot_dim, fig_index)
+                    self.plot_profile(
+                        axis=axis, emission=gas, output_name=output_name,
+                        annotate=False)
+                    fig_index += 1
             if bar_plot:
                 axis = fig.add_subplot(*subplot_dim, fig_index)
                 self.plot_emission_bars(axis=axis, output_name=output_name)
@@ -1168,7 +1169,6 @@ class LatexWriter(Writer):
             plot.add_plot(width=NoEscape(width), dpi=dpi)
         plt.close()
         return None
-        
         
     def add_parameters(self, precision: int = 4) -> None:
         """Add information about model parameters such as conversion factors
@@ -1296,11 +1296,8 @@ class LatexWriter(Writer):
                         row = [parameter_name, unit, value]
                         data_table.add_row(row)
                 # Add summed (composite) emission values
-                if (
-                    self.output_config['outputs']['co2_ch4']['include']
-                    and self.output_config['outputs']['co2_net']['include']
-                    and self.output_config['outputs']['ch4_net']['include']
-                ):
+                if all(self.output_config['outputs'][key]['include'] for key in \
+                    ['co2_ch4', 'co2_net', 'ch4_net']):
                     try:
                         value = Quantity(data['co2_net'] + data['ch4_net'],
                                          options=round_options)
@@ -1315,11 +1312,8 @@ class LatexWriter(Writer):
                         # Do not output anything if one of the data (either)
                         # CO2 net or CH4 net are not included in the results
                         pass
-                if (
-                    self.output_config['outputs']['co2_ch4_n2o']['include']
-                    and self.output_config['outputs']['co2_net']['include']
-                    and self.output_config['outputs']['ch4_net']['include']
-                    and self.output_config['outputs']['n2o_mean']['include']):
+                if all(self.output_config['outputs'][key]['include'] for key in \
+                    ['co2_ch4_n2o', 'co2_net', 'ch4_net', 'n2o_mean']):
                     try:
                         value = Quantity(
                             data['co2_net'] + data['ch4_net'] +
