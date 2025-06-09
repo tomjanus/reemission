@@ -15,11 +15,10 @@
     <title>reemission.exceptions | ReEmission 1.0.0 documentation</title>
     <meta property="og:title" content="reemission.exceptions | ReEmission 1.0.0 documentation" />
     <meta name="twitter:title" content="reemission.exceptions | ReEmission 1.0.0 documentation" />
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=c842c44c" />
-      <link rel="stylesheet" type="text/css" href="../../_static/theme.css?v=ecdfb4fc" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=1949e874" />
+      <link rel="stylesheet" type="text/css" href="../../_static/theme.css?v=42baaae4" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-      <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=a5c4661c" />
         <link rel="search" title="Search" href="../../search.html" />
         <link rel="index" title="Index" href="../../genindex.html" />
 
@@ -36,7 +35,7 @@
       if (!userPreference) {localStorage.setItem('darkMode', mode)}
     </script>
 </head>
-<body x-data="{ showSidebar: false }" class="min-h-screen font-sans antialiased bg-background text-foreground" :class="{ 'overflow-hidden': showSidebar }">
+  <body x-data="{ showSidebar: false, showScrollTop: false }" class="min-h-screen font-sans antialiased bg-background text-foreground" :class="{ 'overflow-hidden': showSidebar }">
     <div x-cloak x-show="showSidebar" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" @click.self="showSidebar = false"></div><div id="page" class="relative flex flex-col min-h-screen"><a href="#content" class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100">
       Skip to content
     </a><header
@@ -191,12 +190,12 @@
 <span></span><code><span id="line-1"><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="line-2"><span class="sd">Module containing custom exceptions.</span>
 </span><span id="line-3"><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-4"><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterable</span>
+</span><span id="line-4"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Iterable</span>
 </span><span id="line-5">
 </span><span id="line-6">
 <div class="viewcode-block" id="WrongN2OModelError">
 <a class="viewcode-back" href="../../api/reemission.exceptions.html#reemission.exceptions.WrongN2OModelError">[docs]</a>
-</span><span id="line-7"><span class="k">class</span> <span class="nc">WrongN2OModelError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+</span><span id="line-7"><span class="k">class</span><span class="w"> </span><span class="nc">WrongN2OModelError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 </span><span id="line-8"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised if attempting to calculate with N$_2$O emission model</span>
 </span><span id="line-9"><span class="sd">    of unknown name/type.</span>
 </span><span id="line-10">
@@ -204,7 +203,7 @@
 </span><span id="line-12"><span class="sd">        permitted_models (Tuple[str, ...]): Names of recognized N$_2$O emission models.</span>
 </span><span id="line-13"><span class="sd">        message (str): Explanation of the error.</span>
 </span><span id="line-14"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="line-15">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+</span><span id="line-15">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
 </span><span id="line-16">            <span class="bp">self</span><span class="p">,</span>
 </span><span id="line-17">            <span class="n">permitted_models</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
 </span><span id="line-18">            <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Model not recognized.&quot;</span><span class="p">):</span>
@@ -224,14 +223,14 @@
 </span><span id="line-31">
 <div class="viewcode-block" id="GasNotRecognizedException">
 <a class="viewcode-back" href="../../api/reemission.exceptions.html#reemission.exceptions.GasNotRecognizedException">[docs]</a>
-</span><span id="line-32"><span class="k">class</span> <span class="nc">GasNotRecognizedException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+</span><span id="line-32"><span class="k">class</span><span class="w"> </span><span class="nc">GasNotRecognizedException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 </span><span id="line-33"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised if attempting to select gas of unknown name/type.</span>
 </span><span id="line-34">
 </span><span id="line-35"><span class="sd">    Attributes:</span>
 </span><span id="line-36"><span class="sd">        permitted_gases (Tuple[str, ...]): Names of recognized emission gases.</span>
 </span><span id="line-37"><span class="sd">        message (str): Explanation of the error.</span>
 </span><span id="line-38"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="line-39">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+</span><span id="line-39">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
 </span><span id="line-40">            <span class="bp">self</span><span class="p">,</span>
 </span><span id="line-41">            <span class="n">permitted_gases</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
 </span><span id="line-42">            <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Gas not recognized.&quot;</span><span class="p">):</span>
@@ -250,14 +249,14 @@
 </span><span id="line-54">
 <div class="viewcode-block" id="WrongAreaFractionsException">
 <a class="viewcode-back" href="../../api/reemission.exceptions.html#reemission.exceptions.WrongAreaFractionsException">[docs]</a>
-</span><span id="line-55"><span class="k">class</span> <span class="nc">WrongAreaFractionsException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+</span><span id="line-55"><span class="k">class</span><span class="w"> </span><span class="nc">WrongAreaFractionsException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 </span><span id="line-56"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised if the number of area fractions does not match the number of land uses.</span>
 </span><span id="line-57">
 </span><span id="line-58"><span class="sd">    Attributes:</span>
 </span><span id="line-59"><span class="sd">        number_of_fractions (int): Number of area fractions in a list.</span>
 </span><span id="line-60"><span class="sd">        number_of_landuses (int): Number of pre-defined land uses.</span>
 </span><span id="line-61"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="line-62">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+</span><span id="line-62">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
 </span><span id="line-63">            <span class="bp">self</span><span class="p">,</span>
 </span><span id="line-64">            <span class="n">number_of_fractions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 </span><span id="line-65">            <span class="n">number_of_landuses</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -278,14 +277,14 @@
 </span><span id="line-79">
 <div class="viewcode-block" id="WrongSumOfAreasException">
 <a class="viewcode-back" href="../../api/reemission.exceptions.html#reemission.exceptions.WrongSumOfAreasException">[docs]</a>
-</span><span id="line-80"><span class="k">class</span> <span class="nc">WrongSumOfAreasException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+</span><span id="line-80"><span class="k">class</span><span class="w"> </span><span class="nc">WrongSumOfAreasException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 </span><span id="line-81"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised if area fractions in a supplied list do not sum to 1.</span>
 </span><span id="line-82">
 </span><span id="line-83"><span class="sd">    Attributes:</span>
 </span><span id="line-84"><span class="sd">        fractions (list): List of area fractions.</span>
 </span><span id="line-85"><span class="sd">        accuracy (float): Acceptable error in the sum of area fractions.</span>
 </span><span id="line-86"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="line-87">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fractions</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">accuracy</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+</span><span id="line-87">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fractions</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">accuracy</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
 </span><span id="line-88"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="line-89"><span class="sd">        Initializes the WrongSumOfAreasException with the fractions and accuracy.</span>
 </span><span id="line-90">
@@ -302,13 +301,13 @@
 </span><span id="line-100">
 <div class="viewcode-block" id="TableNotReadException">
 <a class="viewcode-back" href="../../api/reemission.exceptions.html#reemission.exceptions.TableNotReadException">[docs]</a>
-</span><span id="line-101"><span class="k">class</span> <span class="nc">TableNotReadException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+</span><span id="line-101"><span class="k">class</span><span class="w"> </span><span class="nc">TableNotReadException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 </span><span id="line-102"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised if a configuration table is not found.</span>
 </span><span id="line-103">
 </span><span id="line-104"><span class="sd">    Attributes:</span>
 </span><span id="line-105"><span class="sd">        table (Union[str, list]): Name of the table or list of names of tables that are not found.</span>
 </span><span id="line-106"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="line-107">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">]):</span>
+</span><span id="line-107">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">]):</span>
 </span><span id="line-108"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="line-109"><span class="sd">        Initializes the TableNotReadException with the table name or list of table names.</span>
 </span><span id="line-110">
@@ -327,13 +326,13 @@
 </span><span id="line-122">
 <div class="viewcode-block" id="ConversionMethodUnknownException">
 <a class="viewcode-back" href="../../api/reemission.exceptions.html#reemission.exceptions.ConversionMethodUnknownException">[docs]</a>
-</span><span id="line-123"><span class="k">class</span> <span class="nc">ConversionMethodUnknownException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+</span><span id="line-123"><span class="k">class</span><span class="w"> </span><span class="nc">ConversionMethodUnknownException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 </span><span id="line-124"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Exception raised if a conversion of an object was not possible because the conversion method supplied is unknown.</span>
 </span><span id="line-125">
 </span><span id="line-126"><span class="sd">    Attributes:</span>
 </span><span id="line-127"><span class="sd">        conversion_method (str): Name of the conversion method.</span>
 </span><span id="line-128"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="line-129">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conversion_method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">available_methods</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+</span><span id="line-129">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conversion_method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">available_methods</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
 </span><span id="line-130"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="line-131"><span class="sd">        Initializes the ConversionMethodUnknownException with the conversion method and available methods.</span>
 </span><span id="line-132">
@@ -350,7 +349,7 @@
 </span><span id="line-142">
 <div class="viewcode-block" id="append_message">
 <a class="viewcode-back" href="../../api/reemission.exceptions.html#reemission.exceptions.append_message">[docs]</a>
-</span><span id="line-143"><span class="k">def</span> <span class="nf">append_message</span><span class="p">(</span><span class="n">exc</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-143"><span class="k">def</span><span class="w"> </span><span class="nf">append_message</span><span class="p">(</span><span class="n">exc</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="line-144"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="line-145"><span class="sd">    Appends a message to the message text of the given exception.</span>
 </span><span id="line-146">
@@ -375,7 +374,7 @@
 </span><span id="line-164">
 <div class="viewcode-block" id="replace_message">
 <a class="viewcode-back" href="../../api/reemission.exceptions.html#reemission.exceptions.replace_message">[docs]</a>
-</span><span id="line-165"><span class="k">def</span> <span class="nf">replace_message</span><span class="p">(</span><span class="n">exc</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-165"><span class="k">def</span><span class="w"> </span><span class="nf">replace_message</span><span class="p">(</span><span class="n">exc</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="line-166"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 </span><span id="line-167"><span class="sd">    Replaces the exception message with the given message.</span>
 </span><span id="line-168">
@@ -400,20 +399,19 @@
       <div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
         <p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2024, Tomasz Janus, University of Manchester, United Kingdom&nbsp;Built with <a class="font-medium underline underline-offset-4"
     href="https://www.sphinx-doc.org"
-    rel="noreferrer">Sphinx 7.3.7</a></p>
+    rel="noreferrer">Sphinx 8.1.3</a></p>
 </div>
 </div>
 </footer>
   </div>
   
     <script src="../../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/toggleprompt.js?v=5801b3bb"></script>
-    <script src="../../_static/tabs.js?v=3030b3cb"></script>
-    <script defer="defer" src="../../_static/theme.js?v=e82a16a3"></script>
+    <script defer="defer" src="../../_static/theme.js?v=073f68d9"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
   
 </body>

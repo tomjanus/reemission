@@ -10,11 +10,10 @@
 <title>Model (Main) | ReEmission 1.0.0 documentation</title>
 <meta content="Model (Main) | ReEmission 1.0.0 documentation" property="og:title"/>
 <meta content="Model (Main) | ReEmission 1.0.0 documentation" name="twitter:title"/>
-<link href="../_static/pygments.css?v=c842c44c" rel="stylesheet" type="text/css"/>
-<link href="../_static/theme.css?v=ecdfb4fc" rel="stylesheet" type="text/css"/>
+<link href="../_static/pygments.css?v=1949e874" rel="stylesheet" type="text/css"/>
+<link href="../_static/theme.css?v=42baaae4" rel="stylesheet" type="text/css"/>
 <link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
 <link href="../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/tabs.css?v=a5c4661c" rel="stylesheet" type="text/css"/>
 <link href="../search.html" rel="search" title="Search"/>
 <link href="../genindex.html" rel="index" title="Index"/>
 <link href="reemission.input.html" rel="next" title="Input Model"/>
@@ -32,7 +31,7 @@
       if (!userPreference) {localStorage.setItem('darkMode', mode)}
     </script>
 </head>
-<body :class="{ 'overflow-hidden': showSidebar }" class="min-h-screen font-sans antialiased bg-background text-foreground" x-data="{ showSidebar: false }">
+<body :class="{ 'overflow-hidden': showSidebar }" class="min-h-screen font-sans antialiased bg-background text-foreground" x-data="{ showSidebar: false, showScrollTop: false }">
 <div @click.self="showSidebar = false" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" x-cloak="" x-show="showSidebar"></div><div class="relative flex flex-col min-h-screen" id="page"><a class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100" href="#content">
       Skip to content
     </a><header class="sticky top-0 z-40 w-full border-b shadow-sm border-border supports-backdrop-blur:bg-background/60 bg-background/95 backdrop-blur"><div class="container flex items-center h-14">
@@ -216,7 +215,7 @@ ensure robust performance.</p>
 </dd>
 </dl>
 <p><strong>Example:</strong></p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="kn">from</span> <span class="nn">reemission</span> <span class="kn">import</span> <span class="n">EmissionModel</span><span class="p">,</span> <span class="n">Inputs</span><span class="p">,</span> <span class="n">Writer</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmissionModel</span><span class="p">,</span> <span class="n">Inputs</span><span class="p">,</span> <span class="n">Writer</span>
 </span><span id="line-2">
 </span><span id="line-3"><span class="c1"># Initialize inputs</span>
 </span><span id="line-4"><span class="n">inputs</span> <span class="o">=</span> <span class="n">Inputs</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
@@ -240,7 +239,7 @@ ensure robust performance.</p>
 </div>
 <dl class="py class">
 <dt class="sig sig-object py" id="reemission.model.EmissionModel">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.model.</span></span><span class="sig-name descname"><span class="pre">EmissionModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs:</span> <span class="pre">~reemission.input.Inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config:</span> <span class="pre">~typing.Dict</span> <span class="pre">|</span> <span class="pre">~pathlib.Path</span> <span class="pre">|</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs:</span> <span class="pre">~typing.Dict</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">internal:</span> <span class="pre">~typing.Dict</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">author:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_title:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'Results'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ret_coeff:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'empirical'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_model:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'g-res'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n2o_model:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'model_1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">presenter:</span> <span class="pre">~reemission.presenter.Presenter</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/model.html#EmissionModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.model.</span></span><span class="sig-name descname"><span class="pre">EmissionModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs:</span> <span class="pre">~reemission.input.Inputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_config:</span> <span class="pre">~typing.Dict</span> <span class="pre">|</span> <span class="pre">~pathlib.Path</span> <span class="pre">|</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">presenter_config:</span> <span class="pre">~typing.Dict</span> <span class="pre">|</span> <span class="pre">~pathlib.Path</span> <span class="pre">|</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs:</span> <span class="pre">~typing.Dict</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">internal:</span> <span class="pre">~typing.Dict</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">author:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_title:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'Results'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ret_coeff:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_model:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n2o_model:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">presenter:</span> <span class="pre">~reemission.presenter.Presenter</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/model.html#EmissionModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Calculates emissions for a reservoir or a number of reservoirs.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="reemission.model.EmissionModel.inputs">
@@ -253,9 +252,19 @@ ensure robust performance.</p>
 </dl>
 </dd></dl>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="reemission.model.EmissionModel.config">
-<span class="sig-name descname"><span class="pre">config</span></span></dt>
-<dd><p>Dictionary with configuration data or path to config file.</p>
+<dt class="sig sig-object py" id="reemission.model.EmissionModel.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span></dt>
+<dd><p>Dictionary with model configuration data or path to config file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Union[Dict, pathlib.Path, str]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.model.EmissionModel.presenter_config">
+<span class="sig-name descname"><span class="pre">presenter_config</span></span></dt>
+<dd><p>Dictionary with Presenter configuration data or path to config file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Union[Dict, pathlib.Path, str]</p>
@@ -345,7 +354,7 @@ ensure robust performance.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="reemission.model.EmissionModel.__post_init__">
 <span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/model.html#EmissionModel.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Initialize outputs dict an load config file if config is a path.</p>
+<dd><p>Initialize outputs dict and load presenter_config file if presenter_config is a path.</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="reemission.model.EmissionModel.add_presenter">
@@ -369,10 +378,6 @@ ensure robust performance.</p>
 <span class="sig-name descname"><span class="pre">calculate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/model.html#EmissionModel.calculate"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Calculate emissions for a number of variables defined in config.</p>
 </dd></dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="id1">
-<span class="sig-name descname"><span class="pre">config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></em></dt>
-<dd></dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="reemission.model.EmissionModel.create_exec_dictionary">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_exec_dictionary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">co2_em</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission" title="reemission.emissions.CarbonDioxideEmission"><span class="pre">CarbonDioxideEmission</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ch4_em</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission" title="reemission.emissions.MethaneEmission"><span class="pre">MethaneEmission</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n2o_em</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission" title="reemission.emissions.NitrousOxideEmission"><span class="pre">NitrousOxideEmission</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">years</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(1,</span> <span class="pre">5,</span> <span class="pre">10,</span> <span class="pre">20,</span> <span class="pre">30,</span> <span class="pre">40,</span> <span class="pre">50,</span> <span class="pre">100)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/reemission/model.html#EmissionModel.create_exec_dictionary"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
@@ -394,17 +399,36 @@ ensure robust performance.</p>
 </dd>
 </dl>
 </dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.model.EmissionModel.get_inputs">
+<span class="sig-name descname"><span class="pre">get_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="reemission.input.html#reemission.input.Inputs" title="reemission.input.Inputs"><span class="pre">Inputs</span></a></span></span><a class="reference internal" href="../_modules/reemission/model.html#EmissionModel.get_inputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Getter for the Inputs object</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.model.EmissionModel.get_internal_vars">
+<span class="sig-name descname"><span class="pre">get_internal_vars</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/reemission/model.html#EmissionModel.get_internal_vars"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Getter for internal (intermediate) variables</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.model.EmissionModel.get_outputs">
+<span class="sig-name descname"><span class="pre">get_outputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/reemission/model.html#EmissionModel.get_outputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Getter for outputs dictionary.</p>
+</dd></dl>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id2">
+<dt class="sig sig-object py" id="id1">
 <span class="sig-name descname"><span class="pre">inputs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="reemission.input.html#reemission.input.Inputs" title="reemission.input.Inputs"><span class="pre">Inputs</span></a></em></dt>
 <dd></dd></dl>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id3">
+<dt class="sig sig-object py" id="id2">
 <span class="sig-name descname"><span class="pre">internal</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
 <dd></dd></dl>
 <dl class="py attribute">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
 <dt class="sig sig-object py" id="id4">
-<span class="sig-name descname"><span class="pre">n2o_model</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'model_1'</span></em></dt>
+<span class="sig-name descname"><span class="pre">n2o_model</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em></dt>
 <dd></dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id5">
@@ -412,7 +436,7 @@ ensure robust performance.</p>
 <dd></dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id6">
-<span class="sig-name descname"><span class="pre">p_model</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'g-res'</span></em></dt>
+<span class="sig-name descname"><span class="pre">p_model</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em></dt>
 <dd></dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id7">
@@ -420,11 +444,15 @@ ensure robust performance.</p>
 <dd></dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id8">
-<span class="sig-name descname"><span class="pre">report_title</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Results'</span></em></dt>
+<span class="sig-name descname"><span class="pre">presenter_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em></dt>
 <dd></dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id9">
-<span class="sig-name descname"><span class="pre">ret_coeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'empirical'</span></em></dt>
+<span class="sig-name descname"><span class="pre">report_title</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Results'</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id10">
+<span class="sig-name descname"><span class="pre">ret_coeff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em></dt>
 <dd></dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="reemission.model.EmissionModel.save_results">
@@ -455,7 +483,8 @@ ensure robust performance.</p>
 <ul>
 <li><a :data-current="activeSection === '#reemission.model.EmissionModel'" class="reference internal" href="#reemission.model.EmissionModel"><code class="docutils literal notranslate"><span class="pre">EmissionModel</span></code></a><ul>
 <li><a :data-current="activeSection === '#reemission.model.EmissionModel.inputs'" class="reference internal" href="#reemission.model.EmissionModel.inputs"><code class="docutils literal notranslate"><span class="pre">EmissionModel.inputs</span></code></a></li>
-<li><a :data-current="activeSection === '#reemission.model.EmissionModel.config'" class="reference internal" href="#reemission.model.EmissionModel.config"><code class="docutils literal notranslate"><span class="pre">EmissionModel.config</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.model.EmissionModel.model_config'" class="reference internal" href="#reemission.model.EmissionModel.model_config"><code class="docutils literal notranslate"><span class="pre">EmissionModel.model_config</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.model.EmissionModel.presenter_config'" class="reference internal" href="#reemission.model.EmissionModel.presenter_config"><code class="docutils literal notranslate"><span class="pre">EmissionModel.presenter_config</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.model.EmissionModel.outputs'" class="reference internal" href="#reemission.model.EmissionModel.outputs"><code class="docutils literal notranslate"><span class="pre">EmissionModel.outputs</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.model.EmissionModel.internal'" class="reference internal" href="#reemission.model.EmissionModel.internal"><code class="docutils literal notranslate"><span class="pre">EmissionModel.internal</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.model.EmissionModel.author'" class="reference internal" href="#reemission.model.EmissionModel.author"><code class="docutils literal notranslate"><span class="pre">EmissionModel.author</span></code></a></li>
@@ -468,16 +497,20 @@ ensure robust performance.</p>
 <li><a :data-current="activeSection === '#reemission.model.EmissionModel.add_presenter'" class="reference internal" href="#reemission.model.EmissionModel.add_presenter"><code class="docutils literal notranslate"><span class="pre">EmissionModel.add_presenter()</span></code></a></li>
 <li><a :data-current="activeSection === '#id0'" class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">EmissionModel.author</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.model.EmissionModel.calculate'" class="reference internal" href="#reemission.model.EmissionModel.calculate"><code class="docutils literal notranslate"><span class="pre">EmissionModel.calculate()</span></code></a></li>
-<li><a :data-current="activeSection === '#id1'" class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">EmissionModel.config</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.model.EmissionModel.create_exec_dictionary'" class="reference internal" href="#reemission.model.EmissionModel.create_exec_dictionary"><code class="docutils literal notranslate"><span class="pre">EmissionModel.create_exec_dictionary()</span></code></a></li>
-<li><a :data-current="activeSection === '#id2'" class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">EmissionModel.inputs</span></code></a></li>
-<li><a :data-current="activeSection === '#id3'" class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">EmissionModel.internal</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.model.EmissionModel.get_inputs'" class="reference internal" href="#reemission.model.EmissionModel.get_inputs"><code class="docutils literal notranslate"><span class="pre">EmissionModel.get_inputs()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.model.EmissionModel.get_internal_vars'" class="reference internal" href="#reemission.model.EmissionModel.get_internal_vars"><code class="docutils literal notranslate"><span class="pre">EmissionModel.get_internal_vars()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.model.EmissionModel.get_outputs'" class="reference internal" href="#reemission.model.EmissionModel.get_outputs"><code class="docutils literal notranslate"><span class="pre">EmissionModel.get_outputs()</span></code></a></li>
+<li><a :data-current="activeSection === '#id1'" class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">EmissionModel.inputs</span></code></a></li>
+<li><a :data-current="activeSection === '#id2'" class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">EmissionModel.internal</span></code></a></li>
+<li><a :data-current="activeSection === '#id3'" class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">EmissionModel.model_config</span></code></a></li>
 <li><a :data-current="activeSection === '#id4'" class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">EmissionModel.n2o_model</span></code></a></li>
 <li><a :data-current="activeSection === '#id5'" class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">EmissionModel.outputs</span></code></a></li>
 <li><a :data-current="activeSection === '#id6'" class="reference internal" href="#id6"><code class="docutils literal notranslate"><span class="pre">EmissionModel.p_model</span></code></a></li>
 <li><a :data-current="activeSection === '#id7'" class="reference internal" href="#id7"><code class="docutils literal notranslate"><span class="pre">EmissionModel.presenter</span></code></a></li>
-<li><a :data-current="activeSection === '#id8'" class="reference internal" href="#id8"><code class="docutils literal notranslate"><span class="pre">EmissionModel.report_title</span></code></a></li>
-<li><a :data-current="activeSection === '#id9'" class="reference internal" href="#id9"><code class="docutils literal notranslate"><span class="pre">EmissionModel.ret_coeff</span></code></a></li>
+<li><a :data-current="activeSection === '#id8'" class="reference internal" href="#id8"><code class="docutils literal notranslate"><span class="pre">EmissionModel.presenter_config</span></code></a></li>
+<li><a :data-current="activeSection === '#id9'" class="reference internal" href="#id9"><code class="docutils literal notranslate"><span class="pre">EmissionModel.report_title</span></code></a></li>
+<li><a :data-current="activeSection === '#id10'" class="reference internal" href="#id10"><code class="docutils literal notranslate"><span class="pre">EmissionModel.ret_coeff</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.model.EmissionModel.save_results'" class="reference internal" href="#reemission.model.EmissionModel.save_results"><code class="docutils literal notranslate"><span class="pre">EmissionModel.save_results()</span></code></a></li>
 </ul>
 </li>
@@ -489,18 +522,18 @@ ensure robust performance.</p>
 </div><footer class="py-6 border-t border-border md:py-0">
 <div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
 <div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
-<p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2024, Tomasz Janus, University of Manchester, United Kingdom Built with <a class="font-medium underline underline-offset-4" href="https://www.sphinx-doc.org" rel="noreferrer">Sphinx 7.3.7</a></p>
+<p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2024, Tomasz Janus, University of Manchester, United Kingdom Built with <a class="font-medium underline underline-offset-4" href="https://www.sphinx-doc.org" rel="noreferrer">Sphinx 8.1.3</a></p>
 </div>
 </div>
 </footer>
 </div>
 <script src="../_static/documentation_options.js?v=8d563738"></script>
-<script src="../_static/doctools.js?v=9a2dae69"></script>
+<script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../_static/copybutton.js?v=f281be69"></script>
 <script src="../_static/toggleprompt.js?v=5801b3bb"></script>
-<script defer="defer" src="../_static/theme.js?v=e82a16a3"></script>
+<script defer="defer" src="../_static/theme.js?v=073f68d9"></script>
 <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
 </body>
 </html>

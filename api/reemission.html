@@ -10,11 +10,10 @@
 <title>ReEmission reference documentation. | ReEmission 1.0.0 documentation</title>
 <meta content="ReEmission reference documentation. | ReEmission 1.0.0 documentation" property="og:title"/>
 <meta content="ReEmission reference documentation. | ReEmission 1.0.0 documentation" name="twitter:title"/>
-<link href="../_static/pygments.css?v=c842c44c" rel="stylesheet" type="text/css"/>
-<link href="../_static/theme.css?v=ecdfb4fc" rel="stylesheet" type="text/css"/>
+<link href="../_static/pygments.css?v=1949e874" rel="stylesheet" type="text/css"/>
+<link href="../_static/theme.css?v=42baaae4" rel="stylesheet" type="text/css"/>
 <link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
 <link href="../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/tabs.css?v=a5c4661c" rel="stylesheet" type="text/css"/>
 <link href="../search.html" rel="search" title="Search"/>
 <link href="../genindex.html" rel="index" title="Index"/>
 <link href="reemission.model.html" rel="next" title="Model (Main)"/>
@@ -32,7 +31,7 @@
       if (!userPreference) {localStorage.setItem('darkMode', mode)}
     </script>
 </head>
-<body :class="{ 'overflow-hidden': showSidebar }" class="min-h-screen font-sans antialiased bg-background text-foreground" x-data="{ showSidebar: false }">
+<body :class="{ 'overflow-hidden': showSidebar }" class="min-h-screen font-sans antialiased bg-background text-foreground" x-data="{ showSidebar: false, showScrollTop: false }">
 <div @click.self="showSidebar = false" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" x-cloak="" x-show="showSidebar"></div><div class="relative flex flex-col min-h-screen" id="page"><a class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100" href="#content">
       Skip to content
     </a><header class="sticky top-0 z-40 w-full border-b shadow-sm border-border supports-backdrop-blur:bg-background/60 bg-background/95 backdrop-blur"><div class="container flex items-center h-14">
@@ -155,15 +154,6 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reemission.catchment.html">Catchment Model</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.INI_FILE"><code class="docutils literal notranslate"><span class="pre">INI_FILE</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.TABLES"><code class="docutils literal notranslate"><span class="pre">TABLES</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.tn_coeff_table"><code class="docutils literal notranslate"><span class="pre">tn_coeff_table</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.tp_coeff_table"><code class="docutils literal notranslate"><span class="pre">tp_coeff_table</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.p_loads_pop"><code class="docutils literal notranslate"><span class="pre">p_loads_pop</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.p_exports"><code class="docutils literal notranslate"><span class="pre">p_exports</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.config"><code class="docutils literal notranslate"><span class="pre">config</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.internals_config"><code class="docutils literal notranslate"><span class="pre">internals_config</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.EPS"><code class="docutils literal notranslate"><span class="pre">EPS</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment"><code class="docutils literal notranslate"><span class="pre">Catchment</span></code></a></li>
 </ul>
 </li>
@@ -200,11 +190,15 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reemission.presenter.html">Presenter</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.ExcelWriter"><code class="docutils literal notranslate"><span class="pre">ExcelWriter</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter"><code class="docutils literal notranslate"><span class="pre">HTMLWriter</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.JSONWriter"><code class="docutils literal notranslate"><span class="pre">JSONWriter</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter"><code class="docutils literal notranslate"><span class="pre">LatexWriter</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.Presenter"><code class="docutils literal notranslate"><span class="pre">Presenter</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.Writer"><code class="docutils literal notranslate"><span class="pre">Writer</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.emission_bars"><code class="docutils literal notranslate"><span class="pre">emission_bars()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.emission_profile"><code class="docutils literal notranslate"><span class="pre">emission_profile()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.enforce_unity_sum"><code class="docutils literal notranslate"><span class="pre">enforce_unity_sum()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.format_number"><code class="docutils literal notranslate"><span class="pre">format_number()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.landcover_pie"><code class="docutils literal notranslate"><span class="pre">landcover_pie()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.parse_landcover_composition"><code class="docutils literal notranslate"><span class="pre">parse_landcover_composition()</span></code></a></li>
 </ul>
@@ -226,7 +220,9 @@
 <li class="toctree-l2"><a class="reference internal" href="reemission.utils.html#reemission.utils.load_yaml"><code class="docutils literal notranslate"><span class="pre">load_yaml()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.utils.html#reemission.utils.md5"><code class="docutils literal notranslate"><span class="pre">md5()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.utils.html#reemission.utils.read_config"><code class="docutils literal notranslate"><span class="pre">read_config()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.utils.html#reemission.utils.read_config_dict"><code class="docutils literal notranslate"><span class="pre">read_config_dict()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.utils.html#reemission.utils.read_table"><code class="docutils literal notranslate"><span class="pre">read_table()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.utils.html#reemission.utils.safe_cast"><code class="docutils literal notranslate"><span class="pre">safe_cast()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.utils.html#reemission.utils.save_return"><code class="docutils literal notranslate"><span class="pre">save_return()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.utils.html#reemission.utils.save_to_json"><code class="docutils literal notranslate"><span class="pre">save_to_json()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.utils.html#reemission.utils.split_path"><code class="docutils literal notranslate"><span class="pre">split_path()</span></code></a></li>
@@ -320,18 +316,18 @@
 </div><footer class="py-6 border-t border-border md:py-0">
 <div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
 <div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
-<p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2024, Tomasz Janus, University of Manchester, United Kingdom Built with <a class="font-medium underline underline-offset-4" href="https://www.sphinx-doc.org" rel="noreferrer">Sphinx 7.3.7</a></p>
+<p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2024, Tomasz Janus, University of Manchester, United Kingdom Built with <a class="font-medium underline underline-offset-4" href="https://www.sphinx-doc.org" rel="noreferrer">Sphinx 8.1.3</a></p>
 </div>
 </div>
 </footer>
 </div>
 <script src="../_static/documentation_options.js?v=8d563738"></script>
-<script src="../_static/doctools.js?v=9a2dae69"></script>
+<script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../_static/copybutton.js?v=f281be69"></script>
 <script src="../_static/toggleprompt.js?v=5801b3bb"></script>
-<script defer="defer" src="../_static/theme.js?v=e82a16a3"></script>
+<script defer="defer" src="../_static/theme.js?v=073f68d9"></script>
 <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
 <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
 <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>

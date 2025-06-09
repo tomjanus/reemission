@@ -10,11 +10,10 @@
 <title>Utility functions | ReEmission 1.0.0 documentation</title>
 <meta content="Utility functions | ReEmission 1.0.0 documentation" property="og:title"/>
 <meta content="Utility functions | ReEmission 1.0.0 documentation" name="twitter:title"/>
-<link href="../_static/pygments.css?v=c842c44c" rel="stylesheet" type="text/css"/>
-<link href="../_static/theme.css?v=ecdfb4fc" rel="stylesheet" type="text/css"/>
+<link href="../_static/pygments.css?v=1949e874" rel="stylesheet" type="text/css"/>
+<link href="../_static/theme.css?v=42baaae4" rel="stylesheet" type="text/css"/>
 <link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
 <link href="../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/tabs.css?v=a5c4661c" rel="stylesheet" type="text/css"/>
 <link href="../search.html" rel="search" title="Search"/>
 <link href="../genindex.html" rel="index" title="Index"/>
 <link href="reemission.auxiliary.html" rel="next" title="Auxiliary functions"/>
@@ -32,7 +31,7 @@
       if (!userPreference) {localStorage.setItem('darkMode', mode)}
     </script>
 </head>
-<body :class="{ 'overflow-hidden': showSidebar }" class="min-h-screen font-sans antialiased bg-background text-foreground" x-data="{ showSidebar: false }">
+<body :class="{ 'overflow-hidden': showSidebar }" class="min-h-screen font-sans antialiased bg-background text-foreground" x-data="{ showSidebar: false, showScrollTop: false }">
 <div @click.self="showSidebar = false" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" x-cloak="" x-show="showSidebar"></div><div class="relative flex flex-col min-h-screen" id="page"><a class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100" href="#content">
       Skip to content
     </a><header class="sticky top-0 z-40 w-full border-b shadow-sm border-border supports-backdrop-blur:bg-background/60 bg-background/95 backdrop-blur"><div class="container flex items-center h-14">
@@ -405,6 +404,19 @@
 </dl>
 </dd></dl>
 <dl class="py function">
+<dt class="sig sig-object py" id="reemission.utils.read_config_dict">
+<span class="sig-prename descclassname"><span class="pre">reemission.utils.</span></span><span class="sig-name descname"><span class="pre">read_config_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">ConfigParser</span></span></span><a class="reference internal" href="../_modules/reemission/utils.html#read_config_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Reads the <cite>.ini</cite> file with global configuration parameters and returns the parsed config object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> – Path to the .ini file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary containing the configuration data.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
 <dt class="sig sig-object py" id="reemission.utils.read_table">
 <span class="sig-prename descclassname"><span class="pre">reemission.utils.</span></span><span class="sig-name descname"><span class="pre">read_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">schema_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="../_modules/reemission/utils.html#read_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Reads yaml table from the given YAML file.</p>
@@ -423,6 +435,25 @@
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="reemission.exceptions.html#reemission.exceptions.TableNotReadException" title="reemission.exceptions.TableNotReadException"><strong>TableNotReadException</strong></a> – If the table cannot be read.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="reemission.utils.safe_cast">
+<span class="sig-prename descclassname"><span class="pre">reemission.utils.</span></span><span class="sig-name descname"><span class="pre">safe_cast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="../_modules/reemission/utils.html#safe_cast"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Safely casts a value to a specified type.</p>
+<p>Tries to convert the input value to the specified type. If conversion fails,
+the original value is returned unchanged. Special handling is implemented for
+boolean conversion from common string representations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> – The value to be converted.</p></li>
+<li><p><strong>type</strong> – The target type to cast to (e.g., bool, int, float).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The converted value if casting is successful; otherwise, the original value.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -567,7 +598,9 @@
 <li><a :data-current="activeSection === '#reemission.utils.load_yaml'" class="reference internal" href="#reemission.utils.load_yaml"><code class="docutils literal notranslate"><span class="pre">load_yaml()</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.utils.md5'" class="reference internal" href="#reemission.utils.md5"><code class="docutils literal notranslate"><span class="pre">md5()</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.utils.read_config'" class="reference internal" href="#reemission.utils.read_config"><code class="docutils literal notranslate"><span class="pre">read_config()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.utils.read_config_dict'" class="reference internal" href="#reemission.utils.read_config_dict"><code class="docutils literal notranslate"><span class="pre">read_config_dict()</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.utils.read_table'" class="reference internal" href="#reemission.utils.read_table"><code class="docutils literal notranslate"><span class="pre">read_table()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.utils.safe_cast'" class="reference internal" href="#reemission.utils.safe_cast"><code class="docutils literal notranslate"><span class="pre">safe_cast()</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.utils.save_return'" class="reference internal" href="#reemission.utils.save_return"><code class="docutils literal notranslate"><span class="pre">save_return()</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.utils.save_to_json'" class="reference internal" href="#reemission.utils.save_to_json"><code class="docutils literal notranslate"><span class="pre">save_to_json()</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.utils.split_path'" class="reference internal" href="#reemission.utils.split_path"><code class="docutils literal notranslate"><span class="pre">split_path()</span></code></a></li>
@@ -582,18 +615,18 @@
 </div><footer class="py-6 border-t border-border md:py-0">
 <div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
 <div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
-<p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2024, Tomasz Janus, University of Manchester, United Kingdom Built with <a class="font-medium underline underline-offset-4" href="https://www.sphinx-doc.org" rel="noreferrer">Sphinx 7.3.7</a></p>
+<p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2024, Tomasz Janus, University of Manchester, United Kingdom Built with <a class="font-medium underline underline-offset-4" href="https://www.sphinx-doc.org" rel="noreferrer">Sphinx 8.1.3</a></p>
 </div>
 </div>
 </footer>
 </div>
 <script src="../_static/documentation_options.js?v=8d563738"></script>
-<script src="../_static/doctools.js?v=9a2dae69"></script>
+<script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../_static/copybutton.js?v=f281be69"></script>
 <script src="../_static/toggleprompt.js?v=5801b3bb"></script>
-<script defer="defer" src="../_static/theme.js?v=e82a16a3"></script>
+<script defer="defer" src="../_static/theme.js?v=073f68d9"></script>
 <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
 </body>
 </html>

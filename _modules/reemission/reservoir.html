@@ -15,11 +15,10 @@
     <title>reemission.reservoir | ReEmission 1.0.0 documentation</title>
     <meta property="og:title" content="reemission.reservoir | ReEmission 1.0.0 documentation" />
     <meta name="twitter:title" content="reemission.reservoir | ReEmission 1.0.0 documentation" />
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=c842c44c" />
-      <link rel="stylesheet" type="text/css" href="../../_static/theme.css?v=ecdfb4fc" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=1949e874" />
+      <link rel="stylesheet" type="text/css" href="../../_static/theme.css?v=42baaae4" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-      <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=a5c4661c" />
         <link rel="search" title="Search" href="../../search.html" />
         <link rel="index" title="Index" href="../../genindex.html" />
 
@@ -36,7 +35,7 @@
       if (!userPreference) {localStorage.setItem('darkMode', mode)}
     </script>
 </head>
-<body x-data="{ showSidebar: false }" class="min-h-screen font-sans antialiased bg-background text-foreground" :class="{ 'overflow-hidden': showSidebar }">
+  <body x-data="{ showSidebar: false, showScrollTop: false }" class="min-h-screen font-sans antialiased bg-background text-foreground" :class="{ 'overflow-hidden': showSidebar }">
     <div x-cloak x-show="showSidebar" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" @click.self="showSidebar = false"></div><div id="page" class="relative flex flex-col min-h-screen"><a href="#content" class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100">
       Skip to content
     </a><header
@@ -195,685 +194,683 @@
 </span><span id="line-5"><span class="sd">.. _G-Res: https://www.grestool.org/</span>
 </span><span id="line-6">
 </span><span id="line-7"><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-8"><span class="kn">import</span> <span class="nn">logging</span>
-</span><span id="line-9"><span class="kn">import</span> <span class="nn">math</span>
-</span><span id="line-10"><span class="kn">import</span> <span class="nn">configparser</span>
-</span><span id="line-11"><span class="kn">import</span> <span class="nn">inspect</span>
-</span><span id="line-12"><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
-</span><span id="line-13"><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
-</span><span id="line-14"><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Type</span>
-</span><span id="line-15"><span class="kn">from</span> <span class="nn">reemission.temperature</span> <span class="kn">import</span> <span class="n">MonthlyTemperature</span>
-</span><span id="line-16"><span class="kn">from</span> <span class="nn">reemission.auxiliary</span> <span class="kn">import</span> <span class="p">(</span>
-</span><span id="line-17">    <span class="n">water_density</span><span class="p">,</span> <span class="n">cd_factor</span><span class="p">,</span> <span class="n">scale_windspeed</span><span class="p">,</span> <span class="n">air_density</span><span class="p">)</span>
-</span><span id="line-18"><span class="kn">from</span> <span class="nn">reemission.utils</span> <span class="kn">import</span> <span class="p">(</span>
-</span><span id="line-19">    <span class="n">read_config</span><span class="p">,</span> <span class="n">save_return</span><span class="p">,</span> <span class="n">get_package_file</span><span class="p">,</span> <span class="n">load_yaml</span><span class="p">,</span> <span class="n">debug_on_exception</span><span class="p">)</span>
-</span><span id="line-20"><span class="kn">from</span> <span class="nn">reemission.constants</span> <span class="kn">import</span> <span class="n">Landuse</span><span class="p">,</span> <span class="n">TrophicStatus</span>
-</span><span id="line-21"><span class="kn">from</span> <span class="nn">reemission.exceptions</span> <span class="kn">import</span> <span class="p">(</span>
-</span><span id="line-22">    <span class="n">WrongAreaFractionsException</span><span class="p">,</span>
-</span><span id="line-23">    <span class="n">WrongSumOfAreasException</span><span class="p">)</span>
-</span><span id="line-24"><span class="kn">from</span> <span class="nn">reemission.globals</span> <span class="kn">import</span> <span class="n">internal</span>
+</span><span id="line-8"><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+</span><span id="line-9"><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+</span><span id="line-10"><span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+</span><span id="line-11"><span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+</span><span id="line-12"><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+</span><span id="line-13"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Dict</span>
+</span><span id="line-14"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.temperature</span><span class="w"> </span><span class="kn">import</span> <span class="n">MonthlyTemperature</span>
+</span><span id="line-15"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.auxiliary</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="line-16">    <span class="n">water_density</span><span class="p">,</span> <span class="n">cd_factor</span><span class="p">,</span> <span class="n">scale_windspeed</span><span class="p">,</span> <span class="n">air_density</span><span class="p">)</span>
+</span><span id="line-17"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="line-18">    <span class="n">save_return</span><span class="p">,</span> <span class="n">debug_on_exception</span><span class="p">,</span> <span class="n">safe_cast</span><span class="p">)</span>
+</span><span id="line-19"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">Landuse</span><span class="p">,</span> <span class="n">TrophicStatus</span>
+</span><span id="line-20"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="line-21">    <span class="n">WrongAreaFractionsException</span><span class="p">,</span>
+</span><span id="line-22">    <span class="n">WrongSumOfAreasException</span><span class="p">)</span>
+</span><span id="line-23"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.globals</span><span class="w"> </span><span class="kn">import</span> <span class="n">internal</span>
+</span><span id="line-24"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission</span><span class="w"> </span><span class="kn">import</span> <span class="n">registry</span>
 </span><span id="line-25">
 </span><span id="line-26">
 </span><span id="line-27"><span class="c1"># Set up module logger</span>
 </span><span id="line-28"><span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
-</span><span id="line-29"><span class="n">config</span><span class="p">:</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span> <span class="o">=</span> <span class="n">read_config</span><span class="p">(</span>
-</span><span id="line-30">    <span class="n">get_package_file</span><span class="p">(</span><span class="s2">&quot;config/config.ini&quot;</span><span class="p">))</span>
-</span><span id="line-31">
-</span><span id="line-32"><span class="n">internals_config</span> <span class="o">=</span> <span class="n">load_yaml</span><span class="p">(</span><span class="n">get_package_file</span><span class="p">(</span><span class="s2">&quot;config/internal_vars.yaml&quot;</span><span class="p">))</span>
+</span><span id="line-29">
+</span><span id="line-30"><span class="n">ReservoirType</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;ReservoirType&#39;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="s1">&#39;Reservoir&#39;</span><span class="p">)</span>
+</span><span id="line-31"><span class="n">internals_config</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">presenter_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;report_internal&quot;</span><span class="p">)</span>
+</span><span id="line-32">
 </span><span id="line-33">
-</span><span id="line-34"><span class="c1"># Margin for error by which the sum of landuse fractions can differ from 1.0</span>
-</span><span id="line-35"><span class="n">EPS</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s2">&quot;CALCULATIONS&quot;</span><span class="p">,</span> <span class="s2">&quot;eps_reservoir_area_fractions&quot;</span><span class="p">)</span>
-</span><span id="line-36">
-</span><span id="line-37"><span class="n">ReservoirType</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;ReservoirType&#39;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="s1">&#39;Reservoir&#39;</span><span class="p">)</span>
-</span><span id="line-38">
-</span><span id="line-39">
 <div class="viewcode-block" id="Reservoir">
 <a class="viewcode-back" href="../../api/reemission.reservoir.html#reemission.reservoir.Reservoir">[docs]</a>
-</span><span id="line-40"><span class="nd">@dataclass</span>
-</span><span id="line-41"><span class="k">class</span> <span class="nc">Reservoir</span><span class="p">:</span>
-</span><span id="line-42"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Model of a generic reservoir.</span>
-</span><span id="line-43">
-</span><span id="line-44"><span class="sd">    Attributes:</span>
-</span><span id="line-45"><span class="sd">        coordinates (Tuple[float, float]): Reservoir&#39;s latitude and longitude, degrees.</span>
-</span><span id="line-46"><span class="sd">        temperature (MonthlyTemperature): MonthlyTemperature object with a 12x1 monthly average temperature vector, degC.</span>
-</span><span id="line-47"><span class="sd">        volume (float): Reservoir volume, m$^3$.</span>
-</span><span id="line-48"><span class="sd">        max_depth (float): Maximum reservoir depth, m.</span>
-</span><span id="line-49"><span class="sd">        mean_depth (float): Mean reservoir depth, m.</span>
-</span><span id="line-50"><span class="sd">        inflow_rate (float): Flow of water entering the reservoir, m$^3$/year.</span>
-</span><span id="line-51"><span class="sd">        area (float): Inundated area of the reservoir, km$^2$.</span>
-</span><span id="line-52"><span class="sd">        soil_carbon (float): Mass of carbon in the inundated area, kg/m$^2$.</span>
-</span><span id="line-53"><span class="sd">        area_fractions (List[float]): List of fractions of the inundated area allocated to specific landuse types given in Landuse Enum type per 3 soil type categories: mineral -&gt; organic -&gt; nodata.</span>
-</span><span id="line-54"><span class="sd">        mean_radiance (float): Mean annual monthly horizontal radiance, kWh/m$^2$/d.</span>
-</span><span id="line-55"><span class="sd">        mean_radiance_may_sept (float): Mean monthly horizontal radiance between May and September, kWh/m$^2$/d.</span>
-</span><span id="line-56"><span class="sd">        mean_radiance_nov_mar (float): Mean monthly horizontal radiance between November and March, kWh/m$^2$/d.</span>
-</span><span id="line-57"><span class="sd">        mean_monthly_windspeed (float): Mean annual monthly wind speed, m/s (**assumed to be measured at the height of 50 metres.**)</span>
-</span><span id="line-58"><span class="sd">        water_intake_depth (float): Water intake depth below surface, m.</span>
-</span><span id="line-59"><span class="sd">        name (str): Reservoir name. Default is &quot;n/a&quot;.</span>
+</span><span id="line-34"><span class="nd">@dataclass</span>
+</span><span id="line-35"><span class="k">class</span><span class="w"> </span><span class="nc">Reservoir</span><span class="p">:</span>
+</span><span id="line-36"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Model of a generic reservoir.</span>
+</span><span id="line-37">
+</span><span id="line-38"><span class="sd">    Attributes:</span>
+</span><span id="line-39"><span class="sd">        coordinates (Tuple[float, float]): Reservoir&#39;s latitude and longitude, degrees.</span>
+</span><span id="line-40"><span class="sd">        temperature (MonthlyTemperature): MonthlyTemperature object with a 12x1 monthly average temperature vector, degC.</span>
+</span><span id="line-41"><span class="sd">        volume (float): Reservoir volume, m$^3$.</span>
+</span><span id="line-42"><span class="sd">        max_depth (float): Maximum reservoir depth, m.</span>
+</span><span id="line-43"><span class="sd">        mean_depth (float): Mean reservoir depth, m.</span>
+</span><span id="line-44"><span class="sd">        inflow_rate (float): Flow of water entering the reservoir, m$^3$/year.</span>
+</span><span id="line-45"><span class="sd">        area (float): Inundated area of the reservoir, km$^2$.</span>
+</span><span id="line-46"><span class="sd">        soil_carbon (float): Mass of carbon in the inundated area, kg/m$^2$.</span>
+</span><span id="line-47"><span class="sd">        area_fractions (List[float]): List of fractions of the inundated area allocated to specific landuse types given in Landuse Enum type per 3 soil type categories: mineral -&gt; organic -&gt; nodata.</span>
+</span><span id="line-48"><span class="sd">        mean_radiance (float): Mean annual monthly horizontal radiance, kWh/m$^2$/d.</span>
+</span><span id="line-49"><span class="sd">        mean_radiance_may_sept (float): Mean monthly horizontal radiance between May and September, kWh/m$^2$/d.</span>
+</span><span id="line-50"><span class="sd">        mean_radiance_nov_mar (float): Mean monthly horizontal radiance between November and March, kWh/m$^2$/d.</span>
+</span><span id="line-51"><span class="sd">        mean_monthly_windspeed (float): Mean annual monthly wind speed, m/s (**assumed to be measured at the height of 50 metres.**)</span>
+</span><span id="line-52"><span class="sd">        water_intake_depth (float): Water intake depth below surface, m.</span>
+</span><span id="line-53"><span class="sd">        name (str): Reservoir name. Default is &quot;n/a&quot;.</span>
+</span><span id="line-54">
+</span><span id="line-55"><span class="sd">    Note:</span>
+</span><span id="line-56"><span class="sd">        * Sum of area fractions should be equal to 1 +/- EPS.</span>
+</span><span id="line-57"><span class="sd">        * Reservoir volume in G-Res_ is given in km$^3$.</span>
+</span><span id="line-58"><span class="sd">        * Water intake depth is used for estimating CH$_4$ emissions via degassing.</span>
+</span><span id="line-59"><span class="sd">    &quot;&quot;&quot;</span>
 </span><span id="line-60">
-</span><span id="line-61"><span class="sd">    Note:</span>
-</span><span id="line-62"><span class="sd">        * Sum of area fractions should be equal to 1 +/- EPS.</span>
-</span><span id="line-63"><span class="sd">        * Reservoir volume in G-Res_ is given in km$^3$.</span>
-</span><span id="line-64"><span class="sd">        * Water intake depth is used for estimating CH$_4$ emissions via degassing.</span>
-</span><span id="line-65"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="line-66">
-</span><span id="line-67">    <span class="n">coordinates</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
-</span><span id="line-68">    <span class="n">temperature</span><span class="p">:</span> <span class="n">MonthlyTemperature</span>
-</span><span id="line-69">    <span class="n">volume</span><span class="p">:</span> <span class="nb">float</span>
-</span><span id="line-70">    <span class="n">max_depth</span><span class="p">:</span> <span class="nb">float</span>
-</span><span id="line-71">    <span class="n">mean_depth</span><span class="p">:</span> <span class="nb">float</span>
-</span><span id="line-72">    <span class="n">inflow_rate</span><span class="p">:</span> <span class="nb">float</span>
-</span><span id="line-73">    <span class="n">area</span><span class="p">:</span> <span class="nb">float</span>
-</span><span id="line-74">    <span class="n">soil_carbon</span><span class="p">:</span> <span class="nb">float</span>
-</span><span id="line-75">    <span class="n">area_fractions</span><span class="p">:</span> <span class="n">List</span>
-</span><span id="line-76">    <span class="n">mean_radiance</span><span class="p">:</span> <span class="nb">float</span>
-</span><span id="line-77">    <span class="n">mean_radiance_may_sept</span><span class="p">:</span> <span class="nb">float</span>
-</span><span id="line-78">    <span class="n">mean_radiance_nov_mar</span><span class="p">:</span> <span class="nb">float</span>
-</span><span id="line-79">    <span class="n">mean_monthly_windspeed</span><span class="p">:</span> <span class="nb">float</span>
-</span><span id="line-80">    <span class="n">water_intake_depth</span><span class="p">:</span> <span class="nb">float</span>
-</span><span id="line-81">    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;n/a&quot;</span>
-</span><span id="line-82">
+</span><span id="line-61">    <span class="n">coordinates</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+</span><span id="line-62">    <span class="n">temperature</span><span class="p">:</span> <span class="n">MonthlyTemperature</span>
+</span><span id="line-63">    <span class="n">volume</span><span class="p">:</span> <span class="nb">float</span>
+</span><span id="line-64">    <span class="n">max_depth</span><span class="p">:</span> <span class="nb">float</span>
+</span><span id="line-65">    <span class="n">mean_depth</span><span class="p">:</span> <span class="nb">float</span>
+</span><span id="line-66">    <span class="n">inflow_rate</span><span class="p">:</span> <span class="nb">float</span>
+</span><span id="line-67">    <span class="n">area</span><span class="p">:</span> <span class="nb">float</span>
+</span><span id="line-68">    <span class="n">soil_carbon</span><span class="p">:</span> <span class="nb">float</span>
+</span><span id="line-69">    <span class="n">area_fractions</span><span class="p">:</span> <span class="n">List</span>
+</span><span id="line-70">    <span class="n">mean_radiance</span><span class="p">:</span> <span class="nb">float</span>
+</span><span id="line-71">    <span class="n">mean_radiance_may_sept</span><span class="p">:</span> <span class="nb">float</span>
+</span><span id="line-72">    <span class="n">mean_radiance_nov_mar</span><span class="p">:</span> <span class="nb">float</span>
+</span><span id="line-73">    <span class="n">mean_monthly_windspeed</span><span class="p">:</span> <span class="nb">float</span>
+</span><span id="line-74">    <span class="n">water_intake_depth</span><span class="p">:</span> <span class="nb">float</span>
+</span><span id="line-75">    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;n/a&quot;</span>
+</span><span id="line-76">    <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="line-77">
 <div class="viewcode-block" id="Reservoir.__post_init__">
 <a class="viewcode-back" href="../../api/reemission.reservoir.html#reemission.reservoir.Reservoir.__post_init__">[docs]</a>
-</span><span id="line-83">    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-</span><span id="line-84"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Post-initialization checks and validations.</span>
-</span><span id="line-85">
-</span><span id="line-86"><span class="sd">        Validates the size and sum of area fractions and ensures coordinates are tuples.</span>
-</span><span id="line-87">
-</span><span id="line-88"><span class="sd">        Raises:</span>
-</span><span id="line-89"><span class="sd">            WrongAreaFractionsException: If the number of area fractions is not equal to the number of land uses times three.</span>
-</span><span id="line-90"><span class="sd">            WrongSumOfAreasException: If the sum of area fractions does not equal 1 +/- EPS.</span>
-</span><span id="line-91"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-92">        <span class="k">try</span><span class="p">:</span>
-</span><span id="line-93">            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">Landuse</span><span class="p">)</span>
-</span><span id="line-94">        <span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-</span><span id="line-95">            <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> \
-</span><span id="line-96">                <span class="sa">f</span><span class="s2">&quot;Wrong size of the reservoir </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> area fractions vector.&quot;</span>
-</span><span id="line-97">            <span class="k">raise</span> <span class="n">WrongAreaFractionsException</span><span class="p">(</span>
-</span><span id="line-98">                <span class="n">number_of_fractions</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">),</span>
-</span><span id="line-99">                <span class="n">number_of_landuses</span><span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">Landuse</span><span class="p">),</span>
-</span><span id="line-100">                <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">err</span>
-</span><span id="line-101">        <span class="k">try</span><span class="p">:</span>
-</span><span id="line-102">            <span class="k">assert</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">EPS</span> <span class="o">&lt;=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">EPS</span>
-</span><span id="line-103">        <span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-</span><span id="line-104">            <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> \
-</span><span id="line-105">                <span class="sa">f</span><span class="s2">&quot;Wrong values in reservoir </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> area fractions vector.&quot;</span>
-</span><span id="line-106">            <span class="k">raise</span> <span class="n">WrongSumOfAreasException</span><span class="p">(</span>
-</span><span id="line-107">                <span class="n">fractions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">,</span>
-</span><span id="line-108">                <span class="n">accuracy</span><span class="o">=</span><span class="n">EPS</span><span class="p">,</span>
-</span><span id="line-109">                <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">err</span>
-</span><span id="line-110">        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-</span><span id="line-111">            <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="p">)</span>
-</span><span id="line-112">        <span class="c1"># Validate input arguments</span>
-</span><span id="line-113">        <span class="bp">self</span><span class="o">.</span><span class="n">validate_attributes</span><span class="p">()</span></div>
+</span><span id="line-78">    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-79"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Post-initialization checks and validations.</span>
+</span><span id="line-80">
+</span><span id="line-81"><span class="sd">        Validates the size and sum of area fractions and ensures coordinates are tuples.</span>
+</span><span id="line-82">
+</span><span id="line-83"><span class="sd">        Raises:</span>
+</span><span id="line-84"><span class="sd">            WrongAreaFractionsException: If the number of area fractions is not equal to the number of land uses times three.</span>
+</span><span id="line-85"><span class="sd">            WrongSumOfAreasException: If the sum of area fractions does not equal 1 +/- EPS.</span>
+</span><span id="line-86"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-87">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">:</span>
+</span><span id="line-88">            <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">main_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model_config&quot;</span><span class="p">)</span>
+</span><span id="line-89">        <span class="n">eps</span> <span class="o">=</span> <span class="n">safe_cast</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;CALCULATIONS&quot;</span><span class="p">][</span><span class="s2">&quot;eps_reservoir_area_fractions&quot;</span><span class="p">],</span> <span class="nb">float</span><span class="p">)</span>
+</span><span id="line-90">        <span class="k">try</span><span class="p">:</span>
+</span><span id="line-91">            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">Landuse</span><span class="p">)</span>
+</span><span id="line-92">        <span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+</span><span id="line-93">            <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> \
+</span><span id="line-94">                <span class="sa">f</span><span class="s2">&quot;Wrong size of the reservoir </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> area fractions vector.&quot;</span>
+</span><span id="line-95">            <span class="k">raise</span> <span class="n">WrongAreaFractionsException</span><span class="p">(</span>
+</span><span id="line-96">                <span class="n">number_of_fractions</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">),</span>
+</span><span id="line-97">                <span class="n">number_of_landuses</span><span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">Landuse</span><span class="p">),</span>
+</span><span id="line-98">                <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span>
+</span><span id="line-99">        <span class="k">try</span><span class="p">:</span>
+</span><span id="line-100">            <span class="k">assert</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">eps</span> <span class="o">&lt;=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">eps</span>
+</span><span id="line-101">        <span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+</span><span id="line-102">            <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> \
+</span><span id="line-103">                <span class="sa">f</span><span class="s2">&quot;Wrong values in reservoir </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> area fractions vector.&quot;</span>
+</span><span id="line-104">            <span class="k">raise</span> <span class="n">WrongSumOfAreasException</span><span class="p">(</span>
+</span><span id="line-105">                <span class="n">fractions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">,</span>
+</span><span id="line-106">                <span class="n">accuracy</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span>
+</span><span id="line-107">                <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span>
+</span><span id="line-108">        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+</span><span id="line-109">            <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="p">)</span>
+</span><span id="line-110">        <span class="c1"># Validate input arguments</span>
+</span><span id="line-111">        <span class="bp">self</span><span class="o">.</span><span class="n">validate_attributes</span><span class="p">()</span></div>
 
-</span><span id="line-114">
-</span><span id="line-115">
+</span><span id="line-112">
+</span><span id="line-113">
 <div class="viewcode-block" id="Reservoir.validate_attributes">
 <a class="viewcode-back" href="../../api/reemission.reservoir.html#reemission.reservoir.Reservoir.validate_attributes">[docs]</a>
-</span><span id="line-116">    <span class="k">def</span> <span class="nf">validate_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-117"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate object attributes and correct if necessary.&quot;&quot;&quot;</span>
-</span><span id="line-118">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">water_intake_depth</span> <span class="o">==</span> <span class="s2">&quot;null&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">water_intake_depth</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-119">            <span class="c1"># If water intake depth value is not given, assume that</span>
-</span><span id="line-120">            <span class="c1"># the intake is from deep in the reservoir and therefore,</span>
-</span><span id="line-121">            <span class="c1"># degassing occurs.</span>
-</span><span id="line-122">            <span class="bp">self</span><span class="o">.</span><span class="n">water_intake_depth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span>
-</span><span id="line-123">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">water_intake_depth</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span><span class="p">:</span>
-</span><span id="line-124">            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-</span><span id="line-125">                <span class="s2">&quot;Water intake depth in reservoir </span><span class="si">%s</span><span class="s2"> greater than max depth&quot;</span><span class="p">,</span>
-</span><span id="line-126">                <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-</span><span id="line-127">            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Setting intake depth to max depth.&quot;</span><span class="p">)</span>
-</span><span id="line-128">            <span class="bp">self</span><span class="o">.</span><span class="n">water_intake_depth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span></div>
+</span><span id="line-114">    <span class="k">def</span><span class="w"> </span><span class="nf">validate_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-115"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate object attributes and correct if necessary.&quot;&quot;&quot;</span>
+</span><span id="line-116">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">water_intake_depth</span> <span class="o">==</span> <span class="s2">&quot;null&quot;</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">water_intake_depth</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-117">            <span class="c1"># If water intake depth value is not given, assume that</span>
+</span><span id="line-118">            <span class="c1"># the intake is from deep in the reservoir and therefore,</span>
+</span><span id="line-119">            <span class="c1"># degassing occurs.</span>
+</span><span id="line-120">            <span class="bp">self</span><span class="o">.</span><span class="n">water_intake_depth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span>
+</span><span id="line-121">        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">water_intake_depth</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span><span class="p">:</span>
+</span><span id="line-122">            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+</span><span id="line-123">                <span class="s2">&quot;Water intake depth in reservoir </span><span class="si">%s</span><span class="s2"> greater than max depth&quot;</span><span class="p">,</span>
+</span><span id="line-124">                <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</span><span id="line-125">            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Setting intake depth to max depth.&quot;</span><span class="p">)</span>
+</span><span id="line-126">            <span class="bp">self</span><span class="o">.</span><span class="n">water_intake_depth</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span></div>
 
-</span><span id="line-129">
+</span><span id="line-127">
 <div class="viewcode-block" id="Reservoir.from_dict">
 <a class="viewcode-back" href="../../api/reemission.reservoir.html#reemission.reservoir.Reservoir.from_dict">[docs]</a>
-</span><span id="line-130">    <span class="nd">@classmethod</span>
-</span><span id="line-131">    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">ReservoirType</span><span class="p">],</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-</span><span id="line-132">                  <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ReservoirType</span><span class="p">:</span>
-</span><span id="line-133"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the class from a dictionary.</span>
+</span><span id="line-128">    <span class="nd">@classmethod</span>
+</span><span id="line-129">    <span class="k">def</span><span class="w"> </span><span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">ReservoirType</span><span class="p">],</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+</span><span id="line-130">                  <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ReservoirType</span><span class="p">:</span>
+</span><span id="line-131"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the class from a dictionary.</span>
+</span><span id="line-132">
+</span><span id="line-133"><span class="sd">        Skips keys that are not attributes of the class.</span>
 </span><span id="line-134">
-</span><span id="line-135"><span class="sd">        Skips keys that are not attributes of the class.</span>
-</span><span id="line-136">
-</span><span id="line-137"><span class="sd">        Args:</span>
-</span><span id="line-138"><span class="sd">            parameters (dict): Dictionary of parameters.</span>
-</span><span id="line-139">
-</span><span id="line-140"><span class="sd">        Returns:</span>
-</span><span id="line-141"><span class="sd">            ReservoirType: An instance of the Reservoir class.</span>
-</span><span id="line-142"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-143">        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
-</span><span id="line-144">            <span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">parameters</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-</span><span id="line-145">            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="p">},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+</span><span id="line-135"><span class="sd">        Args:</span>
+</span><span id="line-136"><span class="sd">            parameters (dict): Dictionary of parameters.</span>
+</span><span id="line-137">
+</span><span id="line-138"><span class="sd">        Returns:</span>
+</span><span id="line-139"><span class="sd">            ReservoirType: An instance of the Reservoir class.</span>
+</span><span id="line-140"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-141">        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
+</span><span id="line-142">            <span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">parameters</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+</span><span id="line-143">            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="p">},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-</span><span id="line-146">
-</span><span id="line-147">    <span class="nd">@property</span>
-</span><span id="line-148">    <span class="k">def</span> <span class="nf">latitude</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-149"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Obtain latitude from coordinates.</span>
-</span><span id="line-150">
-</span><span id="line-151"><span class="sd">        Returns:</span>
-</span><span id="line-152"><span class="sd">            float: Latitude of the reservoir.</span>
-</span><span id="line-153"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-154">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="line-155">
-</span><span id="line-156">    <span class="nd">@property</span>
-</span><span id="line-157">    <span class="k">def</span> <span class="nf">longitude</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-158"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Obtain longitude from coordinates.</span>
-</span><span id="line-159">
-</span><span id="line-160"><span class="sd">        Returns:</span>
-</span><span id="line-161"><span class="sd">            float: Longitude of the reservoir.</span>
-</span><span id="line-162"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-163">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-</span><span id="line-164">
-</span><span id="line-165">    <span class="nd">@property</span>
-</span><span id="line-166">    <span class="k">def</span> <span class="nf">residence_time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-167"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate water residence time (WRT) from inflow rate and reservoir volume.</span>
-</span><span id="line-168">
-</span><span id="line-169"><span class="sd">        Residence time represents the average amount of time that a molecule of water spends in a reservoir or lake.</span>
-</span><span id="line-170"><span class="sd">        With assumed units of m$^3$ for `volume` and m$^3$/year for `inflow rate` the residence time is given in years.</span>
-</span><span id="line-171">
-</span><span id="line-172"><span class="sd">        Returns:</span>
-</span><span id="line-173"><span class="sd">            float: Water residence time, years.</span>
-</span><span id="line-174"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-175">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">volume</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">inflow_rate</span>
-</span><span id="line-176">
-</span><span id="line-177">    <span class="nd">@property</span>
-</span><span id="line-178">    <span class="k">def</span> <span class="nf">discharge</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-179"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return discharge from the reservoir.</span>
+</span><span id="line-144">
+</span><span id="line-145">    <span class="nd">@property</span>
+</span><span id="line-146">    <span class="k">def</span><span class="w"> </span><span class="nf">latitude</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-147"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Obtain latitude from coordinates.</span>
+</span><span id="line-148">
+</span><span id="line-149"><span class="sd">        Returns:</span>
+</span><span id="line-150"><span class="sd">            float: Latitude of the reservoir.</span>
+</span><span id="line-151"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-152">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span><span id="line-153">
+</span><span id="line-154">    <span class="nd">@property</span>
+</span><span id="line-155">    <span class="k">def</span><span class="w"> </span><span class="nf">longitude</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-156"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Obtain longitude from coordinates.</span>
+</span><span id="line-157">
+</span><span id="line-158"><span class="sd">        Returns:</span>
+</span><span id="line-159"><span class="sd">            float: Longitude of the reservoir.</span>
+</span><span id="line-160"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-161">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</span><span id="line-162">
+</span><span id="line-163">    <span class="nd">@property</span>
+</span><span id="line-164">    <span class="k">def</span><span class="w"> </span><span class="nf">residence_time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-165"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate water residence time (WRT) from inflow rate and reservoir volume.</span>
+</span><span id="line-166">
+</span><span id="line-167"><span class="sd">        Residence time represents the average amount of time that a molecule of water spends in a reservoir or lake.</span>
+</span><span id="line-168"><span class="sd">        With assumed units of m$^3$ for `volume` and m$^3$/year for `inflow rate` the residence time is given in years.</span>
+</span><span id="line-169">
+</span><span id="line-170"><span class="sd">        Returns:</span>
+</span><span id="line-171"><span class="sd">            float: Water residence time, years.</span>
+</span><span id="line-172"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-173">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">volume</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">inflow_rate</span>
+</span><span id="line-174">
+</span><span id="line-175">    <span class="nd">@property</span>
+</span><span id="line-176">    <span class="k">def</span><span class="w"> </span><span class="nf">discharge</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-177"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return discharge from the reservoir.</span>
+</span><span id="line-178">
+</span><span id="line-179"><span class="sd">        Over a long enough timescale compared to residence time, discharge is equal to the inflow rate.</span>
 </span><span id="line-180">
-</span><span id="line-181"><span class="sd">        Over a long enough timescale compared to residence time, discharge is equal to the inflow rate.</span>
-</span><span id="line-182">
-</span><span id="line-183"><span class="sd">        Returns:</span>
-</span><span id="line-184"><span class="sd">            float: Discharge, m$^3$/year.</span>
-</span><span id="line-185"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-186">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">inflow_rate</span>
-</span><span id="line-187">
-</span><span id="line-188">    <span class="nd">@property</span>
-</span><span id="line-189">    <span class="k">def</span> <span class="nf">retention_coeff_emp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-190"><span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Empirical retention coefficient for solutes.</span>
-</span><span id="line-191">
-</span><span id="line-192"><span class="sd">        Obtained from regression with residence time in years.</span>
-</span><span id="line-193"><span class="sd">        </span>
-</span><span id="line-194"><span class="sd">        .. math::</span>
-</span><span id="line-195"><span class="sd">            f_R = 1 - \frac{1}{1+0.801\,WRT}</span>
-</span><span id="line-196">
-</span><span id="line-197"><span class="sd">        Returns:</span>
-</span><span id="line-198"><span class="sd">            float: Empirical retention coefficient, --</span>
-</span><span id="line-199"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-200">        <span class="k">return</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.801</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">residence_time</span><span class="p">))</span>
-</span><span id="line-201">
-</span><span id="line-202">    <span class="nd">@property</span>
-</span><span id="line-203">    <span class="k">def</span> <span class="nf">retention_coeff_larsen</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-204"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Retention coefficient using the model of Larsen and Mercier (1976) for Phosphorus retention.</span>
+</span><span id="line-181"><span class="sd">        Returns:</span>
+</span><span id="line-182"><span class="sd">            float: Discharge, m$^3$/year.</span>
+</span><span id="line-183"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-184">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">inflow_rate</span>
+</span><span id="line-185">
+</span><span id="line-186">    <span class="nd">@property</span>
+</span><span id="line-187">    <span class="k">def</span><span class="w"> </span><span class="nf">retention_coeff_emp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-188"><span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Empirical retention coefficient for solutes.</span>
+</span><span id="line-189">
+</span><span id="line-190"><span class="sd">        Obtained from regression with residence time in years.</span>
+</span><span id="line-191"><span class="sd">        </span>
+</span><span id="line-192"><span class="sd">        .. math::</span>
+</span><span id="line-193"><span class="sd">            f_R = 1 - \frac{1}{1+0.801\,WRT}</span>
+</span><span id="line-194">
+</span><span id="line-195"><span class="sd">        Returns:</span>
+</span><span id="line-196"><span class="sd">            float: Empirical retention coefficient, --</span>
+</span><span id="line-197"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-198">        <span class="k">return</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.801</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">residence_time</span><span class="p">))</span>
+</span><span id="line-199">
+</span><span id="line-200">    <span class="nd">@property</span>
+</span><span id="line-201">    <span class="k">def</span><span class="w"> </span><span class="nf">retention_coeff_larsen</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-202"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Retention coefficient using the model of Larsen and Mercier (1976) for Phosphorus retention.</span>
+</span><span id="line-203">
+</span><span id="line-204"><span class="sd">        Assumes residence time in years.</span>
 </span><span id="line-205">
-</span><span id="line-206"><span class="sd">        Assumes residence time in years.</span>
-</span><span id="line-207">
-</span><span id="line-208"><span class="sd">        Returns:</span>
-</span><span id="line-209"><span class="sd">            float: Retention coefficient, --</span>
-</span><span id="line-210"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-211">        <span class="k">return</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">residence_time</span><span class="p">))</span>
-</span><span id="line-212">
-</span><span id="line-213">    <span class="nd">@property</span>
-</span><span id="line-214">    <span class="k">def</span> <span class="nf">volume_km3</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-215"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return volume in km$^3$.</span>
-</span><span id="line-216">
-</span><span id="line-217"><span class="sd">        Note:</span>
-</span><span id="line-218"><span class="sd">           The attribute value is in m$^3$.</span>
-</span><span id="line-219">
-</span><span id="line-220"><span class="sd">        Returns:</span>
-</span><span id="line-221"><span class="sd">            float: Volume, km$^3$.</span>
-</span><span id="line-222"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-223">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">volume</span> <span class="o">/</span> <span class="mi">10</span><span class="o">**</span><span class="mi">9</span>
-</span><span id="line-224">
-</span><span id="line-225">    <span class="nd">@property</span>
-</span><span id="line-226">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-</span><span id="line-227">    <span class="k">def</span> <span class="nf">wat_area_frac_pre</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-228"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the fraction of reservoir area that was water prior to impoundment.</span>
-</span><span id="line-229">
-</span><span id="line-230"><span class="sd">        Returns:</span>
-</span><span id="line-231"><span class="sd">            float: Fraction of the reservoir area that was water before impoundment.</span>
-</span><span id="line-232"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-233">        <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">21</span><span class="p">)])</span>
-</span><span id="line-234">
+</span><span id="line-206"><span class="sd">        Returns:</span>
+</span><span id="line-207"><span class="sd">            float: Retention coefficient, --</span>
+</span><span id="line-208"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-209">        <span class="k">return</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">residence_time</span><span class="p">))</span>
+</span><span id="line-210">
+</span><span id="line-211">    <span class="nd">@property</span>
+</span><span id="line-212">    <span class="k">def</span><span class="w"> </span><span class="nf">volume_km3</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-213"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return volume in km$^3$.</span>
+</span><span id="line-214">
+</span><span id="line-215"><span class="sd">        Note:</span>
+</span><span id="line-216"><span class="sd">           The attribute value is in m$^3$.</span>
+</span><span id="line-217">
+</span><span id="line-218"><span class="sd">        Returns:</span>
+</span><span id="line-219"><span class="sd">            float: Volume, km$^3$.</span>
+</span><span id="line-220"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-221">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">volume</span> <span class="o">/</span> <span class="mi">10</span><span class="o">**</span><span class="mi">9</span>
+</span><span id="line-222">
+</span><span id="line-223">    <span class="nd">@property</span>
+</span><span id="line-224">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+</span><span id="line-225">    <span class="k">def</span><span class="w"> </span><span class="nf">wat_area_frac_pre</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-226"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the fraction of reservoir area that was water prior to impoundment.</span>
+</span><span id="line-227">
+</span><span id="line-228"><span class="sd">        Returns:</span>
+</span><span id="line-229"><span class="sd">            float: Fraction of the reservoir area that was water before impoundment.</span>
+</span><span id="line-230"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-231">        <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">21</span><span class="p">)])</span>
+</span><span id="line-232">
 <div class="viewcode-block" id="Reservoir.mean_radiance_lat">
 <a class="viewcode-back" href="../../api/reemission.reservoir.html#reemission.reservoir.Reservoir.mean_radiance_lat">[docs]</a>
-</span><span id="line-235">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;mean_radiance_lat&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
-</span><span id="line-236">    <span class="k">def</span> <span class="nf">mean_radiance_lat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-237"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Select representative mean horizontal radiance for a reservoir depending on its latitude.</span>
-</span><span id="line-238">
-</span><span id="line-239"><span class="sd">        Returns:</span>
-</span><span id="line-240"><span class="sd">            float: Mean horizontal radiance in kWh/m$^2$/d.</span>
-</span><span id="line-241"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-242">        <span class="k">if</span> <span class="mi">40</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">40</span><span class="p">:</span>
-</span><span id="line-243">            <span class="n">radiance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_radiance</span>
-</span><span id="line-244">        <span class="k">if</span> <span class="mi">40</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">:</span>
-</span><span id="line-245">            <span class="n">radiance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_radiance_may_sept</span>
-</span><span id="line-246">        <span class="k">if</span> <span class="o">-</span><span class="mi">40</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">:</span>
-</span><span id="line-247">            <span class="n">radiance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_radiance_nov_mar</span>
-</span><span id="line-248">        <span class="k">return</span> <span class="n">radiance</span></div>
+</span><span id="line-233">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;mean_radiance_lat&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
+</span><span id="line-234">    <span class="k">def</span><span class="w"> </span><span class="nf">mean_radiance_lat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-235"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Select representative mean horizontal radiance for a reservoir depending on its latitude.</span>
+</span><span id="line-236">
+</span><span id="line-237"><span class="sd">        Returns:</span>
+</span><span id="line-238"><span class="sd">            float: Mean horizontal radiance in kWh/m$^2$/d.</span>
+</span><span id="line-239"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-240">        <span class="k">if</span> <span class="mi">40</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">40</span><span class="p">:</span>
+</span><span id="line-241">            <span class="n">radiance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_radiance</span>
+</span><span id="line-242">        <span class="k">if</span> <span class="mi">40</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">:</span>
+</span><span id="line-243">            <span class="n">radiance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_radiance_may_sept</span>
+</span><span id="line-244">        <span class="k">if</span> <span class="o">-</span><span class="mi">40</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">latitude</span><span class="p">:</span>
+</span><span id="line-245">            <span class="n">radiance</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_radiance_nov_mar</span>
+</span><span id="line-246">        <span class="k">return</span> <span class="n">radiance</span></div>
 
-</span><span id="line-249">
+</span><span id="line-247">
 <div class="viewcode-block" id="Reservoir.global_radiance">
 <a class="viewcode-back" href="../../api/reemission.reservoir.html#reemission.reservoir.Reservoir.global_radiance">[docs]</a>
-</span><span id="line-250">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;global_radiance&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
-</span><span id="line-251">    <span class="k">def</span> <span class="nf">global_radiance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">period</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;d&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-252"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate cumulative global horizontal radiance as a function of reservoir&#39;s latitude.</span>
+</span><span id="line-248">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;global_radiance&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
+</span><span id="line-249">    <span class="k">def</span><span class="w"> </span><span class="nf">global_radiance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">period</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;d&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-250"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate cumulative global horizontal radiance as a function of reservoir&#39;s latitude.</span>
+</span><span id="line-251">
+</span><span id="line-252"><span class="sd">        Eq. A.29. from Praire2021_.</span>
 </span><span id="line-253">
-</span><span id="line-254"><span class="sd">        Eq. A.29. from Praire2021_.</span>
-</span><span id="line-255">
-</span><span id="line-256"><span class="sd">        Args:</span>
-</span><span id="line-257"><span class="sd">            period (str): Time period. Options are &quot;d&quot; for day and &quot;m&quot; for month.</span>
-</span><span id="line-258">
-</span><span id="line-259"><span class="sd">        Returns:</span>
-</span><span id="line-260"><span class="sd">            float: Global horizontal radiance, kWh/m$^2$/period.       </span>
-</span><span id="line-261"><span class="sd">        </span>
-</span><span id="line-262"><span class="sd">        Caution:</span>
-</span><span id="line-263"><span class="sd">            The multiplier of 30.4 was included in the published in `G-Res Technical Documentation`_ but not in Praire2021_.</span>
-</span><span id="line-264"><span class="sd">            This multiplier converts the unit of radiance from kWh/m$^2$/day to kWh/m$^2$/month. However, this results in very high CH$_4$ emission estimates. Hence, we set it to 1.0.</span>
-</span><span id="line-265"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-266">        <span class="n">number_months_above_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">number_months_above</span><span class="p">(</span>
-</span><span id="line-267">            <span class="n">threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-</span><span id="line-268">        <span class="k">if</span> <span class="n">period</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="s2">&quot;day&quot;</span><span class="p">):</span>
-</span><span id="line-269">            <span class="n">multiplier</span> <span class="o">=</span> <span class="mf">1.0</span>
-</span><span id="line-270">        <span class="k">if</span> <span class="n">period</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="s2">&quot;month&quot;</span><span class="p">):</span>
-</span><span id="line-271">            <span class="n">multiplier</span> <span class="o">=</span> <span class="mf">30.4</span>
-</span><span id="line-272">        <span class="k">else</span><span class="p">:</span>
-</span><span id="line-273">            <span class="n">multiplier</span> <span class="o">=</span> <span class="mf">1.0</span>
-</span><span id="line-274">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_radiance_lat</span><span class="p">()</span> <span class="o">*</span> <span class="n">number_months_above_0</span> <span class="o">*</span> <span class="n">multiplier</span></div>
+</span><span id="line-254"><span class="sd">        Args:</span>
+</span><span id="line-255"><span class="sd">            period (str): Time period. Options are &quot;d&quot; for day and &quot;m&quot; for month.</span>
+</span><span id="line-256">
+</span><span id="line-257"><span class="sd">        Returns:</span>
+</span><span id="line-258"><span class="sd">            float: Global horizontal radiance, kWh/m$^2$/period.       </span>
+</span><span id="line-259"><span class="sd">        </span>
+</span><span id="line-260"><span class="sd">        Caution:</span>
+</span><span id="line-261"><span class="sd">            The multiplier of 30.4 was included in the published in `G-Res Technical Documentation`_ but not in Praire2021_.</span>
+</span><span id="line-262"><span class="sd">            This multiplier converts the unit of radiance from kWh/m$^2$/day to kWh/m$^2$/month. However, this results in very high CH$_4$ emission estimates. Hence, we set it to 1.0.</span>
+</span><span id="line-263"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-264">        <span class="n">number_months_above_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">number_months_above</span><span class="p">(</span>
+</span><span id="line-265">            <span class="n">threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</span><span id="line-266">        <span class="k">if</span> <span class="n">period</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;d&quot;</span><span class="p">,</span> <span class="s2">&quot;day&quot;</span><span class="p">):</span>
+</span><span id="line-267">            <span class="n">multiplier</span> <span class="o">=</span> <span class="mf">1.0</span>
+</span><span id="line-268">        <span class="k">if</span> <span class="n">period</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="s2">&quot;month&quot;</span><span class="p">):</span>
+</span><span id="line-269">            <span class="n">multiplier</span> <span class="o">=</span> <span class="mf">30.4</span>
+</span><span id="line-270">        <span class="k">else</span><span class="p">:</span>
+</span><span id="line-271">            <span class="n">multiplier</span> <span class="o">=</span> <span class="mf">1.0</span>
+</span><span id="line-272">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_radiance_lat</span><span class="p">()</span> <span class="o">*</span> <span class="n">number_months_above_0</span> <span class="o">*</span> <span class="n">multiplier</span></div>
 
-</span><span id="line-275">
+</span><span id="line-273">
 <div class="viewcode-block" id="Reservoir.compare_mean_depth">
 <a class="viewcode-back" href="../../api/reemission.reservoir.html#reemission.reservoir.Reservoir.compare_mean_depth">[docs]</a>
-</span><span id="line-276">    <span class="k">def</span> <span class="nf">compare_mean_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-277"><span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compare the mean depth of the reservoir against the calculated mean</span>
-</span><span id="line-278"><span class="sd">        depth from volume and area.</span>
-</span><span id="line-279">
-</span><span id="line-280"><span class="sd">        Returns the relative difference between the data and the calculated value in percents.</span>
-</span><span id="line-281"><span class="sd">        Refer to Eqs. A.8./A.9./A.10. in Praire2021_.</span>
-</span><span id="line-282"><span class="sd">        </span>
-</span><span id="line-283"><span class="sd">        .. math::</span>
-</span><span id="line-284"><span class="sd">           100 \, \frac{\bar{h}_{\textrm{from data}}-\bar{h}_{\textrm{from volume}}}{\bar{h}_{\textrm{from data}}}</span>
-</span><span id="line-285"><span class="sd">        </span>
-</span><span id="line-286"><span class="sd">        Returns:</span>
-</span><span id="line-287"><span class="sd">            float: The relative difference between the data and the calculated mean depth, %.</span>
-</span><span id="line-288"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-289">        <span class="n">mean_depth_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_depth</span>
-</span><span id="line-290">        <span class="n">mean_depth_vol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">volume_km3</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="o">*</span> <span class="mi">1_000</span>
-</span><span id="line-291">        <span class="k">return</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">mean_depth_data</span> <span class="o">-</span> <span class="n">mean_depth_vol</span><span class="p">)</span> <span class="o">/</span> <span class="n">mean_depth_data</span></div>
+</span><span id="line-274">    <span class="k">def</span><span class="w"> </span><span class="nf">compare_mean_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-275"><span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compare the mean depth of the reservoir against the calculated mean</span>
+</span><span id="line-276"><span class="sd">        depth from volume and area.</span>
+</span><span id="line-277">
+</span><span id="line-278"><span class="sd">        Returns the relative difference between the data and the calculated value in percents.</span>
+</span><span id="line-279"><span class="sd">        Refer to Eqs. A.8./A.9./A.10. in Praire2021_.</span>
+</span><span id="line-280"><span class="sd">        </span>
+</span><span id="line-281"><span class="sd">        .. math::</span>
+</span><span id="line-282"><span class="sd">           100 \, \frac{\bar{h}_{\textrm{from data}}-\bar{h}_{\textrm{from volume}}}{\bar{h}_{\textrm{from data}}}</span>
+</span><span id="line-283"><span class="sd">        </span>
+</span><span id="line-284"><span class="sd">        Returns:</span>
+</span><span id="line-285"><span class="sd">            float: The relative difference between the data and the calculated mean depth, %.</span>
+</span><span id="line-286"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-287">        <span class="n">mean_depth_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_depth</span>
+</span><span id="line-288">        <span class="n">mean_depth_vol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">volume_km3</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="o">*</span> <span class="mi">1_000</span>
+</span><span id="line-289">        <span class="k">return</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">mean_depth_data</span> <span class="o">-</span> <span class="n">mean_depth_vol</span><span class="p">)</span> <span class="o">/</span> <span class="n">mean_depth_data</span></div>
 
-</span><span id="line-292">
+</span><span id="line-290">
 <div class="viewcode-block" id="Reservoir.check_geometry">
 <a class="viewcode-back" href="../../api/reemission.reservoir.html#reemission.reservoir.Reservoir.check_geometry">[docs]</a>
-</span><span id="line-293">    <span class="k">def</span> <span class="nf">check_geometry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error_margin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-</span><span id="line-294"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the mean depth in the input data is near the value obtained</span>
-</span><span id="line-295"><span class="sd">        from volume and surface area.</span>
-</span><span id="line-296">
-</span><span id="line-297"><span class="sd">        If the difference is less than the error margin, returns True, otherwise returns False.</span>
-</span><span id="line-298"><span class="sd">        </span>
-</span><span id="line-299"><span class="sd">        Args:</span>
-</span><span id="line-300"><span class="sd">            error_margin (float): The allowable error margin in percent. Default is 5.</span>
-</span><span id="line-301">
-</span><span id="line-302"><span class="sd">        Returns:</span>
-</span><span id="line-303"><span class="sd">            bool: True if the difference is less than the error margin, otherwise False.</span>
-</span><span id="line-304"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-305">        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compare_mean_depth</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">error_margin</span><span class="p">)</span></div>
+</span><span id="line-291">    <span class="k">def</span><span class="w"> </span><span class="nf">check_geometry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error_margin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="line-292"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the mean depth in the input data is near the value obtained</span>
+</span><span id="line-293"><span class="sd">        from volume and surface area.</span>
+</span><span id="line-294">
+</span><span id="line-295"><span class="sd">        If the difference is less than the error margin, returns True, otherwise returns False.</span>
+</span><span id="line-296"><span class="sd">        </span>
+</span><span id="line-297"><span class="sd">        Args:</span>
+</span><span id="line-298"><span class="sd">            error_margin (float): The allowable error margin in percent. Default is 5.</span>
+</span><span id="line-299">
+</span><span id="line-300"><span class="sd">        Returns:</span>
+</span><span id="line-301"><span class="sd">            bool: True if the difference is less than the error margin, otherwise False.</span>
+</span><span id="line-302"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-303">        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">compare_mean_depth</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">error_margin</span><span class="p">)</span></div>
 
-</span><span id="line-306">
+</span><span id="line-304">
 <div class="viewcode-block" id="Reservoir.q_bath_shape">
 <a class="viewcode-back" href="../../api/reemission.reservoir.html#reemission.reservoir.Reservoir.q_bath_shape">[docs]</a>
-</span><span id="line-307">    <span class="k">def</span> <span class="nf">q_bath_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-308"><span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Calculate q-bathymetric shape. Refer to Eq. A21 in Praire2021_.</span>
-</span><span id="line-309">
-</span><span id="line-310"><span class="sd">        .. math::</span>
-</span><span id="line-311"><span class="sd">            s_{q,bath} = \frac{h_{max}}{h_{mean}} - 1</span>
-</span><span id="line-312">
-</span><span id="line-313"><span class="sd">        where:</span>
-</span><span id="line-314"><span class="sd">            :math:`s_{q,bath}`, :math:`h_{max}`, and :math:`h_{mean}`</span>
-</span><span id="line-315"><span class="sd">            are, respectively, the q-bathymetric shape, maximum reservoir depth,</span>
-</span><span id="line-316"><span class="sd">            and mean reservoir depth.</span>
-</span><span id="line-317">
-</span><span id="line-318"><span class="sd">        Returns:</span>
-</span><span id="line-319"><span class="sd">            float: The q-bathymetric shape.</span>
-</span><span id="line-320"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-321">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_depth</span> <span class="o">-</span> <span class="mf">1.0</span></div>
+</span><span id="line-305">    <span class="k">def</span><span class="w"> </span><span class="nf">q_bath_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-306"><span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Calculate q-bathymetric shape. Refer to Eq. A21 in Praire2021_.</span>
+</span><span id="line-307">
+</span><span id="line-308"><span class="sd">        .. math::</span>
+</span><span id="line-309"><span class="sd">            s_{q,bath} = \frac{h_{max}}{h_{mean}} - 1</span>
+</span><span id="line-310">
+</span><span id="line-311"><span class="sd">        where:</span>
+</span><span id="line-312"><span class="sd">            :math:`s_{q,bath}`, :math:`h_{max}`, and :math:`h_{mean}`</span>
+</span><span id="line-313"><span class="sd">            are, respectively, the q-bathymetric shape, maximum reservoir depth,</span>
+</span><span id="line-314"><span class="sd">            and mean reservoir depth.</span>
+</span><span id="line-315">
+</span><span id="line-316"><span class="sd">        Returns:</span>
+</span><span id="line-317"><span class="sd">            float: The q-bathymetric shape.</span>
+</span><span id="line-318"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-319">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_depth</span> <span class="o">-</span> <span class="mf">1.0</span></div>
 
-</span><span id="line-322">
+</span><span id="line-320">
 <div class="viewcode-block" id="Reservoir.littoral_area_frac">
 <a class="viewcode-back" href="../../api/reemission.reservoir.html#reemission.reservoir.Reservoir.littoral_area_frac">[docs]</a>
-</span><span id="line-323">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;littoral_area_frac&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
-</span><span id="line-324">    <span class="k">def</span> <span class="nf">littoral_area_frac</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-325"><span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Calculate the percentage of the reservoir&#39;s surface area that is</span>
-</span><span id="line-326"><span class="sd">        littoral (close to the shore). Refer to Eq. A22 in Praire2021_.</span>
+</span><span id="line-321">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;littoral_area_frac&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
+</span><span id="line-322">    <span class="k">def</span><span class="w"> </span><span class="nf">littoral_area_frac</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-323"><span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Calculate the percentage of the reservoir&#39;s surface area that is</span>
+</span><span id="line-324"><span class="sd">        littoral (close to the shore). Refer to Eq. A22 in Praire2021_.</span>
+</span><span id="line-325">
+</span><span id="line-326"><span class="sd">        Ensure that the return value is always greater than 0.</span>
 </span><span id="line-327">
-</span><span id="line-328"><span class="sd">        Ensure that the return value is always greater than 0.</span>
-</span><span id="line-329">
-</span><span id="line-330"><span class="sd">        Returns:</span>
-</span><span id="line-331"><span class="sd">            float: Littoral area fraction in percent.</span>
-</span><span id="line-332">
-</span><span id="line-333"><span class="sd">        .. math::</span>
-</span><span id="line-334"><span class="sd">            f_{lit} = 100 \left(1-\left(1-3/h_{max}\right)^{s_{q,bath}}\right)</span>
-</span><span id="line-335">
-</span><span id="line-336"><span class="sd">        where:</span>
-</span><span id="line-337"><span class="sd">            :math:`f_{lit}`, :math:`h_{max}`, and :math:`s_{q,bath}`</span>
-</span><span id="line-338"><span class="sd">            are, respectively, the littoral area fraction (%), maximum reservoir</span>
-</span><span id="line-339"><span class="sd">            depth (m), and q-bathymetric shape.</span>
-</span><span id="line-340"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-341">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span> <span class="o">&lt;</span> <span class="mf">3.0</span><span class="p">:</span>
-</span><span id="line-342">            <span class="c1"># return 100% littoral area fraction for shallow systems</span>
-</span><span id="line-343">            <span class="k">return</span> <span class="mi">100</span>       
-</span><span id="line-344">        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="mf">100.0</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mf">3.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span><span class="p">)</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_bath_shape</span><span class="p">()),</span><span class="mi">0</span><span class="p">)</span></div>
+</span><span id="line-328"><span class="sd">        Returns:</span>
+</span><span id="line-329"><span class="sd">            float: Littoral area fraction in percent.</span>
+</span><span id="line-330">
+</span><span id="line-331"><span class="sd">        .. math::</span>
+</span><span id="line-332"><span class="sd">            f_{lit} = 100 \left(1-\left(1-3/h_{max}\right)^{s_{q,bath}}\right)</span>
+</span><span id="line-333">
+</span><span id="line-334"><span class="sd">        where:</span>
+</span><span id="line-335"><span class="sd">            :math:`f_{lit}`, :math:`h_{max}`, and :math:`s_{q,bath}`</span>
+</span><span id="line-336"><span class="sd">            are, respectively, the littoral area fraction (%), maximum reservoir</span>
+</span><span id="line-337"><span class="sd">            depth (m), and q-bathymetric shape.</span>
+</span><span id="line-338"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-339">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span> <span class="o">&lt;</span> <span class="mf">3.0</span><span class="p">:</span>
+</span><span id="line-340">            <span class="c1"># return 100% littoral area fraction for shallow systems</span>
+</span><span id="line-341">            <span class="k">return</span> <span class="mi">100</span>       
+</span><span id="line-342">        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="mf">100.0</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mf">3.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span><span class="p">)</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">q_bath_shape</span><span class="p">()),</span><span class="mi">0</span><span class="p">)</span></div>
 
-</span><span id="line-345">
+</span><span id="line-343">
 <div class="viewcode-block" id="Reservoir.bottom_temperature">
 <a class="viewcode-back" href="../../api/reemission.reservoir.html#reemission.reservoir.Reservoir.bottom_temperature">[docs]</a>
-</span><span id="line-346">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;bottom_temperature&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
-</span><span id="line-347">    <span class="k">def</span> <span class="nf">bottom_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-348"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the bottom (hypolimnion) temperature in the reservoir from</span>
-</span><span id="line-349"><span class="sd">        a 12x1 profile of monthly average air temperatures. Refer to Equation A.2. in Praire2021_.</span>
-</span><span id="line-350">
-</span><span id="line-351"><span class="sd">        Note:</span>
-</span><span id="line-352"><span class="sd">            Mean Temperature of the Colder Month in Praire2021_ was interpreted</span>
-</span><span id="line-353"><span class="sd">            as the coldest mean monthly temperature in the 12x1 temperature profile.</span>
-</span><span id="line-354">
-</span><span id="line-355"><span class="sd">        Returns:</span>
-</span><span id="line-356"><span class="sd">            float: The bottom temperature of the reservoir, degrees Celcius.</span>
-</span><span id="line-357"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-358">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">coldest</span> <span class="o">&gt;</span> <span class="mf">1.4</span><span class="p">:</span>
-</span><span id="line-359">            <span class="n">hypolimnion_temp</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.6565</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">coldest</span><span class="p">)</span> <span class="o">+</span> <span class="mf">10.7</span>
-</span><span id="line-360">        <span class="k">else</span><span class="p">:</span>
-</span><span id="line-361">            <span class="n">hypolimnion_temp</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.2345</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">coldest</span><span class="p">)</span> <span class="o">+</span> <span class="mf">10.11</span>
-</span><span id="line-362">        <span class="k">return</span> <span class="n">hypolimnion_temp</span></div>
+</span><span id="line-344">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;bottom_temperature&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
+</span><span id="line-345">    <span class="k">def</span><span class="w"> </span><span class="nf">bottom_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-346"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the bottom (hypolimnion) temperature in the reservoir from</span>
+</span><span id="line-347"><span class="sd">        a 12x1 profile of monthly average air temperatures. Refer to Equation A.2. in Praire2021_.</span>
+</span><span id="line-348">
+</span><span id="line-349"><span class="sd">        Note:</span>
+</span><span id="line-350"><span class="sd">            Mean Temperature of the Colder Month in Praire2021_ was interpreted</span>
+</span><span id="line-351"><span class="sd">            as the coldest mean monthly temperature in the 12x1 temperature profile.</span>
+</span><span id="line-352">
+</span><span id="line-353"><span class="sd">        Returns:</span>
+</span><span id="line-354"><span class="sd">            float: The bottom temperature of the reservoir, degrees Celcius.</span>
+</span><span id="line-355"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-356">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">coldest</span> <span class="o">&gt;</span> <span class="mf">1.4</span><span class="p">:</span>
+</span><span id="line-357">            <span class="n">hypolimnion_temp</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.6565</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">coldest</span><span class="p">)</span> <span class="o">+</span> <span class="mf">10.7</span>
+</span><span id="line-358">        <span class="k">else</span><span class="p">:</span>
+</span><span id="line-359">            <span class="n">hypolimnion_temp</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.2345</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">coldest</span><span class="p">)</span> <span class="o">+</span> <span class="mf">10.11</span>
+</span><span id="line-360">        <span class="k">return</span> <span class="n">hypolimnion_temp</span></div>
 
-</span><span id="line-363">
+</span><span id="line-361">
 <div class="viewcode-block" id="Reservoir.surface_temperature">
 <a class="viewcode-back" href="../../api/reemission.reservoir.html#reemission.reservoir.Reservoir.surface_temperature">[docs]</a>
-</span><span id="line-364">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;surface_temperature&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
-</span><span id="line-365">    <span class="k">def</span> <span class="nf">surface_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-366"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the surface (epilimnion) temperature as the mean temperature of</span>
-</span><span id="line-367"><span class="sd">        the 4 warmest months in a year. Refer to Equation A.4. in Praire2021_.</span>
-</span><span id="line-368">
-</span><span id="line-369"><span class="sd">        Returns:</span>
-</span><span id="line-370"><span class="sd">            float: The surface temperature of the reservoir, degrees Celcius.</span>
-</span><span id="line-371"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-372">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">mean_warmest</span><span class="p">(</span><span class="n">number_of_months</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span></div>
+</span><span id="line-362">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;surface_temperature&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
+</span><span id="line-363">    <span class="k">def</span><span class="w"> </span><span class="nf">surface_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-364"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the surface (epilimnion) temperature as the mean temperature of</span>
+</span><span id="line-365"><span class="sd">        the 4 warmest months in a year. Refer to Equation A.4. in Praire2021_.</span>
+</span><span id="line-366">
+</span><span id="line-367"><span class="sd">        Returns:</span>
+</span><span id="line-368"><span class="sd">            float: The surface temperature of the reservoir, degrees Celcius.</span>
+</span><span id="line-369"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-370">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">mean_warmest</span><span class="p">(</span><span class="n">number_of_months</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span></div>
 
-</span><span id="line-373">
+</span><span id="line-371">
 <div class="viewcode-block" id="Reservoir.bottom_density">
 <a class="viewcode-back" href="../../api/reemission.reservoir.html#reemission.reservoir.Reservoir.bottom_density">[docs]</a>
-</span><span id="line-374">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;bottom_density&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
-</span><span id="line-375">    <span class="k">def</span> <span class="nf">bottom_density</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-376"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the water density in kg/m$^3$ at the bottom of the reservoir.</span>
-</span><span id="line-377"><span class="sd">        Refer to Equation A.3. in Praire2021_.</span>
-</span><span id="line-378">
-</span><span id="line-379"><span class="sd">        Returns:</span>
-</span><span id="line-380"><span class="sd">            float: The water density at the bottom of the reservoir, kg/m$^3$.</span>
-</span><span id="line-381"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-382">        <span class="k">return</span> <span class="n">water_density</span><span class="p">(</span><span class="n">temp</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bottom_temperature</span><span class="p">())</span></div>
+</span><span id="line-372">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;bottom_density&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
+</span><span id="line-373">    <span class="k">def</span><span class="w"> </span><span class="nf">bottom_density</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-374"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the water density in kg/m$^3$ at the bottom of the reservoir.</span>
+</span><span id="line-375"><span class="sd">        Refer to Equation A.3. in Praire2021_.</span>
+</span><span id="line-376">
+</span><span id="line-377"><span class="sd">        Returns:</span>
+</span><span id="line-378"><span class="sd">            float: The water density at the bottom of the reservoir, kg/m$^3$.</span>
+</span><span id="line-379"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-380">        <span class="k">return</span> <span class="n">water_density</span><span class="p">(</span><span class="n">temp</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bottom_temperature</span><span class="p">())</span></div>
 
-</span><span id="line-383">
+</span><span id="line-381">
 <div class="viewcode-block" id="Reservoir.surface_density">
 <a class="viewcode-back" href="../../api/reemission.reservoir.html#reemission.reservoir.Reservoir.surface_density">[docs]</a>
-</span><span id="line-384">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;surface_density&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
-</span><span id="line-385">    <span class="k">def</span> <span class="nf">surface_density</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-386"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the water density in kg/m$^3$ at the surface of the reservoir.</span>
-</span><span id="line-387"><span class="sd">        Refer to Equation A.4. in Praire2021_.</span>
-</span><span id="line-388">
-</span><span id="line-389"><span class="sd">        Returns:</span>
-</span><span id="line-390"><span class="sd">            float: The water density at the surface of the reservoir, kg/m$^3$.</span>
-</span><span id="line-391"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-392">        <span class="k">return</span> <span class="n">water_density</span><span class="p">(</span><span class="n">temp</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">surface_temperature</span><span class="p">())</span></div>
+</span><span id="line-382">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;surface_density&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
+</span><span id="line-383">    <span class="k">def</span><span class="w"> </span><span class="nf">surface_density</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-384"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the water density in kg/m$^3$ at the surface of the reservoir.</span>
+</span><span id="line-385"><span class="sd">        Refer to Equation A.4. in Praire2021_.</span>
+</span><span id="line-386">
+</span><span id="line-387"><span class="sd">        Returns:</span>
+</span><span id="line-388"><span class="sd">            float: The water density at the surface of the reservoir, kg/m$^3$.</span>
+</span><span id="line-389"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-390">        <span class="k">return</span> <span class="n">water_density</span><span class="p">(</span><span class="n">temp</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">surface_temperature</span><span class="p">())</span></div>
 
-</span><span id="line-393">
+</span><span id="line-391">
 <div class="viewcode-block" id="Reservoir.thermocline_depth">
 <a class="viewcode-back" href="../../api/reemission.reservoir.html#reemission.reservoir.Reservoir.thermocline_depth">[docs]</a>
-</span><span id="line-394">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;thermocline_depth&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
-</span><span id="line-395">    <span class="k">def</span> <span class="nf">thermocline_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wind_speed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="line-396">                          <span class="n">wind_height</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-397"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the thermocline depth required for the calculation of CH$_4$</span>
-</span><span id="line-398"><span class="sd">        degassing.</span>
-</span><span id="line-399">
-</span><span id="line-400"><span class="sd">        Assumes that the surface water temperature is equal to</span>
-</span><span id="line-401"><span class="sd">        the mean monthly air temperature from the 4 warmest months in the year.</span>
-</span><span id="line-402">
-</span><span id="line-403"><span class="sd">        Follows the equation in Gorham and Boyce (1989):</span>
-</span><span id="line-404"><span class="sd">        https://www.sciencedirect.com/science/article/pii/S0380133089714799</span>
-</span><span id="line-405"><span class="sd">        `Influence of Lake Surface Area and Depth Upon Thermal Stratification</span>
-</span><span id="line-406"><span class="sd">        and the Depth of the Summer Thermocline`, Gorham, Eville and Boyce,</span>
-</span><span id="line-407"><span class="sd">        Farrell M. Journal of Great Lakes ResearchOpen AccessVolume 15,</span>
-</span><span id="line-408"><span class="sd">        Issue 2, Pages 233 - 245, 1989.</span>
-</span><span id="line-409">
-</span><span id="line-410"><span class="sd">        If wind_speed or monthly_temp is not supplied, a simplified equation</span>
-</span><span id="line-411"><span class="sd">        from Hanna 1990 is used, as implemented in G-Res_.</span>
-</span><span id="line-412">
-</span><span id="line-413"><span class="sd">        Args:</span>
-</span><span id="line-414"><span class="sd">            wind_speed (Optional[float]): Average annual wind speed at the location of the reservoir, m/s.</span>
-</span><span id="line-415"><span class="sd">            wind_height (float): Height at which wind_speed is measured, in meters. Default is 50 meters.</span>
-</span><span id="line-416">
-</span><span id="line-417"><span class="sd">        Returns:</span>
-</span><span id="line-418"><span class="sd">            float: The thermocline depth of the reservoir, m.</span>
-</span><span id="line-419"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-420">        <span class="k">if</span> <span class="n">wind_speed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-421">            <span class="c1">#thermocline_depth = 10**(0.185 * math.log10(self.area) + 0.842)</span>
-</span><span id="line-422">            <span class="n">thermocline_depth</span> <span class="o">=</span> <span class="mf">6.95</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">**</span><span class="mf">0.185</span>
-</span><span id="line-423">            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Thermocline depth calculated with model of Hanna.&quot;</span><span class="p">)</span>
-</span><span id="line-424">        <span class="k">else</span><span class="p">:</span>
-</span><span id="line-425">            <span class="c1"># Calculate CD coefficient and scale wind speed to 10m</span>
-</span><span id="line-426">            <span class="n">cd_coeff</span> <span class="o">=</span> <span class="n">cd_factor</span><span class="p">(</span><span class="n">wind_speed</span><span class="p">)</span>
-</span><span id="line-427">            <span class="n">wind_at_10m</span> <span class="o">=</span> <span class="n">scale_windspeed</span><span class="p">(</span>
-</span><span id="line-428">                <span class="n">wind_speed</span><span class="o">=</span><span class="n">wind_speed</span><span class="p">,</span> <span class="n">wind_height</span><span class="o">=</span><span class="n">wind_height</span><span class="p">,</span> <span class="n">new_height</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-</span><span id="line-429">            <span class="c1"># Find thermocline depth in metres</span>
-</span><span id="line-430">            <span class="n">aux_var_1</span> <span class="o">=</span> <span class="n">cd_coeff</span> <span class="o">*</span> <span class="n">air_density</span><span class="p">(</span>
-</span><span id="line-431">                <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">mean_warmest</span><span class="p">(</span><span class="n">number_of_months</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span> <span class="o">*</span> \
-</span><span id="line-432">                <span class="n">wind_at_10m</span><span class="o">**</span><span class="mi">2</span>
-</span><span id="line-433">            <span class="c1"># It is possible that the second auxiliary variable turns out negative</span>
-</span><span id="line-434">            <span class="c1"># due to some previous empirical calculations not working properly for</span>
-</span><span id="line-435">            <span class="c1"># some combinations of input variables.</span>
-</span><span id="line-436">            <span class="n">aux_var_2</span> <span class="o">=</span> <span class="mf">9.80665</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bottom_density</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface_density</span><span class="p">())</span>
-</span><span id="line-437">            <span class="n">aux_var_3</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">6</span><span class="p">)</span>
-</span><span id="line-438">            <span class="k">try</span><span class="p">:</span>
-</span><span id="line-439">                <span class="n">thermocline_depth</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">aux_var_1</span> <span class="o">/</span> <span class="n">aux_var_2</span><span class="p">)</span> <span class="o">*</span> \
-</span><span id="line-440">                    <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">aux_var_3</span><span class="p">)</span>
-</span><span id="line-441">                <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-</span><span id="line-442">                    <span class="s2">&quot;Thermocline depth calculated with model of Gorham and Boyce.&quot;</span><span class="p">)</span>
-</span><span id="line-443">            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-</span><span id="line-444">                <span class="n">thermocline_depth</span> <span class="o">=</span> <span class="mf">6.95</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">**</span><span class="mf">0.185</span>
-</span><span id="line-445">                <span class="n">main_msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> \
-</span><span id="line-446">                    <span class="s2">&quot;Problem with thermocline depth calculation using Gorham and Boyce model.&quot;</span>
-</span><span id="line-447">                <span class="n">extra_msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> \
-</span><span id="line-448">                    <span class="s2">&quot;Area, depth, wind and temperature inputs produce errorenous output.</span><span class="se">\n</span><span class="s2">&quot;</span>
-</span><span id="line-449">                <span class="n">extra_msg</span> <span class="o">+=</span> <span class="s2">&quot;Thermocline depth calculated with the model of Hanna instead.&quot;</span>
-</span><span id="line-450">                <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">main_msg</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;detail&#39;</span><span class="p">:</span> <span class="n">extra_msg</span><span class="p">})</span>
-</span><span id="line-451">        <span class="k">return</span> <span class="n">thermocline_depth</span></div>
+</span><span id="line-392">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;thermocline_depth&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
+</span><span id="line-393">    <span class="k">def</span><span class="w"> </span><span class="nf">thermocline_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wind_speed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+</span><span id="line-394">                          <span class="n">wind_height</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-395"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the thermocline depth required for the calculation of CH$_4$</span>
+</span><span id="line-396"><span class="sd">        degassing.</span>
+</span><span id="line-397">
+</span><span id="line-398"><span class="sd">        Assumes that the surface water temperature is equal to</span>
+</span><span id="line-399"><span class="sd">        the mean monthly air temperature from the 4 warmest months in the year.</span>
+</span><span id="line-400">
+</span><span id="line-401"><span class="sd">        Follows the equation in Gorham and Boyce (1989):</span>
+</span><span id="line-402"><span class="sd">        https://www.sciencedirect.com/science/article/pii/S0380133089714799</span>
+</span><span id="line-403"><span class="sd">        `Influence of Lake Surface Area and Depth Upon Thermal Stratification</span>
+</span><span id="line-404"><span class="sd">        and the Depth of the Summer Thermocline`, Gorham, Eville and Boyce,</span>
+</span><span id="line-405"><span class="sd">        Farrell M. Journal of Great Lakes ResearchOpen AccessVolume 15,</span>
+</span><span id="line-406"><span class="sd">        Issue 2, Pages 233 - 245, 1989.</span>
+</span><span id="line-407">
+</span><span id="line-408"><span class="sd">        If wind_speed or monthly_temp is not supplied, a simplified equation</span>
+</span><span id="line-409"><span class="sd">        from Hanna 1990 is used, as implemented in G-Res_.</span>
+</span><span id="line-410">
+</span><span id="line-411"><span class="sd">        Args:</span>
+</span><span id="line-412"><span class="sd">            wind_speed (Optional[float]): Average annual wind speed at the location of the reservoir, m/s.</span>
+</span><span id="line-413"><span class="sd">            wind_height (float): Height at which wind_speed is measured, in meters. Default is 50 meters.</span>
+</span><span id="line-414">
+</span><span id="line-415"><span class="sd">        Returns:</span>
+</span><span id="line-416"><span class="sd">            float: The thermocline depth of the reservoir, m.</span>
+</span><span id="line-417"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-418">        <span class="k">if</span> <span class="n">wind_speed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-419">            <span class="c1">#thermocline_depth = 10**(0.185 * math.log10(self.area) + 0.842)</span>
+</span><span id="line-420">            <span class="n">thermocline_depth</span> <span class="o">=</span> <span class="mf">6.95</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">**</span><span class="mf">0.185</span>
+</span><span id="line-421">            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Thermocline depth calculated with model of Hanna.&quot;</span><span class="p">)</span>
+</span><span id="line-422">        <span class="k">else</span><span class="p">:</span>
+</span><span id="line-423">            <span class="c1"># Calculate CD coefficient and scale wind speed to 10m</span>
+</span><span id="line-424">            <span class="n">cd_coeff</span> <span class="o">=</span> <span class="n">cd_factor</span><span class="p">(</span><span class="n">wind_speed</span><span class="p">)</span>
+</span><span id="line-425">            <span class="n">wind_at_10m</span> <span class="o">=</span> <span class="n">scale_windspeed</span><span class="p">(</span>
+</span><span id="line-426">                <span class="n">wind_speed</span><span class="o">=</span><span class="n">wind_speed</span><span class="p">,</span> <span class="n">wind_height</span><span class="o">=</span><span class="n">wind_height</span><span class="p">,</span> <span class="n">new_height</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</span><span id="line-427">            <span class="c1"># Find thermocline depth in metres</span>
+</span><span id="line-428">            <span class="n">aux_var_1</span> <span class="o">=</span> <span class="n">cd_coeff</span> <span class="o">*</span> <span class="n">air_density</span><span class="p">(</span>
+</span><span id="line-429">                <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">mean_warmest</span><span class="p">(</span><span class="n">number_of_months</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span> <span class="o">*</span> \
+</span><span id="line-430">                <span class="n">wind_at_10m</span><span class="o">**</span><span class="mi">2</span>
+</span><span id="line-431">            <span class="c1"># It is possible that the second auxiliary variable turns out negative</span>
+</span><span id="line-432">            <span class="c1"># due to some previous empirical calculations not working properly for</span>
+</span><span id="line-433">            <span class="c1"># some combinations of input variables.</span>
+</span><span id="line-434">            <span class="n">aux_var_2</span> <span class="o">=</span> <span class="mf">9.80665</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bottom_density</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface_density</span><span class="p">())</span>
+</span><span id="line-435">            <span class="n">aux_var_3</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="mi">6</span><span class="p">)</span>
+</span><span id="line-436">            <span class="k">try</span><span class="p">:</span>
+</span><span id="line-437">                <span class="n">thermocline_depth</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">aux_var_1</span> <span class="o">/</span> <span class="n">aux_var_2</span><span class="p">)</span> <span class="o">*</span> \
+</span><span id="line-438">                    <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">aux_var_3</span><span class="p">)</span>
+</span><span id="line-439">                <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+</span><span id="line-440">                    <span class="s2">&quot;Thermocline depth calculated with model of Gorham and Boyce.&quot;</span><span class="p">)</span>
+</span><span id="line-441">            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+</span><span id="line-442">                <span class="n">thermocline_depth</span> <span class="o">=</span> <span class="mf">6.95</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">**</span><span class="mf">0.185</span>
+</span><span id="line-443">                <span class="n">main_msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> \
+</span><span id="line-444">                    <span class="s2">&quot;Problem with thermocline depth calculation using Gorham and Boyce model.&quot;</span>
+</span><span id="line-445">                <span class="n">extra_msg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> \
+</span><span id="line-446">                    <span class="s2">&quot;Area, depth, wind and temperature inputs produce errorenous output.</span><span class="se">\n</span><span class="s2">&quot;</span>
+</span><span id="line-447">                <span class="n">extra_msg</span> <span class="o">+=</span> <span class="s2">&quot;Thermocline depth calculated with the model of Hanna instead.&quot;</span>
+</span><span id="line-448">                <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">main_msg</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;detail&#39;</span><span class="p">:</span> <span class="n">extra_msg</span><span class="p">})</span>
+</span><span id="line-449">        <span class="k">return</span> <span class="n">thermocline_depth</span></div>
 
-</span><span id="line-452">
-</span><span id="line-453">    <span class="nd">@staticmethod</span>
-</span><span id="line-454">    <span class="k">def</span> <span class="nf">_k600_ch4</span><span class="p">(</span>
-</span><span id="line-455">            <span class="n">waterbody_area</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">wind_speed</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-</span><span id="line-456">            <span class="n">wind_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-457"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Estimate gas transfer velocity, k600 in cm/h for CH$_4$ from wind</span>
-</span><span id="line-458"><span class="sd">        speed in m/s and waterbody area in km$^2$ and return the estimate in m/d.</span>
-</span><span id="line-459"><span class="sd">        Refer to Table 2, p. 1760, Model B, Vachon and Prairie, 2013:</span>
-</span><span id="line-460"><span class="sd">        https://cdnsciencepub.com/doi/10.1139/cjfas-2013-0241.</span>
-</span><span id="line-461"><span class="sd">        Eq. A.16. in Praire2021_.</span>
-</span><span id="line-462">
-</span><span id="line-463"><span class="sd">        Args:</span>
-</span><span id="line-464"><span class="sd">            waterbody_area (float): The area of the waterbody, km$^2$.</span>
-</span><span id="line-465"><span class="sd">            wind_speed (float): The wind speed, m/s.</span>
-</span><span id="line-466"><span class="sd">            wind_height (float): The height at which the wind speed is measured, m.</span>
-</span><span id="line-467">
-</span><span id="line-468"><span class="sd">        Returns:</span>
-</span><span id="line-469"><span class="sd">            float: The gas transfer velocity, k600, m/d.</span>
-</span><span id="line-470"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-471">        <span class="k">if</span> <span class="n">wind_height</span> <span class="o">==</span> <span class="mi">10</span><span class="p">:</span>
-</span><span id="line-472">            <span class="n">wind_at_10m</span> <span class="o">=</span> <span class="n">wind_speed</span>
-</span><span id="line-473">        <span class="k">else</span><span class="p">:</span>
-</span><span id="line-474">            <span class="n">wind_at_10m</span> <span class="o">=</span> <span class="n">scale_windspeed</span><span class="p">(</span>
-</span><span id="line-475">                <span class="n">wind_speed</span><span class="o">=</span><span class="n">wind_speed</span><span class="p">,</span> <span class="n">wind_height</span><span class="o">=</span><span class="n">wind_height</span><span class="p">,</span> <span class="n">new_height</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-</span><span id="line-476">        <span class="c1"># k600 in cm/h</span>
-</span><span id="line-477">        <span class="n">k600</span> <span class="o">=</span> <span class="mf">2.51</span> <span class="o">+</span> <span class="mf">1.48</span> <span class="o">*</span> <span class="n">wind_at_10m</span> <span class="o">+</span> <span class="mf">0.39</span> <span class="o">*</span> <span class="n">wind_at_10m</span> <span class="o">*</span> \
-</span><span id="line-478">            <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">waterbody_area</span><span class="p">)</span>
-</span><span id="line-479">        <span class="c1"># return k600 in m/d</span>
-</span><span id="line-480">        <span class="k">return</span> <span class="n">k600</span> <span class="o">*</span> <span class="mf">0.24</span>
-</span><span id="line-481">
-</span><span id="line-482">    <span class="k">def</span> <span class="nf">_kh_ch4</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-483"><span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Calculate the k$_h$ coefficient for CH$_4$. Refer to Handbook of Physics and Chemistry,</span>
-</span><span id="line-484"><span class="sd">        Lide, 1994. CRC Press, Boca Raton, USA.</span>
-</span><span id="line-485"><span class="sd">        </span>
-</span><span id="line-486"><span class="sd">        Note:</span>
-</span><span id="line-487"><span class="sd">           Unit derived through back-calculation: kg CH$_4$/(m$^3$*atm).</span>
-</span><span id="line-488"><span class="sd">        Refer to Eq. A.17. in Praire2021_.</span>
-</span><span id="line-489">
-</span><span id="line-490"><span class="sd">        Returns:</span>
-</span><span id="line-491"><span class="sd">            float: The k$_h$ coefficient for CH$_4$, kg CH$_4$/(m$^3$*atm).</span>
-</span><span id="line-492"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-493">        <span class="c1"># Calculate effective temperature in deg C for methane</span>
-</span><span id="line-494">        <span class="n">eff_temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">eff_temp</span><span class="p">(</span><span class="n">gas</span><span class="o">=</span><span class="s2">&quot;ch4&quot;</span><span class="p">)</span>
-</span><span id="line-495">        <span class="n">eff_temp_scaled</span> <span class="o">=</span> <span class="p">(</span><span class="n">eff_temp</span> <span class="o">+</span> <span class="mf">273.15</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span>
-</span><span id="line-496">        <span class="n">molecular_weight_ch4</span> <span class="o">=</span> <span class="mf">18.0153</span>
-</span><span id="line-497">        <span class="n">aux_1</span> <span class="o">=</span> <span class="o">-</span><span class="mf">115.6477</span> <span class="o">-</span> <span class="mf">6.1698</span> <span class="o">*</span> <span class="n">eff_temp_scaled</span>
-</span><span id="line-498">        <span class="n">aux_2</span> <span class="o">=</span> <span class="mf">155.5756</span> <span class="o">/</span> <span class="n">eff_temp_scaled</span>
-</span><span id="line-499">        <span class="n">aux_3</span> <span class="o">=</span> <span class="mf">65.2553</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">eff_temp_scaled</span><span class="p">)</span>
-</span><span id="line-500">        <span class="n">kh_ch4</span> <span class="o">=</span> <span class="mf">1000.0</span><span class="o">/</span><span class="n">molecular_weight_ch4</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">aux_1</span> <span class="o">+</span> <span class="n">aux_2</span> <span class="o">+</span> <span class="n">aux_3</span><span class="p">)</span>
-</span><span id="line-501">        <span class="k">return</span> <span class="n">kh_ch4</span>
-</span><span id="line-502">
-</span><span id="line-503">    <span class="k">def</span> <span class="nf">_p_ch4</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">waterbody_area</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-504"><span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Calculate the partial pressure of CH$_4$ in microatm ($\mu$atm).</span>
-</span><span id="line-505"><span class="sd">        Refer to Rasillo 2014: https://doi.org/10.1111/gcb.12741.</span>
-</span><span id="line-506"><span class="sd">        Terhi Rasilo, Yves T. Prairie, Paul A. del Giorgio,</span>
-</span><span id="line-507"><span class="sd">        Global Change Biology,</span>
-</span><span id="line-508"><span class="sd">        `Large-scale patterns in summer diffusive CH$_4$ fluxes across boreal</span>
-</span><span id="line-509"><span class="sd">        lakes, and contribution to diffusive C emissions.`</span>
-</span><span id="line-510"><span class="sd">        Eq. A.18. in Praire2021_.</span>
-</span><span id="line-511">
-</span><span id="line-512"><span class="sd">        Args:</span>
-</span><span id="line-513"><span class="sd">            waterbody_area (float): The area of the waterbody, km$^2$.</span>
-</span><span id="line-514">
-</span><span id="line-515"><span class="sd">        Returns:</span>
-</span><span id="line-516"><span class="sd">            float: The partial pressure of CH$_4$, $\mu atm$.</span>
-</span><span id="line-517"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-518">        <span class="n">aux_1</span> <span class="o">=</span> <span class="mf">1.46</span> <span class="o">+</span> <span class="mf">0.03</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">eff_temp</span><span class="p">(</span><span class="n">gas</span><span class="o">=</span><span class="s2">&quot;ch4&quot;</span><span class="p">)</span>
-</span><span id="line-519">        <span class="n">aux_2</span> <span class="o">=</span> <span class="o">-</span> <span class="mf">0.29</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">waterbody_area</span><span class="p">)</span>
-</span><span id="line-520">        <span class="k">return</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="n">aux_1</span> <span class="o">+</span> <span class="n">aux_2</span><span class="p">)</span>
-</span><span id="line-521">
+</span><span id="line-450">
+</span><span id="line-451">    <span class="nd">@staticmethod</span>
+</span><span id="line-452">    <span class="k">def</span><span class="w"> </span><span class="nf">_k600_ch4</span><span class="p">(</span>
+</span><span id="line-453">            <span class="n">waterbody_area</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">wind_speed</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span id="line-454">            <span class="n">wind_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-455"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Estimate gas transfer velocity, k600 in cm/h for CH$_4$ from wind</span>
+</span><span id="line-456"><span class="sd">        speed in m/s and waterbody area in km$^2$ and return the estimate in m/d.</span>
+</span><span id="line-457"><span class="sd">        Refer to Table 2, p. 1760, Model B, Vachon and Prairie, 2013:</span>
+</span><span id="line-458"><span class="sd">        https://cdnsciencepub.com/doi/10.1139/cjfas-2013-0241.</span>
+</span><span id="line-459"><span class="sd">        Eq. A.16. in Praire2021_.</span>
+</span><span id="line-460">
+</span><span id="line-461"><span class="sd">        Args:</span>
+</span><span id="line-462"><span class="sd">            waterbody_area (float): The area of the waterbody, km$^2$.</span>
+</span><span id="line-463"><span class="sd">            wind_speed (float): The wind speed, m/s.</span>
+</span><span id="line-464"><span class="sd">            wind_height (float): The height at which the wind speed is measured, m.</span>
+</span><span id="line-465">
+</span><span id="line-466"><span class="sd">        Returns:</span>
+</span><span id="line-467"><span class="sd">            float: The gas transfer velocity, k600, m/d.</span>
+</span><span id="line-468"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-469">        <span class="k">if</span> <span class="n">wind_height</span> <span class="o">==</span> <span class="mi">10</span><span class="p">:</span>
+</span><span id="line-470">            <span class="n">wind_at_10m</span> <span class="o">=</span> <span class="n">wind_speed</span>
+</span><span id="line-471">        <span class="k">else</span><span class="p">:</span>
+</span><span id="line-472">            <span class="n">wind_at_10m</span> <span class="o">=</span> <span class="n">scale_windspeed</span><span class="p">(</span>
+</span><span id="line-473">                <span class="n">wind_speed</span><span class="o">=</span><span class="n">wind_speed</span><span class="p">,</span> <span class="n">wind_height</span><span class="o">=</span><span class="n">wind_height</span><span class="p">,</span> <span class="n">new_height</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</span><span id="line-474">        <span class="c1"># k600 in cm/h</span>
+</span><span id="line-475">        <span class="n">k600</span> <span class="o">=</span> <span class="mf">2.51</span> <span class="o">+</span> <span class="mf">1.48</span> <span class="o">*</span> <span class="n">wind_at_10m</span> <span class="o">+</span> <span class="mf">0.39</span> <span class="o">*</span> <span class="n">wind_at_10m</span> <span class="o">*</span> \
+</span><span id="line-476">            <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">waterbody_area</span><span class="p">)</span>
+</span><span id="line-477">        <span class="c1"># return k600 in m/d</span>
+</span><span id="line-478">        <span class="k">return</span> <span class="n">k600</span> <span class="o">*</span> <span class="mf">0.24</span>
+</span><span id="line-479">
+</span><span id="line-480">    <span class="k">def</span><span class="w"> </span><span class="nf">_kh_ch4</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-481"><span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Calculate the k$_h$ coefficient for CH$_4$. Refer to Handbook of Physics and Chemistry,</span>
+</span><span id="line-482"><span class="sd">        Lide, 1994. CRC Press, Boca Raton, USA.</span>
+</span><span id="line-483"><span class="sd">        </span>
+</span><span id="line-484"><span class="sd">        Note:</span>
+</span><span id="line-485"><span class="sd">           Unit derived through back-calculation: kg CH$_4$/(m$^3$*atm).</span>
+</span><span id="line-486"><span class="sd">        Refer to Eq. A.17. in Praire2021_.</span>
+</span><span id="line-487">
+</span><span id="line-488"><span class="sd">        Returns:</span>
+</span><span id="line-489"><span class="sd">            float: The k$_h$ coefficient for CH$_4$, kg CH$_4$/(m$^3$*atm).</span>
+</span><span id="line-490"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-491">        <span class="c1"># Calculate effective temperature in deg C for methane</span>
+</span><span id="line-492">        <span class="n">eff_temp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">eff_temp</span><span class="p">(</span><span class="n">gas</span><span class="o">=</span><span class="s2">&quot;ch4&quot;</span><span class="p">)</span>
+</span><span id="line-493">        <span class="n">eff_temp_scaled</span> <span class="o">=</span> <span class="p">(</span><span class="n">eff_temp</span> <span class="o">+</span> <span class="mf">273.15</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span>
+</span><span id="line-494">        <span class="n">molecular_weight_ch4</span> <span class="o">=</span> <span class="mf">18.0153</span>
+</span><span id="line-495">        <span class="n">aux_1</span> <span class="o">=</span> <span class="o">-</span><span class="mf">115.6477</span> <span class="o">-</span> <span class="mf">6.1698</span> <span class="o">*</span> <span class="n">eff_temp_scaled</span>
+</span><span id="line-496">        <span class="n">aux_2</span> <span class="o">=</span> <span class="mf">155.5756</span> <span class="o">/</span> <span class="n">eff_temp_scaled</span>
+</span><span id="line-497">        <span class="n">aux_3</span> <span class="o">=</span> <span class="mf">65.2553</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">eff_temp_scaled</span><span class="p">)</span>
+</span><span id="line-498">        <span class="n">kh_ch4</span> <span class="o">=</span> <span class="mf">1000.0</span><span class="o">/</span><span class="n">molecular_weight_ch4</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">aux_1</span> <span class="o">+</span> <span class="n">aux_2</span> <span class="o">+</span> <span class="n">aux_3</span><span class="p">)</span>
+</span><span id="line-499">        <span class="k">return</span> <span class="n">kh_ch4</span>
+</span><span id="line-500">
+</span><span id="line-501">    <span class="k">def</span><span class="w"> </span><span class="nf">_p_ch4</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">waterbody_area</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-502"><span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Calculate the partial pressure of CH$_4$ in microatm ($\mu$atm).</span>
+</span><span id="line-503"><span class="sd">        Refer to Rasillo 2014: https://doi.org/10.1111/gcb.12741.</span>
+</span><span id="line-504"><span class="sd">        Terhi Rasilo, Yves T. Prairie, Paul A. del Giorgio,</span>
+</span><span id="line-505"><span class="sd">        Global Change Biology,</span>
+</span><span id="line-506"><span class="sd">        `Large-scale patterns in summer diffusive CH$_4$ fluxes across boreal</span>
+</span><span id="line-507"><span class="sd">        lakes, and contribution to diffusive C emissions.`</span>
+</span><span id="line-508"><span class="sd">        Eq. A.18. in Praire2021_.</span>
+</span><span id="line-509">
+</span><span id="line-510"><span class="sd">        Args:</span>
+</span><span id="line-511"><span class="sd">            waterbody_area (float): The area of the waterbody, km$^2$.</span>
+</span><span id="line-512">
+</span><span id="line-513"><span class="sd">        Returns:</span>
+</span><span id="line-514"><span class="sd">            float: The partial pressure of CH$_4$, $\mu atm$.</span>
+</span><span id="line-515"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-516">        <span class="n">aux_1</span> <span class="o">=</span> <span class="mf">1.46</span> <span class="o">+</span> <span class="mf">0.03</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="o">.</span><span class="n">eff_temp</span><span class="p">(</span><span class="n">gas</span><span class="o">=</span><span class="s2">&quot;ch4&quot;</span><span class="p">)</span>
+</span><span id="line-517">        <span class="n">aux_2</span> <span class="o">=</span> <span class="o">-</span> <span class="mf">0.29</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">waterbody_area</span><span class="p">)</span>
+</span><span id="line-518">        <span class="k">return</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="n">aux_1</span> <span class="o">+</span> <span class="n">aux_2</span><span class="p">)</span>
+</span><span id="line-519">
 <div class="viewcode-block" id="Reservoir.surface_ch4_conc">
 <a class="viewcode-back" href="../../api/reemission.reservoir.html#reemission.reservoir.Reservoir.surface_ch4_conc">[docs]</a>
-</span><span id="line-522">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;surface_ch4_conc&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
-</span><span id="line-523">    <span class="k">def</span> <span class="nf">surface_ch4_conc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">waterbody_area</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-524"><span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Calculate the surface water CH$_4$ concentration in mg CH$_4$/m$^3$ ($\mu$g/L).</span>
-</span><span id="line-525"><span class="sd">        Refer to Eq. A.19. in Praire2021_.</span>
-</span><span id="line-526">
-</span><span id="line-527"><span class="sd">        Args:</span>
-</span><span id="line-528"><span class="sd">            waterbody_area (float): The area of the waterbody, km$^2$.</span>
-</span><span id="line-529">
-</span><span id="line-530"><span class="sd">        Returns:</span>
-</span><span id="line-531"><span class="sd">            float: The surface water CH$_4$ concentration in mg CH$_4$/m$^3$ ($\mu$g/L).</span>
-</span><span id="line-532"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-533">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kh_ch4</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p_ch4</span><span class="p">(</span><span class="n">waterbody_area</span><span class="p">)</span></div>
+</span><span id="line-520">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;surface_ch4_conc&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
+</span><span id="line-521">    <span class="k">def</span><span class="w"> </span><span class="nf">surface_ch4_conc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">waterbody_area</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-522"><span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Calculate the surface water CH$_4$ concentration in mg CH$_4$/m$^3$ ($\mu$g/L).</span>
+</span><span id="line-523"><span class="sd">        Refer to Eq. A.19. in Praire2021_.</span>
+</span><span id="line-524">
+</span><span id="line-525"><span class="sd">        Args:</span>
+</span><span id="line-526"><span class="sd">            waterbody_area (float): The area of the waterbody, km$^2$.</span>
+</span><span id="line-527">
+</span><span id="line-528"><span class="sd">        Returns:</span>
+</span><span id="line-529"><span class="sd">            float: The surface water CH$_4$ concentration in mg CH$_4$/m$^3$ ($\mu$g/L).</span>
+</span><span id="line-530"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-531">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kh_ch4</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_p_ch4</span><span class="p">(</span><span class="n">waterbody_area</span><span class="p">)</span></div>
 
-</span><span id="line-534">
+</span><span id="line-532">
 <div class="viewcode-block" id="Reservoir.ch4_preemission_factor">
 <a class="viewcode-back" href="../../api/reemission.reservoir.html#reemission.reservoir.Reservoir.ch4_preemission_factor">[docs]</a>
-</span><span id="line-535">    <span class="k">def</span> <span class="nf">ch4_preemission_factor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wind_height</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-536"><span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Calculate the CH$_4$ emission factor for the water body, in kg CH$_4$/ha/yr.</span>
-</span><span id="line-537"><span class="sd">        Refer to Eq. A.20. in Praire2021_.</span>
-</span><span id="line-538">
-</span><span id="line-539"><span class="sd">        This value is used for estimating preimpoundment reservoir CH$_4$</span>
-</span><span id="line-540"><span class="sd">        emissions from water bodies present in the inundated area prior to</span>
-</span><span id="line-541"><span class="sd">        inundation on top of what was emitted from soil (based on inundated</span>
-</span><span id="line-542"><span class="sd">        soil land cover composition and soil type).</span>
-</span><span id="line-543">
-</span><span id="line-544"><span class="sd">        Args:</span>
-</span><span id="line-545"><span class="sd">            wind_height (float): The height at which the wind speed is measured, in meters. Default is 50 meters.</span>
-</span><span id="line-546">
-</span><span id="line-547"><span class="sd">        Returns:</span>
-</span><span id="line-548"><span class="sd">            float: The CH$_4$ emission factor for the water body, kg CH$_4$/ha/yr.</span>
-</span><span id="line-549"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-550">        <span class="c1"># Waterbody area is the sum of water areas within the reservoir area</span>
-</span><span id="line-551">        <span class="c1"># prior to impounment (construction of the reservoir)</span>
-</span><span id="line-552">        <span class="n">waterbody_area</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wat_area_frac_pre</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span>
-</span><span id="line-553">        <span class="k">if</span> <span class="n">waterbody_area</span> <span class="o">&lt;</span> <span class="mf">1E-6</span><span class="p">:</span>
-</span><span id="line-554">            <span class="k">return</span> <span class="mf">0.0</span>
-</span><span id="line-555">        <span class="n">ch4_molar</span> <span class="o">=</span> <span class="mi">16</span>  <span class="c1"># g/mol</span>
-</span><span id="line-556">        <span class="n">em_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface_ch4_conc</span><span class="p">(</span><span class="n">waterbody_area</span><span class="p">)</span> <span class="o">*</span> \
-</span><span id="line-557">            <span class="bp">self</span><span class="o">.</span><span class="n">_k600_ch4</span><span class="p">(</span>
-</span><span id="line-558">                <span class="n">waterbody_area</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_monthly_windspeed</span><span class="p">,</span> <span class="n">wind_height</span><span class="p">)</span> <span class="o">*</span> \
-</span><span id="line-559">            <span class="n">ch4_molar</span> <span class="o">*</span> <span class="mi">365</span><span class="o">/</span><span class="mi">100</span>
-</span><span id="line-560">        <span class="c1"># 365 converts from /d to /yr</span>
-</span><span id="line-561">        <span class="c1"># 1/100 converts from 1/km2 to 1/ha</span>
-</span><span id="line-562">        <span class="k">return</span> <span class="n">em_factor</span></div>
+</span><span id="line-533">    <span class="k">def</span><span class="w"> </span><span class="nf">ch4_preemission_factor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wind_height</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-534"><span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Calculate the CH$_4$ emission factor for the water body, in kg CH$_4$/ha/yr.</span>
+</span><span id="line-535"><span class="sd">        Refer to Eq. A.20. in Praire2021_.</span>
+</span><span id="line-536">
+</span><span id="line-537"><span class="sd">        This value is used for estimating preimpoundment reservoir CH$_4$</span>
+</span><span id="line-538"><span class="sd">        emissions from water bodies present in the inundated area prior to</span>
+</span><span id="line-539"><span class="sd">        inundation on top of what was emitted from soil (based on inundated</span>
+</span><span id="line-540"><span class="sd">        soil land cover composition and soil type).</span>
+</span><span id="line-541">
+</span><span id="line-542"><span class="sd">        Args:</span>
+</span><span id="line-543"><span class="sd">            wind_height (float): The height at which the wind speed is measured, in meters. Default is 50 meters.</span>
+</span><span id="line-544">
+</span><span id="line-545"><span class="sd">        Returns:</span>
+</span><span id="line-546"><span class="sd">            float: The CH$_4$ emission factor for the water body, kg CH$_4$/ha/yr.</span>
+</span><span id="line-547"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-548">        <span class="c1"># Waterbody area is the sum of water areas within the reservoir area</span>
+</span><span id="line-549">        <span class="c1"># prior to impounment (construction of the reservoir)</span>
+</span><span id="line-550">        <span class="n">waterbody_area</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">wat_area_frac_pre</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span>
+</span><span id="line-551">        <span class="k">if</span> <span class="n">waterbody_area</span> <span class="o">&lt;</span> <span class="mf">1E-6</span><span class="p">:</span>
+</span><span id="line-552">            <span class="k">return</span> <span class="mf">0.0</span>
+</span><span id="line-553">        <span class="n">ch4_molar</span> <span class="o">=</span> <span class="mi">16</span>  <span class="c1"># g/mol</span>
+</span><span id="line-554">        <span class="n">em_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface_ch4_conc</span><span class="p">(</span><span class="n">waterbody_area</span><span class="p">)</span> <span class="o">*</span> \
+</span><span id="line-555">            <span class="bp">self</span><span class="o">.</span><span class="n">_k600_ch4</span><span class="p">(</span>
+</span><span id="line-556">                <span class="n">waterbody_area</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_monthly_windspeed</span><span class="p">,</span> <span class="n">wind_height</span><span class="p">)</span> <span class="o">*</span> \
+</span><span id="line-557">            <span class="n">ch4_molar</span> <span class="o">*</span> <span class="mi">365</span><span class="o">/</span><span class="mi">100</span>
+</span><span id="line-558">        <span class="c1"># 365 converts from /d to /yr</span>
+</span><span id="line-559">        <span class="c1"># 1/100 converts from 1/km2 to 1/ha</span>
+</span><span id="line-560">        <span class="k">return</span> <span class="n">em_factor</span></div>
 
-</span><span id="line-563">
-</span><span id="line-564">
+</span><span id="line-561">
+</span><span id="line-562">
 <div class="viewcode-block" id="Reservoir.retention_coeff">
 <a class="viewcode-back" href="../../api/reemission.reservoir.html#reemission.reservoir.Reservoir.retention_coeff">[docs]</a>
-</span><span id="line-565">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;retention_coeff&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
-</span><span id="line-566">    <span class="k">def</span> <span class="nf">retention_coeff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-567"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the retention coefficient using the chosen calculation method.</span>
-</span><span id="line-568">
-</span><span id="line-569"><span class="sd">        Args:</span>
-</span><span id="line-570"><span class="sd">            method (str): Retention coefficient calculation method.</span>
-</span><span id="line-571">
-</span><span id="line-572"><span class="sd">        Returns:</span>
-</span><span id="line-573"><span class="sd">            float: The retention coefficient based on the selected method.</span>
-</span><span id="line-574"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-575">        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;larsen&#39;</span><span class="p">:</span>
-</span><span id="line-576">            <span class="n">ret_coeff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">retention_coeff_larsen</span>
-</span><span id="line-577">        <span class="k">elif</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;emp&#39;</span><span class="p">,</span> <span class="s1">&#39;empirical&#39;</span><span class="p">]:</span>
-</span><span id="line-578">            <span class="n">ret_coeff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">retention_coeff_emp</span>
-</span><span id="line-579">        <span class="k">else</span><span class="p">:</span>
-</span><span id="line-580">            <span class="c1"># Otherwise, use the Larsen and Mercier model</span>
-</span><span id="line-581">            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Residence time calculation method </span><span class="si">%s</span><span class="s1"> unknown. &#39;</span> <span class="o">+</span>
-</span><span id="line-582">                        <span class="s1">&#39;Using the Larsen and Mercier model&#39;</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
-</span><span id="line-583">            <span class="n">ret_coeff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">retention_coeff_larsen</span>
-</span><span id="line-584">        <span class="k">return</span> <span class="n">ret_coeff</span></div>
+</span><span id="line-563">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;retention_coeff&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
+</span><span id="line-564">    <span class="k">def</span><span class="w"> </span><span class="nf">retention_coeff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-565"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the retention coefficient using the chosen calculation method.</span>
+</span><span id="line-566">
+</span><span id="line-567"><span class="sd">        Args:</span>
+</span><span id="line-568"><span class="sd">            method (str): Retention coefficient calculation method.</span>
+</span><span id="line-569">
+</span><span id="line-570"><span class="sd">        Returns:</span>
+</span><span id="line-571"><span class="sd">            float: The retention coefficient based on the selected method.</span>
+</span><span id="line-572"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-573">        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;larsen&#39;</span><span class="p">:</span>
+</span><span id="line-574">            <span class="n">ret_coeff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">retention_coeff_larsen</span>
+</span><span id="line-575">        <span class="k">elif</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;emp&#39;</span><span class="p">,</span> <span class="s1">&#39;empirical&#39;</span><span class="p">]:</span>
+</span><span id="line-576">            <span class="n">ret_coeff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">retention_coeff_emp</span>
+</span><span id="line-577">        <span class="k">else</span><span class="p">:</span>
+</span><span id="line-578">            <span class="c1"># Otherwise, use the Larsen and Mercier model</span>
+</span><span id="line-579">            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Residence time calculation method </span><span class="si">%s</span><span class="s1"> unknown. &#39;</span> <span class="o">+</span>
+</span><span id="line-580">                        <span class="s1">&#39;Using the Larsen and Mercier model&#39;</span><span class="p">,</span> <span class="n">method</span><span class="p">)</span>
+</span><span id="line-581">            <span class="n">ret_coeff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">retention_coeff_larsen</span>
+</span><span id="line-582">        <span class="k">return</span> <span class="n">ret_coeff</span></div>
 
-</span><span id="line-585">
+</span><span id="line-583">
 <div class="viewcode-block" id="Reservoir.reservoir_conc">
 <a class="viewcode-back" href="../../api/reemission.reservoir.html#reemission.reservoir.Reservoir.reservoir_conc">[docs]</a>
-</span><span id="line-586">    <span class="k">def</span> <span class="nf">reservoir_conc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inflow_conc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-</span><span id="line-587">                     <span class="n">method</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-588"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the reservoir concentration based on inflow concentration and</span>
-</span><span id="line-589"><span class="sd">        the reservoir retention coefficient.</span>
-</span><span id="line-590">
-</span><span id="line-591"><span class="sd">        Args:</span>
-</span><span id="line-592"><span class="sd">            inflow_conc (float): The inflow concentration, usually TP/TN concentration, $\mu$grams/L.</span>
-</span><span id="line-593"><span class="sd">            method (Optional[str]): Retention coefficient estimation method.</span>
-</span><span id="line-594">
-</span><span id="line-595"><span class="sd">        Returns:</span>
-</span><span id="line-596"><span class="sd">            float: The reservoir concentration, same unit as `inflow_conc`</span>
-</span><span id="line-597"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-598">        <span class="c1"># Method for calculating retention coefficient in reservoirs:</span>
-</span><span id="line-599">        <span class="c1"># empirical/larsen</span>
-</span><span id="line-600">        <span class="k">if</span> <span class="n">method</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-601">            <span class="n">method</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;CALCULATIONS&#39;</span><span class="p">][</span><span class="s2">&quot;ret_coeff_method&quot;</span><span class="p">]</span>
-</span><span id="line-602">        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">inflow_conc</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">retention_coeff</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">)))</span></div>
+</span><span id="line-584">    <span class="k">def</span><span class="w"> </span><span class="nf">reservoir_conc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inflow_conc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span id="line-585">                     <span class="n">method</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-586"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate the reservoir concentration based on inflow concentration and</span>
+</span><span id="line-587"><span class="sd">        the reservoir retention coefficient.</span>
+</span><span id="line-588">
+</span><span id="line-589"><span class="sd">        Args:</span>
+</span><span id="line-590"><span class="sd">            inflow_conc (float): The inflow concentration, usually TP/TN concentration, $\mu$grams/L.</span>
+</span><span id="line-591"><span class="sd">            method (Optional[str]): Retention coefficient estimation method.</span>
+</span><span id="line-592">
+</span><span id="line-593"><span class="sd">        Returns:</span>
+</span><span id="line-594"><span class="sd">            float: The reservoir concentration, same unit as `inflow_conc`</span>
+</span><span id="line-595"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-596">        <span class="c1"># Method for calculating retention coefficient in reservoirs:</span>
+</span><span id="line-597">        <span class="c1"># empirical/larsen</span>
+</span><span id="line-598">        <span class="k">if</span> <span class="n">method</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-599">            <span class="n">method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;CALCULATIONS&#39;</span><span class="p">][</span><span class="s2">&quot;ret_coeff_method&quot;</span><span class="p">]</span>
+</span><span id="line-600">        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">inflow_conc</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">retention_coeff</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">)))</span></div>
 
-</span><span id="line-603">
-</span><span id="line-604">
+</span><span id="line-601">
+</span><span id="line-602">
 <div class="viewcode-block" id="Reservoir.trophic_status">
 <a class="viewcode-back" href="../../api/reemission.reservoir.html#reemission.reservoir.Reservoir.trophic_status">[docs]</a>
-</span><span id="line-605">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;trophic_status&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
-</span><span id="line-606">    <span class="k">def</span> <span class="nf">trophic_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tp_inflow_conc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">as_value</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Enum</span> <span class="o">|</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="line-607"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the reservoir&#39;s trophic status depending on the influent</span>
-</span><span id="line-608"><span class="sd">        TP concentration.</span>
-</span><span id="line-609">
-</span><span id="line-610"><span class="sd">        Args:</span>
-</span><span id="line-611"><span class="sd">            tp_inflow_conc (float): The TP concentration in the inflow, in $\mu$grams/L.</span>
-</span><span id="line-612"><span class="sd">            as_value (bool): Whether to return the value or the Enum. Default is True.</span>
-</span><span id="line-613">
-</span><span id="line-614"><span class="sd">        Returns:</span>
-</span><span id="line-615"><span class="sd">            Enum | str: The trophic status of the reservoir.</span>
-</span><span id="line-616"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-617">        <span class="n">reservoir_tp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reservoir_conc</span><span class="p">(</span><span class="n">tp_inflow_conc</span><span class="p">)</span>
-</span><span id="line-618">        <span class="k">if</span> <span class="n">reservoir_tp</span> <span class="o">&lt;</span> <span class="mf">10.0</span><span class="p">:</span>
-</span><span id="line-619">            <span class="n">trophic_status</span> <span class="o">=</span> <span class="n">TrophicStatus</span><span class="o">.</span><span class="n">OLIGOTROPHIC</span>
-</span><span id="line-620">        <span class="k">if</span> <span class="n">reservoir_tp</span> <span class="o">&lt;</span> <span class="mf">30.0</span><span class="p">:</span>
-</span><span id="line-621">            <span class="n">trophic_status</span> <span class="o">=</span> <span class="n">TrophicStatus</span><span class="o">.</span><span class="n">MESOTROPHIC</span>
-</span><span id="line-622">        <span class="k">if</span> <span class="n">reservoir_tp</span> <span class="o">&lt;</span> <span class="mf">100.0</span><span class="p">:</span>
-</span><span id="line-623">            <span class="n">trophic_status</span> <span class="o">=</span> <span class="n">TrophicStatus</span><span class="o">.</span><span class="n">EUTROPHIC</span>
-</span><span id="line-624">        <span class="k">else</span><span class="p">:</span>
-</span><span id="line-625">            <span class="n">trophic_status</span> <span class="o">=</span> <span class="n">TrophicStatus</span><span class="o">.</span><span class="n">HYPER_EUTROPHIC</span>
-</span><span id="line-626">        <span class="k">if</span> <span class="n">as_value</span><span class="p">:</span>
-</span><span id="line-627">            <span class="k">return</span> <span class="n">trophic_status</span><span class="o">.</span><span class="n">value</span>
-</span><span id="line-628">        <span class="k">return</span> <span class="n">trophic_status</span></div>
+</span><span id="line-603">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;trophic_status&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
+</span><span id="line-604">    <span class="k">def</span><span class="w"> </span><span class="nf">trophic_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tp_inflow_conc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">as_value</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Enum</span> <span class="o">|</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="line-605"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the reservoir&#39;s trophic status depending on the influent</span>
+</span><span id="line-606"><span class="sd">        TP concentration.</span>
+</span><span id="line-607">
+</span><span id="line-608"><span class="sd">        Args:</span>
+</span><span id="line-609"><span class="sd">            tp_inflow_conc (float): The TP concentration in the inflow, in $\mu$grams/L.</span>
+</span><span id="line-610"><span class="sd">            as_value (bool): Whether to return the value or the Enum. Default is True.</span>
+</span><span id="line-611">
+</span><span id="line-612"><span class="sd">        Returns:</span>
+</span><span id="line-613"><span class="sd">            Enum | str: The trophic status of the reservoir.</span>
+</span><span id="line-614"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-615">        <span class="n">reservoir_tp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reservoir_conc</span><span class="p">(</span><span class="n">tp_inflow_conc</span><span class="p">)</span>
+</span><span id="line-616">        <span class="k">if</span> <span class="n">reservoir_tp</span> <span class="o">&lt;</span> <span class="mf">10.0</span><span class="p">:</span>
+</span><span id="line-617">            <span class="n">trophic_status</span> <span class="o">=</span> <span class="n">TrophicStatus</span><span class="o">.</span><span class="n">OLIGOTROPHIC</span>
+</span><span id="line-618">        <span class="k">if</span> <span class="n">reservoir_tp</span> <span class="o">&lt;</span> <span class="mf">30.0</span><span class="p">:</span>
+</span><span id="line-619">            <span class="n">trophic_status</span> <span class="o">=</span> <span class="n">TrophicStatus</span><span class="o">.</span><span class="n">MESOTROPHIC</span>
+</span><span id="line-620">        <span class="k">if</span> <span class="n">reservoir_tp</span> <span class="o">&lt;</span> <span class="mf">100.0</span><span class="p">:</span>
+</span><span id="line-621">            <span class="n">trophic_status</span> <span class="o">=</span> <span class="n">TrophicStatus</span><span class="o">.</span><span class="n">EUTROPHIC</span>
+</span><span id="line-622">        <span class="k">else</span><span class="p">:</span>
+</span><span id="line-623">            <span class="n">trophic_status</span> <span class="o">=</span> <span class="n">TrophicStatus</span><span class="o">.</span><span class="n">HYPER_EUTROPHIC</span>
+</span><span id="line-624">        <span class="k">if</span> <span class="n">as_value</span><span class="p">:</span>
+</span><span id="line-625">            <span class="k">return</span> <span class="n">trophic_status</span><span class="o">.</span><span class="n">value</span>
+</span><span id="line-626">        <span class="k">return</span> <span class="n">trophic_status</span></div>
 </div>
 
 </span></code></pre></div>
@@ -886,20 +883,19 @@
       <div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
         <p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2024, Tomasz Janus, University of Manchester, United Kingdom&nbsp;Built with <a class="font-medium underline underline-offset-4"
     href="https://www.sphinx-doc.org"
-    rel="noreferrer">Sphinx 7.3.7</a></p>
+    rel="noreferrer">Sphinx 8.1.3</a></p>
 </div>
 </div>
 </footer>
   </div>
   
     <script src="../../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/toggleprompt.js?v=5801b3bb"></script>
-    <script src="../../_static/tabs.js?v=3030b3cb"></script>
-    <script defer="defer" src="../../_static/theme.js?v=e82a16a3"></script>
+    <script defer="defer" src="../../_static/theme.js?v=073f68d9"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
   
 </body>

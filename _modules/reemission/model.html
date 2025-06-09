@@ -15,11 +15,10 @@
     <title>reemission.model | ReEmission 1.0.0 documentation</title>
     <meta property="og:title" content="reemission.model | ReEmission 1.0.0 documentation" />
     <meta name="twitter:title" content="reemission.model | ReEmission 1.0.0 documentation" />
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=c842c44c" />
-      <link rel="stylesheet" type="text/css" href="../../_static/theme.css?v=ecdfb4fc" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=1949e874" />
+      <link rel="stylesheet" type="text/css" href="../../_static/theme.css?v=42baaae4" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-      <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=a5c4661c" />
         <link rel="search" title="Search" href="../../search.html" />
         <link rel="index" title="Index" href="../../genindex.html" />
 
@@ -36,7 +35,7 @@
       if (!userPreference) {localStorage.setItem('darkMode', mode)}
     </script>
 </head>
-<body x-data="{ showSidebar: false }" class="min-h-screen font-sans antialiased bg-background text-foreground" :class="{ 'overflow-hidden': showSidebar }">
+  <body x-data="{ showSidebar: false, showScrollTop: false }" class="min-h-screen font-sans antialiased bg-background text-foreground" :class="{ 'overflow-hidden': showSidebar }">
     <div x-cloak x-show="showSidebar" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" @click.self="showSidebar = false"></div><div id="page" class="relative flex flex-col min-h-screen"><a href="#content" class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100">
       Skip to content
     </a><header
@@ -259,315 +258,343 @@
 </span><span id="line-69"><span class="sd">Note:</span>
 </span><span id="line-70"><span class="sd">    Ensure the configuration file and input data are properly formatted and validated before running the calculations.</span>
 </span><span id="line-71"><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-72"><span class="kn">import</span> <span class="nn">configparser</span>
-</span><span id="line-73"><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
-</span><span id="line-74"><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
-</span><span id="line-75"><span class="kn">import</span> <span class="nn">pathlib</span>
-</span><span id="line-76"><span class="kn">import</span> <span class="nn">logging</span>
-</span><span id="line-77"><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span>
-</span><span id="line-78"><span class="kn">from</span> <span class="nn">reemission.utils</span> <span class="kn">import</span> <span class="n">read_config</span><span class="p">,</span> <span class="n">get_package_file</span><span class="p">,</span> <span class="n">load_yaml</span>
-</span><span id="line-79"><span class="kn">from</span> <span class="nn">reemission.globals</span> <span class="kn">import</span> <span class="n">internal</span>
-</span><span id="line-80"><span class="kn">from</span> <span class="nn">reemission.input</span> <span class="kn">import</span> <span class="n">Inputs</span>
-</span><span id="line-81"><span class="kn">from</span> <span class="nn">reemission.temperature</span> <span class="kn">import</span> <span class="n">MonthlyTemperature</span>
-</span><span id="line-82"><span class="kn">from</span> <span class="nn">reemission.catchment</span> <span class="kn">import</span> <span class="n">Catchment</span>
-</span><span id="line-83"><span class="kn">from</span> <span class="nn">reemission.reservoir</span> <span class="kn">import</span> <span class="n">Reservoir</span>
-</span><span id="line-84"><span class="kn">from</span> <span class="nn">reemission.emissions</span> <span class="kn">import</span> <span class="p">(</span>
-</span><span id="line-85">    <span class="n">CarbonDioxideEmission</span><span class="p">,</span> <span class="n">NitrousOxideEmission</span><span class="p">,</span> <span class="n">MethaneEmission</span><span class="p">)</span>
-</span><span id="line-86"><span class="kn">from</span> <span class="nn">reemission.presenter</span> <span class="kn">import</span> <span class="n">Presenter</span><span class="p">,</span> <span class="n">Writer</span>
+</span><span id="line-72"><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+</span><span id="line-73"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
+</span><span id="line-74"><span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
+</span><span id="line-75"><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+</span><span id="line-76"><span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">chain</span>
+</span><span id="line-77"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_yaml</span><span class="p">,</span> <span class="n">read_config_dict</span>
+</span><span id="line-78"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.globals</span><span class="w"> </span><span class="kn">import</span> <span class="n">internal</span>
+</span><span id="line-79"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.input</span><span class="w"> </span><span class="kn">import</span> <span class="n">Inputs</span>
+</span><span id="line-80"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.temperature</span><span class="w"> </span><span class="kn">import</span> <span class="n">MonthlyTemperature</span>
+</span><span id="line-81"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.catchment</span><span class="w"> </span><span class="kn">import</span> <span class="n">Catchment</span>
+</span><span id="line-82"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.reservoir</span><span class="w"> </span><span class="kn">import</span> <span class="n">Reservoir</span>
+</span><span id="line-83"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.emissions</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="line-84">    <span class="n">CarbonDioxideEmission</span><span class="p">,</span> <span class="n">NitrousOxideEmission</span><span class="p">,</span> <span class="n">MethaneEmission</span><span class="p">)</span>
+</span><span id="line-85"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.presenter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Presenter</span><span class="p">,</span> <span class="n">Writer</span>
+</span><span id="line-86"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission</span><span class="w"> </span><span class="kn">import</span> <span class="n">registry</span>
 </span><span id="line-87">
 </span><span id="line-88"><span class="c1"># Set up module logger</span>
 </span><span id="line-89"><span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
 </span><span id="line-90"><span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 </span><span id="line-91">
-</span><span id="line-92"><span class="c1"># Derive default calculation options from config</span>
-</span><span id="line-93"><span class="n">config</span><span class="p">:</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span> <span class="o">=</span> <span class="n">read_config</span><span class="p">(</span>
-</span><span id="line-94">    <span class="n">get_package_file</span><span class="p">(</span><span class="s2">&quot;config/config.ini&quot;</span><span class="p">))</span>
-</span><span id="line-95"><span class="n">ret_coeff_method</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;CALCULATIONS&quot;</span><span class="p">,</span> <span class="s2">&quot;ret_coeff_method&quot;</span><span class="p">)</span>
-</span><span id="line-96"><span class="n">p_export_cal</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;CALCULATIONS&quot;</span><span class="p">,</span> <span class="s2">&quot;p_export_cal&quot;</span><span class="p">)</span>
-</span><span id="line-97"><span class="n">nitrous_oxide_model</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;CALCULATIONS&quot;</span><span class="p">,</span> <span class="s2">&quot;nitrous_oxide_model&quot;</span><span class="p">)</span>
-</span><span id="line-98">
-</span><span id="line-99"><span class="c1">#  TODO: potential problems in Python &lt;= 3.6 because dicts are not ordered</span>
-</span><span id="line-100"><span class="c1">#       pay attention</span>
-</span><span id="line-101"><span class="n">TRUTHS</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;true&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="s1">&#39;yes&#39;</span><span class="p">,</span> <span class="s1">&#39;on&#39;</span><span class="p">]</span>
-</span><span id="line-102"><span class="n">FALSES</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;false&#39;</span><span class="p">,</span> <span class="s1">&#39;False&#39;</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">,</span> <span class="s1">&#39;off&#39;</span><span class="p">,</span> <span class="s1">&#39;null&#39;</span><span class="p">]</span>
-</span><span id="line-103">
-</span><span id="line-104">
+</span><span id="line-92"><span class="c1">#  TODO: potential problems in Python &lt;= 3.6 because dicts are not ordered</span>
+</span><span id="line-93"><span class="c1">#       pay attention</span>
+</span><span id="line-94"><span class="n">TRUTHS</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;true&#39;</span><span class="p">,</span> <span class="s1">&#39;True&#39;</span><span class="p">,</span> <span class="s1">&#39;yes&#39;</span><span class="p">,</span> <span class="s1">&#39;on&#39;</span><span class="p">]</span>
+</span><span id="line-95"><span class="n">FALSES</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;false&#39;</span><span class="p">,</span> <span class="s1">&#39;False&#39;</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">,</span> <span class="s1">&#39;off&#39;</span><span class="p">,</span> <span class="s1">&#39;null&#39;</span><span class="p">]</span>
+</span><span id="line-96">
+</span><span id="line-97">
 <div class="viewcode-block" id="EmissionModel">
 <a class="viewcode-back" href="../../api/reemission.model.html#reemission.model.EmissionModel">[docs]</a>
-</span><span id="line-105"><span class="nd">@dataclass</span>
-</span><span id="line-106"><span class="k">class</span> <span class="nc">EmissionModel</span><span class="p">:</span>
-</span><span id="line-107"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-108"><span class="sd">    Calculates emissions for a reservoir or a number of reservoirs.</span>
-</span><span id="line-109">
-</span><span id="line-110"><span class="sd">    Attributes:</span>
-</span><span id="line-111"><span class="sd">        inputs (Inputs): Inputs object with input data.</span>
-</span><span id="line-112"><span class="sd">        config (Union[Dict, pathlib.Path, str]): Dictionary with configuration data or path to config file.</span>
-</span><span id="line-113"><span class="sd">        outputs (Dict): Emission calculation outputs in a dictionary structure.</span>
-</span><span id="line-114"><span class="sd">        internal (Dict): Internal variables for calculations.</span>
-</span><span id="line-115"><span class="sd">        author (str): Author&#39;s name.</span>
-</span><span id="line-116"><span class="sd">        report_title (str): Title of output report / GHG emission estimation study.</span>
-</span><span id="line-117"><span class="sd">        ret_coeff (str): Reservoir retention coefficient calculation model.</span>
-</span><span id="line-118"><span class="sd">        p_model (str): P export calculation method.</span>
-</span><span id="line-119"><span class="sd">        n2o_model (str): Nitrous Oxide calculation method.</span>
-</span><span id="line-120"><span class="sd">        presenter (Optional[Presenter]): Presenter object for presenting input and output data in various formats.</span>
-</span><span id="line-121"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="line-122">    <span class="n">inputs</span><span class="p">:</span> <span class="n">Inputs</span>
-</span><span id="line-123">    <span class="n">config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
-</span><span id="line-124">    <span class="n">outputs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
-</span><span id="line-125">    <span class="n">internal</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
-</span><span id="line-126">    <span class="n">author</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-</span><span id="line-127">    <span class="n">report_title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;Results&quot;</span><span class="p">)</span>
-</span><span id="line-128">    <span class="n">ret_coeff</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">ret_coeff_method</span><span class="p">)</span>
-</span><span id="line-129">    <span class="n">p_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">p_export_cal</span><span class="p">)</span>
-</span><span id="line-130">    <span class="n">n2o_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">nitrous_oxide_model</span><span class="p">)</span>
-</span><span id="line-131">    <span class="n">presenter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Presenter</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-</span><span id="line-132">
+</span><span id="line-98"><span class="nd">@dataclass</span>
+</span><span id="line-99"><span class="k">class</span><span class="w"> </span><span class="nc">EmissionModel</span><span class="p">:</span>
+</span><span id="line-100"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-101"><span class="sd">    Calculates emissions for a reservoir or a number of reservoirs.</span>
+</span><span id="line-102">
+</span><span id="line-103"><span class="sd">    Attributes:</span>
+</span><span id="line-104"><span class="sd">        inputs (Inputs): Inputs object with input data.</span>
+</span><span id="line-105"><span class="sd">        model_config (Union[Dict, pathlib.Path, str]): Dictionary with model configuration data or path to config file.</span>
+</span><span id="line-106"><span class="sd">        presenter_config (Union[Dict, pathlib.Path, str]): Dictionary with Presenter configuration data or path to config file.</span>
+</span><span id="line-107"><span class="sd">        outputs (Dict): Emission calculation outputs in a dictionary structure.</span>
+</span><span id="line-108"><span class="sd">        internal (Dict): Internal variables for calculations.</span>
+</span><span id="line-109"><span class="sd">        author (str): Author&#39;s name.</span>
+</span><span id="line-110"><span class="sd">        report_title (str): Title of output report / GHG emission estimation study.</span>
+</span><span id="line-111"><span class="sd">        ret_coeff (str): Reservoir retention coefficient calculation model.</span>
+</span><span id="line-112"><span class="sd">        p_model (str): P export calculation method.</span>
+</span><span id="line-113"><span class="sd">        n2o_model (str): Nitrous Oxide calculation method.</span>
+</span><span id="line-114"><span class="sd">        presenter (Optional[Presenter]): Presenter object for presenting input and output data in various formats.</span>
+</span><span id="line-115"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="line-116">    <span class="n">inputs</span><span class="p">:</span> <span class="n">Inputs</span>
+</span><span id="line-117">    <span class="n">model_config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span><span id="line-118">    <span class="n">presenter_config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">,</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span><span id="line-119">    <span class="n">outputs</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+</span><span id="line-120">    <span class="n">internal</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+</span><span id="line-121">    <span class="n">author</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+</span><span id="line-122">    <span class="n">report_title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;Results&quot;</span><span class="p">)</span>
+</span><span id="line-123">    <span class="n">ret_coeff</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span><span id="line-124">    <span class="n">p_model</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span><span id="line-125">    <span class="n">n2o_model</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span><span id="line-126">    <span class="n">presenter</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Presenter</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</span><span id="line-127">
 <div class="viewcode-block" id="EmissionModel.__post_init__">
 <a class="viewcode-back" href="../../api/reemission.model.html#reemission.model.EmissionModel.__post_init__">[docs]</a>
-</span><span id="line-133">    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-134"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize outputs dict an load config file if config is a path.&quot;&quot;&quot;</span>
-</span><span id="line-135">        <span class="n">internal</span> <span class="o">=</span> <span class="p">{}</span>
-</span><span id="line-136">        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
-</span><span id="line-137">            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">load_yaml</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">))</span></div>
+</span><span id="line-128">    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-129"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize outputs dict and load presenter_config file if presenter_config is a path.&quot;&quot;&quot;</span>
+</span><span id="line-130">        <span class="n">internal</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="line-131">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">presenter_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-132">            <span class="bp">self</span><span class="o">.</span><span class="n">presenter_config</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">presenter_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;report_outputs&quot;</span><span class="p">)</span>
+</span><span id="line-133">        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">presenter_config</span><span class="p">,</span> <span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
+</span><span id="line-134">            <span class="bp">self</span><span class="o">.</span><span class="n">presenter_config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">load_yaml</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">presenter_config</span><span class="p">))</span>
+</span><span id="line-135">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-136">            <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">main_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model_config&quot;</span><span class="p">)</span>
+</span><span id="line-137">        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="p">,</span> <span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
+</span><span id="line-138">            <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">read_config_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="p">)</span>
+</span><span id="line-139">        
+</span><span id="line-140">        <span class="c1"># Option to explicitly set individual parameters in the class - perhaps of removing it and</span>
+</span><span id="line-141">        <span class="c1"># relying directly on configurations</span>
+</span><span id="line-142">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ret_coeff</span><span class="p">:</span>
+</span><span id="line-143">            <span class="bp">self</span><span class="o">.</span><span class="n">ret_coeff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="p">[</span><span class="s2">&quot;CALCULATIONS&quot;</span><span class="p">][</span><span class="s1">&#39;ret_coeff_method&#39;</span><span class="p">]</span>
+</span><span id="line-144">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_model</span><span class="p">:</span>
+</span><span id="line-145">           <span class="bp">self</span><span class="o">.</span><span class="n">p_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="p">[</span><span class="s2">&quot;CALCULATIONS&quot;</span><span class="p">][</span><span class="s1">&#39;p_export_cal&#39;</span><span class="p">]</span>
+</span><span id="line-146">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">n2o_model</span><span class="p">:</span>
+</span><span id="line-147">            <span class="bp">self</span><span class="o">.</span><span class="n">n2o_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="p">[</span><span class="s2">&quot;CALCULATIONS&quot;</span><span class="p">][</span><span class="s1">&#39;nitrous_oxide_model&#39;</span><span class="p">]</span></div>
 
-</span><span id="line-138">
+</span><span id="line-148">            
+<div class="viewcode-block" id="EmissionModel.get_outputs">
+<a class="viewcode-back" href="../../api/reemission.model.html#reemission.model.EmissionModel.get_outputs">[docs]</a>
+</span><span id="line-149">    <span class="k">def</span><span class="w"> </span><span class="nf">get_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+</span><span id="line-150"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Getter for outputs dictionary.&quot;&quot;&quot;</span>
+</span><span id="line-151">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span></div>
+
+</span><span id="line-152">        
+<div class="viewcode-block" id="EmissionModel.get_inputs">
+<a class="viewcode-back" href="../../api/reemission.model.html#reemission.model.EmissionModel.get_inputs">[docs]</a>
+</span><span id="line-153">    <span class="k">def</span><span class="w"> </span><span class="nf">get_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Inputs</span><span class="p">:</span>
+</span><span id="line-154"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Getter for the Inputs object&quot;&quot;&quot;</span>
+</span><span id="line-155">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span></div>
+
+</span><span id="line-156">        
+<div class="viewcode-block" id="EmissionModel.get_internal_vars">
+<a class="viewcode-back" href="../../api/reemission.model.html#reemission.model.EmissionModel.get_internal_vars">[docs]</a>
+</span><span id="line-157">    <span class="k">def</span><span class="w"> </span><span class="nf">get_internal_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+</span><span id="line-158"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Getter for internal (intermediate) variables&quot;&quot;&quot;</span>
+</span><span id="line-159">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal</span></div>
+
+</span><span id="line-160">
 <div class="viewcode-block" id="EmissionModel.create_exec_dictionary">
 <a class="viewcode-back" href="../../api/reemission.model.html#reemission.model.EmissionModel.create_exec_dictionary">[docs]</a>
-</span><span id="line-139">    <span class="nd">@staticmethod</span>
-</span><span id="line-140">    <span class="k">def</span> <span class="nf">create_exec_dictionary</span><span class="p">(</span>
-</span><span id="line-141">        <span class="n">co2_em</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">CarbonDioxideEmission</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
-</span><span id="line-142">        <span class="n">ch4_em</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">MethaneEmission</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
-</span><span id="line-143">        <span class="n">n2o_em</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">NitrousOxideEmission</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
-</span><span id="line-144">        <span class="n">years</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
-</span><span id="line-145">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
-</span><span id="line-146"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-147"><span class="sd">        Create a dictionary with function references and arguments for calculating gas emissions.</span>
-</span><span id="line-148">
-</span><span id="line-149"><span class="sd">        Args:</span>
-</span><span id="line-150"><span class="sd">            co2_em (Union[CarbonDioxideEmission, None]): CarbonDioxideEmission object.</span>
-</span><span id="line-151"><span class="sd">            ch4_em (Union[MethaneEmission, None]): MethaneEmission object.</span>
-</span><span id="line-152"><span class="sd">            n2o_em (Union[NitrousOxideEmission, None]): NitrousOxideEmission object.</span>
-</span><span id="line-153"><span class="sd">            years (Tuple[int, ...]): Vector of years for which the emission profiles are calculated.</span>
-</span><span id="line-154">
-</span><span id="line-155"><span class="sd">        Returns:</span>
-</span><span id="line-156"><span class="sd">            Dict: Dictionary with function references and arguments for gas emissions calculations.</span>
-</span><span id="line-157"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-158">        <span class="n">co2_exec</span><span class="p">,</span> <span class="n">ch4_exec</span><span class="p">,</span> <span class="n">n2o_exec</span> <span class="o">=</span> <span class="p">{},</span> <span class="p">{},</span> <span class="p">{}</span>
-</span><span id="line-159">        <span class="k">if</span> <span class="n">co2_em</span><span class="p">:</span>
-</span><span id="line-160">            <span class="n">co2_exec</span> <span class="o">=</span> <span class="p">{</span>
-</span><span id="line-161">                <span class="s1">&#39;co2_diffusion&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="line-162">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">co2_em</span><span class="o">.</span><span class="n">diffusion_flux_int</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{}},</span>
-</span><span id="line-163">                <span class="s1">&#39;co2_diffusion_nonanthro&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="line-164">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">co2_em</span><span class="o">.</span><span class="n">diffusion_flux_nonanthro</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{}},</span>
-</span><span id="line-165">                <span class="s1">&#39;co2_preimp&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="line-166">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">co2_em</span><span class="o">.</span><span class="n">pre_impoundment</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{}},</span>
-</span><span id="line-167">                <span class="s1">&#39;co2_minus_nonanthro&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="line-168">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">co2_em</span><span class="o">.</span><span class="n">net_total</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{}},</span>
-</span><span id="line-169">                <span class="s1">&#39;co2_net&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="line-170">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">co2_em</span><span class="o">.</span><span class="n">factor</span><span class="p">,</span>
-</span><span id="line-171">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;number_of_years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
-</span><span id="line-172">                <span class="s1">&#39;co2_total_per_year&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="line-173">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">co2_em</span><span class="o">.</span><span class="n">total_emission_per_year</span><span class="p">,</span>
-</span><span id="line-174">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;number_of_years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
-</span><span id="line-175">                <span class="s1">&#39;co2_total_lifetime&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="line-176">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">co2_em</span><span class="o">.</span><span class="n">total_lifetime_emission</span><span class="p">,</span>
-</span><span id="line-177">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;number_of_years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
-</span><span id="line-178">                <span class="s1">&#39;co2_profile&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="line-179">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">co2_em</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">}},</span>
-</span><span id="line-180">            <span class="p">}</span>
-</span><span id="line-181">        <span class="k">if</span> <span class="n">ch4_em</span><span class="p">:</span>
-</span><span id="line-182">            <span class="n">ch4_exec</span> <span class="o">=</span> <span class="p">{</span>
-</span><span id="line-183">                <span class="s1">&#39;ch4_diffusion&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="line-184">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">ch4_em</span><span class="o">.</span><span class="n">diffusion_flux_int</span><span class="p">,</span>
-</span><span id="line-185">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;time_horizon&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
-</span><span id="line-186">                <span class="s1">&#39;ch4_ebullition&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="line-187">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">ch4_em</span><span class="o">.</span><span class="n">ebullition_flux_int</span><span class="p">,</span>
-</span><span id="line-188">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;time_horizon&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
-</span><span id="line-189">                <span class="s1">&#39;ch4_degassing&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="line-190">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">ch4_em</span><span class="o">.</span><span class="n">degassing_flux_int</span><span class="p">,</span>
-</span><span id="line-191">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;time_horizon&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
-</span><span id="line-192">                <span class="s1">&#39;ch4_preimp&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="line-193">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">ch4_em</span><span class="o">.</span><span class="n">pre_impoundment</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{}},</span>
-</span><span id="line-194">                <span class="s1">&#39;ch4_net&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="line-195">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">ch4_em</span><span class="o">.</span><span class="n">factor</span><span class="p">,</span>
+</span><span id="line-161">    <span class="nd">@staticmethod</span>
+</span><span id="line-162">    <span class="k">def</span><span class="w"> </span><span class="nf">create_exec_dictionary</span><span class="p">(</span>
+</span><span id="line-163">        <span class="n">co2_em</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">CarbonDioxideEmission</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+</span><span id="line-164">        <span class="n">ch4_em</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">MethaneEmission</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+</span><span id="line-165">        <span class="n">n2o_em</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">NitrousOxideEmission</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+</span><span id="line-166">        <span class="n">years</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+</span><span id="line-167">    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+</span><span id="line-168"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-169"><span class="sd">        Create a dictionary with function references and arguments for calculating gas emissions.</span>
+</span><span id="line-170">
+</span><span id="line-171"><span class="sd">        Args:</span>
+</span><span id="line-172"><span class="sd">            co2_em (Union[CarbonDioxideEmission, None]): CarbonDioxideEmission object.</span>
+</span><span id="line-173"><span class="sd">            ch4_em (Union[MethaneEmission, None]): MethaneEmission object.</span>
+</span><span id="line-174"><span class="sd">            n2o_em (Union[NitrousOxideEmission, None]): NitrousOxideEmission object.</span>
+</span><span id="line-175"><span class="sd">            years (Tuple[int, ...]): Vector of years for which the emission profiles are calculated.</span>
+</span><span id="line-176">
+</span><span id="line-177"><span class="sd">        Returns:</span>
+</span><span id="line-178"><span class="sd">            Dict: Dictionary with function references and arguments for gas emissions calculations.</span>
+</span><span id="line-179"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-180">        <span class="n">co2_exec</span><span class="p">,</span> <span class="n">ch4_exec</span><span class="p">,</span> <span class="n">n2o_exec</span> <span class="o">=</span> <span class="p">{},</span> <span class="p">{},</span> <span class="p">{}</span>
+</span><span id="line-181">        <span class="k">if</span> <span class="n">co2_em</span><span class="p">:</span>
+</span><span id="line-182">            <span class="n">co2_exec</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="line-183">                <span class="s1">&#39;co2_diffusion&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-184">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">co2_em</span><span class="o">.</span><span class="n">diffusion_flux_int</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{}},</span>
+</span><span id="line-185">                <span class="s1">&#39;co2_diffusion_nonanthro&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-186">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">co2_em</span><span class="o">.</span><span class="n">diffusion_flux_nonanthro</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{}},</span>
+</span><span id="line-187">                <span class="s1">&#39;co2_preimp&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-188">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">co2_em</span><span class="o">.</span><span class="n">pre_impoundment</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{}},</span>
+</span><span id="line-189">                <span class="s1">&#39;co2_minus_nonanthro&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-190">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">co2_em</span><span class="o">.</span><span class="n">net_total</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{}},</span>
+</span><span id="line-191">                <span class="s1">&#39;co2_net&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-192">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">co2_em</span><span class="o">.</span><span class="n">factor</span><span class="p">,</span>
+</span><span id="line-193">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;number_of_years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
+</span><span id="line-194">                <span class="s1">&#39;co2_total_per_year&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-195">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">co2_em</span><span class="o">.</span><span class="n">total_emission_per_year</span><span class="p">,</span>
 </span><span id="line-196">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;number_of_years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
-</span><span id="line-197">                <span class="s1">&#39;ch4_total_per_year&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="line-198">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">ch4_em</span><span class="o">.</span><span class="n">total_emission_per_year</span><span class="p">,</span>
+</span><span id="line-197">                <span class="s1">&#39;co2_total_lifetime&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-198">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">co2_em</span><span class="o">.</span><span class="n">total_lifetime_emission</span><span class="p">,</span>
 </span><span id="line-199">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;number_of_years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
-</span><span id="line-200">                <span class="s1">&#39;ch4_total_lifetime&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="line-201">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">ch4_em</span><span class="o">.</span><span class="n">total_lifetime_emission</span><span class="p">,</span>
-</span><span id="line-202">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;number_of_years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
-</span><span id="line-203">                <span class="s1">&#39;ch4_profile&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="line-204">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">ch4_em</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">}},</span>
-</span><span id="line-205">            <span class="p">}</span>
-</span><span id="line-206">        <span class="k">if</span> <span class="n">n2o_em</span><span class="p">:</span>
-</span><span id="line-207">            <span class="n">n2o_exec</span> <span class="o">=</span> <span class="p">{</span>
-</span><span id="line-208">                <span class="s1">&#39;n2o_methodA&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="line-209">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">n2o_em</span><span class="o">.</span><span class="n">factor</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="s1">&#39;model_1&#39;</span><span class="p">}},</span>
-</span><span id="line-210">                <span class="s1">&#39;n2o_methodB&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="line-211">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">n2o_em</span><span class="o">.</span><span class="n">factor</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="s1">&#39;model_2&#39;</span><span class="p">}},</span>
-</span><span id="line-212">                <span class="s1">&#39;n2o_mean&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="line-213">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">n2o_em</span><span class="o">.</span><span class="n">factor</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;mean&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}},</span>
-</span><span id="line-214">                <span class="s1">&#39;n2o_total_per_year&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="line-215">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">n2o_em</span><span class="o">.</span><span class="n">total_emission_per_year</span><span class="p">,</span>
-</span><span id="line-216">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;number_of_years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
-</span><span id="line-217">                <span class="s1">&#39;n2o_total_lifetime&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="line-218">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">n2o_em</span><span class="o">.</span><span class="n">total_lifetime_emission</span><span class="p">,</span>
-</span><span id="line-219">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;number_of_years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
-</span><span id="line-220">                <span class="s1">&#39;n2o_profile&#39;</span><span class="p">:</span> <span class="p">{</span>
-</span><span id="line-221">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">n2o_em</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">}},</span>
-</span><span id="line-222">            <span class="p">}</span>
-</span><span id="line-223">        <span class="n">exec_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-</span><span id="line-224">            <span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span>
-</span><span id="line-225">                <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="p">(</span><span class="n">co2_exec</span><span class="p">,</span> <span class="n">ch4_exec</span><span class="p">,</span> <span class="n">n2o_exec</span><span class="p">)))</span>
-</span><span id="line-226">        <span class="k">return</span> <span class="n">exec_dict</span></div>
+</span><span id="line-200">                <span class="s1">&#39;co2_profile&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-201">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">co2_em</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">}},</span>
+</span><span id="line-202">            <span class="p">}</span>
+</span><span id="line-203">        <span class="k">if</span> <span class="n">ch4_em</span><span class="p">:</span>
+</span><span id="line-204">            <span class="n">ch4_exec</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="line-205">                <span class="s1">&#39;ch4_diffusion&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-206">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">ch4_em</span><span class="o">.</span><span class="n">diffusion_flux_int</span><span class="p">,</span>
+</span><span id="line-207">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;time_horizon&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
+</span><span id="line-208">                <span class="s1">&#39;ch4_ebullition&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-209">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">ch4_em</span><span class="o">.</span><span class="n">ebullition_flux_int</span><span class="p">,</span>
+</span><span id="line-210">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;time_horizon&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
+</span><span id="line-211">                <span class="s1">&#39;ch4_degassing&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-212">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">ch4_em</span><span class="o">.</span><span class="n">degassing_flux_int</span><span class="p">,</span>
+</span><span id="line-213">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;time_horizon&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
+</span><span id="line-214">                <span class="s1">&#39;ch4_preimp&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-215">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">ch4_em</span><span class="o">.</span><span class="n">pre_impoundment</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{}},</span>
+</span><span id="line-216">                <span class="s1">&#39;ch4_net&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-217">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">ch4_em</span><span class="o">.</span><span class="n">factor</span><span class="p">,</span>
+</span><span id="line-218">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;number_of_years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
+</span><span id="line-219">                <span class="s1">&#39;ch4_total_per_year&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-220">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">ch4_em</span><span class="o">.</span><span class="n">total_emission_per_year</span><span class="p">,</span>
+</span><span id="line-221">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;number_of_years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
+</span><span id="line-222">                <span class="s1">&#39;ch4_total_lifetime&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-223">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">ch4_em</span><span class="o">.</span><span class="n">total_lifetime_emission</span><span class="p">,</span>
+</span><span id="line-224">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;number_of_years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
+</span><span id="line-225">                <span class="s1">&#39;ch4_profile&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-226">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">ch4_em</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">}},</span>
+</span><span id="line-227">            <span class="p">}</span>
+</span><span id="line-228">        <span class="k">if</span> <span class="n">n2o_em</span><span class="p">:</span>
+</span><span id="line-229">            <span class="n">n2o_exec</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="line-230">                <span class="s1">&#39;n2o_methodA&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-231">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">n2o_em</span><span class="o">.</span><span class="n">factor</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="s1">&#39;model_1&#39;</span><span class="p">}},</span>
+</span><span id="line-232">                <span class="s1">&#39;n2o_methodB&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-233">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">n2o_em</span><span class="o">.</span><span class="n">factor</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;model&#39;</span><span class="p">:</span> <span class="s1">&#39;model_2&#39;</span><span class="p">}},</span>
+</span><span id="line-234">                <span class="s1">&#39;n2o_mean&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-235">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">n2o_em</span><span class="o">.</span><span class="n">factor</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;mean&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}},</span>
+</span><span id="line-236">                <span class="s1">&#39;n2o_total_per_year&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-237">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">n2o_em</span><span class="o">.</span><span class="n">total_emission_per_year</span><span class="p">,</span>
+</span><span id="line-238">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;number_of_years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
+</span><span id="line-239">                <span class="s1">&#39;n2o_total_lifetime&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-240">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">n2o_em</span><span class="o">.</span><span class="n">total_lifetime_emission</span><span class="p">,</span>
+</span><span id="line-241">                    <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;number_of_years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}},</span>
+</span><span id="line-242">                <span class="s1">&#39;n2o_profile&#39;</span><span class="p">:</span> <span class="p">{</span>
+</span><span id="line-243">                    <span class="s1">&#39;ref&#39;</span><span class="p">:</span> <span class="n">n2o_em</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="s1">&#39;args&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;years&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">}},</span>
+</span><span id="line-244">            <span class="p">}</span>
+</span><span id="line-245">        <span class="n">exec_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+</span><span id="line-246">            <span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span>
+</span><span id="line-247">                <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="p">(</span><span class="n">co2_exec</span><span class="p">,</span> <span class="n">ch4_exec</span><span class="p">,</span> <span class="n">n2o_exec</span><span class="p">)))</span>
+</span><span id="line-248">        <span class="k">return</span> <span class="n">exec_dict</span></div>
 
-</span><span id="line-227">
+</span><span id="line-249">
 <div class="viewcode-block" id="EmissionModel.add_presenter">
 <a class="viewcode-back" href="../../api/reemission.model.html#reemission.model.EmissionModel.add_presenter">[docs]</a>
-</span><span id="line-228">    <span class="k">def</span> <span class="nf">add_presenter</span><span class="p">(</span>
-</span><span id="line-229">            <span class="bp">self</span><span class="p">,</span> <span class="n">writers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Writer</span><span class="p">]],</span> <span class="n">output_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> \
-</span><span id="line-230">            <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-231"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-232"><span class="sd">        Instantiate a presenter class to the emission model for data output formatting.</span>
-</span><span id="line-233">
-</span><span id="line-234"><span class="sd">        Args:</span>
-</span><span id="line-235"><span class="sd">            writers (List[Type[Writer]]): List of presenter.Writer objects.</span>
-</span><span id="line-236"><span class="sd">            output_files (List[str]): Paths to output files, one per writer.</span>
-</span><span id="line-237"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-238">        <span class="bp">self</span><span class="o">.</span><span class="n">presenter</span> <span class="o">=</span> <span class="n">Presenter</span><span class="p">(</span>
-</span><span id="line-239">            <span class="n">inputs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> 
-</span><span id="line-240">            <span class="n">outputs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">,</span> 
-</span><span id="line-241">            <span class="n">intern_vars</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">internal</span><span class="p">,</span>
-</span><span id="line-242">            <span class="n">author</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">author</span><span class="p">,</span> 
-</span><span id="line-243">            <span class="n">title</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">report_title</span><span class="p">)</span>
-</span><span id="line-244">        <span class="k">try</span><span class="p">:</span>
-</span><span id="line-245">            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">writers</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">output_files</span><span class="p">)</span>
-</span><span id="line-246">        <span class="k">except</span> <span class="ne">AssertionError</span><span class="p">:</span>
-</span><span id="line-247">            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Number of writers not equal to the number of files.&quot;</span><span class="p">)</span>
-</span><span id="line-248">            <span class="k">return</span> <span class="kc">None</span>
-</span><span id="line-249">        <span class="k">for</span> <span class="n">writer</span><span class="p">,</span> <span class="n">output_file</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">writers</span><span class="p">,</span> <span class="n">output_files</span><span class="p">):</span>
-</span><span id="line-250">            <span class="bp">self</span><span class="o">.</span><span class="n">presenter</span><span class="o">.</span><span class="n">add_writer</span><span class="p">(</span><span class="n">writer</span><span class="o">=</span><span class="n">writer</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="n">output_file</span><span class="p">)</span>
-</span><span id="line-251">        <span class="k">return</span> <span class="kc">None</span></div>
+</span><span id="line-250">    <span class="k">def</span><span class="w"> </span><span class="nf">add_presenter</span><span class="p">(</span>
+</span><span id="line-251">            <span class="bp">self</span><span class="p">,</span> <span class="n">writers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Type</span><span class="p">[</span><span class="n">Writer</span><span class="p">]],</span> <span class="n">output_files</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> \
+</span><span id="line-252">            <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-253"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-254"><span class="sd">        Instantiate a presenter class to the emission model for data output formatting.</span>
+</span><span id="line-255">
+</span><span id="line-256"><span class="sd">        Args:</span>
+</span><span id="line-257"><span class="sd">            writers (List[Type[Writer]]): List of presenter.Writer objects.</span>
+</span><span id="line-258"><span class="sd">            output_files (List[str]): Paths to output files, one per writer.</span>
+</span><span id="line-259"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-260">        <span class="bp">self</span><span class="o">.</span><span class="n">presenter</span> <span class="o">=</span> <span class="n">Presenter</span><span class="p">(</span>
+</span><span id="line-261">            <span class="n">inputs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> 
+</span><span id="line-262">            <span class="n">outputs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">,</span> 
+</span><span id="line-263">            <span class="n">intern_vars</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">internal</span><span class="p">,</span>
+</span><span id="line-264">            <span class="n">author</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">author</span><span class="p">,</span> 
+</span><span id="line-265">            <span class="n">title</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">report_title</span><span class="p">)</span>
+</span><span id="line-266">        <span class="k">try</span><span class="p">:</span>
+</span><span id="line-267">            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">writers</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">output_files</span><span class="p">)</span>
+</span><span id="line-268">        <span class="k">except</span> <span class="ne">AssertionError</span><span class="p">:</span>
+</span><span id="line-269">            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Number of writers not equal to the number of files.&quot;</span><span class="p">)</span>
+</span><span id="line-270">            <span class="k">return</span> <span class="kc">None</span>
+</span><span id="line-271">        <span class="k">for</span> <span class="n">writer</span><span class="p">,</span> <span class="n">output_file</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">writers</span><span class="p">,</span> <span class="n">output_files</span><span class="p">):</span>
+</span><span id="line-272">            <span class="bp">self</span><span class="o">.</span><span class="n">presenter</span><span class="o">.</span><span class="n">add_writer</span><span class="p">(</span><span class="n">writer</span><span class="o">=</span><span class="n">writer</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="n">output_file</span><span class="p">)</span>
+</span><span id="line-273">        <span class="k">return</span> <span class="kc">None</span></div>
 
-</span><span id="line-252">
+</span><span id="line-274">
 <div class="viewcode-block" id="EmissionModel.save_results">
 <a class="viewcode-back" href="../../api/reemission.model.html#reemission.model.EmissionModel.save_results">[docs]</a>
-</span><span id="line-253">    <span class="k">def</span> <span class="nf">save_results</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-254"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Save results using presenters defined in the presenters list.&quot;&quot;&quot;</span>
-</span><span id="line-255">        <span class="k">if</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">):</span>
-</span><span id="line-256">            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-</span><span id="line-257">                <span class="s2">&quot;Output dictionary empty. Run calculations first and &quot;</span> <span class="o">+</span>
-</span><span id="line-258">                <span class="s2">&quot; try again.&quot;</span><span class="p">)</span>
-</span><span id="line-259">            <span class="k">return</span> <span class="kc">None</span>
-</span><span id="line-260">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">presenter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-261">            <span class="bp">self</span><span class="o">.</span><span class="n">presenter</span><span class="o">.</span><span class="n">output</span><span class="p">()</span>
-</span><span id="line-262">        <span class="k">else</span><span class="p">:</span>
-</span><span id="line-263">            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Presenter not defined.&quot;</span><span class="p">)</span>
-</span><span id="line-264">        <span class="k">return</span> <span class="kc">None</span></div>
+</span><span id="line-275">    <span class="k">def</span><span class="w"> </span><span class="nf">save_results</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-276"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Save results using presenters defined in the presenters list.&quot;&quot;&quot;</span>
+</span><span id="line-277">        <span class="k">if</span> <span class="ow">not</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">):</span>
+</span><span id="line-278">            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+</span><span id="line-279">                <span class="s2">&quot;Output dictionary empty. Run calculations first and &quot;</span> <span class="o">+</span>
+</span><span id="line-280">                <span class="s2">&quot; try again.&quot;</span><span class="p">)</span>
+</span><span id="line-281">            <span class="k">return</span> <span class="kc">None</span>
+</span><span id="line-282">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">presenter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-283">            <span class="bp">self</span><span class="o">.</span><span class="n">presenter</span><span class="o">.</span><span class="n">output</span><span class="p">()</span>
+</span><span id="line-284">        <span class="k">else</span><span class="p">:</span>
+</span><span id="line-285">            <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Presenter not defined.&quot;</span><span class="p">)</span>
+</span><span id="line-286">        <span class="k">return</span> <span class="kc">None</span></div>
 
-</span><span id="line-265">
+</span><span id="line-287">
 <div class="viewcode-block" id="EmissionModel.calculate">
 <a class="viewcode-back" href="../../api/reemission.model.html#reemission.model.EmissionModel.calculate">[docs]</a>
-</span><span id="line-266">    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-267"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate emissions for a number of variables defined in config.&quot;&quot;&quot;</span>
-</span><span id="line-268">        <span class="c1"># Check the calculation options given in input arguments.</span>
-</span><span id="line-269">        <span class="n">avail_p_calc_methods</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;g-res&#39;</span><span class="p">,</span> <span class="s1">&#39;mcdowell&#39;</span><span class="p">)</span>
-</span><span id="line-270">        <span class="n">avail_n2o_models</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;model_1&#39;</span><span class="p">,</span> <span class="s1">&#39;model_2&#39;</span><span class="p">)</span>
-</span><span id="line-271">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_model</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">avail_p_calc_methods</span><span class="p">:</span>
-</span><span id="line-272">            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-</span><span id="line-273">                <span class="s2">&quot;Invalid P calculation method. Expected: </span><span class="si">%s</span><span class="s2">. &quot;</span> <span class="o">+</span>
-</span><span id="line-274">                <span class="s2">&quot;Using default g-res method.&quot;</span><span class="p">,</span>
-</span><span id="line-275">                <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">avail_p_calc_methods</span><span class="p">))</span>
-</span><span id="line-276">            <span class="bp">self</span><span class="o">.</span><span class="n">p_model</span> <span class="o">=</span> <span class="s1">&#39;g-res&#39;</span>
-</span><span id="line-277">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n2o_model</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">avail_n2o_models</span><span class="p">:</span>
-</span><span id="line-278">            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-</span><span id="line-279">                <span class="s2">&quot;Invalid total N2O emission model. Expected: </span><span class="si">%s</span><span class="s2">. &quot;</span> <span class="o">+</span>
-</span><span id="line-280">                <span class="s2">&quot;Using default model 1.&quot;</span><span class="p">,</span>
-</span><span id="line-281">                <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">avail_n2o_models</span><span class="p">))</span>
-</span><span id="line-282">            <span class="bp">self</span><span class="o">.</span><span class="n">n2o_model</span> <span class="o">=</span> <span class="s1">&#39;model_1&#39;</span>
-</span><span id="line-283">
-</span><span id="line-284">        <span class="c1"># Iterate through each set of inputs and output results in a dict</span>
-</span><span id="line-285">        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">model_input</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-</span><span id="line-286">            <span class="n">monthly_temp</span> <span class="o">=</span> <span class="n">MonthlyTemperature</span><span class="p">(</span>
-</span><span id="line-287">                <span class="n">model_input</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;monthly_temps&#39;</span><span class="p">])</span>
-</span><span id="line-288">            <span class="c1"># Instantiate Catchment and Reservoir objects</span>
-</span><span id="line-289">            <span class="n">catchment_data</span> <span class="o">=</span> <span class="n">model_input</span><span class="o">.</span><span class="n">catchment_data</span>
-</span><span id="line-290">            <span class="n">reservoir_data</span> <span class="o">=</span> <span class="n">model_input</span><span class="o">.</span><span class="n">reservoir_data</span>
-</span><span id="line-291">            <span class="k">if</span> <span class="n">catchment_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">reservoir_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-292">                <span class="n">catchment</span> <span class="o">=</span> <span class="n">Catchment</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
-</span><span id="line-293">                    <span class="n">parameters</span><span class="o">=</span><span class="n">catchment_data</span><span class="p">,</span>
-</span><span id="line-294">                    <span class="n">name</span><span class="o">=</span><span class="n">model_input</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-</span><span id="line-295">                <span class="n">reservoir</span> <span class="o">=</span> <span class="n">Reservoir</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
-</span><span id="line-296">                    <span class="n">parameters</span><span class="o">=</span><span class="n">reservoir_data</span><span class="p">,</span>
-</span><span id="line-297">                    <span class="n">temperature</span><span class="o">=</span><span class="n">monthly_temp</span><span class="p">,</span>
-</span><span id="line-298">                    <span class="n">coordinates</span><span class="o">=</span><span class="n">model_input</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;coordinates&quot;</span><span class="p">],</span>
-</span><span id="line-299">                    <span class="n">inflow_rate</span><span class="o">=</span><span class="n">catchment</span><span class="o">.</span><span class="n">discharge</span><span class="p">,</span>
-</span><span id="line-300">                    <span class="n">name</span><span class="o">=</span><span class="n">model_input</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-</span><span id="line-301">            <span class="k">else</span><span class="p">:</span>
-</span><span id="line-302">                <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Catchment or Reservoir data absent.&quot;</span><span class="p">)</span>
-</span><span id="line-303">                <span class="k">return</span> <span class="kc">None</span>
-</span><span id="line-304">            
-</span><span id="line-305">            <span class="c1"># Run calculations of internal variables that we might want to output</span>
-</span><span id="line-306">            <span class="c1"># but which are not called during GHG estimation</span>
-</span><span id="line-307">            <span class="c1">#1. Trophic status</span>
-</span><span id="line-308">            <span class="n">_</span> <span class="o">=</span> <span class="n">reservoir</span><span class="o">.</span><span class="n">trophic_status</span><span class="p">(</span>
-</span><span id="line-309">                <span class="n">tp_inflow_conc</span><span class="o">=</span><span class="n">catchment</span><span class="o">.</span><span class="n">inflow_p_conc</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p_model</span><span class="p">))</span>
-</span><span id="line-310">
-</span><span id="line-311">            <span class="c1"># Calculate gas emissions</span>
-</span><span id="line-312">            <span class="k">if</span> <span class="s2">&quot;co2&quot;</span> <span class="ow">in</span> <span class="n">model_input</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;gasses&#39;</span><span class="p">]:</span>
-</span><span id="line-313">                <span class="n">em_co2</span> <span class="o">=</span> <span class="n">CarbonDioxideEmission</span><span class="p">(</span>
-</span><span id="line-314">                    <span class="n">catchment</span><span class="o">=</span><span class="n">catchment</span><span class="p">,</span>
-</span><span id="line-315">                    <span class="n">reservoir</span><span class="o">=</span><span class="n">reservoir</span><span class="p">,</span>
-</span><span id="line-316">                    <span class="n">eff_temp</span><span class="o">=</span><span class="n">monthly_temp</span><span class="o">.</span><span class="n">eff_temp</span><span class="p">(</span><span class="n">gas</span><span class="o">=</span><span class="s1">&#39;co2&#39;</span><span class="p">),</span>
-</span><span id="line-317">                    <span class="n">p_calc_method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p_model</span><span class="p">)</span>
-</span><span id="line-318">                
-</span><span id="line-319">                <span class="c1">#2. Reservoir TN concentration</span>
-</span><span id="line-320">                <span class="n">_</span> <span class="o">=</span> <span class="n">em_co2</span><span class="o">.</span><span class="n">reservoir_tn</span>
-</span><span id="line-321">
-</span><span id="line-322">            <span class="k">else</span><span class="p">:</span>
-</span><span id="line-323">                <span class="n">em_co2</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="line-324">            <span class="k">if</span> <span class="s2">&quot;ch4&quot;</span> <span class="ow">in</span> <span class="n">model_input</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;gasses&#39;</span><span class="p">]:</span>
-</span><span id="line-325">                <span class="n">em_ch4</span> <span class="o">=</span> <span class="n">MethaneEmission</span><span class="p">(</span>
-</span><span id="line-326">                    <span class="n">catchment</span><span class="o">=</span><span class="n">catchment</span><span class="p">,</span>
-</span><span id="line-327">                    <span class="n">reservoir</span><span class="o">=</span><span class="n">reservoir</span><span class="p">,</span>
-</span><span id="line-328">                    <span class="n">monthly_temp</span><span class="o">=</span><span class="n">monthly_temp</span><span class="p">)</span>
-</span><span id="line-329">            <span class="k">else</span><span class="p">:</span>
-</span><span id="line-330">                <span class="n">em_ch4</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="line-331">
-</span><span id="line-332">            <span class="k">if</span> <span class="s2">&quot;n2o&quot;</span> <span class="ow">in</span> <span class="n">model_input</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;gasses&#39;</span><span class="p">]:</span>
-</span><span id="line-333">                <span class="n">em_n2o</span> <span class="o">=</span> <span class="n">NitrousOxideEmission</span><span class="p">(</span>
-</span><span id="line-334">                    <span class="n">catchment</span><span class="o">=</span><span class="n">catchment</span><span class="p">,</span>
-</span><span id="line-335">                    <span class="n">reservoir</span><span class="o">=</span><span class="n">reservoir</span><span class="p">,</span>
-</span><span id="line-336">                    <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n2o_model</span><span class="p">,</span>
-</span><span id="line-337">                    <span class="n">p_export_model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p_model</span><span class="p">)</span>
-</span><span id="line-338">            <span class="k">else</span><span class="p">:</span>
-</span><span id="line-339">                <span class="n">em_n2o</span> <span class="o">=</span> <span class="kc">None</span>
-</span><span id="line-340">
-</span><span id="line-341">            <span class="n">exec_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_exec_dictionary</span><span class="p">(</span>
-</span><span id="line-342">                <span class="n">co2_em</span><span class="o">=</span><span class="n">em_co2</span><span class="p">,</span>
-</span><span id="line-343">                <span class="n">ch4_em</span><span class="o">=</span><span class="n">em_ch4</span><span class="p">,</span>
-</span><span id="line-344">                <span class="n">n2o_em</span><span class="o">=</span><span class="n">em_n2o</span><span class="p">,</span>
-</span><span id="line-345">                <span class="n">years</span><span class="o">=</span><span class="n">model_input</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;year_vector&#39;</span><span class="p">])</span>
-</span><span id="line-346">
-</span><span id="line-347">            <span class="n">output</span> <span class="o">=</span> <span class="p">{}</span>
-</span><span id="line-348">            <span class="c1"># Iterate through all emission components and record those that</span>
-</span><span id="line-349">            <span class="c1"># are marked for outputting</span>
-</span><span id="line-350">            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-</span><span id="line-351">                <span class="k">for</span> <span class="n">emission</span><span class="p">,</span> <span class="n">em_config</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-</span><span id="line-352">                    <span class="k">if</span> <span class="n">emission</span> <span class="ow">in</span> <span class="n">exec_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> \
-</span><span id="line-353">                            <span class="n">em_config</span><span class="p">[</span><span class="s1">&#39;include&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">TRUTHS</span><span class="p">:</span>
-</span><span id="line-354">                        <span class="n">output</span><span class="p">[</span><span class="n">emission</span><span class="p">]</span> <span class="o">=</span> <span class="n">exec_dict</span><span class="p">[</span><span class="n">emission</span><span class="p">][</span><span class="s1">&#39;ref&#39;</span><span class="p">](</span>
-</span><span id="line-355">                            <span class="o">**</span><span class="n">exec_dict</span><span class="p">[</span><span class="n">emission</span><span class="p">][</span><span class="s1">&#39;args&#39;</span><span class="p">])</span>
-</span><span id="line-356">                <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="n">model_input</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">output</span>
-</span><span id="line-357">                <span class="c1"># WARNING - COULD RUN INTO ISSUES IF CONFIG CHANGES IN BETWEEN RESERVOIRS</span>
-</span><span id="line-358">                <span class="c1"># BECAUSE THE `INTERNAL` GLOBAL VAR IS NOT RESET IN BETWEEN CONSECUTIVE</span>
-</span><span id="line-359">                <span class="c1"># RESERVOIR GHG EMISSION CALCULATIONS</span>
-</span><span id="line-360">                <span class="bp">self</span><span class="o">.</span><span class="n">internal</span><span class="p">[</span><span class="n">model_input</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">internal</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-</span><span id="line-361">            <span class="k">else</span><span class="p">:</span>
-</span><span id="line-362">                <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-</span><span id="line-363">                    <span class="s2">&quot;Output/Input configuration file not instantiated.&quot;</span><span class="p">)</span>
-</span><span id="line-364">        <span class="k">return</span> <span class="kc">None</span></div>
+</span><span id="line-288">    <span class="k">def</span><span class="w"> </span><span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-289"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate emissions for a number of variables defined in config.&quot;&quot;&quot;</span>
+</span><span id="line-290">        <span class="c1"># Check the calculation options given in input arguments.</span>
+</span><span id="line-291">        <span class="n">avail_p_calc_methods</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;g-res&#39;</span><span class="p">,</span> <span class="s1">&#39;mcdowell&#39;</span><span class="p">)</span>
+</span><span id="line-292">        <span class="n">avail_n2o_models</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;model_1&#39;</span><span class="p">,</span> <span class="s1">&#39;model_2&#39;</span><span class="p">)</span>
+</span><span id="line-293">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_model</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">avail_p_calc_methods</span><span class="p">:</span>
+</span><span id="line-294">            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+</span><span id="line-295">                <span class="s2">&quot;Invalid P calculation method. Expected: </span><span class="si">%s</span><span class="s2">. &quot;</span> <span class="o">+</span>
+</span><span id="line-296">                <span class="s2">&quot;Using default g-res method.&quot;</span><span class="p">,</span>
+</span><span id="line-297">                <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">avail_p_calc_methods</span><span class="p">))</span>
+</span><span id="line-298">            <span class="bp">self</span><span class="o">.</span><span class="n">p_model</span> <span class="o">=</span> <span class="s1">&#39;g-res&#39;</span>
+</span><span id="line-299">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n2o_model</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">avail_n2o_models</span><span class="p">:</span>
+</span><span id="line-300">            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+</span><span id="line-301">                <span class="s2">&quot;Invalid total N2O emission model. Expected: </span><span class="si">%s</span><span class="s2">. &quot;</span> <span class="o">+</span>
+</span><span id="line-302">                <span class="s2">&quot;Using default model 1.&quot;</span><span class="p">,</span>
+</span><span id="line-303">                <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">avail_n2o_models</span><span class="p">))</span>
+</span><span id="line-304">            <span class="bp">self</span><span class="o">.</span><span class="n">n2o_model</span> <span class="o">=</span> <span class="s1">&#39;model_1&#39;</span>
+</span><span id="line-305">
+</span><span id="line-306">        <span class="c1"># Iterate through each set of inputs and output results in a dict</span>
+</span><span id="line-307">        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">model_input</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span><span id="line-308">            <span class="n">monthly_temp</span> <span class="o">=</span> <span class="n">MonthlyTemperature</span><span class="p">(</span>
+</span><span id="line-309">                <span class="n">model_input</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;monthly_temps&#39;</span><span class="p">])</span>
+</span><span id="line-310">            <span class="c1"># Instantiate Catchment and Reservoir objects</span>
+</span><span id="line-311">            <span class="n">catchment_data</span> <span class="o">=</span> <span class="n">model_input</span><span class="o">.</span><span class="n">catchment_data</span>
+</span><span id="line-312">            <span class="n">reservoir_data</span> <span class="o">=</span> <span class="n">model_input</span><span class="o">.</span><span class="n">reservoir_data</span>
+</span><span id="line-313">            <span class="k">if</span> <span class="n">catchment_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">reservoir_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-314">                <span class="n">catchment</span> <span class="o">=</span> <span class="n">Catchment</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
+</span><span id="line-315">                    <span class="n">parameters</span><span class="o">=</span><span class="n">catchment_data</span><span class="p">,</span>
+</span><span id="line-316">                    <span class="n">name</span><span class="o">=</span><span class="n">model_input</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</span><span id="line-317">                <span class="n">reservoir</span> <span class="o">=</span> <span class="n">Reservoir</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
+</span><span id="line-318">                    <span class="n">parameters</span><span class="o">=</span><span class="n">reservoir_data</span><span class="p">,</span>
+</span><span id="line-319">                    <span class="n">temperature</span><span class="o">=</span><span class="n">monthly_temp</span><span class="p">,</span>
+</span><span id="line-320">                    <span class="n">coordinates</span><span class="o">=</span><span class="n">model_input</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;coordinates&quot;</span><span class="p">],</span>
+</span><span id="line-321">                    <span class="n">inflow_rate</span><span class="o">=</span><span class="n">catchment</span><span class="o">.</span><span class="n">discharge</span><span class="p">,</span>
+</span><span id="line-322">                    <span class="n">name</span><span class="o">=</span><span class="n">model_input</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+</span><span id="line-323">            <span class="k">else</span><span class="p">:</span>
+</span><span id="line-324">                <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Catchment or Reservoir data absent.&quot;</span><span class="p">)</span>
+</span><span id="line-325">                <span class="k">return</span> <span class="kc">None</span>
+</span><span id="line-326">            
+</span><span id="line-327">            <span class="c1"># Run calculations of internal variables that we might want to output</span>
+</span><span id="line-328">            <span class="c1"># but which are not called during GHG estimation</span>
+</span><span id="line-329">            <span class="c1">#1. Trophic status</span>
+</span><span id="line-330">            <span class="n">_</span> <span class="o">=</span> <span class="n">reservoir</span><span class="o">.</span><span class="n">trophic_status</span><span class="p">(</span>
+</span><span id="line-331">                <span class="n">tp_inflow_conc</span><span class="o">=</span><span class="n">catchment</span><span class="o">.</span><span class="n">inflow_p_conc</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p_model</span><span class="p">))</span>
+</span><span id="line-332">
+</span><span id="line-333">            <span class="c1"># Calculate gas emissions</span>
+</span><span id="line-334">            <span class="k">if</span> <span class="s2">&quot;co2&quot;</span> <span class="ow">in</span> <span class="n">model_input</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;gasses&#39;</span><span class="p">]:</span>
+</span><span id="line-335">                <span class="n">em_co2</span> <span class="o">=</span> <span class="n">CarbonDioxideEmission</span><span class="p">(</span>
+</span><span id="line-336">                    <span class="n">catchment</span><span class="o">=</span><span class="n">catchment</span><span class="p">,</span>
+</span><span id="line-337">                    <span class="n">reservoir</span><span class="o">=</span><span class="n">reservoir</span><span class="p">,</span>
+</span><span id="line-338">                    <span class="n">eff_temp</span><span class="o">=</span><span class="n">monthly_temp</span><span class="o">.</span><span class="n">eff_temp</span><span class="p">(</span><span class="n">gas</span><span class="o">=</span><span class="s1">&#39;co2&#39;</span><span class="p">),</span>
+</span><span id="line-339">                    <span class="n">p_calc_method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p_model</span><span class="p">)</span>
+</span><span id="line-340">                
+</span><span id="line-341">                <span class="c1">#2. Reservoir TN concentration</span>
+</span><span id="line-342">                <span class="n">_</span> <span class="o">=</span> <span class="n">em_co2</span><span class="o">.</span><span class="n">reservoir_tn</span>
+</span><span id="line-343">
+</span><span id="line-344">            <span class="k">else</span><span class="p">:</span>
+</span><span id="line-345">                <span class="n">em_co2</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="line-346">            <span class="k">if</span> <span class="s2">&quot;ch4&quot;</span> <span class="ow">in</span> <span class="n">model_input</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;gasses&#39;</span><span class="p">]:</span>
+</span><span id="line-347">                <span class="n">em_ch4</span> <span class="o">=</span> <span class="n">MethaneEmission</span><span class="p">(</span>
+</span><span id="line-348">                    <span class="n">catchment</span><span class="o">=</span><span class="n">catchment</span><span class="p">,</span>
+</span><span id="line-349">                    <span class="n">reservoir</span><span class="o">=</span><span class="n">reservoir</span><span class="p">,</span>
+</span><span id="line-350">                    <span class="n">monthly_temp</span><span class="o">=</span><span class="n">monthly_temp</span><span class="p">)</span>
+</span><span id="line-351">            <span class="k">else</span><span class="p">:</span>
+</span><span id="line-352">                <span class="n">em_ch4</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="line-353">
+</span><span id="line-354">            <span class="k">if</span> <span class="s2">&quot;n2o&quot;</span> <span class="ow">in</span> <span class="n">model_input</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;gasses&#39;</span><span class="p">]:</span>
+</span><span id="line-355">                <span class="n">em_n2o</span> <span class="o">=</span> <span class="n">NitrousOxideEmission</span><span class="p">(</span>
+</span><span id="line-356">                    <span class="n">catchment</span><span class="o">=</span><span class="n">catchment</span><span class="p">,</span>
+</span><span id="line-357">                    <span class="n">reservoir</span><span class="o">=</span><span class="n">reservoir</span><span class="p">,</span>
+</span><span id="line-358">                    <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n2o_model</span><span class="p">,</span>
+</span><span id="line-359">                    <span class="n">p_export_model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">p_model</span><span class="p">)</span>
+</span><span id="line-360">            <span class="k">else</span><span class="p">:</span>
+</span><span id="line-361">                <span class="n">em_n2o</span> <span class="o">=</span> <span class="kc">None</span>
+</span><span id="line-362">
+</span><span id="line-363">            <span class="n">exec_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_exec_dictionary</span><span class="p">(</span>
+</span><span id="line-364">                <span class="n">co2_em</span><span class="o">=</span><span class="n">em_co2</span><span class="p">,</span>
+</span><span id="line-365">                <span class="n">ch4_em</span><span class="o">=</span><span class="n">em_ch4</span><span class="p">,</span>
+</span><span id="line-366">                <span class="n">n2o_em</span><span class="o">=</span><span class="n">em_n2o</span><span class="p">,</span>
+</span><span id="line-367">                <span class="n">years</span><span class="o">=</span><span class="n">model_input</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;year_vector&#39;</span><span class="p">])</span>
+</span><span id="line-368">
+</span><span id="line-369">            <span class="n">output</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="line-370">            <span class="c1"># Iterate through all emission components and record those that</span>
+</span><span id="line-371">            <span class="c1"># are marked for outputting</span>
+</span><span id="line-372">            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">presenter_config</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+</span><span id="line-373">                <span class="k">for</span> <span class="n">emission</span><span class="p">,</span> <span class="n">em_config</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">presenter_config</span><span class="p">[</span><span class="s1">&#39;outputs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span><span id="line-374">                    <span class="k">if</span> <span class="n">emission</span> <span class="ow">in</span> <span class="n">exec_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> \
+</span><span id="line-375">                            <span class="n">em_config</span><span class="p">[</span><span class="s1">&#39;include&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">TRUTHS</span><span class="p">:</span>
+</span><span id="line-376">                        <span class="n">output</span><span class="p">[</span><span class="n">emission</span><span class="p">]</span> <span class="o">=</span> <span class="n">exec_dict</span><span class="p">[</span><span class="n">emission</span><span class="p">][</span><span class="s1">&#39;ref&#39;</span><span class="p">](</span>
+</span><span id="line-377">                            <span class="o">**</span><span class="n">exec_dict</span><span class="p">[</span><span class="n">emission</span><span class="p">][</span><span class="s1">&#39;args&#39;</span><span class="p">])</span>
+</span><span id="line-378">                <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="n">model_input</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">output</span>
+</span><span id="line-379">                <span class="bp">self</span><span class="o">.</span><span class="n">internal</span><span class="p">[</span><span class="n">model_input</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">internal</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</span><span id="line-380">            <span class="k">else</span><span class="p">:</span>
+</span><span id="line-381">                <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+</span><span id="line-382">                    <span class="s2">&quot;Output/Input configuration file not instantiated.&quot;</span><span class="p">)</span>
+</span><span id="line-383">        <span class="k">return</span> <span class="kc">None</span></div>
 </div>
 
 </span></code></pre></div>
@@ -580,20 +607,19 @@
       <div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
         <p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2024, Tomasz Janus, University of Manchester, United Kingdom&nbsp;Built with <a class="font-medium underline underline-offset-4"
     href="https://www.sphinx-doc.org"
-    rel="noreferrer">Sphinx 7.3.7</a></p>
+    rel="noreferrer">Sphinx 8.1.3</a></p>
 </div>
 </div>
 </footer>
   </div>
   
     <script src="../../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/toggleprompt.js?v=5801b3bb"></script>
-    <script src="../../_static/tabs.js?v=3030b3cb"></script>
-    <script defer="defer" src="../../_static/theme.js?v=e82a16a3"></script>
+    <script defer="defer" src="../../_static/theme.js?v=073f68d9"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
   
 </body>

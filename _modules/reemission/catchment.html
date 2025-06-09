@@ -15,11 +15,10 @@
     <title>reemission.catchment | ReEmission 1.0.0 documentation</title>
     <meta property="og:title" content="reemission.catchment | ReEmission 1.0.0 documentation" />
     <meta name="twitter:title" content="reemission.catchment | ReEmission 1.0.0 documentation" />
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=c842c44c" />
-      <link rel="stylesheet" type="text/css" href="../../_static/theme.css?v=ecdfb4fc" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=1949e874" />
+      <link rel="stylesheet" type="text/css" href="../../_static/theme.css?v=42baaae4" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-      <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=a5c4661c" />
         <link rel="search" title="Search" href="../../search.html" />
         <link rel="index" title="Index" href="../../genindex.html" />
 
@@ -36,7 +35,7 @@
       if (!userPreference) {localStorage.setItem('darkMode', mode)}
     </script>
 </head>
-<body x-data="{ showSidebar: false }" class="min-h-screen font-sans antialiased bg-background text-foreground" :class="{ 'overflow-hidden': showSidebar }">
+  <body x-data="{ showSidebar: false, showScrollTop: false }" class="min-h-screen font-sans antialiased bg-background text-foreground" :class="{ 'overflow-hidden': showSidebar }">
     <div x-cloak x-show="showSidebar" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" @click.self="showSidebar = false"></div><div id="page" class="relative flex flex-col min-h-screen"><a href="#content" class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100">
       Skip to content
     </a><header
@@ -193,530 +192,504 @@
 </span><span id="line-3">
 </span><span id="line-4"><span class="sd">This module provides functionalities for calculating various catchment-related metrics, </span>
 </span><span id="line-5"><span class="sd">including phosphorus and nitrogen loads, using different methodologies.</span>
-</span><span id="line-6">
-</span><span id="line-7"><span class="sd">Attributes:</span>
-</span><span id="line-8"><span class="sd">    INI_FILE (str): Path to the configuration file.</span>
-</span><span id="line-9"><span class="sd">    TABLES (str): Path to the parameters directory.</span>
-</span><span id="line-10"><span class="sd">    tn_coeff_table (dict): TN coefficient table loaded from YAML.</span>
-</span><span id="line-11"><span class="sd">    tp_coeff_table (dict): TP coefficient table loaded from YAML.</span>
-</span><span id="line-12"><span class="sd">    p_loads_pop (dict): Phosphorus loads population table loaded from YAML.</span>
-</span><span id="line-13"><span class="sd">    p_exports (dict): Phosphorus exports table loaded from YAML.</span>
-</span><span id="line-14"><span class="sd">    config (configparser.ConfigParser): Loaded configuration settings.</span>
-</span><span id="line-15"><span class="sd">    internals_config (dict): Internal variables configuration loaded from YAML.</span>
-</span><span id="line-16"><span class="sd">    EPS (float): Margin of error for the sum of land use fractions.</span>
-</span><span id="line-17"><span class="sd">    </span>
-</span><span id="line-18"><span class="sd">.. _G-Res Technical Documentation: https://www.hydropower.org/publications/the-ghg-reservoir-tool-g-res-technical-documentation</span>
-</span><span id="line-19"><span class="sd">.. _Praire2021: https://www.sciencedirect.com/science/article/pii/S1364815221001602</span>
-</span><span id="line-20"><span class="sd">.. _G-Res: https://www.grestool.org/</span>
-</span><span id="line-21"><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-22"><span class="kn">import</span> <span class="nn">inspect</span>
-</span><span id="line-23"><span class="kn">import</span> <span class="nn">configparser</span>
-</span><span id="line-24"><span class="kn">import</span> <span class="nn">logging</span>
-</span><span id="line-25"><span class="kn">import</span> <span class="nn">math</span>
-</span><span id="line-26"><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
-</span><span id="line-27"><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Type</span>
-</span><span id="line-28"><span class="kn">from</span> <span class="nn">reemission.utils</span> <span class="kn">import</span> <span class="p">(</span>
-</span><span id="line-29">    <span class="n">read_table</span><span class="p">,</span> <span class="n">find_enum_index</span><span class="p">,</span> <span class="n">read_config</span><span class="p">,</span> <span class="n">save_return</span><span class="p">,</span> <span class="n">get_package_file</span><span class="p">,</span> <span class="n">load_yaml</span><span class="p">)</span>
-</span><span id="line-30"><span class="kn">from</span> <span class="nn">reemission.biogenic</span> <span class="kn">import</span> <span class="n">BiogenicFactors</span>
-</span><span id="line-31"><span class="kn">from</span> <span class="nn">reemission.constants</span> <span class="kn">import</span> <span class="n">Landuse</span>
-</span><span id="line-32"><span class="kn">from</span> <span class="nn">reemission.exceptions</span> <span class="kn">import</span> <span class="n">WrongSumOfAreasException</span><span class="p">,</span> <span class="n">WrongAreaFractionsException</span>
-</span><span id="line-33"><span class="kn">from</span> <span class="nn">reemission.globals</span> <span class="kn">import</span> <span class="n">internal</span>
-</span><span id="line-34">
-</span><span id="line-35">
-</span><span id="line-36"><span class="c1"># Set up module logger</span>
-</span><span id="line-37"><span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
-</span><span id="line-38"><span class="c1"># Load path to Yaml tables</span>
-</span><span id="line-39"><span class="n">INI_FILE</span> <span class="o">=</span> <span class="n">get_package_file</span><span class="p">(</span><span class="s2">&quot;config/config.ini&quot;</span><span class="p">)</span>
-</span><span id="line-40"><span class="n">TABLES</span> <span class="o">=</span> <span class="n">get_package_file</span><span class="p">(</span><span class="s2">&quot;parameters&quot;</span><span class="p">)</span>
-</span><span id="line-41">
-</span><span id="line-42"><span class="n">tn_coeff_table</span> <span class="o">=</span> <span class="n">read_table</span><span class="p">(</span>
-</span><span id="line-43">    <span class="n">TABLES</span> <span class="o">/</span> <span class="s2">&quot;McDowell/landscape_TN_export.yaml&quot;</span><span class="p">,</span> 
-</span><span id="line-44">    <span class="n">schema_file</span><span class="o">=</span><span class="n">get_package_file</span><span class="p">(</span><span class="s1">&#39;schemas/landscape_TN_export_schema.json&#39;</span><span class="p">))</span>
-</span><span id="line-45"><span class="n">tp_coeff_table</span> <span class="o">=</span> <span class="n">read_table</span><span class="p">(</span>
-</span><span id="line-46">    <span class="n">TABLES</span> <span class="o">/</span> <span class="s2">&quot;McDowell/landscape_TP_export.yaml&quot;</span><span class="p">,</span>
-</span><span id="line-47">    <span class="n">schema_file</span><span class="o">=</span><span class="n">get_package_file</span><span class="p">(</span><span class="s1">&#39;schemas/landscape_TP_export_schema.json&#39;</span><span class="p">))</span>
-</span><span id="line-48"><span class="n">p_loads_pop</span> <span class="o">=</span> <span class="n">read_table</span><span class="p">(</span>
-</span><span id="line-49">    <span class="n">TABLES</span> <span class="o">/</span> <span class="s2">&quot;phosphorus_loads.yaml&quot;</span><span class="p">,</span>
-</span><span id="line-50">    <span class="n">schema_file</span><span class="o">=</span><span class="n">get_package_file</span><span class="p">(</span><span class="s1">&#39;schemas/phosphorus_loads_schema.json&#39;</span><span class="p">))</span>
-</span><span id="line-51"><span class="n">p_exports</span> <span class="o">=</span> <span class="n">read_table</span><span class="p">(</span>
-</span><span id="line-52">    <span class="n">TABLES</span> <span class="o">/</span> <span class="s2">&quot;phosphorus_exports.yaml&quot;</span><span class="p">,</span>
-</span><span id="line-53">    <span class="n">schema_file</span><span class="o">=</span><span class="n">get_package_file</span><span class="p">(</span><span class="s1">&#39;schemas/phosphorus_exports_schema.json&#39;</span><span class="p">))</span>
-</span><span id="line-54">
-</span><span id="line-55"><span class="n">config</span><span class="p">:</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span> <span class="o">=</span> <span class="n">read_config</span><span class="p">(</span><span class="n">INI_FILE</span><span class="p">)</span>
-</span><span id="line-56"><span class="n">internals_config</span> <span class="o">=</span> <span class="n">load_yaml</span><span class="p">(</span><span class="n">get_package_file</span><span class="p">(</span><span class="s2">&quot;config/internal_vars.yaml&quot;</span><span class="p">))</span>
-</span><span id="line-57">
-</span><span id="line-58"><span class="c1"># Margin for error by which the sum of landuse fractions can differ from 1.0</span>
-</span><span id="line-59"><span class="n">EPS</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s2">&quot;CALCULATIONS&quot;</span><span class="p">,</span> <span class="s2">&quot;eps_catchment_area_fractions&quot;</span><span class="p">)</span>
-</span><span id="line-60">
-</span><span id="line-61"><span class="n">CatchmentType</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;CatchmentType&#39;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="s1">&#39;Catchment&#39;</span><span class="p">)</span>
-</span><span id="line-62">
-</span><span id="line-63">
+</span><span id="line-6"><span class="sd">    </span>
+</span><span id="line-7"><span class="sd">.. _G-Res Technical Documentation: https://www.hydropower.org/publications/the-ghg-reservoir-tool-g-res-technical-documentation</span>
+</span><span id="line-8"><span class="sd">.. _Praire2021: https://www.sciencedirect.com/science/article/pii/S1364815221001602</span>
+</span><span id="line-9"><span class="sd">.. _G-Res: https://www.grestool.org/</span>
+</span><span id="line-10"><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-11"><span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+</span><span id="line-12"><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+</span><span id="line-13"><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+</span><span id="line-14"><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+</span><span id="line-15"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Type</span>
+</span><span id="line-16"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_enum_index</span><span class="p">,</span> <span class="n">save_return</span>
+</span><span id="line-17"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.biogenic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BiogenicFactors</span>
+</span><span id="line-18"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">Landuse</span>
+</span><span id="line-19"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">WrongSumOfAreasException</span><span class="p">,</span> <span class="n">WrongAreaFractionsException</span>
+</span><span id="line-20"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.globals</span><span class="w"> </span><span class="kn">import</span> <span class="n">internal</span>
+</span><span id="line-21"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission</span><span class="w"> </span><span class="kn">import</span> <span class="n">registry</span>
+</span><span id="line-22">
+</span><span id="line-23">
+</span><span id="line-24"><span class="c1"># Set up module logger</span>
+</span><span id="line-25"><span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+</span><span id="line-26">
+</span><span id="line-27"><span class="n">internals_config</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">presenter_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;report_internal&quot;</span><span class="p">)</span>
+</span><span id="line-28">
+</span><span id="line-29"><span class="n">CatchmentType</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;CatchmentType&#39;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="s1">&#39;Catchment&#39;</span><span class="p">)</span>
+</span><span id="line-30">
+</span><span id="line-31">
 <div class="viewcode-block" id="Catchment">
 <a class="viewcode-back" href="../../api/reemission.catchment.html#reemission.catchment.Catchment">[docs]</a>
-</span><span id="line-64"><span class="nd">@dataclass</span>
-</span><span id="line-65"><span class="k">class</span> <span class="nc">Catchment</span><span class="p">:</span>
-</span><span id="line-66"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-67"><span class="sd">    Representation of a generic catchment area.</span>
-</span><span id="line-68">
-</span><span id="line-69"><span class="sd">    Attributes:</span>
-</span><span id="line-70"><span class="sd">        area (float): Catchment area in km$^2$.</span>
-</span><span id="line-71"><span class="sd">        riv_length (float): River length before impoundment in km.</span>
-</span><span id="line-72"><span class="sd">        runoff (float): Mean annual runoff in mm/year.</span>
-</span><span id="line-73"><span class="sd">        population (int): Population in the catchment.</span>
-</span><span id="line-74"><span class="sd">        slope (float): Catchment mean slope in %.</span>
-</span><span id="line-75"><span class="sd">        precip (float): Mean annual precipitation in mm/year.</span>
-</span><span id="line-76"><span class="sd">        etransp (float): Mean annual evapotranspiration in mm/year.</span>
-</span><span id="line-77"><span class="sd">        soil_wetness (float): Soil wetness in mm over profile.</span>
-</span><span id="line-78"><span class="sd">        mean_olsen (float): Mean P content in soil in kg/ha.</span>
-</span><span id="line-79"><span class="sd">        area_fractions (List[float]): List of fractions of land representing different land uses.</span>
-</span><span id="line-80"><span class="sd">        biogenic_factors (BiogenicFactors): BiogenicFactors object with categorical descriptors used </span>
-</span><span id="line-81"><span class="sd">            in the determination of the trophic status of the reservoir.</span>
-</span><span id="line-82"><span class="sd">        name (str): Name of the catchment (default &quot;n/a&quot;).</span>
-</span><span id="line-83">
-</span><span id="line-84"><span class="sd">    Raises:</span>
-</span><span id="line-85"><span class="sd">        WrongAreaFractionsException: If number of area fractions in the list is not equal to </span>
-</span><span id="line-86"><span class="sd">            the number of land uses.</span>
-</span><span id="line-87"><span class="sd">        WrongSumOfAreasException: If area fractions do not sum to 1 ± accuracy coefficient EPS.</span>
-</span><span id="line-88"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="line-89">
-</span><span id="line-90">    <span class="n">area</span><span class="p">:</span> <span class="nb">float</span>
-</span><span id="line-91">    <span class="n">riv_length</span><span class="p">:</span> <span class="nb">float</span>
-</span><span id="line-92">    <span class="n">runoff</span><span class="p">:</span> <span class="nb">float</span>
-</span><span id="line-93">    <span class="n">population</span><span class="p">:</span> <span class="nb">int</span>
-</span><span id="line-94">    <span class="n">slope</span><span class="p">:</span> <span class="nb">float</span>
-</span><span id="line-95">    <span class="n">precip</span><span class="p">:</span> <span class="nb">float</span>
-</span><span id="line-96">    <span class="n">etransp</span><span class="p">:</span> <span class="nb">float</span>
-</span><span id="line-97">    <span class="n">soil_wetness</span><span class="p">:</span> <span class="nb">float</span>
-</span><span id="line-98">    <span class="n">mean_olsen</span><span class="p">:</span> <span class="nb">float</span>
-</span><span id="line-99">    <span class="n">area_fractions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
-</span><span id="line-100">    <span class="n">biogenic_factors</span><span class="p">:</span> <span class="n">BiogenicFactors</span>
-</span><span id="line-101">    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;n/a&quot;</span>
-</span><span id="line-102">
+</span><span id="line-32"><span class="nd">@dataclass</span>
+</span><span id="line-33"><span class="k">class</span><span class="w"> </span><span class="nc">Catchment</span><span class="p">:</span>
+</span><span id="line-34"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-35"><span class="sd">    Representation of a generic catchment area.</span>
+</span><span id="line-36">
+</span><span id="line-37"><span class="sd">    Attributes:</span>
+</span><span id="line-38"><span class="sd">        area (float): Catchment area in km$^2$.</span>
+</span><span id="line-39"><span class="sd">        riv_length (float): River length before impoundment in km.</span>
+</span><span id="line-40"><span class="sd">        runoff (float): Mean annual runoff in mm/year.</span>
+</span><span id="line-41"><span class="sd">        population (int): Population in the catchment.</span>
+</span><span id="line-42"><span class="sd">        slope (float): Catchment mean slope in %.</span>
+</span><span id="line-43"><span class="sd">        precip (float): Mean annual precipitation in mm/year.</span>
+</span><span id="line-44"><span class="sd">        etransp (float): Mean annual evapotranspiration in mm/year.</span>
+</span><span id="line-45"><span class="sd">        soil_wetness (float): Soil wetness in mm over profile.</span>
+</span><span id="line-46"><span class="sd">        mean_olsen (float): Mean P content in soil in kg/ha.</span>
+</span><span id="line-47"><span class="sd">        area_fractions (List[float]): List of fractions of land representing different land uses.</span>
+</span><span id="line-48"><span class="sd">        biogenic_factors (BiogenicFactors): BiogenicFactors object with categorical descriptors used </span>
+</span><span id="line-49"><span class="sd">            in the determination of the trophic status of the reservoir.</span>
+</span><span id="line-50"><span class="sd">        name (str): Name of the catchment (default &quot;n/a&quot;).</span>
+</span><span id="line-51">
+</span><span id="line-52"><span class="sd">    Raises:</span>
+</span><span id="line-53"><span class="sd">        WrongAreaFractionsException: If number of area fractions in the list is not equal to </span>
+</span><span id="line-54"><span class="sd">            the number of land uses.</span>
+</span><span id="line-55"><span class="sd">        WrongSumOfAreasException: If area fractions do not sum to 1 ± accuracy coefficient EPS.</span>
+</span><span id="line-56"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="line-57">
+</span><span id="line-58">    <span class="n">area</span><span class="p">:</span> <span class="nb">float</span>
+</span><span id="line-59">    <span class="n">riv_length</span><span class="p">:</span> <span class="nb">float</span>
+</span><span id="line-60">    <span class="n">runoff</span><span class="p">:</span> <span class="nb">float</span>
+</span><span id="line-61">    <span class="n">population</span><span class="p">:</span> <span class="nb">int</span>
+</span><span id="line-62">    <span class="n">slope</span><span class="p">:</span> <span class="nb">float</span>
+</span><span id="line-63">    <span class="n">precip</span><span class="p">:</span> <span class="nb">float</span>
+</span><span id="line-64">    <span class="n">etransp</span><span class="p">:</span> <span class="nb">float</span>
+</span><span id="line-65">    <span class="n">soil_wetness</span><span class="p">:</span> <span class="nb">float</span>
+</span><span id="line-66">    <span class="n">mean_olsen</span><span class="p">:</span> <span class="nb">float</span>
+</span><span id="line-67">    <span class="n">area_fractions</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+</span><span id="line-68">    <span class="n">biogenic_factors</span><span class="p">:</span> <span class="n">BiogenicFactors</span>
+</span><span id="line-69">    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;n/a&quot;</span>
+</span><span id="line-70">
 <div class="viewcode-block" id="Catchment.__post_init__">
 <a class="viewcode-back" href="../../api/reemission.catchment.html#reemission.catchment.Catchment.__post_init__">[docs]</a>
-</span><span id="line-103">    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-104"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Validates the provided list of land use fractions.</span>
-</span><span id="line-105">
-</span><span id="line-106"><span class="sd">        Note:</span>
-</span><span id="line-107"><span class="sd">            If False, set area_fractions to None.</span>
-</span><span id="line-108"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-109">        <span class="k">try</span><span class="p">:</span>
-</span><span id="line-110">            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">Landuse</span><span class="p">)</span>
-</span><span id="line-111">        <span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-</span><span id="line-112">            <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> \
-</span><span id="line-113">                <span class="s2">&quot;Wrong size of the catchment area fractions vector &quot;</span> <span class="o">+</span> \
-</span><span id="line-114">                <span class="sa">f</span><span class="s2">&quot;for reservoir </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.&quot;</span>
-</span><span id="line-115">            <span class="k">raise</span> <span class="n">WrongAreaFractionsException</span><span class="p">(</span>
-</span><span id="line-116">                <span class="n">number_of_fractions</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">),</span>
-</span><span id="line-117">                <span class="n">number_of_landuses</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">Landuse</span><span class="p">),</span>
-</span><span id="line-118">                <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">err</span>
-</span><span id="line-119">
-</span><span id="line-120">        <span class="k">try</span><span class="p">:</span>
-</span><span id="line-121">            <span class="k">assert</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">EPS</span> <span class="o">&lt;=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">EPS</span>
-</span><span id="line-122">        <span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
-</span><span id="line-123">            <span class="n">message</span> <span class="o">=</span> \
-</span><span id="line-124">                <span class="s2">&quot;Wrong values in the catchment area fractions vector &quot;</span> <span class="o">+</span> \
-</span><span id="line-125">                <span class="sa">f</span><span class="s2">&quot;for reservoir </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.&quot;</span>
-</span><span id="line-126">            <span class="k">raise</span> <span class="n">WrongSumOfAreasException</span><span class="p">(</span>
-</span><span id="line-127">                <span class="n">fractions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">,</span>
-</span><span id="line-128">                <span class="n">accuracy</span><span class="o">=</span><span class="n">EPS</span><span class="p">,</span>
-</span><span id="line-129">                <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">err</span></div>
+</span><span id="line-71">    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-72"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Validates the provided list of land use fractions.</span>
+</span><span id="line-73">
+</span><span id="line-74"><span class="sd">        Note:</span>
+</span><span id="line-75"><span class="sd">            If False, set area_fractions to None.</span>
+</span><span id="line-76"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-77">        <span class="n">config</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">main_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;model_config&quot;</span><span class="p">)</span>
+</span><span id="line-78">        <span class="n">eps</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;CALCULATIONS&#39;</span><span class="p">][</span><span class="s2">&quot;eps_catchment_area_fractions&quot;</span><span class="p">])</span>
+</span><span id="line-79">        <span class="k">try</span><span class="p">:</span>
+</span><span id="line-80">            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">Landuse</span><span class="p">)</span>
+</span><span id="line-81">        <span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+</span><span id="line-82">            <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> \
+</span><span id="line-83">                <span class="s2">&quot;Wrong size of the catchment area fractions vector &quot;</span> <span class="o">+</span> \
+</span><span id="line-84">                <span class="sa">f</span><span class="s2">&quot;for reservoir </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.&quot;</span>
+</span><span id="line-85">            <span class="k">raise</span> <span class="n">WrongAreaFractionsException</span><span class="p">(</span>
+</span><span id="line-86">                <span class="n">number_of_fractions</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">),</span>
+</span><span id="line-87">                <span class="n">number_of_landuses</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">Landuse</span><span class="p">),</span>
+</span><span id="line-88">                <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span>
+</span><span id="line-89">
+</span><span id="line-90">        <span class="k">try</span><span class="p">:</span>
+</span><span id="line-91">            <span class="k">assert</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">eps</span> <span class="o">&lt;=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">eps</span>
+</span><span id="line-92">        <span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+</span><span id="line-93">            <span class="n">message</span> <span class="o">=</span> \
+</span><span id="line-94">                <span class="s2">&quot;Wrong values in the catchment area fractions vector &quot;</span> <span class="o">+</span> \
+</span><span id="line-95">                <span class="sa">f</span><span class="s2">&quot;for reservoir </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.&quot;</span>
+</span><span id="line-96">            <span class="k">raise</span> <span class="n">WrongSumOfAreasException</span><span class="p">(</span>
+</span><span id="line-97">                <span class="n">fractions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">,</span>
+</span><span id="line-98">                <span class="n">accuracy</span><span class="o">=</span><span class="n">eps</span><span class="p">,</span>
+</span><span id="line-99">                <span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">err</span></div>
 
-</span><span id="line-130">
+</span><span id="line-100">
 <div class="viewcode-block" id="Catchment.from_dict">
 <a class="viewcode-back" href="../../api/reemission.catchment.html#reemission.catchment.Catchment.from_dict">[docs]</a>
-</span><span id="line-131">    <span class="nd">@classmethod</span>
-</span><span id="line-132">    <span class="k">def</span> <span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">CatchmentType</span><span class="p">],</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-</span><span id="line-133">                  <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CatchmentType</span><span class="p">:</span>
-</span><span id="line-134"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-135"><span class="sd">        Initializes the class from a dictionary. Skips keys that are not featured as class&#39;s attributes.</span>
-</span><span id="line-136">
-</span><span id="line-137"><span class="sd">        Args:</span>
-</span><span id="line-138"><span class="sd">            cls (Type[CatchmentType]): The class type.</span>
-</span><span id="line-139"><span class="sd">            parameters (dict): The dictionary of parameters.</span>
-</span><span id="line-140"><span class="sd">            **kwargs: Additional keyword arguments.</span>
-</span><span id="line-141">
-</span><span id="line-142"><span class="sd">        Returns:</span>
-</span><span id="line-143"><span class="sd">            CatchmentType: An instance of the Catchment class.</span>
-</span><span id="line-144"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-145">        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
-</span><span id="line-146">            <span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">parameters</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-</span><span id="line-147">            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="p">},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+</span><span id="line-101">    <span class="nd">@classmethod</span>
+</span><span id="line-102">    <span class="k">def</span><span class="w"> </span><span class="nf">from_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">CatchmentType</span><span class="p">],</span> <span class="n">parameters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+</span><span id="line-103">                  <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CatchmentType</span><span class="p">:</span>
+</span><span id="line-104"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-105"><span class="sd">        Initializes the class from a dictionary. Skips keys that are not featured as class&#39;s attributes.</span>
+</span><span id="line-106">
+</span><span id="line-107"><span class="sd">        Args:</span>
+</span><span id="line-108"><span class="sd">            cls (Type[CatchmentType]): The class type.</span>
+</span><span id="line-109"><span class="sd">            parameters (dict): The dictionary of parameters.</span>
+</span><span id="line-110"><span class="sd">            **kwargs: Additional keyword arguments.</span>
+</span><span id="line-111">
+</span><span id="line-112"><span class="sd">        Returns:</span>
+</span><span id="line-113"><span class="sd">            CatchmentType: An instance of the Catchment class.</span>
+</span><span id="line-114"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-115">        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="p">{</span>
+</span><span id="line-116">            <span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">parameters</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+</span><span id="line-117">            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="p">},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-</span><span id="line-148">
-</span><span id="line-149">    <span class="nd">@property</span>
-</span><span id="line-150">    <span class="k">def</span> <span class="nf">population_density</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-151"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-152"><span class="sd">        Calculates the population density.</span>
-</span><span id="line-153"><span class="sd">        </span>
-</span><span id="line-154"><span class="sd">        Note:</span>
-</span><span id="line-155"><span class="sd">            Population density is derived from catchment population and catchment</span>
-</span><span id="line-156"><span class="sd">            area. [capita/km$^2$]. From Eq. A.25. in Praire2021_.</span>
-</span><span id="line-157">
-</span><span id="line-158"><span class="sd">        Returns:</span>
-</span><span id="line-159"><span class="sd">            float: Population density in capita/km$^2$.</span>
-</span><span id="line-160"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-161">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">area</span>
-</span><span id="line-162">
-</span><span id="line-163">    <span class="nd">@property</span>
-</span><span id="line-164">    <span class="k">def</span> <span class="nf">area_ha</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-165"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-166"><span class="sd">        Converts area from km$^2$ to hectares.</span>
-</span><span id="line-167">
-</span><span id="line-168"><span class="sd">        Returns:</span>
-</span><span id="line-169"><span class="sd">            float: Area in hectares.</span>
-</span><span id="line-170"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-171">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="o">*</span> <span class="mf">100.0</span>
-</span><span id="line-172">
+</span><span id="line-118">
+</span><span id="line-119">    <span class="nd">@property</span>
+</span><span id="line-120">    <span class="k">def</span><span class="w"> </span><span class="nf">population_density</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-121"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-122"><span class="sd">        Calculates the population density.</span>
+</span><span id="line-123"><span class="sd">        </span>
+</span><span id="line-124"><span class="sd">        Note:</span>
+</span><span id="line-125"><span class="sd">            Population density is derived from catchment population and catchment</span>
+</span><span id="line-126"><span class="sd">            area. [capita/km$^2$]. From Eq. A.25. in Praire2021_.</span>
+</span><span id="line-127">
+</span><span id="line-128"><span class="sd">        Returns:</span>
+</span><span id="line-129"><span class="sd">            float: Population density in capita/km$^2$.</span>
+</span><span id="line-130"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-131">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">population</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">area</span>
+</span><span id="line-132">
+</span><span id="line-133">    <span class="nd">@property</span>
+</span><span id="line-134">    <span class="k">def</span><span class="w"> </span><span class="nf">area_ha</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-135"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-136"><span class="sd">        Converts area from km$^2$ to hectares.</span>
+</span><span id="line-137">
+</span><span id="line-138"><span class="sd">        Returns:</span>
+</span><span id="line-139"><span class="sd">            float: Area in hectares.</span>
+</span><span id="line-140"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-141">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="o">*</span> <span class="mf">100.0</span>
+</span><span id="line-142">
 <div class="viewcode-block" id="Catchment.landuse_area">
 <a class="viewcode-back" href="../../api/reemission.catchment.html#reemission.catchment.Catchment.landuse_area">[docs]</a>
-</span><span id="line-173">    <span class="k">def</span> <span class="nf">landuse_area</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">landuse_fraction</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-174"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-175"><span class="sd">        Calculates land use area from catchment area and land use fraction.</span>
-</span><span id="line-176">
-</span><span id="line-177"><span class="sd">        Args:</span>
-</span><span id="line-178"><span class="sd">            landuse_fraction (float): Fraction of land use.</span>
-</span><span id="line-179">
-</span><span id="line-180"><span class="sd">        Returns:</span>
-</span><span id="line-181"><span class="sd">            float: Land use area in km$^2$.</span>
-</span><span id="line-182"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-183">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="o">*</span> <span class="n">landuse_fraction</span></div>
+</span><span id="line-143">    <span class="k">def</span><span class="w"> </span><span class="nf">landuse_area</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">landuse_fraction</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-144"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-145"><span class="sd">        Calculates land use area from catchment area and land use fraction.</span>
+</span><span id="line-146">
+</span><span id="line-147"><span class="sd">        Args:</span>
+</span><span id="line-148"><span class="sd">            landuse_fraction (float): Fraction of land use.</span>
+</span><span id="line-149">
+</span><span id="line-150"><span class="sd">        Returns:</span>
+</span><span id="line-151"><span class="sd">            float: Land use area in km$^2$.</span>
+</span><span id="line-152"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-153">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span> <span class="o">*</span> <span class="n">landuse_fraction</span></div>
 
-</span><span id="line-184">
+</span><span id="line-154">
 <div class="viewcode-block" id="Catchment.landuse_area_ha">
 <a class="viewcode-back" href="../../api/reemission.catchment.html#reemission.catchment.Catchment.landuse_area_ha">[docs]</a>
-</span><span id="line-185">    <span class="k">def</span> <span class="nf">landuse_area_ha</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">landuse_fraction</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-186"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-187"><span class="sd">        Calculates land use area in hectares from catchment area and land use fraction.</span>
-</span><span id="line-188">
-</span><span id="line-189"><span class="sd">        Args:</span>
-</span><span id="line-190"><span class="sd">            landuse_fraction (float): Fraction of land use.</span>
-</span><span id="line-191">
-</span><span id="line-192"><span class="sd">        Returns:</span>
-</span><span id="line-193"><span class="sd">            float: Land use area in hectares.</span>
-</span><span id="line-194"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-195">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_ha</span> <span class="o">*</span> <span class="n">landuse_fraction</span></div>
+</span><span id="line-155">    <span class="k">def</span><span class="w"> </span><span class="nf">landuse_area_ha</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">landuse_fraction</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-156"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-157"><span class="sd">        Calculates land use area in hectares from catchment area and land use fraction.</span>
+</span><span id="line-158">
+</span><span id="line-159"><span class="sd">        Args:</span>
+</span><span id="line-160"><span class="sd">            landuse_fraction (float): Fraction of land use.</span>
+</span><span id="line-161">
+</span><span id="line-162"><span class="sd">        Returns:</span>
+</span><span id="line-163"><span class="sd">            float: Land use area in hectares.</span>
+</span><span id="line-164"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-165">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_ha</span> <span class="o">*</span> <span class="n">landuse_fraction</span></div>
 
-</span><span id="line-196">
-</span><span id="line-197">    <span class="nd">@property</span>
-</span><span id="line-198">    <span class="k">def</span> <span class="nf">discharge</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-199"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-200"><span class="sd">        Calculates mean annual discharge.</span>
-</span><span id="line-201"><span class="sd">        </span>
-</span><span id="line-202"><span class="sd">        Note:</span>
-</span><span id="line-203"><span class="sd">            mean annual discharge in m$^3$/year is calculated from runoff in</span>
-</span><span id="line-204"><span class="sd">            mm/year and area in km$^2$</span>
-</span><span id="line-205">
-</span><span id="line-206"><span class="sd">        Returns:</span>
-</span><span id="line-207"><span class="sd">            float: Mean annual discharge in m$^3$/year.</span>
-</span><span id="line-208"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-209">        <span class="k">return</span> <span class="mi">1_000</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">runoff</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span>
-</span><span id="line-210">
-</span><span id="line-211">    <span class="nd">@property</span>
-</span><span id="line-212">    <span class="k">def</span> <span class="nf">discharge_cumecs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-213"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-214"><span class="sd">        Returns mean annual discharge in cubic meters per second.</span>
-</span><span id="line-215">
-</span><span id="line-216"><span class="sd">        Returns:</span>
-</span><span id="line-217"><span class="sd">            float: Mean annual discharge in m$^3$/s.</span>
-</span><span id="line-218"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-219">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">discharge</span><span class="o">/</span><span class="p">(</span><span class="mf">365.25</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
-</span><span id="line-220">
+</span><span id="line-166">
+</span><span id="line-167">    <span class="nd">@property</span>
+</span><span id="line-168">    <span class="k">def</span><span class="w"> </span><span class="nf">discharge</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-169"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-170"><span class="sd">        Calculates mean annual discharge.</span>
+</span><span id="line-171"><span class="sd">        </span>
+</span><span id="line-172"><span class="sd">        Note:</span>
+</span><span id="line-173"><span class="sd">            mean annual discharge in m$^3$/year is calculated from runoff in</span>
+</span><span id="line-174"><span class="sd">            mm/year and area in km$^2$</span>
+</span><span id="line-175">
+</span><span id="line-176"><span class="sd">        Returns:</span>
+</span><span id="line-177"><span class="sd">            float: Mean annual discharge in m$^3$/year.</span>
+</span><span id="line-178"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-179">        <span class="k">return</span> <span class="mi">1_000</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">runoff</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span>
+</span><span id="line-180">
+</span><span id="line-181">    <span class="nd">@property</span>
+</span><span id="line-182">    <span class="k">def</span><span class="w"> </span><span class="nf">discharge_cumecs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-183"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-184"><span class="sd">        Returns mean annual discharge in cubic meters per second.</span>
+</span><span id="line-185">
+</span><span id="line-186"><span class="sd">        Returns:</span>
+</span><span id="line-187"><span class="sd">            float: Mean annual discharge in m$^3$/s.</span>
+</span><span id="line-188"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-189">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">discharge</span><span class="o">/</span><span class="p">(</span><span class="mf">365.25</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
+</span><span id="line-190">
 <div class="viewcode-block" id="Catchment.river_area_before_impoundment">
 <a class="viewcode-back" href="../../api/reemission.catchment.html#reemission.catchment.Catchment.river_area_before_impoundment">[docs]</a>
-</span><span id="line-221">    <span class="k">def</span> <span class="nf">river_area_before_impoundment</span><span class="p">(</span>
-</span><span id="line-222">            <span class="bp">self</span><span class="p">,</span> <span class="n">river_width</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-223"><span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-224"><span class="sd">        Calculates the area taken up by the river in the impounded area prior to impoundment.</span>
-</span><span id="line-225">
-</span><span id="line-226"><span class="sd">        Args:</span>
-</span><span id="line-227"><span class="sd">            river_width (Optional[float]): River width in meters. If None, a default allometric </span>
-</span><span id="line-228"><span class="sd">                formula is used.</span>
-</span><span id="line-229"><span class="sd">                </span>
-</span><span id="line-230"><span class="sd">        **Formula:**</span>
-</span><span id="line-231"><span class="sd">        </span>
-</span><span id="line-232"><span class="sd">        .. math::</span>
-</span><span id="line-233"><span class="sd">            \begin{equation}</span>
-</span><span id="line-234"><span class="sd">                A_{pre} = 5.9 \, 10^{-6} \, L_{river} \, A_{catchment}^{0.32}</span>
-</span><span id="line-235"><span class="sd">            \end{equation}</span>
-</span><span id="line-236"><span class="sd">        where:</span>
-</span><span id="line-237"><span class="sd">            * $A_{pre}$ : pre-inundation area, [km$^2$]</span>
-</span><span id="line-238"><span class="sd">            * $A_{catchment}$ : catchment area, [km$^2$]</span>
-</span><span id="line-239"><span class="sd">            * $L_{river}$ : lentgh of the river prior to impoundment, [km]</span>
-</span><span id="line-240">
-</span><span id="line-241"><span class="sd">        Returns:</span>
-</span><span id="line-242"><span class="sd">            float: River area in km$^2$.</span>
-</span><span id="line-243"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-244">        <span class="k">if</span> <span class="n">river_width</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-245">            <span class="c1"># Use simple allometric formula of Whipple et al. 2013 (G-Res)</span>
-</span><span id="line-246">            <span class="n">river_width</span> <span class="o">=</span> <span class="mf">5.9</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">**</span><span class="mf">0.32</span>
-</span><span id="line-247">        <span class="k">return</span> <span class="mf">1E-3</span> <span class="o">*</span> <span class="n">river_width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">riv_length</span></div>
+</span><span id="line-191">    <span class="k">def</span><span class="w"> </span><span class="nf">river_area_before_impoundment</span><span class="p">(</span>
+</span><span id="line-192">            <span class="bp">self</span><span class="p">,</span> <span class="n">river_width</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-193"><span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-194"><span class="sd">        Calculates the area taken up by the river in the impounded area prior to impoundment.</span>
+</span><span id="line-195">
+</span><span id="line-196"><span class="sd">        Args:</span>
+</span><span id="line-197"><span class="sd">            river_width (Optional[float]): River width in meters. If None, a default allometric </span>
+</span><span id="line-198"><span class="sd">                formula is used.</span>
+</span><span id="line-199"><span class="sd">                </span>
+</span><span id="line-200"><span class="sd">        **Formula:**</span>
+</span><span id="line-201"><span class="sd">        </span>
+</span><span id="line-202"><span class="sd">        .. math::</span>
+</span><span id="line-203"><span class="sd">            \begin{equation}</span>
+</span><span id="line-204"><span class="sd">                A_{pre} = 5.9 \, 10^{-6} \, L_{river} \, A_{catchment}^{0.32}</span>
+</span><span id="line-205"><span class="sd">            \end{equation}</span>
+</span><span id="line-206"><span class="sd">        where:</span>
+</span><span id="line-207"><span class="sd">            * $A_{pre}$ : pre-inundation area, [km$^2$]</span>
+</span><span id="line-208"><span class="sd">            * $A_{catchment}$ : catchment area, [km$^2$]</span>
+</span><span id="line-209"><span class="sd">            * $L_{river}$ : lentgh of the river prior to impoundment, [km]</span>
+</span><span id="line-210">
+</span><span id="line-211"><span class="sd">        Returns:</span>
+</span><span id="line-212"><span class="sd">            float: River area in km$^2$.</span>
+</span><span id="line-213"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-214">        <span class="k">if</span> <span class="n">river_width</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-215">            <span class="c1"># Use simple allometric formula of Whipple et al. 2013 (G-Res)</span>
+</span><span id="line-216">            <span class="n">river_width</span> <span class="o">=</span> <span class="mf">5.9</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">area</span><span class="o">**</span><span class="mf">0.32</span>
+</span><span id="line-217">        <span class="k">return</span> <span class="mf">1E-3</span> <span class="o">*</span> <span class="n">river_width</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">riv_length</span></div>
 
-</span><span id="line-248">
+</span><span id="line-218">
 <div class="viewcode-block" id="Catchment.p_human_input_gres">
 <a class="viewcode-back" href="../../api/reemission.catchment.html#reemission.catchment.Catchment.p_human_input_gres">[docs]</a>
-</span><span id="line-249">    <span class="k">def</span> <span class="nf">p_human_input_gres</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-250"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-251"><span class="sd">        Calculates phosphorus load/input from human activity and level of wastewater treatment.</span>
-</span><span id="line-252">
-</span><span id="line-253"><span class="sd">        Note:</span>
-</span><span id="line-254"><span class="sd">            Follows the methodology applied in G-Res_</span>
-</span><span id="line-255">
-</span><span id="line-256"><span class="sd">        Returns:</span>
-</span><span id="line-257"><span class="sd">            float: Phosphorus load in kgP/year.</span>
-</span><span id="line-258"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-259">        <span class="n">treatment_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">biogenic_factors</span><span class="o">.</span><span class="n">treatment_factor</span>
-</span><span id="line-260">        <span class="n">load</span> <span class="o">=</span> <span class="mf">0.002</span> <span class="o">*</span> <span class="mf">365.25</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="o">*</span> \
-</span><span id="line-261">            <span class="n">p_loads_pop</span><span class="p">[</span><span class="n">treatment_factor</span><span class="o">.</span><span class="n">value</span><span class="p">]</span>
-</span><span id="line-262">        <span class="k">return</span> <span class="n">load</span></div>
+</span><span id="line-219">    <span class="k">def</span><span class="w"> </span><span class="nf">p_human_input_gres</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-220"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-221"><span class="sd">        Calculates phosphorus load/input from human activity and level of wastewater treatment.</span>
+</span><span id="line-222">
+</span><span id="line-223"><span class="sd">        Note:</span>
+</span><span id="line-224"><span class="sd">            Follows the methodology applied in G-Res_</span>
+</span><span id="line-225">
+</span><span id="line-226"><span class="sd">        Returns:</span>
+</span><span id="line-227"><span class="sd">            float: Phosphorus load in kgP/year.</span>
+</span><span id="line-228"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-229">        <span class="n">p_loads_pop</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">tables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;gres_p_loads&quot;</span><span class="p">)</span> 
+</span><span id="line-230">        <span class="n">treatment_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">biogenic_factors</span><span class="o">.</span><span class="n">treatment_factor</span>
+</span><span id="line-231">        <span class="n">load</span> <span class="o">=</span> <span class="mf">0.002</span> <span class="o">*</span> <span class="mf">365.25</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="o">*</span> \
+</span><span id="line-232">            <span class="n">p_loads_pop</span><span class="p">[</span><span class="n">treatment_factor</span><span class="o">.</span><span class="n">value</span><span class="p">]</span>
+</span><span id="line-233">        <span class="k">return</span> <span class="n">load</span></div>
 
-</span><span id="line-263">
+</span><span id="line-234">
 <div class="viewcode-block" id="Catchment.p_land_input_gres">
 <a class="viewcode-back" href="../../api/reemission.catchment.html#reemission.catchment.Catchment.p_land_input_gres">[docs]</a>
-</span><span id="line-264">    <span class="k">def</span> <span class="nf">p_land_input_gres</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-265"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-266"><span class="sd">        Calculates phosphorus load/input from land in the catchment.</span>
-</span><span id="line-267">
-</span><span id="line-268"><span class="sd">        Note:</span>
-</span><span id="line-269"><span class="sd">            Considers differences in P emissions across different landuse types</span>
-</span><span id="line-270"><span class="sd">            Follows the methodology applied in G-Res_</span>
-</span><span id="line-271">
-</span><span id="line-272"><span class="sd">        Returns:</span>
-</span><span id="line-273"><span class="sd">            float: Phosphorus load in kgP/year.</span>
-</span><span id="line-274"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-275">        <span class="n">intensity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">biogenic_factors</span><span class="o">.</span><span class="n">landuse_intensity</span>
-</span><span id="line-276">        <span class="n">landuse_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">landuse</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">landuse</span> <span class="ow">in</span> <span class="n">Landuse</span><span class="p">]</span>
-</span><span id="line-277">        <span class="c1"># Area marging below which the output is output as zero</span>
-</span><span id="line-278">        <span class="n">EPS</span> <span class="o">=</span> <span class="mf">1e-6</span>
-</span><span id="line-279">
-</span><span id="line-280">        <span class="c1"># Define two inner funtions to determine land cover export coefficients</span>
-</span><span id="line-281">        <span class="c1"># for two instances in which the coefficients in the phosphorus exports</span>
-</span><span id="line-282">        <span class="c1"># table additionally depend on the catchment area and hence, are not</span>
-</span><span id="line-283">        <span class="c1"># constant</span>
-</span><span id="line-284">        <span class="k">def</span> <span class="nf">fun_exp</span><span class="p">(</span><span class="n">area_fraction</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fun_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-285"><span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-286"><span class="sd">            Regression function for P export from crops and forest.</span>
-</span><span id="line-287">
-</span><span id="line-288"><span class="sd">            Args:</span>
-</span><span id="line-289"><span class="sd">                area_fraction (float): Fraction of land use area.</span>
-</span><span id="line-290"><span class="sd">                fun_name (str): Name of the function.</span>
+</span><span id="line-235">    <span class="k">def</span><span class="w"> </span><span class="nf">p_land_input_gres</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-236"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-237"><span class="sd">        Calculates phosphorus load/input from land in the catchment.</span>
+</span><span id="line-238">
+</span><span id="line-239"><span class="sd">        Note:</span>
+</span><span id="line-240"><span class="sd">            Considers differences in P emissions across different landuse types</span>
+</span><span id="line-241"><span class="sd">            Follows the methodology applied in G-Res_</span>
+</span><span id="line-242">
+</span><span id="line-243"><span class="sd">        Returns:</span>
+</span><span id="line-244"><span class="sd">            float: Phosphorus load in kgP/year.</span>
+</span><span id="line-245"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-246">        <span class="n">intensity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">biogenic_factors</span><span class="o">.</span><span class="n">landuse_intensity</span>
+</span><span id="line-247">        <span class="n">landuse_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">landuse</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">landuse</span> <span class="ow">in</span> <span class="n">Landuse</span><span class="p">]</span>
+</span><span id="line-248">        <span class="n">p_exports</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">tables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;gres_p_exports&quot;</span><span class="p">)</span> 
+</span><span id="line-249">        <span class="c1"># Area marging below which the output is output as zero</span>
+</span><span id="line-250">        <span class="n">EPS</span> <span class="o">=</span> <span class="mf">1e-6</span>
+</span><span id="line-251">
+</span><span id="line-252">        <span class="c1"># Define two inner funtions to determine land cover export coefficients</span>
+</span><span id="line-253">        <span class="c1"># for two instances in which the coefficients in the phosphorus exports</span>
+</span><span id="line-254">        <span class="c1"># table additionally depend on the catchment area and hence, are not</span>
+</span><span id="line-255">        <span class="c1"># constant</span>
+</span><span id="line-256">        <span class="k">def</span><span class="w"> </span><span class="nf">fun_exp</span><span class="p">(</span><span class="n">area_fraction</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fun_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-257"><span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-258"><span class="sd">            Regression function for P export from crops and forest.</span>
+</span><span id="line-259">
+</span><span id="line-260"><span class="sd">            Args:</span>
+</span><span id="line-261"><span class="sd">                area_fraction (float): Fraction of land use area.</span>
+</span><span id="line-262"><span class="sd">                fun_name (str): Name of the function.</span>
+</span><span id="line-263">
+</span><span id="line-264"><span class="sd">            Returns:</span>
+</span><span id="line-265"><span class="sd">                float: Phosphorus export coefficient.</span>
+</span><span id="line-266"><span class="sd">            &quot;&quot;&quot;</span>
+</span><span id="line-267">            <span class="k">if</span> <span class="n">fun_name</span> <span class="o">==</span> <span class="s1">&#39;crop export&#39;</span><span class="p">:</span>
+</span><span id="line-268">                <span class="n">reg_coeffs</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.818</span><span class="p">,</span> <span class="mf">0.227</span><span class="p">)</span>
+</span><span id="line-269">            <span class="k">elif</span> <span class="n">fun_name</span> <span class="o">==</span> <span class="s1">&#39;forest export&#39;</span><span class="p">:</span>
+</span><span id="line-270">                <span class="n">reg_coeffs</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.914</span><span class="p">,</span> <span class="mf">0.014</span><span class="p">)</span>
+</span><span id="line-271">            <span class="k">else</span><span class="p">:</span>
+</span><span id="line-272">                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+</span><span id="line-273">                    <span class="s1">&#39;Regression function </span><span class="si">%s</span><span class="s1"> unknown. Returning zero.&#39;</span><span class="p">,</span>
+</span><span id="line-274">                    <span class="n">fun_name</span><span class="p">)</span>
+</span><span id="line-275">                <span class="k">return</span> <span class="mf">0.0</span>
+</span><span id="line-276">            <span class="k">if</span> <span class="n">area_fraction</span> <span class="o">&lt;</span> <span class="n">EPS</span><span class="p">:</span>
+</span><span id="line-277">                <span class="k">return</span> <span class="mf">0.0</span>
+</span><span id="line-278">            <span class="k">try</span><span class="p">:</span>
+</span><span id="line-279">                <span class="c1"># Equation gives P export coefficient in kgP/ha/yr</span>
+</span><span id="line-280">                <span class="c1"># Eq. A.23. and A.24. from Praire2021</span>
+</span><span id="line-281">                <span class="n">p_export_coeff</span> <span class="o">=</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span>
+</span><span id="line-282">                    <span class="n">reg_coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span>
+</span><span id="line-283">                        <span class="bp">self</span><span class="o">.</span><span class="n">landuse_area</span><span class="p">(</span><span class="n">area_fraction</span><span class="p">))</span> <span class="o">*</span> <span class="n">reg_coeffs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</span><span id="line-284">            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+</span><span id="line-285">                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+</span><span id="line-286">                    <span class="sa">f</span><span class="s2">&quot;Error processing </span><span class="si">{</span><span class="n">fun_name</span><span class="si">}</span><span class="s2">, area fraction </span><span class="si">{</span><span class="n">area_fraction</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="line-287">                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+</span><span id="line-288">                    <span class="s1">&#39;Export coefficient could not be calculated. Returning 0.&#39;</span><span class="p">)</span>
+</span><span id="line-289">                <span class="n">p_export_coeff</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span id="line-290">            <span class="k">return</span> <span class="n">p_export_coeff</span>
 </span><span id="line-291">
-</span><span id="line-292"><span class="sd">            Returns:</span>
-</span><span id="line-293"><span class="sd">                float: Phosphorus export coefficient.</span>
-</span><span id="line-294"><span class="sd">            &quot;&quot;&quot;</span>
-</span><span id="line-295">            <span class="k">if</span> <span class="n">fun_name</span> <span class="o">==</span> <span class="s1">&#39;crop export&#39;</span><span class="p">:</span>
-</span><span id="line-296">                <span class="n">reg_coeffs</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.818</span><span class="p">,</span> <span class="mf">0.227</span><span class="p">)</span>
-</span><span id="line-297">            <span class="k">elif</span> <span class="n">fun_name</span> <span class="o">==</span> <span class="s1">&#39;forest export&#39;</span><span class="p">:</span>
-</span><span id="line-298">                <span class="n">reg_coeffs</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.914</span><span class="p">,</span> <span class="mf">0.014</span><span class="p">)</span>
-</span><span id="line-299">            <span class="k">else</span><span class="p">:</span>
-</span><span id="line-300">                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-</span><span id="line-301">                    <span class="s1">&#39;Regression function </span><span class="si">%s</span><span class="s1"> unknown. Returning zero.&#39;</span><span class="p">,</span>
-</span><span id="line-302">                    <span class="n">fun_name</span><span class="p">)</span>
-</span><span id="line-303">                <span class="k">return</span> <span class="mf">0.0</span>
-</span><span id="line-304">            <span class="k">if</span> <span class="n">area_fraction</span> <span class="o">&lt;</span> <span class="n">EPS</span><span class="p">:</span>
-</span><span id="line-305">                <span class="k">return</span> <span class="mf">0.0</span>
-</span><span id="line-306">            <span class="k">try</span><span class="p">:</span>
-</span><span id="line-307">                <span class="c1"># Equation gives P export coefficient in kgP/ha/yr</span>
-</span><span id="line-308">                <span class="c1"># Eq. A.23. and A.24. from Praire2021</span>
-</span><span id="line-309">                <span class="n">p_export_coeff</span> <span class="o">=</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span>
-</span><span id="line-310">                    <span class="n">reg_coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span>
-</span><span id="line-311">                        <span class="bp">self</span><span class="o">.</span><span class="n">landuse_area</span><span class="p">(</span><span class="n">area_fraction</span><span class="p">))</span> <span class="o">*</span> <span class="n">reg_coeffs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-</span><span id="line-312">            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-</span><span id="line-313">                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-</span><span id="line-314">                    <span class="sa">f</span><span class="s2">&quot;Error processing </span><span class="si">{</span><span class="n">fun_name</span><span class="si">}</span><span class="s2">, area fraction </span><span class="si">{</span><span class="n">area_fraction</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</span><span id="line-315">                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-</span><span id="line-316">                    <span class="s1">&#39;Export coefficient could not be calculated. Returning 0.&#39;</span><span class="p">)</span>
-</span><span id="line-317">                <span class="n">p_export_coeff</span> <span class="o">=</span> <span class="mf">0.0</span>
-</span><span id="line-318">            <span class="k">return</span> <span class="n">p_export_coeff</span>
-</span><span id="line-319">
-</span><span id="line-320">        <span class="n">load</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
-</span><span id="line-321">        <span class="k">for</span> <span class="n">landuse</span><span class="p">,</span> <span class="n">area_fraction</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">landuse_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">):</span>
-</span><span id="line-322">            <span class="c1"># iterate and calculate the total phosphorus load</span>
-</span><span id="line-323">            <span class="n">coefficient</span> <span class="o">=</span> <span class="n">p_exports</span><span class="p">[</span><span class="n">landuse</span><span class="p">][</span><span class="n">intensity</span><span class="o">.</span><span class="n">value</span><span class="p">]</span>
-</span><span id="line-324">            <span class="k">if</span> <span class="n">coefficient</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;crop export&#39;</span><span class="p">,</span> <span class="s1">&#39;forest export&#39;</span><span class="p">):</span>
-</span><span id="line-325">                <span class="n">coefficient</span> <span class="o">=</span> <span class="n">fun_exp</span><span class="p">(</span><span class="n">area_fraction</span><span class="p">,</span> <span class="n">coefficient</span><span class="p">)</span>
-</span><span id="line-326">            <span class="n">load</span> <span class="o">+=</span> <span class="n">coefficient</span> <span class="o">*</span> <span class="n">area_fraction</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_ha</span>
-</span><span id="line-327">        <span class="k">return</span> <span class="n">load</span></div>
+</span><span id="line-292">        <span class="n">load</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+</span><span id="line-293">        <span class="k">for</span> <span class="n">landuse</span><span class="p">,</span> <span class="n">area_fraction</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">landuse_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">):</span>
+</span><span id="line-294">            <span class="c1"># iterate and calculate the total phosphorus load</span>
+</span><span id="line-295">            <span class="n">coefficient</span> <span class="o">=</span> <span class="n">p_exports</span><span class="p">[</span><span class="n">landuse</span><span class="p">][</span><span class="n">intensity</span><span class="o">.</span><span class="n">value</span><span class="p">]</span>
+</span><span id="line-296">            <span class="k">if</span> <span class="n">coefficient</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;crop export&#39;</span><span class="p">,</span> <span class="s1">&#39;forest export&#39;</span><span class="p">):</span>
+</span><span id="line-297">                <span class="n">coefficient</span> <span class="o">=</span> <span class="n">fun_exp</span><span class="p">(</span><span class="n">area_fraction</span><span class="p">,</span> <span class="n">coefficient</span><span class="p">)</span>
+</span><span id="line-298">            <span class="n">load</span> <span class="o">+=</span> <span class="n">coefficient</span> <span class="o">*</span> <span class="n">area_fraction</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_ha</span>
+</span><span id="line-299">        <span class="k">return</span> <span class="n">load</span></div>
 
-</span><span id="line-328">
+</span><span id="line-300">
 <div class="viewcode-block" id="Catchment.p_input_gres">
 <a class="viewcode-back" href="../../api/reemission.catchment.html#reemission.catchment.Catchment.p_input_gres">[docs]</a>
-</span><span id="line-329">    <span class="k">def</span> <span class="nf">p_input_gres</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-330"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-331"><span class="sd">        Calculates annual input of phosphorus from catchment to the reservoir.</span>
-</span><span id="line-332">
-</span><span id="line-333"><span class="sd">        Note:</span>
-</span><span id="line-334"><span class="sd">            Follows the G-Res_ approach.</span>
-</span><span id="line-335">
-</span><span id="line-336"><span class="sd">        Returns:</span>
-</span><span id="line-337"><span class="sd">            float: Annual phosphorus input in kgP/year.</span>
-</span><span id="line-338"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-339">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_human_input_gres</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_land_input_gres</span><span class="p">()</span></div>
+</span><span id="line-301">    <span class="k">def</span><span class="w"> </span><span class="nf">p_input_gres</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-302"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-303"><span class="sd">        Calculates annual input of phosphorus from catchment to the reservoir.</span>
+</span><span id="line-304">
+</span><span id="line-305"><span class="sd">        Note:</span>
+</span><span id="line-306"><span class="sd">            Follows the G-Res_ approach.</span>
+</span><span id="line-307">
+</span><span id="line-308"><span class="sd">        Returns:</span>
+</span><span id="line-309"><span class="sd">            float: Annual phosphorus input in kgP/year.</span>
+</span><span id="line-310"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-311">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_human_input_gres</span><span class="p">()</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_land_input_gres</span><span class="p">()</span></div>
 
-</span><span id="line-340">
+</span><span id="line-312">
 <div class="viewcode-block" id="Catchment.p_input_mcdowell">
 <a class="viewcode-back" href="../../api/reemission.catchment.html#reemission.catchment.Catchment.p_input_mcdowell">[docs]</a>
-</span><span id="line-341">    <span class="k">def</span> <span class="nf">p_input_mcdowell</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-342"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-343"><span class="sd">        Calculates annual input of phosphorus from catchment to the reservoir using McDowell regression.</span>
-</span><span id="line-344">
-</span><span id="line-345"><span class="sd">        Returns:</span>
-</span><span id="line-346"><span class="sd">            float: Annual phosphorus input in kgP/year.</span>
-</span><span id="line-347"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-348">        <span class="c1"># 1e-6 converts mg/m3 to kg/m3; discharge is given in m3/year</span>
-</span><span id="line-349">        <span class="k">return</span> <span class="mf">1e-6</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">inflow_p_conc_mcdowell</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">discharge</span></div>
+</span><span id="line-313">    <span class="k">def</span><span class="w"> </span><span class="nf">p_input_mcdowell</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-314"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-315"><span class="sd">        Calculates annual input of phosphorus from catchment to the reservoir using McDowell regression.</span>
+</span><span id="line-316">
+</span><span id="line-317"><span class="sd">        Returns:</span>
+</span><span id="line-318"><span class="sd">            float: Annual phosphorus input in kgP/year.</span>
+</span><span id="line-319"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-320">        <span class="c1"># 1e-6 converts mg/m3 to kg/m3; discharge is given in m3/year</span>
+</span><span id="line-321">        <span class="k">return</span> <span class="mf">1e-6</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">inflow_p_conc_mcdowell</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">discharge</span></div>
 
-</span><span id="line-350">
+</span><span id="line-322">
 <div class="viewcode-block" id="Catchment.inflow_p_conc_mcdowell">
 <a class="viewcode-back" href="../../api/reemission.catchment.html#reemission.catchment.Catchment.inflow_p_conc_mcdowell">[docs]</a>
-</span><span id="line-351">    <span class="k">def</span> <span class="nf">inflow_p_conc_mcdowell</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-352"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-353"><span class="sd">        Calculates influent phosphorus concentration to the reservoir using McDowell2020 regression model.</span>
-</span><span id="line-354">
-</span><span id="line-355"><span class="sd">        Returns:</span>
-</span><span id="line-356"><span class="sd">            float: Influent phosphorus concentration in $\mu$g/L.</span>
-</span><span id="line-357"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-358">        <span class="n">biome</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">biogenic_factors</span><span class="o">.</span><span class="n">biome</span>
-</span><span id="line-359">        <span class="c1"># Calculate natural logarithm of total phosphorus conc. in mg/L</span>
-</span><span id="line-360">        <span class="c1"># Find percentage of catchment area allocated to crops</span>
-</span><span id="line-361">        <span class="n">crop_index</span> <span class="o">=</span> <span class="n">find_enum_index</span><span class="p">(</span><span class="n">enum</span><span class="o">=</span><span class="n">Landuse</span><span class="p">,</span> <span class="n">to_find</span><span class="o">=</span><span class="n">Landuse</span><span class="o">.</span><span class="n">CROPS</span><span class="p">)</span>
-</span><span id="line-362">        <span class="n">crop_percent</span> <span class="o">=</span> <span class="mf">100.0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">[</span><span class="n">crop_index</span><span class="p">]</span>
-</span><span id="line-363">        <span class="c1"># Find coefficients from the McDowell table of regression coefficients</span>
-</span><span id="line-364">        <span class="n">intercept</span> <span class="o">=</span> <span class="n">tp_coeff_table</span><span class="p">[</span><span class="s1">&#39;intercept&#39;</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
-</span><span id="line-365">        <span class="n">olsen_p</span> <span class="o">=</span> <span class="n">tp_coeff_table</span><span class="p">[</span><span class="s1">&#39;olsen_p&#39;</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
-</span><span id="line-366">        <span class="n">prec_coeff</span> <span class="o">=</span> <span class="n">tp_coeff_table</span><span class="p">[</span><span class="s1">&#39;mean_prec&#39;</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
-</span><span id="line-367">        <span class="n">slope_coeff</span> <span class="o">=</span> <span class="n">tp_coeff_table</span><span class="p">[</span><span class="s1">&#39;mean_slope&#39;</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
-</span><span id="line-368">        <span class="n">cropland_coeff</span> <span class="o">=</span> <span class="n">tp_coeff_table</span><span class="p">[</span><span class="s1">&#39;cropland&#39;</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
-</span><span id="line-369">        <span class="n">et_coeff</span> <span class="o">=</span> <span class="n">tp_coeff_table</span><span class="p">[</span><span class="s1">&#39;pet&#39;</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
-</span><span id="line-370">        <span class="n">biome_coeff</span> <span class="o">=</span> <span class="n">tp_coeff_table</span><span class="p">[</span><span class="s1">&#39;biome&#39;</span><span class="p">][</span><span class="n">biome</span><span class="o">.</span><span class="n">value</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
-</span><span id="line-371">        <span class="n">bias_corr</span> <span class="o">=</span> <span class="n">tp_coeff_table</span><span class="p">[</span><span class="s1">&#39;corr&#39;</span><span class="p">]</span>
-</span><span id="line-372">
-</span><span id="line-373">        <span class="c1"># Define the inner function calculating the final output P conc.</span>
-</span><span id="line-374">        <span class="k">def</span> <span class="nf">inflow_tp</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-375"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Calculate inflow TP in [micrograms/L] using McDowell&#39;s</span>
-</span><span id="line-376"><span class="sd">            regression coefficients.</span>
-</span><span id="line-377"><span class="sd">            &quot;&quot;&quot;</span>
-</span><span id="line-378">            <span class="n">ln_tp</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="line-379">                <span class="n">intercept</span>
-</span><span id="line-380">                <span class="o">+</span> <span class="n">olsen_p</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_olsen</span>
-</span><span id="line-381">                <span class="o">+</span> <span class="n">prec_coeff</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">precip</span> <span class="o">/</span> <span class="mi">12</span>
-</span><span id="line-382">                <span class="o">+</span> <span class="n">slope_coeff</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">slope</span>
-</span><span id="line-383">                <span class="o">+</span> <span class="n">cropland_coeff</span> <span class="o">*</span> <span class="n">crop_percent</span>
-</span><span id="line-384">                <span class="o">+</span> <span class="n">et_coeff</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">etransp</span> <span class="o">/</span> <span class="mi">12</span>
-</span><span id="line-385">                <span class="o">+</span> <span class="n">biome_coeff</span><span class="p">)</span>
-</span><span id="line-386">            <span class="n">inflow_p</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">bias_corr</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">ln_tp</span><span class="p">)</span>
-</span><span id="line-387">            <span class="k">return</span> <span class="n">inflow_p</span>
-</span><span id="line-388">
-</span><span id="line-389">        <span class="k">return</span> <span class="n">inflow_tp</span><span class="p">()</span></div>
+</span><span id="line-323">    <span class="k">def</span><span class="w"> </span><span class="nf">inflow_p_conc_mcdowell</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-324"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-325"><span class="sd">        Calculates influent phosphorus concentration to the reservoir using McDowell2020 regression model.</span>
+</span><span id="line-326">
+</span><span id="line-327"><span class="sd">        Returns:</span>
+</span><span id="line-328"><span class="sd">            float: Influent phosphorus concentration in $\mu$g/L.</span>
+</span><span id="line-329"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-330">        <span class="n">biome</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">biogenic_factors</span><span class="o">.</span><span class="n">biome</span>
+</span><span id="line-331">        <span class="c1"># Calculate natural logarithm of total phosphorus conc. in mg/L</span>
+</span><span id="line-332">        <span class="c1"># Find percentage of catchment area allocated to crops</span>
+</span><span id="line-333">        <span class="n">crop_index</span> <span class="o">=</span> <span class="n">find_enum_index</span><span class="p">(</span><span class="n">enum</span><span class="o">=</span><span class="n">Landuse</span><span class="p">,</span> <span class="n">to_find</span><span class="o">=</span><span class="n">Landuse</span><span class="o">.</span><span class="n">CROPS</span><span class="p">)</span>
+</span><span id="line-334">        <span class="n">crop_percent</span> <span class="o">=</span> <span class="mf">100.0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">[</span><span class="n">crop_index</span><span class="p">]</span>
+</span><span id="line-335">        <span class="c1"># Find coefficients from the McDowell table of regression coefficients</span>
+</span><span id="line-336">        <span class="n">tp_coeff_table</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">tables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mcdowell_p_exports&quot;</span><span class="p">)</span> 
+</span><span id="line-337">        <span class="n">intercept</span> <span class="o">=</span> <span class="n">tp_coeff_table</span><span class="p">[</span><span class="s1">&#39;intercept&#39;</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
+</span><span id="line-338">        <span class="n">olsen_p</span> <span class="o">=</span> <span class="n">tp_coeff_table</span><span class="p">[</span><span class="s1">&#39;olsen_p&#39;</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
+</span><span id="line-339">        <span class="n">prec_coeff</span> <span class="o">=</span> <span class="n">tp_coeff_table</span><span class="p">[</span><span class="s1">&#39;mean_prec&#39;</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
+</span><span id="line-340">        <span class="n">slope_coeff</span> <span class="o">=</span> <span class="n">tp_coeff_table</span><span class="p">[</span><span class="s1">&#39;mean_slope&#39;</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
+</span><span id="line-341">        <span class="n">cropland_coeff</span> <span class="o">=</span> <span class="n">tp_coeff_table</span><span class="p">[</span><span class="s1">&#39;cropland&#39;</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
+</span><span id="line-342">        <span class="n">et_coeff</span> <span class="o">=</span> <span class="n">tp_coeff_table</span><span class="p">[</span><span class="s1">&#39;pet&#39;</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
+</span><span id="line-343">        <span class="n">biome_coeff</span> <span class="o">=</span> <span class="n">tp_coeff_table</span><span class="p">[</span><span class="s1">&#39;biome&#39;</span><span class="p">][</span><span class="n">biome</span><span class="o">.</span><span class="n">value</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
+</span><span id="line-344">        <span class="n">bias_corr</span> <span class="o">=</span> <span class="n">tp_coeff_table</span><span class="p">[</span><span class="s1">&#39;corr&#39;</span><span class="p">]</span>
+</span><span id="line-345">
+</span><span id="line-346">        <span class="c1"># Define the inner function calculating the final output P conc.</span>
+</span><span id="line-347">        <span class="k">def</span><span class="w"> </span><span class="nf">inflow_tp</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-348"><span class="w">            </span><span class="sd">&quot;&quot;&quot;Calculate inflow TP in [micrograms/L] using McDowell&#39;s</span>
+</span><span id="line-349"><span class="sd">            regression coefficients.</span>
+</span><span id="line-350"><span class="sd">            &quot;&quot;&quot;</span>
+</span><span id="line-351">            <span class="n">ln_tp</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="line-352">                <span class="n">intercept</span>
+</span><span id="line-353">                <span class="o">+</span> <span class="n">olsen_p</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">mean_olsen</span>
+</span><span id="line-354">                <span class="o">+</span> <span class="n">prec_coeff</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">precip</span> <span class="o">/</span> <span class="mi">12</span>
+</span><span id="line-355">                <span class="o">+</span> <span class="n">slope_coeff</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">slope</span>
+</span><span id="line-356">                <span class="o">+</span> <span class="n">cropland_coeff</span> <span class="o">*</span> <span class="n">crop_percent</span>
+</span><span id="line-357">                <span class="o">+</span> <span class="n">et_coeff</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">etransp</span> <span class="o">/</span> <span class="mi">12</span>
+</span><span id="line-358">                <span class="o">+</span> <span class="n">biome_coeff</span><span class="p">)</span>
+</span><span id="line-359">            <span class="n">inflow_p</span> <span class="o">=</span> <span class="mi">10</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">bias_corr</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">ln_tp</span><span class="p">)</span>
+</span><span id="line-360">            <span class="k">return</span> <span class="n">inflow_p</span>
+</span><span id="line-361">
+</span><span id="line-362">        <span class="k">return</span> <span class="n">inflow_tp</span><span class="p">()</span></div>
 
-</span><span id="line-390">
+</span><span id="line-363">
 <div class="viewcode-block" id="Catchment.inflow_p_conc_gres">
 <a class="viewcode-back" href="../../api/reemission.catchment.html#reemission.catchment.Catchment.inflow_p_conc_gres">[docs]</a>
-</span><span id="line-391">    <span class="k">def</span> <span class="nf">inflow_p_conc_gres</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-392"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-393"><span class="sd">        Calculates influent phosphorus concentration to the reservoir following the G-Res_ approach.</span>
-</span><span id="line-394">
-</span><span id="line-395"><span class="sd">        Returns:</span>
-</span><span id="line-396"><span class="sd">            float: Influent phosphorus concentration in micrograms/L.</span>
-</span><span id="line-397"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-398">        <span class="n">load_pop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_human_input_gres</span><span class="p">()</span>
-</span><span id="line-399">        <span class="n">load_land</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_land_input_gres</span><span class="p">()</span>
-</span><span id="line-400">        <span class="n">load_total</span> <span class="o">=</span> <span class="n">load_pop</span> <span class="o">+</span> <span class="n">load_land</span>
-</span><span id="line-401">        <span class="k">return</span> <span class="mi">10</span><span class="o">**</span><span class="mi">6</span> <span class="o">*</span> <span class="n">load_total</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">discharge</span></div>
+</span><span id="line-364">    <span class="k">def</span><span class="w"> </span><span class="nf">inflow_p_conc_gres</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-365"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-366"><span class="sd">        Calculates influent phosphorus concentration to the reservoir following the G-Res_ approach.</span>
+</span><span id="line-367">
+</span><span id="line-368"><span class="sd">        Returns:</span>
+</span><span id="line-369"><span class="sd">            float: Influent phosphorus concentration in micrograms/L.</span>
+</span><span id="line-370"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-371">        <span class="n">load_pop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_human_input_gres</span><span class="p">()</span>
+</span><span id="line-372">        <span class="n">load_land</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p_land_input_gres</span><span class="p">()</span>
+</span><span id="line-373">        <span class="n">load_total</span> <span class="o">=</span> <span class="n">load_pop</span> <span class="o">+</span> <span class="n">load_land</span>
+</span><span id="line-374">        <span class="k">return</span> <span class="mi">10</span><span class="o">**</span><span class="mi">6</span> <span class="o">*</span> <span class="n">load_total</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">discharge</span></div>
 
-</span><span id="line-402">
+</span><span id="line-375">
 <div class="viewcode-block" id="Catchment.inflow_p_conc">
 <a class="viewcode-back" href="../../api/reemission.catchment.html#reemission.catchment.Catchment.inflow_p_conc">[docs]</a>
-</span><span id="line-403">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;inflow_p_conc&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
-</span><span id="line-404">    <span class="k">def</span> <span class="nf">inflow_p_conc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-405"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-406"><span class="sd">        Calculates median influent total phosphorus concentration.</span>
-</span><span id="line-407">
-</span><span id="line-408"><span class="sd">        Args:</span>
-</span><span id="line-409"><span class="sd">            method (str): Method to use for calculation (&quot;g-res&quot; or &quot;mcdowell&quot;).</span>
-</span><span id="line-410">
-</span><span id="line-411"><span class="sd">        Returns:</span>
-</span><span id="line-412"><span class="sd">            float: Median influent total phosphorus concentration in micrograms/L.</span>
-</span><span id="line-413"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-414">        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;g-res&quot;</span><span class="p">:</span>
-</span><span id="line-415">            <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inflow_p_conc_gres</span><span class="p">()</span>
-</span><span id="line-416">        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;mcdowell&quot;</span><span class="p">:</span>
-</span><span id="line-417">            <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inflow_p_conc_mcdowell</span><span class="p">()</span>
-</span><span id="line-418">        <span class="k">else</span><span class="p">:</span>
-</span><span id="line-419">            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-</span><span id="line-420">                <span class="s1">&#39;Unrecognized method </span><span class="si">%s</span><span class="s1">. &#39;</span><span class="p">,</span>
-</span><span id="line-421">                <span class="n">method</span> <span class="o">+</span> <span class="s1">&#39;. Using the default G-Res method.&#39;</span><span class="p">)</span>
-</span><span id="line-422">            <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inflow_p_conc_gres</span><span class="p">()</span>
-</span><span id="line-423">        <span class="k">return</span> <span class="n">output</span></div>
+</span><span id="line-376">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;inflow_p_conc&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
+</span><span id="line-377">    <span class="k">def</span><span class="w"> </span><span class="nf">inflow_p_conc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-378"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-379"><span class="sd">        Calculates median influent total phosphorus concentration.</span>
+</span><span id="line-380">
+</span><span id="line-381"><span class="sd">        Args:</span>
+</span><span id="line-382"><span class="sd">            method (str): Method to use for calculation (&quot;g-res&quot; or &quot;mcdowell&quot;).</span>
+</span><span id="line-383">
+</span><span id="line-384"><span class="sd">        Returns:</span>
+</span><span id="line-385"><span class="sd">            float: Median influent total phosphorus concentration in micrograms/L.</span>
+</span><span id="line-386"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-387">        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;g-res&quot;</span><span class="p">:</span>
+</span><span id="line-388">            <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inflow_p_conc_gres</span><span class="p">()</span>
+</span><span id="line-389">        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;mcdowell&quot;</span><span class="p">:</span>
+</span><span id="line-390">            <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inflow_p_conc_mcdowell</span><span class="p">()</span>
+</span><span id="line-391">        <span class="k">else</span><span class="p">:</span>
+</span><span id="line-392">            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+</span><span id="line-393">                <span class="s1">&#39;Unrecognized method </span><span class="si">%s</span><span class="s1">. &#39;</span><span class="p">,</span>
+</span><span id="line-394">                <span class="n">method</span> <span class="o">+</span> <span class="s1">&#39;. Using the default G-Res method.&#39;</span><span class="p">)</span>
+</span><span id="line-395">            <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inflow_p_conc_gres</span><span class="p">()</span>
+</span><span id="line-396">        <span class="k">return</span> <span class="n">output</span></div>
 
-</span><span id="line-424">
+</span><span id="line-397">
 <div class="viewcode-block" id="Catchment.inflow_n_conc">
 <a class="viewcode-back" href="../../api/reemission.catchment.html#reemission.catchment.Catchment.inflow_n_conc">[docs]</a>
-</span><span id="line-425">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;inflow_n_conc&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
-</span><span id="line-426">    <span class="k">def</span> <span class="nf">inflow_n_conc</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-427"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-428"><span class="sd">        Calculates median influent total nitrogen concentration.</span>
-</span><span id="line-429">
-</span><span id="line-430"><span class="sd">        Attention:</span>
-</span><span id="line-431"><span class="sd">            Contrary to Phosphorus, no other method than McDowell is available.</span>
-</span><span id="line-432"><span class="sd">        Returns:</span>
-</span><span id="line-433"><span class="sd">            float: Median influent total nitrogen concentration in micrograms/L.</span>
-</span><span id="line-434"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-435">        <span class="n">biome</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">biogenic_factors</span><span class="o">.</span><span class="n">biome</span>
-</span><span id="line-436">        <span class="n">intercept</span> <span class="o">=</span> <span class="n">tn_coeff_table</span><span class="p">[</span><span class="s1">&#39;intercept&#39;</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
-</span><span id="line-437">        <span class="n">prec_coeff</span> <span class="o">=</span> <span class="n">tn_coeff_table</span><span class="p">[</span><span class="s1">&#39;mean_prec&#39;</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
-</span><span id="line-438">        <span class="n">slope_coeff</span> <span class="o">=</span> <span class="n">tn_coeff_table</span><span class="p">[</span><span class="s1">&#39;mean_slope&#39;</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
-</span><span id="line-439">        <span class="n">cropland_coeff</span> <span class="o">=</span> <span class="n">tn_coeff_table</span><span class="p">[</span><span class="s1">&#39;cropland&#39;</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
-</span><span id="line-440">        <span class="n">soil_wet_coeff</span> <span class="o">=</span> <span class="n">tn_coeff_table</span><span class="p">[</span><span class="s1">&#39;soil_wet&#39;</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
-</span><span id="line-441">        <span class="n">biome_coeff</span> <span class="o">=</span> <span class="n">tn_coeff_table</span><span class="p">[</span><span class="s1">&#39;biome&#39;</span><span class="p">][</span><span class="n">biome</span><span class="o">.</span><span class="n">value</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
-</span><span id="line-442">        <span class="n">bias_corr</span> <span class="o">=</span> <span class="n">tn_coeff_table</span><span class="p">[</span><span class="s1">&#39;corr&#39;</span><span class="p">]</span>
-</span><span id="line-443">        <span class="c1"># Find percentage of catchment area allocated to crops</span>
-</span><span id="line-444">        <span class="n">crop_index</span> <span class="o">=</span> <span class="n">find_enum_index</span><span class="p">(</span><span class="n">enum</span><span class="o">=</span><span class="n">Landuse</span><span class="p">,</span> <span class="n">to_find</span><span class="o">=</span><span class="n">Landuse</span><span class="o">.</span><span class="n">CROPS</span><span class="p">)</span>
-</span><span id="line-445">        <span class="n">crop_percent</span> <span class="o">=</span> <span class="mf">100.0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">[</span><span class="n">crop_index</span><span class="p">]</span>
-</span><span id="line-446">        <span class="n">inflow_n</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="line-447">            <span class="mi">10</span><span class="o">**</span><span class="mi">3</span>
-</span><span id="line-448">            <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
-</span><span id="line-449">                <span class="n">intercept</span>
-</span><span id="line-450">                <span class="o">+</span> <span class="n">prec_coeff</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">precip</span> <span class="o">/</span> <span class="mi">12</span>
-</span><span id="line-451">                <span class="o">+</span> <span class="n">slope_coeff</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">slope</span>
-</span><span id="line-452">                <span class="o">+</span> <span class="n">cropland_coeff</span> <span class="o">*</span> <span class="n">crop_percent</span>
-</span><span id="line-453">                <span class="o">+</span> <span class="n">soil_wet_coeff</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">soil_wetness</span>
-</span><span id="line-454">                <span class="o">+</span> <span class="n">biome_coeff</span>
-</span><span id="line-455">            <span class="p">)</span> <span class="o">*</span> <span class="n">bias_corr</span><span class="p">)</span>
-</span><span id="line-456">        <span class="k">return</span> <span class="n">inflow_n</span></div>
+</span><span id="line-398">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;inflow_n_conc&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
+</span><span id="line-399">    <span class="k">def</span><span class="w"> </span><span class="nf">inflow_n_conc</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-400"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-401"><span class="sd">        Calculates median influent total nitrogen concentration.</span>
+</span><span id="line-402">
+</span><span id="line-403"><span class="sd">        Attention:</span>
+</span><span id="line-404"><span class="sd">            Contrary to Phosphorus, no other method than McDowell is available.</span>
+</span><span id="line-405"><span class="sd">        Returns:</span>
+</span><span id="line-406"><span class="sd">            float: Median influent total nitrogen concentration in micrograms/L.</span>
+</span><span id="line-407"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-408">        <span class="n">biome</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">biogenic_factors</span><span class="o">.</span><span class="n">biome</span>
+</span><span id="line-409">        <span class="n">tn_coeff_table</span> <span class="o">=</span> <span class="n">registry</span><span class="o">.</span><span class="n">tables</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mcdowell_n_exports&quot;</span><span class="p">)</span>
+</span><span id="line-410">        <span class="n">intercept</span> <span class="o">=</span> <span class="n">tn_coeff_table</span><span class="p">[</span><span class="s1">&#39;intercept&#39;</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
+</span><span id="line-411">        <span class="n">prec_coeff</span> <span class="o">=</span> <span class="n">tn_coeff_table</span><span class="p">[</span><span class="s1">&#39;mean_prec&#39;</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
+</span><span id="line-412">        <span class="n">slope_coeff</span> <span class="o">=</span> <span class="n">tn_coeff_table</span><span class="p">[</span><span class="s1">&#39;mean_slope&#39;</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
+</span><span id="line-413">        <span class="n">cropland_coeff</span> <span class="o">=</span> <span class="n">tn_coeff_table</span><span class="p">[</span><span class="s1">&#39;cropland&#39;</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
+</span><span id="line-414">        <span class="n">soil_wet_coeff</span> <span class="o">=</span> <span class="n">tn_coeff_table</span><span class="p">[</span><span class="s1">&#39;soil_wet&#39;</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
+</span><span id="line-415">        <span class="n">biome_coeff</span> <span class="o">=</span> <span class="n">tn_coeff_table</span><span class="p">[</span><span class="s1">&#39;biome&#39;</span><span class="p">][</span><span class="n">biome</span><span class="o">.</span><span class="n">value</span><span class="p">][</span><span class="s1">&#39;coeff&#39;</span><span class="p">]</span>
+</span><span id="line-416">        <span class="n">bias_corr</span> <span class="o">=</span> <span class="n">tn_coeff_table</span><span class="p">[</span><span class="s1">&#39;corr&#39;</span><span class="p">]</span>
+</span><span id="line-417">        <span class="c1"># Find percentage of catchment area allocated to crops</span>
+</span><span id="line-418">        <span class="n">crop_index</span> <span class="o">=</span> <span class="n">find_enum_index</span><span class="p">(</span><span class="n">enum</span><span class="o">=</span><span class="n">Landuse</span><span class="p">,</span> <span class="n">to_find</span><span class="o">=</span><span class="n">Landuse</span><span class="o">.</span><span class="n">CROPS</span><span class="p">)</span>
+</span><span id="line-419">        <span class="n">crop_percent</span> <span class="o">=</span> <span class="mf">100.0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">[</span><span class="n">crop_index</span><span class="p">]</span>
+</span><span id="line-420">        <span class="n">inflow_n</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="line-421">            <span class="mi">10</span><span class="o">**</span><span class="mi">3</span>
+</span><span id="line-422">            <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+</span><span id="line-423">                <span class="n">intercept</span>
+</span><span id="line-424">                <span class="o">+</span> <span class="n">prec_coeff</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">precip</span> <span class="o">/</span> <span class="mi">12</span>
+</span><span id="line-425">                <span class="o">+</span> <span class="n">slope_coeff</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">slope</span>
+</span><span id="line-426">                <span class="o">+</span> <span class="n">cropland_coeff</span> <span class="o">*</span> <span class="n">crop_percent</span>
+</span><span id="line-427">                <span class="o">+</span> <span class="n">soil_wet_coeff</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">soil_wetness</span>
+</span><span id="line-428">                <span class="o">+</span> <span class="n">biome_coeff</span>
+</span><span id="line-429">            <span class="p">)</span> <span class="o">*</span> <span class="n">bias_corr</span><span class="p">)</span>
+</span><span id="line-430">        <span class="k">return</span> <span class="n">inflow_n</span></div>
 
-</span><span id="line-457">
+</span><span id="line-431">
 <div class="viewcode-block" id="Catchment.nitrogen_load">
 <a class="viewcode-back" href="../../api/reemission.catchment.html#reemission.catchment.Catchment.nitrogen_load">[docs]</a>
-</span><span id="line-458">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;nitrogen_load&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
-</span><span id="line-459">    <span class="k">def</span> <span class="nf">nitrogen_load</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-460"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-461"><span class="sd">        Calculates total nitrogen load entering the reservoir with catchment runoff.</span>
-</span><span id="line-462">
-</span><span id="line-463"><span class="sd">        Returns:</span>
-</span><span id="line-464"><span class="sd">            float: Total nitrogen load in kgN/year.</span>
-</span><span id="line-465"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-466">        <span class="n">inflow_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inflow_n_conc</span><span class="p">()</span>
-</span><span id="line-467">        <span class="c1"># 1e-6 converts mg/m3 (microgram/L) to kg/m3</span>
-</span><span id="line-468">        <span class="k">return</span> <span class="mf">1e-6</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">discharge</span> <span class="o">*</span> <span class="n">inflow_n</span></div>
+</span><span id="line-432">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;nitrogen_load&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
+</span><span id="line-433">    <span class="k">def</span><span class="w"> </span><span class="nf">nitrogen_load</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-434"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-435"><span class="sd">        Calculates total nitrogen load entering the reservoir with catchment runoff.</span>
+</span><span id="line-436">
+</span><span id="line-437"><span class="sd">        Returns:</span>
+</span><span id="line-438"><span class="sd">            float: Total nitrogen load in kgN/year.</span>
+</span><span id="line-439"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-440">        <span class="n">inflow_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inflow_n_conc</span><span class="p">()</span>
+</span><span id="line-441">        <span class="c1"># 1e-6 converts mg/m3 (microgram/L) to kg/m3</span>
+</span><span id="line-442">        <span class="k">return</span> <span class="mf">1e-6</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">discharge</span> <span class="o">*</span> <span class="n">inflow_n</span></div>
 
-</span><span id="line-469">
+</span><span id="line-443">
 <div class="viewcode-block" id="Catchment.phosphorus_load">
 <a class="viewcode-back" href="../../api/reemission.catchment.html#reemission.catchment.Catchment.phosphorus_load">[docs]</a>
-</span><span id="line-470">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;phosphorus_load&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
-</span><span id="line-471">    <span class="k">def</span> <span class="nf">phosphorus_load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-472"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-473"><span class="sd">        Calculates total phosphorus load entering the reservoir with catchment runoff.</span>
-</span><span id="line-474">
-</span><span id="line-475"><span class="sd">        Args:</span>
-</span><span id="line-476"><span class="sd">            method (str): P export calculation method: &quot;g-res&quot; or &quot;mcdowell&quot;.</span>
-</span><span id="line-477">
-</span><span id="line-478"><span class="sd">        Returns:</span>
-</span><span id="line-479"><span class="sd">            float: Total phosphorus load in kgP/year.</span>
-</span><span id="line-480"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-481">        <span class="n">inflow_p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inflow_p_conc</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
-</span><span id="line-482">        <span class="c1"># 1e-6 converts mg/m3 (microgram/L) to kg/m3</span>
-</span><span id="line-483">        <span class="k">return</span> <span class="mf">1e-6</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">discharge</span> <span class="o">*</span> <span class="n">inflow_p</span></div>
+</span><span id="line-444">    <span class="nd">@save_return</span><span class="p">(</span><span class="n">internal</span><span class="p">,</span> <span class="n">internals_config</span><span class="p">[</span><span class="s1">&#39;phosphorus_load&#39;</span><span class="p">][</span><span class="s1">&#39;include&#39;</span><span class="p">])</span>
+</span><span id="line-445">    <span class="k">def</span><span class="w"> </span><span class="nf">phosphorus_load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-446"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-447"><span class="sd">        Calculates total phosphorus load entering the reservoir with catchment runoff.</span>
+</span><span id="line-448">
+</span><span id="line-449"><span class="sd">        Args:</span>
+</span><span id="line-450"><span class="sd">            method (str): P export calculation method: &quot;g-res&quot; or &quot;mcdowell&quot;.</span>
+</span><span id="line-451">
+</span><span id="line-452"><span class="sd">        Returns:</span>
+</span><span id="line-453"><span class="sd">            float: Total phosphorus load in kgP/year.</span>
+</span><span id="line-454"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-455">        <span class="n">inflow_p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inflow_p_conc</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+</span><span id="line-456">        <span class="c1"># 1e-6 converts mg/m3 (microgram/L) to kg/m3</span>
+</span><span id="line-457">        <span class="k">return</span> <span class="mf">1e-6</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">discharge</span> <span class="o">*</span> <span class="n">inflow_p</span></div>
 </div>
 
 </span></code></pre></div>
@@ -729,20 +702,19 @@
       <div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
         <p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2024, Tomasz Janus, University of Manchester, United Kingdom&nbsp;Built with <a class="font-medium underline underline-offset-4"
     href="https://www.sphinx-doc.org"
-    rel="noreferrer">Sphinx 7.3.7</a></p>
+    rel="noreferrer">Sphinx 8.1.3</a></p>
 </div>
 </div>
 </footer>
   </div>
   
     <script src="../../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/toggleprompt.js?v=5801b3bb"></script>
-    <script src="../../_static/tabs.js?v=3030b3cb"></script>
-    <script defer="defer" src="../../_static/theme.js?v=e82a16a3"></script>
+    <script defer="defer" src="../../_static/theme.js?v=073f68d9"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
   
 </body>

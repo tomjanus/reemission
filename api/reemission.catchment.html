@@ -10,11 +10,10 @@
 <title>Catchment Model | ReEmission 1.0.0 documentation</title>
 <meta content="Catchment Model | ReEmission 1.0.0 documentation" property="og:title"/>
 <meta content="Catchment Model | ReEmission 1.0.0 documentation" name="twitter:title"/>
-<link href="../_static/pygments.css?v=c842c44c" rel="stylesheet" type="text/css"/>
-<link href="../_static/theme.css?v=ecdfb4fc" rel="stylesheet" type="text/css"/>
+<link href="../_static/pygments.css?v=1949e874" rel="stylesheet" type="text/css"/>
+<link href="../_static/theme.css?v=42baaae4" rel="stylesheet" type="text/css"/>
 <link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
 <link href="../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/tabs.css?v=a5c4661c" rel="stylesheet" type="text/css"/>
 <link href="../search.html" rel="search" title="Search"/>
 <link href="../genindex.html" rel="index" title="Index"/>
 <link href="reemission.ns_catchment.html" rel="next" title="Post-impoundment catchment"/>
@@ -32,7 +31,7 @@
       if (!userPreference) {localStorage.setItem('darkMode', mode)}
     </script>
 </head>
-<body :class="{ 'overflow-hidden': showSidebar }" class="min-h-screen font-sans antialiased bg-background text-foreground" x-data="{ showSidebar: false }">
+<body :class="{ 'overflow-hidden': showSidebar }" class="min-h-screen font-sans antialiased bg-background text-foreground" x-data="{ showSidebar: false, showScrollTop: false }">
 <div @click.self="showSidebar = false" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" x-cloak="" x-show="showSidebar"></div><div class="relative flex flex-col min-h-screen" id="page"><a class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100" href="#content">
       Skip to content
     </a><header class="sticky top-0 z-40 w-full border-b shadow-sm border-border supports-backdrop-blur:bg-background/60 bg-background/95 backdrop-blur"><div class="container flex items-center h-14">
@@ -147,96 +146,6 @@
 <p id="module-reemission.catchment">Catchment-related processes.</p>
 <p>This module provides functionalities for calculating various catchment-related metrics,
 including phosphorus and nitrogen loads, using different methodologies.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="reemission.catchment.INI_FILE">
-<span class="sig-prename descclassname"><span class="pre">reemission.catchment.</span></span><span class="sig-name descname"><span class="pre">INI_FILE</span></span></dt>
-<dd><p>Path to the configuration file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="reemission.catchment.TABLES">
-<span class="sig-prename descclassname"><span class="pre">reemission.catchment.</span></span><span class="sig-name descname"><span class="pre">TABLES</span></span></dt>
-<dd><p>Path to the parameters directory.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="reemission.catchment.tn_coeff_table">
-<span class="sig-prename descclassname"><span class="pre">reemission.catchment.</span></span><span class="sig-name descname"><span class="pre">tn_coeff_table</span></span></dt>
-<dd><p>TN coefficient table loaded from YAML.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="reemission.catchment.tp_coeff_table">
-<span class="sig-prename descclassname"><span class="pre">reemission.catchment.</span></span><span class="sig-name descname"><span class="pre">tp_coeff_table</span></span></dt>
-<dd><p>TP coefficient table loaded from YAML.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="reemission.catchment.p_loads_pop">
-<span class="sig-prename descclassname"><span class="pre">reemission.catchment.</span></span><span class="sig-name descname"><span class="pre">p_loads_pop</span></span></dt>
-<dd><p>Phosphorus loads population table loaded from YAML.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="reemission.catchment.p_exports">
-<span class="sig-prename descclassname"><span class="pre">reemission.catchment.</span></span><span class="sig-name descname"><span class="pre">p_exports</span></span></dt>
-<dd><p>Phosphorus exports table loaded from YAML.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="reemission.catchment.config">
-<span class="sig-prename descclassname"><span class="pre">reemission.catchment.</span></span><span class="sig-name descname"><span class="pre">config</span></span></dt>
-<dd><p>Loaded configuration settings.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>configparser.ConfigParser</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="reemission.catchment.internals_config">
-<span class="sig-prename descclassname"><span class="pre">reemission.catchment.</span></span><span class="sig-name descname"><span class="pre">internals_config</span></span></dt>
-<dd><p>Internal variables configuration loaded from YAML.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict</p>
-</dd>
-</dl>
-</dd></dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="reemission.catchment.EPS">
-<span class="sig-prename descclassname"><span class="pre">reemission.catchment.</span></span><span class="sig-name descname"><span class="pre">EPS</span></span></dt>
-<dd><p>Margin of error for the sum of land use fractions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="reemission.catchment.Catchment">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.catchment.</span></span><span class="sig-name descname"><span class="pre">Catchment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">area</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">riv_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runoff</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">population</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slope</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">etransp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">soil_wetness</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_olsen</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_fractions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">biogenic_factors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="reemission.biogenic.html#reemission.biogenic.BiogenicFactors" title="reemission.biogenic.BiogenicFactors"><span class="pre">BiogenicFactors</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'n/a'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/catchment.html#Catchment"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
@@ -750,15 +659,6 @@ formula is used.</p>
 </div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
 <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
 <ul>
-<li><a :data-current="activeSection === '#reemission.catchment.INI_FILE'" class="reference internal" href="#reemission.catchment.INI_FILE"><code class="docutils literal notranslate"><span class="pre">INI_FILE</span></code></a></li>
-<li><a :data-current="activeSection === '#reemission.catchment.TABLES'" class="reference internal" href="#reemission.catchment.TABLES"><code class="docutils literal notranslate"><span class="pre">TABLES</span></code></a></li>
-<li><a :data-current="activeSection === '#reemission.catchment.tn_coeff_table'" class="reference internal" href="#reemission.catchment.tn_coeff_table"><code class="docutils literal notranslate"><span class="pre">tn_coeff_table</span></code></a></li>
-<li><a :data-current="activeSection === '#reemission.catchment.tp_coeff_table'" class="reference internal" href="#reemission.catchment.tp_coeff_table"><code class="docutils literal notranslate"><span class="pre">tp_coeff_table</span></code></a></li>
-<li><a :data-current="activeSection === '#reemission.catchment.p_loads_pop'" class="reference internal" href="#reemission.catchment.p_loads_pop"><code class="docutils literal notranslate"><span class="pre">p_loads_pop</span></code></a></li>
-<li><a :data-current="activeSection === '#reemission.catchment.p_exports'" class="reference internal" href="#reemission.catchment.p_exports"><code class="docutils literal notranslate"><span class="pre">p_exports</span></code></a></li>
-<li><a :data-current="activeSection === '#reemission.catchment.config'" class="reference internal" href="#reemission.catchment.config"><code class="docutils literal notranslate"><span class="pre">config</span></code></a></li>
-<li><a :data-current="activeSection === '#reemission.catchment.internals_config'" class="reference internal" href="#reemission.catchment.internals_config"><code class="docutils literal notranslate"><span class="pre">internals_config</span></code></a></li>
-<li><a :data-current="activeSection === '#reemission.catchment.EPS'" class="reference internal" href="#reemission.catchment.EPS"><code class="docutils literal notranslate"><span class="pre">EPS</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.catchment.Catchment'" class="reference internal" href="#reemission.catchment.Catchment"><code class="docutils literal notranslate"><span class="pre">Catchment</span></code></a><ul>
 <li><a :data-current="activeSection === '#reemission.catchment.Catchment.area'" class="reference internal" href="#reemission.catchment.Catchment.area"><code class="docutils literal notranslate"><span class="pre">Catchment.area</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.catchment.Catchment.riv_length'" class="reference internal" href="#reemission.catchment.Catchment.riv_length"><code class="docutils literal notranslate"><span class="pre">Catchment.riv_length</span></code></a></li>
@@ -813,18 +713,18 @@ formula is used.</p>
 </div><footer class="py-6 border-t border-border md:py-0">
 <div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
 <div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
-<p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2024, Tomasz Janus, University of Manchester, United Kingdom Built with <a class="font-medium underline underline-offset-4" href="https://www.sphinx-doc.org" rel="noreferrer">Sphinx 7.3.7</a></p>
+<p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2024, Tomasz Janus, University of Manchester, United Kingdom Built with <a class="font-medium underline underline-offset-4" href="https://www.sphinx-doc.org" rel="noreferrer">Sphinx 8.1.3</a></p>
 </div>
 </div>
 </footer>
 </div>
 <script src="../_static/documentation_options.js?v=8d563738"></script>
-<script src="../_static/doctools.js?v=9a2dae69"></script>
+<script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../_static/copybutton.js?v=f281be69"></script>
 <script src="../_static/toggleprompt.js?v=5801b3bb"></script>
-<script defer="defer" src="../_static/theme.js?v=e82a16a3"></script>
+<script defer="defer" src="../_static/theme.js?v=073f68d9"></script>
 <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
 <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
 <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>

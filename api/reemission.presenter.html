@@ -10,11 +10,10 @@
 <title>Presenter | ReEmission 1.0.0 documentation</title>
 <meta content="Presenter | ReEmission 1.0.0 documentation" property="og:title"/>
 <meta content="Presenter | ReEmission 1.0.0 documentation" name="twitter:title"/>
-<link href="../_static/pygments.css?v=c842c44c" rel="stylesheet" type="text/css"/>
-<link href="../_static/theme.css?v=ecdfb4fc" rel="stylesheet" type="text/css"/>
+<link href="../_static/pygments.css?v=1949e874" rel="stylesheet" type="text/css"/>
+<link href="../_static/theme.css?v=42baaae4" rel="stylesheet" type="text/css"/>
 <link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
 <link href="../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/tabs.css?v=a5c4661c" rel="stylesheet" type="text/css"/>
 <link href="../search.html" rel="search" title="Search"/>
 <link href="../genindex.html" rel="index" title="Index"/>
 <link href="reemission.utils.html" rel="next" title="Utility functions"/>
@@ -32,7 +31,7 @@
       if (!userPreference) {localStorage.setItem('darkMode', mode)}
     </script>
 </head>
-<body :class="{ 'overflow-hidden': showSidebar }" class="min-h-screen font-sans antialiased bg-background text-foreground" x-data="{ showSidebar: false }">
+<body :class="{ 'overflow-hidden': showSidebar }" class="min-h-screen font-sans antialiased bg-background text-foreground" x-data="{ showSidebar: false, showScrollTop: false }">
 <div @click.self="showSidebar = false" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" x-cloak="" x-show="showSidebar"></div><div class="relative flex flex-col min-h-screen" id="page"><a class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100" href="#content">
       Skip to content
     </a><header class="sticky top-0 z-40 w-full border-b shadow-sm border-border supports-backdrop-blur:bg-background/60 bg-background/95 backdrop-blur"><div class="container flex items-center h-14">
@@ -145,40 +144,61 @@
 </tbody>
 </table>
 <p id="module-reemission.presenter">Presenter Module</p>
-<p>This module provides classes and functions for presenting GHG (Greenhouse Gas) emissions computation results
-in various output formats such as Excel, JSON, and LaTeX.</p>
-<dl class="simple">
-<dt><strong>Classes:</strong></dt><dd><ul class="simple">
-<li><p><strong>ExcelWriter</strong>: Formats and writes data to an Excel file.</p></li>
-<li><p><strong>JSONWriter</strong>: Formats and writes data to a JSON file.</p></li>
-<li><p><strong>LatexWriter</strong>: Formats and writes data to a LaTeX file using PyLaTeX.</p></li>
-<li><p><strong>Presenter</strong>: Reads and processes GHG emission calculation results and outputs them using various writers.</p></li>
-</ul>
+<p>This module provides functionality for presenting Greenhouse Gas (GHG) emissions
+computation results in various output formats such as Excel, JSON, LaTeX, and HTML.</p>
+<dl>
+<dt>Classes:</dt><dd><dl class="simple">
+<dt>ExcelWriter:</dt><dd><p>Formats and writes data to an Excel file.</p>
 </dd>
-<dt>Each writer class (<strong>ExcelWriter</strong>, <strong>JSONWriter</strong>, <strong>LatexWriter</strong>) is designed to handle specific output formats, ensuring the presentation of inputs, outputs, and internal variables in a structured manner. All writers inherit from an abstract base class <strong>Writer</strong> which implements the following static methods:</dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">round_parameter(number:</span> <span class="pre">Union[float,</span> <span class="pre">list],</span> <span class="pre">number_decimals:</span> <span class="pre">int)</span> <span class="pre">-&gt;</span> <span class="pre">Union[float,</span> <span class="pre">list]</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">rollout(var_name:</span> <span class="pre">str,</span> <span class="pre">var_vector:</span> <span class="pre">Union[Sequence,</span> <span class="pre">Dict])</span> <span class="pre">-&gt;</span> <span class="pre">Iterator[Tuple[str,</span> <span class="pre">Any]]</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">def</span> <span class="pre">write_par_to_dict(input_name:</span> <span class="pre">str,</span> <span class="pre">parameter:</span> <span class="pre">Any,</span> <span class="pre">par_dict:</span> <span class="pre">Dict,</span> <span class="pre">reservoir_name:</span> <span class="pre">str,</span> <span class="pre">precision:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">3)</span> <span class="pre">-&gt;</span> <span class="pre">Dict</span></code></p></li>
-</ul>
+<dt>JSONWriter:</dt><dd><p>Formats and writes data to a JSON file.</p>
+</dd>
+<dt>LatexWriter:</dt><dd><p>Formats and writes data to a LaTeX file using PyLaTeX.</p>
+</dd>
+<dt>HTMLWriter:</dt><dd><p>Formats and writes data to an HTML file.</p>
+</dd>
+<dt>Presenter:</dt><dd><p>Reads and processes GHG emission calculation results and outputs them
+using various writers.</p>
 </dd>
 </dl>
-<p>and enforces implementation of the <code class="docutils literal notranslate"><span class="pre">write</span></code> method.</p>
-<dl class="simple">
-<dt><strong>Functions:</strong></dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">enforce_unity_sum</span></code>: Ensures the sum of values in a vector is approximately 1.0 within a given epsilon tolerance.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">landcover_pie</span></code>: Creates a pie chart of land cover composition using matplotlib.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">parse_landcover_composition</span></code>: Parses a vector representing land cover composition into a standardized format.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">write_par_to_dict</span></code>: Writes a parameter to a dictionary of parameter name-value pairs.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">rollout</span></code>: Creates variable names and values from a sequence or dictionary.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">round_parameter</span></code>: Rounds a number or each element in a list to the specified number of decimals.</p></li>
-</ul>
 </dd>
-<dt><strong>Usage:</strong></dt><dd><p>[To be Added later]</p>
+<dt>Functions:</dt><dd><dl>
+<dt>enforce_unity_sum(vector: List[float], epsilon: float = 0.001) -&gt; List[float]:</dt><dd><p>Ensures the sum of values in a vector is approximately 1.0 within a given epsilon tolerance.</p>
+</dd>
+<dt>landcover_pie(axis: plt.Axes, values: List[float], labels: List[str], colors: List[Any],</dt><dd><blockquote>
+<div><p>title: Optional[str] = None, show_legend: bool = False) -&gt; None:</p>
+</div></blockquote>
+<p>Creates a pie chart of land cover composition using matplotlib.</p>
+</dd>
+<dt>parse_landcover_composition(vector: List[float]) -&gt; List[float]:</dt><dd><p>Parses a vector representing land cover composition into a standardized format.</p>
+</dd>
+<dt>write_par_to_dict(input_name: str, parameter: Any, par_dict: Dict, reservoir_name: str,</dt><dd><blockquote>
+<div><p>precision: int = 3) -&gt; Dict:</p>
+</div></blockquote>
+<p>Writes a parameter to a dictionary of parameter name-value pairs.</p>
+</dd>
+<dt>rollout(var_name: str, var_vector: Union[Sequence, Dict]) -&gt; Iterator[Tuple[str, Any]]:</dt><dd><p>Creates variable names and values from a sequence or dictionary.</p>
+</dd>
+<dt>round_parameter(number: Union[float, list], number_decimals: int) -&gt; Union[float, list]:</dt><dd><p>Rounds a number or each element in a list to the specified number of decimals.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Each writer class (ExcelWriter, JSONWriter, LatexWriter, HTMLWriter) is designed to handle
+specific output formats, ensuring the presentation of inputs, outputs, and internal variables
+in a structured manner.</p></li>
+<li><p>All writer classes inherit from the abstract base class Writer, which enforces the implementation
+of the <cite>write</cite> method and provides utility methods such as <cite>round_parameter</cite>, <cite>rollout</cite>, and
+<cite>write_par_to_dict</cite>.</p></li>
+</ul>
+<dl class="simple">
+<dt>Usage:</dt><dd><p>[To be added later]</p>
 </dd>
 </dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="reemission.presenter.ExcelWriter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.presenter.</span></span><span class="sig-name descname"><span class="pre">ExcelWriter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="reemission.input.html#reemission.input.Inputs" title="reemission.input.Inputs"><span class="pre">Inputs</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intern_vars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intern_vars_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_ini</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ConfigParser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">author</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/presenter.html#ExcelWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.presenter.</span></span><span class="sig-name descname"><span class="pre">ExcelWriter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="reemission.input.html#reemission.input.Inputs" title="reemission.input.Inputs"><span class="pre">Inputs</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intern_vars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intern_vars_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_ini</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">author</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/presenter.html#ExcelWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Formats and writes data to an Excel file.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="reemission.presenter.ExcelWriter.inputs">
@@ -263,10 +283,10 @@ in various output formats such as Excel, JSON, and LaTeX.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="reemission.presenter.ExcelWriter.config_ini">
 <span class="sig-name descname"><span class="pre">config_ini</span></span></dt>
-<dd><p>Global parameter configuration file.</p>
+<dd><p>Global parameter configuration dict (usually from .ini file).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>configparser.ConfigParser</p>
+<dd class="field-odd"><p>Dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -361,7 +381,7 @@ in various output formats such as Excel, JSON, and LaTeX.</p>
 <dd></dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id1">
-<span class="sig-name descname"><span class="pre">config_ini</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ConfigParser</span></em></dt>
+<span class="sig-name descname"><span class="pre">config_ini</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
 <dd></dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="reemission.presenter.ExcelWriter.dict_data_to_df">
@@ -439,8 +459,121 @@ in various output formats such as Excel, JSON, and LaTeX.</p>
 </dd></dl>
 </dd></dl>
 <dl class="py class">
+<dt class="sig sig-object py" id="reemission.presenter.HTMLWriter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.presenter.</span></span><span class="sig-name descname"><span class="pre">HTMLWriter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="reemission.input.html#reemission.input.Inputs" title="reemission.input.Inputs"><span class="pre">Inputs</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intern_vars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intern_vars_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_ini</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">author</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/presenter.html#HTMLWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Format and write data to an HTML file.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.HTMLWriter.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#HTMLWriter.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Initialize the HTML content with a basic structure.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.HTMLWriter.add_inputs_table">
+<span class="sig-name descname"><span class="pre">add_inputs_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#HTMLWriter.add_inputs_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add information with model inputs (for each reservoir) to the HTML content.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.HTMLWriter.add_intern_vars_table">
+<span class="sig-name descname"><span class="pre">add_intern_vars_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#HTMLWriter.add_intern_vars_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add internal variables table to the HTML content.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.HTMLWriter.add_landcover_piecharts">
+<span class="sig-name descname"><span class="pre">add_landcover_piecharts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#HTMLWriter.add_landcover_piecharts"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add landcover piecharts to the HTML content.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.HTMLWriter.add_outputs_table">
+<span class="sig-name descname"><span class="pre">add_outputs_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#HTMLWriter.add_outputs_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add outputs table to the HTML content.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.HTMLWriter.add_plot">
+<span class="sig-name descname"><span class="pre">add_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caption</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dpi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">200</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#HTMLWriter.add_plot"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add a plot to the HTML content using PNG format for faster rendering.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.HTMLWriter.add_plots">
+<span class="sig-name descname"><span class="pre">add_plots</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#HTMLWriter.add_plots"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Generate and add emission plots to the HTML content.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.HTMLWriter.add_section">
+<span class="sig-name descname"><span class="pre">add_section</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#HTMLWriter.add_section"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add a section to the HTML content.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.HTMLWriter.add_subsection">
+<span class="sig-name descname"><span class="pre">add_subsection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#HTMLWriter.add_subsection"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add a subsection to the HTML content.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.HTMLWriter.add_table">
+<span class="sig-name descname"><span class="pre">add_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#HTMLWriter.add_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add a table to the HTML content.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.HTMLWriter.author">
+<span class="sig-name descname"><span class="pre">author</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.HTMLWriter.config_ini">
+<span class="sig-name descname"><span class="pre">config_ini</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.HTMLWriter.html_fragments">
+<span class="sig-name descname"><span class="pre">html_fragments</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.HTMLWriter.input_config">
+<span class="sig-name descname"><span class="pre">input_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.HTMLWriter.inputs">
+<span class="sig-name descname"><span class="pre">inputs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="reemission.input.html#reemission.input.Inputs" title="reemission.input.Inputs"><span class="pre">Inputs</span></a></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.HTMLWriter.intern_vars">
+<span class="sig-name descname"><span class="pre">intern_vars</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.HTMLWriter.intern_vars_config">
+<span class="sig-name descname"><span class="pre">intern_vars_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.HTMLWriter.output_config">
+<span class="sig-name descname"><span class="pre">output_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.HTMLWriter.output_file_path">
+<span class="sig-name descname"><span class="pre">output_file_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.HTMLWriter.outputs">
+<span class="sig-name descname"><span class="pre">outputs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.HTMLWriter.parameter_config">
+<span class="sig-name descname"><span class="pre">parameter_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.HTMLWriter.plot_emission_bars">
+<span class="sig-name descname"><span class="pre">plot_emission_bars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#HTMLWriter.plot_emission_bars"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plot total emissions as a bar chart.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.presenter.HTMLWriter.title">
+<span class="sig-name descname"><span class="pre">title</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.presenter.HTMLWriter.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#HTMLWriter.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Write the HTML content to the output file.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
 <dt class="sig sig-object py" id="reemission.presenter.JSONWriter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.presenter.</span></span><span class="sig-name descname"><span class="pre">JSONWriter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="reemission.input.html#reemission.input.Inputs" title="reemission.input.Inputs"><span class="pre">Inputs</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intern_vars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intern_vars_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_ini</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ConfigParser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">author</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/presenter.html#JSONWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.presenter.</span></span><span class="sig-name descname"><span class="pre">JSONWriter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="reemission.input.html#reemission.input.Inputs" title="reemission.input.Inputs"><span class="pre">Inputs</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intern_vars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intern_vars_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_ini</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">author</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/presenter.html#JSONWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Format and write data to a JSON file.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="reemission.presenter.JSONWriter.inputs">
@@ -525,10 +658,10 @@ in various output formats such as Excel, JSON, and LaTeX.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="reemission.presenter.JSONWriter.config_ini">
 <span class="sig-name descname"><span class="pre">config_ini</span></span></dt>
-<dd><p>Global parameter configuration file.</p>
+<dd><p>Global parameter configuration dict (usually from .ini file).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>configparser.ConfigParser</p>
+<dd class="field-odd"><p>Dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -603,7 +736,7 @@ in various output formats such as Excel, JSON, and LaTeX.</p>
 <dd></dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id15">
-<span class="sig-name descname"><span class="pre">config_ini</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ConfigParser</span></em></dt>
+<span class="sig-name descname"><span class="pre">config_ini</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
 <dd></dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id16">
@@ -673,7 +806,7 @@ in various output formats such as Excel, JSON, and LaTeX.</p>
 </dd></dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="reemission.presenter.LatexWriter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.presenter.</span></span><span class="sig-name descname"><span class="pre">LatexWriter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="reemission.input.html#reemission.input.Inputs" title="reemission.input.Inputs"><span class="pre">Inputs</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intern_vars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intern_vars_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_ini</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ConfigParser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">author</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/presenter.html#LatexWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.presenter.</span></span><span class="sig-name descname"><span class="pre">LatexWriter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="reemission.input.html#reemission.input.Inputs" title="reemission.input.Inputs"><span class="pre">Inputs</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intern_vars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intern_vars_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_ini</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">author</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/presenter.html#LatexWriter"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Format and write data to a LaTeX file using PyLaTeX.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="reemission.presenter.LatexWriter.inputs">
@@ -758,10 +891,10 @@ in various output formats such as Excel, JSON, and LaTeX.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="reemission.presenter.LatexWriter.config_ini">
 <span class="sig-name descname"><span class="pre">config_ini</span></span></dt>
-<dd><p>Global parameter configuration file.</p>
+<dd><p>Global parameter configuration dict (usually from .ini file).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>configparser.ConfigParser</p>
+<dd class="field-odd"><p>Dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -965,7 +1098,7 @@ and other useful details to the report.</p>
 <dd></dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id27">
-<span class="sig-name descname"><span class="pre">config_ini</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ConfigParser</span></em></dt>
+<span class="sig-name descname"><span class="pre">config_ini</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em></dt>
 <dd></dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="reemission.presenter.LatexWriter.geometry">
@@ -1170,7 +1303,7 @@ them in different formats.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>input_file</strong> (<em>str</em>) – Path to JSON file containing input data.</p></li>
 <li><p><strong>output_file</strong> (<em>str</em>) – Path to JSON file containing model outputs.</p></li>
-<li><p><strong>interns_file</strong> (<em>str</em>) – Path to JSON file containing internal variables.</p></li>
+<li><p><strong>interns_file</strong> (<em>str</em>) – Path to JSON file containioutput_file_pathng internal variables.</p></li>
 <li><p><strong>**kwargs</strong> – Additional keyword arguments for customization.</p></li>
 </ul>
 </dd>
@@ -1279,9 +1412,45 @@ them in different formats.</p>
 </dd></dl>
 </dd></dl>
 <dl class="py function">
+<dt class="sig sig-object py" id="reemission.presenter.emission_bars">
+<span class="sig-prename descclassname"><span class="pre">reemission.presenter.</span></span><span class="sig-name descname"><span class="pre">emission_bars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gases</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#emission_bars"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Visualize total emissions (unit x surface area) for the calculated gases.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>axis</strong> (<em>plt.Axes</em>) – Matplotlib axes object.</p></li>
+<li><p><strong>gases</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – List of gas names to be displayed on the y-axis.</p></li>
+<li><p><strong>values</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – List of total annual emissions for each gas.</p></li>
+<li><p><strong>output_name</strong> (<em>str</em>) – Name of the output/reservoir.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="reemission.presenter.emission_profile">
+<span class="sig-prename descclassname"><span class="pre">reemission.presenter.</span></span><span class="sig-name descname"><span class="pre">emission_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Axes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">years</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">emissions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_label</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#emission_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Plots a profile of emissions over time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>axis</strong> (<em>plt.Axes</em>) – Matplotlib axes object.</p></li>
+<li><p><strong>years</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – List of years corresponding to the emissions.</p></li>
+<li><p><strong>emissions</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – List of emissions corresponding to the years.</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Title of the plot.</p></li>
+<li><p><strong>y_label</strong> (<em>str</em>) – Label for the y-axis.</p></li>
+<li><p><strong>annotate</strong> (<em>bool</em>) – Flag setting whether emission values are added to plot. Default is True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the lengths of years and emissions do not match, or if they contain non-numeric values.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
 <dt class="sig sig-object py" id="reemission.presenter.enforce_unity_sum">
 <span class="sig-prename descclassname"><span class="pre">reemission.presenter.</span></span><span class="sig-name descname"><span class="pre">enforce_unity_sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#enforce_unity_sum"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Ensures the sum of values in the vector is approximately 1.0 within a given epsilon tolerance.</p>
+<dd><p>Ensures the sum of values in the vector is approximately 1.0 within a given epsilon
+tolerance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1302,6 +1471,38 @@ should lie. Defaults to 0.001.</p></li>
 <ul class="simple">
 <li><p>If the sum of values in the input vector is not within the range [1.0 - epsilon, 1.0 + epsilon],
 the vector is normalized by dividing each element by the current sum of the vector.</p></li>
+</ul>
+</div>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="reemission.presenter.format_number">
+<span class="sig-prename descclassname"><span class="pre">reemission.presenter.</span></span><span class="sig-name descname"><span class="pre">format_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/reemission/presenter.html#format_number"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Formats a number for display in a human-readable way.
+:param x: The number to format. It can be an int, float, or None.
+:type x: Any</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A string representation of the number formatted for readability.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>If <cite>x</cite> is None, it returns “—” (or “N/A”).</p></li>
+<li><p>If <cite>x</cite> is an integer, it returns the integer as a string.</p></li>
+<li><dl class="simple">
+<dt>For floats, it formats them based on their magnitude:</dt><dd><ul>
+<li><p>Very large or very negative values are formatted with 1 decimal point.</p></li>
+<li><p>Moderate values are formatted with up to 5 significant digits.</p></li>
+<li><p>Very small values are formatted with 3 significant digits.</p></li>
+<li><p>Extremely small values are formatted in engineering notation.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
 </ul>
 </div>
 </dd></dl>
@@ -1420,6 +1621,33 @@ each part is summed element-wise, resulting in a 9-element vector.</p></li>
 <li><a :data-current="activeSection === '#reemission.presenter.ExcelWriter.write'" class="reference internal" href="#reemission.presenter.ExcelWriter.write"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.write()</span></code></a></li>
 </ul>
 </li>
+<li><a :data-current="activeSection === '#reemission.presenter.HTMLWriter'" class="reference internal" href="#reemission.presenter.HTMLWriter"><code class="docutils literal notranslate"><span class="pre">HTMLWriter</span></code></a><ul>
+<li><a :data-current="activeSection === '#reemission.presenter.HTMLWriter.__post_init__'" class="reference internal" href="#reemission.presenter.HTMLWriter.__post_init__"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.__post_init__()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.HTMLWriter.add_inputs_table'" class="reference internal" href="#reemission.presenter.HTMLWriter.add_inputs_table"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.add_inputs_table()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.HTMLWriter.add_intern_vars_table'" class="reference internal" href="#reemission.presenter.HTMLWriter.add_intern_vars_table"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.add_intern_vars_table()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.HTMLWriter.add_landcover_piecharts'" class="reference internal" href="#reemission.presenter.HTMLWriter.add_landcover_piecharts"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.add_landcover_piecharts()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.HTMLWriter.add_outputs_table'" class="reference internal" href="#reemission.presenter.HTMLWriter.add_outputs_table"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.add_outputs_table()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.HTMLWriter.add_plot'" class="reference internal" href="#reemission.presenter.HTMLWriter.add_plot"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.add_plot()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.HTMLWriter.add_plots'" class="reference internal" href="#reemission.presenter.HTMLWriter.add_plots"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.add_plots()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.HTMLWriter.add_section'" class="reference internal" href="#reemission.presenter.HTMLWriter.add_section"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.add_section()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.HTMLWriter.add_subsection'" class="reference internal" href="#reemission.presenter.HTMLWriter.add_subsection"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.add_subsection()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.HTMLWriter.add_table'" class="reference internal" href="#reemission.presenter.HTMLWriter.add_table"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.add_table()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.HTMLWriter.author'" class="reference internal" href="#reemission.presenter.HTMLWriter.author"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.author</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.HTMLWriter.config_ini'" class="reference internal" href="#reemission.presenter.HTMLWriter.config_ini"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.config_ini</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.HTMLWriter.html_fragments'" class="reference internal" href="#reemission.presenter.HTMLWriter.html_fragments"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.html_fragments</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.HTMLWriter.input_config'" class="reference internal" href="#reemission.presenter.HTMLWriter.input_config"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.input_config</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.HTMLWriter.inputs'" class="reference internal" href="#reemission.presenter.HTMLWriter.inputs"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.inputs</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.HTMLWriter.intern_vars'" class="reference internal" href="#reemission.presenter.HTMLWriter.intern_vars"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.intern_vars</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.HTMLWriter.intern_vars_config'" class="reference internal" href="#reemission.presenter.HTMLWriter.intern_vars_config"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.intern_vars_config</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.HTMLWriter.output_config'" class="reference internal" href="#reemission.presenter.HTMLWriter.output_config"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.output_config</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.HTMLWriter.output_file_path'" class="reference internal" href="#reemission.presenter.HTMLWriter.output_file_path"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.output_file_path</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.HTMLWriter.outputs'" class="reference internal" href="#reemission.presenter.HTMLWriter.outputs"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.outputs</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.HTMLWriter.parameter_config'" class="reference internal" href="#reemission.presenter.HTMLWriter.parameter_config"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.parameter_config</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.HTMLWriter.plot_emission_bars'" class="reference internal" href="#reemission.presenter.HTMLWriter.plot_emission_bars"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.plot_emission_bars()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.HTMLWriter.title'" class="reference internal" href="#reemission.presenter.HTMLWriter.title"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.title</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.HTMLWriter.write'" class="reference internal" href="#reemission.presenter.HTMLWriter.write"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.write()</span></code></a></li>
+</ul>
+</li>
 <li><a :data-current="activeSection === '#reemission.presenter.JSONWriter'" class="reference internal" href="#reemission.presenter.JSONWriter"><code class="docutils literal notranslate"><span class="pre">JSONWriter</span></code></a><ul>
 <li><a :data-current="activeSection === '#reemission.presenter.JSONWriter.inputs'" class="reference internal" href="#reemission.presenter.JSONWriter.inputs"><code class="docutils literal notranslate"><span class="pre">JSONWriter.inputs</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.presenter.JSONWriter.outputs'" class="reference internal" href="#reemission.presenter.JSONWriter.outputs"><code class="docutils literal notranslate"><span class="pre">JSONWriter.outputs</span></code></a></li>
@@ -1523,7 +1751,10 @@ each part is summed element-wise, resulting in a 9-element vector.</p></li>
 <li><a :data-current="activeSection === '#reemission.presenter.Writer.write_par_to_dict'" class="reference internal" href="#reemission.presenter.Writer.write_par_to_dict"><code class="docutils literal notranslate"><span class="pre">Writer.write_par_to_dict()</span></code></a></li>
 </ul>
 </li>
+<li><a :data-current="activeSection === '#reemission.presenter.emission_bars'" class="reference internal" href="#reemission.presenter.emission_bars"><code class="docutils literal notranslate"><span class="pre">emission_bars()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.emission_profile'" class="reference internal" href="#reemission.presenter.emission_profile"><code class="docutils literal notranslate"><span class="pre">emission_profile()</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.presenter.enforce_unity_sum'" class="reference internal" href="#reemission.presenter.enforce_unity_sum"><code class="docutils literal notranslate"><span class="pre">enforce_unity_sum()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.presenter.format_number'" class="reference internal" href="#reemission.presenter.format_number"><code class="docutils literal notranslate"><span class="pre">format_number()</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.presenter.landcover_pie'" class="reference internal" href="#reemission.presenter.landcover_pie"><code class="docutils literal notranslate"><span class="pre">landcover_pie()</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.presenter.parse_landcover_composition'" class="reference internal" href="#reemission.presenter.parse_landcover_composition"><code class="docutils literal notranslate"><span class="pre">parse_landcover_composition()</span></code></a></li>
 </ul>
@@ -1534,18 +1765,18 @@ each part is summed element-wise, resulting in a 9-element vector.</p></li>
 </div><footer class="py-6 border-t border-border md:py-0">
 <div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
 <div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
-<p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2024, Tomasz Janus, University of Manchester, United Kingdom Built with <a class="font-medium underline underline-offset-4" href="https://www.sphinx-doc.org" rel="noreferrer">Sphinx 7.3.7</a></p>
+<p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2024, Tomasz Janus, University of Manchester, United Kingdom Built with <a class="font-medium underline underline-offset-4" href="https://www.sphinx-doc.org" rel="noreferrer">Sphinx 8.1.3</a></p>
 </div>
 </div>
 </footer>
 </div>
 <script src="../_static/documentation_options.js?v=8d563738"></script>
-<script src="../_static/doctools.js?v=9a2dae69"></script>
+<script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../_static/copybutton.js?v=f281be69"></script>
 <script src="../_static/toggleprompt.js?v=5801b3bb"></script>
-<script defer="defer" src="../_static/theme.js?v=e82a16a3"></script>
+<script defer="defer" src="../_static/theme.js?v=073f68d9"></script>
 <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
 </body>
 </html>

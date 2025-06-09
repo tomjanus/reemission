@@ -15,11 +15,10 @@
     <title>reemission.profile | ReEmission 1.0.0 documentation</title>
     <meta property="og:title" content="reemission.profile | ReEmission 1.0.0 documentation" />
     <meta name="twitter:title" content="reemission.profile | ReEmission 1.0.0 documentation" />
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=c842c44c" />
-      <link rel="stylesheet" type="text/css" href="../../_static/theme.css?v=ecdfb4fc" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=1949e874" />
+      <link rel="stylesheet" type="text/css" href="../../_static/theme.css?v=42baaae4" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
-      <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=a5c4661c" />
         <link rel="search" title="Search" href="../../search.html" />
         <link rel="index" title="Index" href="../../genindex.html" />
 
@@ -36,7 +35,7 @@
       if (!userPreference) {localStorage.setItem('darkMode', mode)}
     </script>
 </head>
-<body x-data="{ showSidebar: false }" class="min-h-screen font-sans antialiased bg-background text-foreground" :class="{ 'overflow-hidden': showSidebar }">
+  <body x-data="{ showSidebar: false, showScrollTop: false }" class="min-h-screen font-sans antialiased bg-background text-foreground" :class="{ 'overflow-hidden': showSidebar }">
     <div x-cloak x-show="showSidebar" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" @click.self="showSidebar = false"></div><div id="page" class="relative flex flex-col min-h-screen"><a href="#content" class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100">
       Skip to content
     </a><header
@@ -192,20 +191,20 @@
 </span><span id="line-2"><span class="sd">Collection of classes and functions for managing and calculating emission profiles of</span>
 </span><span id="line-3"><span class="sd">emissions from multiple reservoirs constructed at different dates.</span>
 </span><span id="line-4"><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-5"><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
-</span><span id="line-6"><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">auto</span>
-</span><span id="line-7"><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">reduce</span>
-</span><span id="line-8"><span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Iterator</span>
-</span><span id="line-9"><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">ClassVar</span><span class="p">,</span> <span class="n">Iterable</span>
-</span><span id="line-10"><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">InitVar</span>
-</span><span id="line-11"><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">date</span>
-</span><span id="line-12"><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-</span><span id="line-13"><span class="kn">import</span> <span class="nn">math</span>
-</span><span id="line-14"><span class="kn">import</span> <span class="nn">scipy</span> <span class="k">as</span> <span class="nn">sc</span>
-</span><span id="line-15"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-</span><span id="line-16"><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-</span><span id="line-17"><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-</span><span id="line-18"><span class="kn">from</span> <span class="nn">reemission.constants</span> <span class="kn">import</span> <span class="n">AssetConstructionStage</span>
+</span><span id="line-5"><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+</span><span id="line-6"><span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">auto</span>
+</span><span id="line-7"><span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">reduce</span>
+</span><span id="line-8"><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterator</span>
+</span><span id="line-9"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">ClassVar</span><span class="p">,</span> <span class="n">Iterable</span>
+</span><span id="line-10"><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">InitVar</span>
+</span><span id="line-11"><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">date</span>
+</span><span id="line-12"><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+</span><span id="line-13"><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+</span><span id="line-14"><span class="kn">import</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sc</span>
+</span><span id="line-15"><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</span><span id="line-16"><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+</span><span id="line-17"><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+</span><span id="line-18"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">AssetConstructionStage</span>
 </span><span id="line-19">
 </span><span id="line-20">
 </span><span id="line-21"><span class="c1"># Default month attached to each year value in the annual time-series data</span>
@@ -221,7 +220,7 @@
 </span><span id="line-31">
 <div class="viewcode-block" id="YearsNotEquallySpacedError">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.YearsNotEquallySpacedError">[docs]</a>
-</span><span id="line-32"><span class="k">class</span> <span class="nc">YearsNotEquallySpacedError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+</span><span id="line-32"><span class="k">class</span><span class="w"> </span><span class="nc">YearsNotEquallySpacedError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 </span><span id="line-33"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom exception raised if years in the emission profile are not equally spaced.&quot;&quot;&quot;</span>
 </span><span id="line-34">    <span class="k">pass</span></div>
 
@@ -230,7 +229,7 @@
 <div class="viewcode-block" id="AssetSimDateManager">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.AssetSimDateManager">[docs]</a>
 </span><span id="line-37"><span class="nd">@dataclass</span>
-</span><span id="line-38"><span class="k">class</span> <span class="nc">AssetSimDateManager</span><span class="p">:</span>
+</span><span id="line-38"><span class="k">class</span><span class="w"> </span><span class="nc">AssetSimDateManager</span><span class="p">:</span>
 </span><span id="line-39"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Manages construction and simulation dates for asset simulations.</span>
 </span><span id="line-40">
 </span><span id="line-41"><span class="sd">    Attributes:</span>
@@ -244,7 +243,7 @@
 </span><span id="line-49">    <span class="n">construction_date</span><span class="p">:</span> <span class="n">datetime</span>
 </span><span id="line-50">    <span class="n">sim_start_date</span><span class="p">:</span> <span class="n">datetime</span>
 </span><span id="line-51">
-</span><span id="line-52">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">construction_year</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
+</span><span id="line-52">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">construction_year</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
 </span><span id="line-53">                 <span class="n">sim_start_year</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="line-54">        <span class="k">if</span> <span class="ow">not</span> <span class="n">construction_year</span><span class="p">:</span>
 </span><span id="line-55">            <span class="bp">self</span><span class="o">.</span><span class="n">construction_date</span> <span class="o">=</span> <span class="n">DEFAULT_CONSTRUCTION_DATE</span>
@@ -256,13 +255,13 @@
 </span><span id="line-61">            <span class="bp">self</span><span class="o">.</span><span class="n">sim_start_date</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_year_to_date</span><span class="p">(</span><span class="n">sim_start_year</span><span class="p">)</span>
 </span><span id="line-62">
 </span><span id="line-63">    <span class="nd">@staticmethod</span>
-</span><span id="line-64">    <span class="k">def</span> <span class="nf">_year_to_date</span><span class="p">(</span><span class="n">year</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="p">:</span>
+</span><span id="line-64">    <span class="k">def</span><span class="w"> </span><span class="nf">_year_to_date</span><span class="p">(</span><span class="n">year</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="p">:</span>
 </span><span id="line-65"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts a year (integer) to a datetime object.&quot;&quot;&quot;</span>
 </span><span id="line-66">        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">year</span><span class="p">),</span> <span class="s1">&#39;%Y&#39;</span><span class="p">)</span>
 </span><span id="line-67">
 <div class="viewcode-block" id="AssetSimDateManager.asset_status">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.AssetSimDateManager.asset_status">[docs]</a>
-</span><span id="line-68">    <span class="k">def</span> <span class="nf">asset_status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AssetConstructionStage</span><span class="p">:</span>
+</span><span id="line-68">    <span class="k">def</span><span class="w"> </span><span class="nf">asset_status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AssetConstructionStage</span><span class="p">:</span>
 </span><span id="line-69"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Determines the asset status (EXISTING/FUTURE) based on its age.&quot;&quot;&quot;</span>
 </span><span id="line-70">        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">asset_age</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
 </span><span id="line-71">            <span class="k">return</span> <span class="n">AssetConstructionStage</span><span class="o">.</span><span class="n">EXISTING</span>
@@ -270,7 +269,7 @@
 
 </span><span id="line-73">
 </span><span id="line-74">    <span class="nd">@property</span>
-</span><span id="line-75">    <span class="k">def</span> <span class="nf">asset_age</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span><span id="line-75">    <span class="k">def</span><span class="w"> </span><span class="nf">asset_age</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 </span><span id="line-76"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates the asset age in years.&quot;&quot;&quot;</span>
 </span><span id="line-77">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sim_start_date</span><span class="o">.</span><span class="n">year</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">construction_date</span><span class="o">.</span><span class="n">year</span></div>
 
@@ -279,7 +278,7 @@
 <div class="viewcode-block" id="EmissionQuantity">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.EmissionQuantity">[docs]</a>
 </span><span id="line-80"><span class="nd">@dataclass</span>
-</span><span id="line-81"><span class="k">class</span> <span class="nc">EmissionQuantity</span><span class="p">:</span>
+</span><span id="line-81"><span class="k">class</span><span class="w"> </span><span class="nc">EmissionQuantity</span><span class="p">:</span>
 </span><span id="line-82"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents emission magnitude and unit.</span>
 </span><span id="line-83">
 </span><span id="line-84"><span class="sd">    Attributes:</span>
@@ -296,12 +295,12 @@
 </span><span id="line-95">    <span class="n">_unit</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">)</span>
 </span><span id="line-96">
 </span><span id="line-97">    <span class="nd">@property</span>
-</span><span id="line-98">    <span class="k">def</span> <span class="nf">unit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="line-98">    <span class="k">def</span><span class="w"> </span><span class="nf">unit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 </span><span id="line-99"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the unit as a string.&quot;&quot;&quot;</span>
 </span><span id="line-100">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unit</span>
 </span><span id="line-101">
 </span><span id="line-102">    <span class="nd">@unit</span><span class="o">.</span><span class="n">setter</span>
-</span><span id="line-103">    <span class="k">def</span> <span class="nf">unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-103">    <span class="k">def</span><span class="w"> </span><span class="nf">unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="line-104"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Sets the unit and handles unit conversion.</span>
 </span><span id="line-105"><span class="sd">        </span>
 </span><span id="line-106"><span class="sd">        Todo: </span>
@@ -311,7 +310,7 @@
 </span><span id="line-110">
 <div class="viewcode-block" id="EmissionQuantity.convert_unit">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.EmissionQuantity.convert_unit">[docs]</a>
-</span><span id="line-111">    <span class="k">def</span> <span class="nf">convert_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-111">    <span class="k">def</span><span class="w"> </span><span class="nf">convert_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="line-112"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts the emission quantity to a different unit.</span>
 </span><span id="line-113"><span class="sd">        </span>
 </span><span id="line-114"><span class="sd">        Model: self.value = self.value * CONV_VALUE</span>
@@ -324,7 +323,7 @@
 </span><span id="line-120">
 <div class="viewcode-block" id="EmissionQuantity.__add__">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.EmissionQuantity.__add__">[docs]</a>
-</span><span id="line-121">    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">emission2</span><span class="p">:</span> <span class="n">EmissionQuantity</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmissionQuantity</span><span class="p">:</span>
+</span><span id="line-121">    <span class="k">def</span><span class="w"> </span><span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">emission2</span><span class="p">:</span> <span class="n">EmissionQuantity</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmissionQuantity</span><span class="p">:</span>
 </span><span id="line-122"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds two emission quantities.</span>
 </span><span id="line-123"><span class="sd">        </span>
 </span><span id="line-124"><span class="sd">        Note:</span>
@@ -337,7 +336,7 @@
 </span><span id="line-130">
 <div class="viewcode-block" id="EmissionQuantity.__sub__">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.EmissionQuantity.__sub__">[docs]</a>
-</span><span id="line-131">    <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">emission2</span><span class="p">:</span> <span class="n">EmissionQuantity</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmissionQuantity</span><span class="p">:</span>
+</span><span id="line-131">    <span class="k">def</span><span class="w"> </span><span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">emission2</span><span class="p">:</span> <span class="n">EmissionQuantity</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmissionQuantity</span><span class="p">:</span>
 </span><span id="line-132"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Subtracts two emission quantities.</span>
 </span><span id="line-133"><span class="sd">        </span>
 </span><span id="line-134"><span class="sd">        Note:</span>
@@ -353,7 +352,7 @@
 <div class="viewcode-block" id="EmissionProfile">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.EmissionProfile">[docs]</a>
 </span><span id="line-142"><span class="nd">@dataclass</span>
-</span><span id="line-143"><span class="k">class</span> <span class="nc">EmissionProfile</span><span class="p">(</span><span class="n">Iterator</span><span class="p">):</span>
+</span><span id="line-143"><span class="k">class</span><span class="w"> </span><span class="nc">EmissionProfile</span><span class="p">(</span><span class="n">Iterator</span><span class="p">):</span>
 </span><span id="line-144"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Stores and manipulates emission profiles.</span>
 </span><span id="line-145">
 </span><span id="line-146"><span class="sd">    Attributes:</span>
@@ -372,13 +371,13 @@
 </span><span id="line-159">    <span class="n">values</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">EmissionQuantity</span><span class="p">]</span>
 </span><span id="line-160">    <span class="n">years</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
 </span><span id="line-161">
-</span><span id="line-162">    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-162">    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="line-163">        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">years</span><span class="p">):</span>
 </span><span id="line-164">            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
 </span><span id="line-165">                <span class="s2">&quot;Emission and Year vectors have different lengths.&quot;</span><span class="p">)</span>
 </span><span id="line-166">        <span class="bp">self</span><span class="o">.</span><span class="n">_check_units</span><span class="p">()</span>
 </span><span id="line-167">
-</span><span id="line-168">    <span class="k">def</span> <span class="nf">_check_units</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-168">    <span class="k">def</span><span class="w"> </span><span class="nf">_check_units</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="line-169"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if all emission quantities have the same unit.</span>
 </span><span id="line-170"><span class="sd">       </span>
 </span><span id="line-171"><span class="sd">        Raises:</span>
@@ -394,7 +393,7 @@
 </span><span id="line-181">
 <div class="viewcode-block" id="EmissionProfile.__next__">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.EmissionProfile.__next__">[docs]</a>
-</span><span id="line-182">    <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span><span id="line-182">    <span class="k">def</span><span class="w"> </span><span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 </span><span id="line-183">        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
 </span><span id="line-184">            <span class="k">raise</span> <span class="ne">StopIteration</span>
 </span><span id="line-185">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span></div>
@@ -402,7 +401,7 @@
 </span><span id="line-186">
 <div class="viewcode-block" id="EmissionProfile.convert_unit">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.EmissionProfile.convert_unit">[docs]</a>
-</span><span id="line-187">    <span class="k">def</span> <span class="nf">convert_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-187">    <span class="k">def</span><span class="w"> </span><span class="nf">convert_unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_unit</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="line-188"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts all emission quantities in the profile to a different unit.&quot;&quot;&quot;</span>
 </span><span id="line-189">        <span class="k">for</span> <span class="n">emission</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
 </span><span id="line-190">            <span class="n">emission</span><span class="o">.</span><span class="n">convert_unit</span><span class="p">(</span><span class="n">new_unit</span><span class="p">)</span></div>
@@ -410,7 +409,7 @@
 </span><span id="line-191">
 <div class="viewcode-block" id="EmissionProfile.unit">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.EmissionProfile.unit">[docs]</a>
-</span><span id="line-192">    <span class="k">def</span> <span class="nf">unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">check_consistency</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="line-192">    <span class="k">def</span><span class="w"> </span><span class="nf">unit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">check_consistency</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 </span><span id="line-193"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the unit of the emission profile.&quot;&quot;&quot;</span>
 </span><span id="line-194">        <span class="k">if</span> <span class="n">check_consistency</span><span class="p">:</span>
 </span><span id="line-195">            <span class="bp">self</span><span class="o">.</span><span class="n">_check_units</span><span class="p">()</span>
@@ -419,7 +418,7 @@
 </span><span id="line-197">
 <div class="viewcode-block" id="EmissionProfile._is_equally_spaced">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.EmissionProfile._is_equally_spaced">[docs]</a>
-</span><span id="line-198">    <span class="k">def</span> <span class="nf">_is_equally_spaced</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spacing</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span><span id="line-198">    <span class="k">def</span><span class="w"> </span><span class="nf">_is_equally_spaced</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spacing</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 </span><span id="line-199"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the years are equally spaced.</span>
 </span><span id="line-200"><span class="sd">        </span>
 </span><span id="line-201"><span class="sd">        Note:</span>
@@ -431,7 +430,7 @@
 </span><span id="line-206">
 <div class="viewcode-block" id="EmissionProfile.interpolate">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.EmissionProfile.interpolate">[docs]</a>
-</span><span id="line-207">    <span class="k">def</span> <span class="nf">interpolate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spacing</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmissionProfile</span><span class="p">:</span>        
+</span><span id="line-207">    <span class="k">def</span><span class="w"> </span><span class="nf">interpolate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spacing</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmissionProfile</span><span class="p">:</span>        
 </span><span id="line-208"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct emission profile with equal year spacing given in argument</span>
 </span><span id="line-209"><span class="sd">        `spacing` (default = 1) spanning from the first to the last year in</span>
 </span><span id="line-210"><span class="sd">        self.years</span>
@@ -451,7 +450,7 @@
 </span><span id="line-223">
 <div class="viewcode-block" id="EmissionProfile.plot">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.EmissionProfile.plot">[docs]</a>
-</span><span id="line-224">    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-224">    <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="line-225"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Plots the emission profile.</span>
 </span><span id="line-226"><span class="sd">        </span>
 </span><span id="line-227"><span class="sd">        Attention:</span>
@@ -463,7 +462,7 @@
 </span><span id="line-232">
 <div class="viewcode-block" id="EmissionProfile.to_series">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.EmissionProfile.to_series">[docs]</a>
-</span><span id="line-233">    <span class="k">def</span> <span class="nf">to_series</span><span class="p">(</span>
+</span><span id="line-233">    <span class="k">def</span><span class="w"> </span><span class="nf">to_series</span><span class="p">(</span>
 </span><span id="line-234">            <span class="bp">self</span><span class="p">,</span> <span class="n">construction_year</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
 </span><span id="line-235">            <span class="n">interpolate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmissionProfileSeries</span><span class="p">:</span>
 </span><span id="line-236"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts the emission profile (a list of emission quantities) to a Pandas Series</span>
@@ -506,7 +505,7 @@
 <div class="viewcode-block" id="EmissionProfileSeries">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.EmissionProfileSeries">[docs]</a>
 </span><span id="line-271"><span class="nd">@dataclass</span>
-</span><span id="line-272"><span class="k">class</span> <span class="nc">EmissionProfileSeries</span><span class="p">:</span>
+</span><span id="line-272"><span class="k">class</span><span class="w"> </span><span class="nc">EmissionProfileSeries</span><span class="p">:</span>
 </span><span id="line-273"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents an emission profile as a Pandas Series.</span>
 </span><span id="line-274">
 </span><span id="line-275"><span class="sd">    Attributes:</span>
@@ -521,7 +520,7 @@
 </span><span id="line-284">
 <div class="viewcode-block" id="EmissionProfileSeries.plot">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.EmissionProfileSeries.plot">[docs]</a>
-</span><span id="line-285">    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">marker</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span>
+</span><span id="line-285">    <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">marker</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span>
 </span><span id="line-286">             <span class="n">linewidth</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="line-287"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Plots the emission profile as a Pandas time-series.</span>
 </span><span id="line-288">
@@ -553,7 +552,7 @@
 <div class="viewcode-block" id="CombinedEmissionProfile">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.CombinedEmissionProfile">[docs]</a>
 </span><span id="line-312"><span class="nd">@dataclass</span>
-</span><span id="line-313"><span class="k">class</span> <span class="nc">CombinedEmissionProfile</span><span class="p">:</span>
+</span><span id="line-313"><span class="k">class</span><span class="w"> </span><span class="nc">CombinedEmissionProfile</span><span class="p">:</span>
 </span><span id="line-314"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a combined emission profile from multiple sources.</span>
 </span><span id="line-315"><span class="sd">    </span>
 </span><span id="line-316"><span class="sd">    Note:</span>
@@ -574,7 +573,7 @@
 </span><span id="line-331">
 <div class="viewcode-block" id="CombinedEmissionProfile.__post_init__">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.CombinedEmissionProfile.__post_init__">[docs]</a>
-</span><span id="line-332">    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span>
+</span><span id="line-332">    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span>
 </span><span id="line-333">            <span class="bp">self</span><span class="p">,</span>
 </span><span id="line-334">            <span class="n">emission_profiles</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">EmissionProfileSeries</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="line-335"><span class="w">        </span><span class="sd">&quot;&quot;&quot; &quot;&quot;&quot;</span>
@@ -585,12 +584,12 @@
 
 </span><span id="line-340">
 </span><span id="line-341">    <span class="nd">@property</span>
-</span><span id="line-342">    <span class="k">def</span> <span class="nf">unit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="line-342">    <span class="k">def</span><span class="w"> </span><span class="nf">unit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 </span><span id="line-343"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the unit of the combined emission profile.&quot;&quot;&quot;</span>
 </span><span id="line-344">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="o">.</span><span class="n">unit</span>
 </span><span id="line-345">
 </span><span id="line-346">    <span class="nd">@staticmethod</span>
-</span><span id="line-347">    <span class="k">def</span> <span class="nf">_check_units</span><span class="p">(</span>
+</span><span id="line-347">    <span class="k">def</span><span class="w"> </span><span class="nf">_check_units</span><span class="p">(</span>
 </span><span id="line-348">            <span class="n">emission_profiles</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">EmissionProfileSeries</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="line-349"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the units of all emission profiles are the same. </span>
 </span><span id="line-350"><span class="sd">        </span>
@@ -608,7 +607,7 @@
 </span><span id="line-362">                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">unit_curr</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">unit_next</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 </span><span id="line-363">
 </span><span id="line-364">    <span class="nd">@staticmethod</span>
-</span><span id="line-365">    <span class="k">def</span> <span class="nf">_combine_profiles</span><span class="p">(</span>
+</span><span id="line-365">    <span class="k">def</span><span class="w"> </span><span class="nf">_combine_profiles</span><span class="p">(</span>
 </span><span id="line-366">            <span class="n">profiles</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">EmissionProfileSeries</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">EmissionProfileSeries</span><span class="p">:</span>
 </span><span id="line-367"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Combines multiple emission profiles into one.</span>
 </span><span id="line-368"><span class="sd">        </span>
@@ -631,7 +630,7 @@
 </span><span id="line-385">
 <div class="viewcode-block" id="CombinedEmissionProfile.plot">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.CombinedEmissionProfile.plot">[docs]</a>
-</span><span id="line-386">    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Combined emission profile&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span>
+</span><span id="line-386">    <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Combined emission profile&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span>
 </span><span id="line-387">             <span class="n">linestyle</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="line-388"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Plots the combined emission profile.</span>
 </span><span id="line-389">
@@ -649,7 +648,7 @@
 <div class="viewcode-block" id="EmissionProfileCalculator">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.EmissionProfileCalculator">[docs]</a>
 </span><span id="line-399"><span class="nd">@dataclass</span>
-</span><span id="line-400"><span class="k">class</span> <span class="nc">EmissionProfileCalculator</span><span class="p">:</span>
+</span><span id="line-400"><span class="k">class</span><span class="w"> </span><span class="nc">EmissionProfileCalculator</span><span class="p">:</span>
 </span><span id="line-401"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates emission profiles using a provided profile function.</span>
 </span><span id="line-402"><span class="sd">    </span>
 </span><span id="line-403"><span class="sd">    Note:</span>
@@ -670,7 +669,7 @@
 </span><span id="line-418">
 <div class="viewcode-block" id="EmissionProfileCalculator.emission">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.EmissionProfileCalculator.emission">[docs]</a>
-</span><span id="line-419">    <span class="k">def</span> <span class="nf">emission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">no_years</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmissionQuantity</span><span class="p">:</span>
+</span><span id="line-419">    <span class="k">def</span><span class="w"> </span><span class="nf">emission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">no_years</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmissionQuantity</span><span class="p">:</span>
 </span><span id="line-420"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates the emission for a given number of years elapsed from impoundment.</span>
 </span><span id="line-421">
 </span><span id="line-422"><span class="sd">        Args:</span>
@@ -686,7 +685,7 @@
 </span><span id="line-431">
 <div class="viewcode-block" id="EmissionProfileCalculator.calculate">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.EmissionProfileCalculator.calculate">[docs]</a>
-</span><span id="line-432">    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">years</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">EmissionProfile</span><span class="p">:</span>
+</span><span id="line-432">    <span class="k">def</span><span class="w"> </span><span class="nf">calculate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">years</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">EmissionProfile</span><span class="p">:</span>
 </span><span id="line-433"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates the emission profile for a range of years.</span>
 </span><span id="line-434">
 </span><span id="line-435"><span class="sd">        Args:</span>
@@ -702,7 +701,7 @@
 </span><span id="line-444">
 <div class="viewcode-block" id="EmissionProfileCalculator.integrate">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.EmissionProfileCalculator.integrate">[docs]</a>
-</span><span id="line-445">    <span class="k">def</span> <span class="nf">integrate</span><span class="p">(</span>
+</span><span id="line-445">    <span class="k">def</span><span class="w"> </span><span class="nf">integrate</span><span class="p">(</span>
 </span><span id="line-446">            <span class="bp">self</span><span class="p">,</span> <span class="n">start_year</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> 
 </span><span id="line-447">            <span class="n">end_year</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmissionQuantity</span><span class="p">:</span>
 </span><span id="line-448"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Integrates the emission profile over a range of years.</span>
@@ -733,7 +732,7 @@
 <div class="viewcode-block" id="TotalEmissionCalculator">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.TotalEmissionCalculator">[docs]</a>
 </span><span id="line-471"><span class="nd">@dataclass</span>
-</span><span id="line-472"><span class="k">class</span> <span class="nc">TotalEmissionCalculator</span><span class="p">:</span>
+</span><span id="line-472"><span class="k">class</span><span class="w"> </span><span class="nc">TotalEmissionCalculator</span><span class="p">:</span>
 </span><span id="line-473"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates total emissions using an analytical integral function.</span>
 </span><span id="line-474">
 </span><span id="line-475"><span class="sd">    Attributes:</span>
@@ -748,7 +747,7 @@
 </span><span id="line-484">
 <div class="viewcode-block" id="TotalEmissionCalculator.calculate">
 <a class="viewcode-back" href="../../api/reemission.profile.html#reemission.profile.TotalEmissionCalculator.calculate">[docs]</a>
-</span><span id="line-485">    <span class="k">def</span> <span class="nf">calculate</span><span class="p">(</span>
+</span><span id="line-485">    <span class="k">def</span><span class="w"> </span><span class="nf">calculate</span><span class="p">(</span>
 </span><span id="line-486">            <span class="bp">self</span><span class="p">,</span> <span class="n">start_year</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> 
 </span><span id="line-487">            <span class="n">end_year</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmissionQuantity</span><span class="p">:</span>
 </span><span id="line-488"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates total emissions over a range of years.</span>
@@ -776,24 +775,24 @@
 </span><span id="line-508">
 </span><span id="line-509"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
 </span><span id="line-510">
-</span><span id="line-511">    <span class="k">def</span> <span class="nf">test_one</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-511">    <span class="k">def</span><span class="w"> </span><span class="nf">test_one</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="line-512"><span class="w">        </span><span class="sd">&quot;&quot;&quot;TEST 1: Test Asset Date Container functionality&quot;&quot;&quot;</span>
 </span><span id="line-513">        <span class="n">dates</span> <span class="o">=</span> <span class="n">AssetSimDateManager</span><span class="p">(</span><span class="mi">2008</span><span class="p">,</span> <span class="mi">2023</span><span class="p">)</span>
 </span><span id="line-514">        <span class="k">assert</span> <span class="n">dates</span><span class="o">.</span><span class="n">asset_age</span> <span class="o">&gt;</span> <span class="mi">0</span>
 </span><span id="line-515">        <span class="n">dates2</span> <span class="o">=</span> <span class="n">AssetSimDateManager</span><span class="p">(</span><span class="mi">2050</span><span class="p">,</span> <span class="mi">2023</span><span class="p">)</span>
 </span><span id="line-516">        <span class="k">assert</span> <span class="n">dates2</span><span class="o">.</span><span class="n">asset_age</span> <span class="o">&lt;</span> <span class="mi">0</span>
 </span><span id="line-517">
-</span><span id="line-518">    <span class="k">def</span> <span class="nf">test_two</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-518">    <span class="k">def</span><span class="w"> </span><span class="nf">test_two</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="line-519"><span class="w">        </span><span class="sd">&quot;&quot;&quot;TEST 2: Test Emission profile calculation, conversion to Pandas series</span>
 </span><span id="line-520"><span class="sd">        profile addition and plotting&quot;&quot;&quot;</span>
 </span><span id="line-521">        <span class="n">years</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
 </span><span id="line-522">
 </span><span id="line-523">        <span class="c1"># Profile 1</span>
-</span><span id="line-524">        <span class="k">def</span> <span class="nf">uniform_profile</span><span class="p">(</span><span class="n">year</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmissionQuantity</span><span class="p">:</span>
+</span><span id="line-524">        <span class="k">def</span><span class="w"> </span><span class="nf">uniform_profile</span><span class="p">(</span><span class="n">year</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmissionQuantity</span><span class="p">:</span>
 </span><span id="line-525">            <span class="k">return</span> <span class="n">EmissionQuantity</span><span class="p">(</span><span class="mf">6.0</span><span class="p">,</span> <span class="s1">&#39;tonneCO2/m2/year&#39;</span><span class="p">)</span>
 </span><span id="line-526">
 </span><span id="line-527">        <span class="c1"># Profile 2</span>
-</span><span id="line-528">        <span class="k">def</span> <span class="nf">exp_profile</span><span class="p">(</span><span class="n">year</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmissionQuantity</span><span class="p">:</span>
+</span><span id="line-528">        <span class="k">def</span><span class="w"> </span><span class="nf">exp_profile</span><span class="p">(</span><span class="n">year</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EmissionQuantity</span><span class="p">:</span>
 </span><span id="line-529">            <span class="n">out</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.04</span><span class="o">*</span><span class="n">year</span><span class="p">)</span>
 </span><span id="line-530">            <span class="k">return</span> <span class="n">EmissionQuantity</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="s1">&#39;tonneCO2/m2/year&#39;</span><span class="p">)</span>
 </span><span id="line-531">
@@ -827,20 +826,19 @@
       <div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
         <p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2024, Tomasz Janus, University of Manchester, United Kingdom&nbsp;Built with <a class="font-medium underline underline-offset-4"
     href="https://www.sphinx-doc.org"
-    rel="noreferrer">Sphinx 7.3.7</a></p>
+    rel="noreferrer">Sphinx 8.1.3</a></p>
 </div>
 </div>
 </footer>
   </div>
   
     <script src="../../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/toggleprompt.js?v=5801b3bb"></script>
-    <script src="../../_static/tabs.js?v=3030b3cb"></script>
-    <script defer="defer" src="../../_static/theme.js?v=e82a16a3"></script>
+    <script defer="defer" src="../../_static/theme.js?v=073f68d9"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
   
 </body>
