@@ -477,7 +477,8 @@ Refer to Eqs. A.8./A.9./A.10. in <a class="reference external" href="https://www
 <div class="admonition caution">
 <p class="admonition-title">Caution</p>
 <p>The multiplier of 30.4 was included in the published in <a class="reference external" href="https://www.hydropower.org/publications/the-ghg-reservoir-tool-g-res-technical-documentation">G-Res Technical Documentation</a> but not in <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S1364815221001602">Praire2021</a>.
-This multiplier converts the unit of radiance from kWh/m<span class="math notranslate nohighlight">\(^2\)</span>/day to kWh/m<span class="math notranslate nohighlight">\(^2\)</span>/month. However, this results in very high CH<span class="math notranslate nohighlight">\(_4\)</span> emission estimates. Hence, we set it to 1.0.</p>
+This multiplier converts the unit of radiance from kWh/m<span class="math notranslate nohighlight">\(^2\)</span>/day to kWh/m<span class="math notranslate nohighlight">\(^2\)</span>/month.
+However, this results in very high CH<span class="math notranslate nohighlight">\(_4\)</span> emissions. Hence, we set it to 1.0.</p>
 </div>
 </dd></dl>
 <dl class="py attribute">
@@ -666,15 +667,18 @@ With assumed units of m<span class="math notranslate nohighlight">\(^3\)</span> 
 <dt class="sig sig-object py" id="reemission.reservoir.Reservoir.retention_coeff_larsen">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">retention_coeff_larsen</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em></dt>
 <dd><p>Retention coefficient using the model of Larsen and Mercier (1976) for Phosphorus retention.</p>
-<p>Assumes residence time in years.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Retention coefficient, –</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[f_R =\]</div>
+</div></blockquote>
+<p>rac{1}{1 + 1 / sqrt{WRT}}</p>
+<blockquote>
+<div><p>Assumes residence time in years.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>float: Retention coefficient, –</p>
 </dd>
 </dl>
+</div></blockquote>
 </dd></dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id11">
@@ -731,7 +735,7 @@ the 4 warmest months in a year. Refer to Equation A.4. in <a class="reference ex
 <dd></dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="reemission.reservoir.Reservoir.thermocline_depth">
-<span class="sig-name descname"><span class="pre">thermocline_depth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wind_speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wind_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/reemission/reservoir.html#Reservoir.thermocline_depth"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">thermocline_depth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wind_speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wind_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/reservoir.html#Reservoir.thermocline_depth"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Calculate the thermocline depth required for the calculation of CH<span class="math notranslate nohighlight">\(_4\)</span>
 degassing.</p>
 <p>Assumes that the surface water temperature is equal to
@@ -752,7 +756,8 @@ from Hanna 1990 is used, as implemented in <a class="reference external" href="h
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The thermocline depth of the reservoir, m.</p>
+<dd class="field-even"><p>The thermocline depth of the reservoir, m.
+None: If the reservoir is not stratified.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>

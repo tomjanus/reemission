@@ -272,43 +272,44 @@
 </span><span id="line-81"><span class="sd">            &quot;&quot;&quot;</span>
 </span><span id="line-82">            <span class="n">num_landcovers_in_catchment</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">catchment</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">)</span>
 </span><span id="line-83">            <span class="n">num_landcovers_in_reservoir</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reservoir</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">)</span>
-</span><span id="line-84">            <span class="n">den</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_landcovers_in_reservoir</span><span class="o">/</span><span class="n">num_landcovers_in_catchment</span><span class="p">)</span>
-</span><span id="line-85">            <span class="k">return</span> <span class="n">r_landcover_fractions</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
-</span><span id="line-86">                <span class="n">den</span><span class="p">,</span><span class="n">num_landcovers_in_catchment</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-</span><span id="line-87">
-</span><span id="line-88">        <span class="n">c_landcover_fractions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">catchment</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">)</span>
-</span><span id="line-89">        <span class="n">r_landcover_fractions</span> <span class="o">=</span> <span class="n">_r_to_c_area_fractions</span><span class="p">(</span>
-</span><span id="line-90">            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reservoir</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">))</span>
-</span><span id="line-91">        <span class="n">c_landcover_areas</span> <span class="o">=</span> <span class="n">c_landcover_fractions</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">catchment</span><span class="o">.</span><span class="n">area</span>
-</span><span id="line-92">        <span class="n">r_landcover_areas</span> <span class="o">=</span> <span class="n">r_landcover_fractions</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">reservoir</span><span class="o">.</span><span class="n">area</span>
-</span><span id="line-93">            
-</span><span id="line-94">        <span class="k">return</span> <span class="p">(</span><span class="n">c_landcover_areas</span> <span class="o">-</span> <span class="n">r_landcover_areas</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">ns_catchment_area</span>
-</span><span id="line-95">
+</span><span id="line-84">            <span class="k">return</span> <span class="n">r_landcover_fractions</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+</span><span id="line-85">                <span class="nb">int</span><span class="p">(</span><span class="n">num_landcovers_in_reservoir</span><span class="o">/</span><span class="n">num_landcovers_in_catchment</span><span class="p">),</span>
+</span><span id="line-86">                <span class="n">num_landcovers_in_catchment</span><span class="p">)</span>\
+</span><span id="line-87">                <span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</span><span id="line-88">
+</span><span id="line-89">        <span class="n">c_landcover_fractions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">catchment</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">)</span>
+</span><span id="line-90">        <span class="n">r_landcover_fractions</span> <span class="o">=</span> <span class="n">_r_to_c_area_fractions</span><span class="p">(</span>
+</span><span id="line-91">            <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reservoir</span><span class="o">.</span><span class="n">area_fractions</span><span class="p">))</span>
+</span><span id="line-92">        <span class="n">c_landcover_areas</span> <span class="o">=</span> <span class="n">c_landcover_fractions</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">catchment</span><span class="o">.</span><span class="n">area</span>
+</span><span id="line-93">        <span class="n">r_landcover_areas</span> <span class="o">=</span> <span class="n">r_landcover_fractions</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">reservoir</span><span class="o">.</span><span class="n">area</span>
+</span><span id="line-94">            
+</span><span id="line-95">        <span class="k">return</span> <span class="p">(</span><span class="n">c_landcover_areas</span> <span class="o">-</span> <span class="n">r_landcover_areas</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">ns_catchment_area</span>
 </span><span id="line-96">
+</span><span id="line-97">
 <div class="viewcode-block" id="NSCatchmentCreator.get_catchment">
 <a class="viewcode-back" href="../../api/reemission.ns_catchment.html#reemission.ns_catchment.NSCatchmentCreator.get_catchment">[docs]</a>
-</span><span id="line-97">    <span class="k">def</span><span class="w"> </span><span class="nf">get_catchment</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Catchment</span><span class="p">:</span>
-</span><span id="line-98"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Subtracts the reservoir from the catchment and returns a new catchment object </span>
-</span><span id="line-99"><span class="sd">        with the altered properties representing post-impoundment conditions, i.e., </span>
-</span><span id="line-100"><span class="sd">        original catchment minus reservoir.</span>
-</span><span id="line-101">
-</span><span id="line-102"><span class="sd">        Returns:</span>
-</span><span id="line-103"><span class="sd">            Catchment: The modified catchment object.</span>
-</span><span id="line-104"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-105">        <span class="n">catchment</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">catchment</span><span class="p">)</span>
-</span><span id="line-106">        <span class="n">catchment</span><span class="o">.</span><span class="n">area_fractions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ns_landuse_fractions</span><span class="p">()</span>
-</span><span id="line-107">        <span class="n">catchment</span><span class="o">.</span><span class="n">area</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ns_catchment_area</span>
-</span><span id="line-108">        <span class="c1"># TODO: How to deal with population? Currently assumed that the population</span>
-</span><span id="line-109">        <span class="c1"># stays the same because either there was no population within the reservoir contour</span>
-</span><span id="line-110">        <span class="c1"># (no relocation) or some people get relocated to new places within the catchment.</span>
-</span><span id="line-111">        <span class="k">return</span> <span class="n">catchment</span></div>
+</span><span id="line-98">    <span class="k">def</span><span class="w"> </span><span class="nf">get_catchment</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Catchment</span><span class="p">:</span>
+</span><span id="line-99"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Subtracts the reservoir from the catchment and returns a new catchment object </span>
+</span><span id="line-100"><span class="sd">        with the altered properties representing post-impoundment conditions, i.e., </span>
+</span><span id="line-101"><span class="sd">        original catchment minus reservoir.</span>
+</span><span id="line-102">
+</span><span id="line-103"><span class="sd">        Returns:</span>
+</span><span id="line-104"><span class="sd">            Catchment: The modified catchment object.</span>
+</span><span id="line-105"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-106">        <span class="n">catchment</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">catchment</span><span class="p">)</span>
+</span><span id="line-107">        <span class="n">catchment</span><span class="o">.</span><span class="n">area_fractions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ns_landuse_fractions</span><span class="p">()</span>
+</span><span id="line-108">        <span class="n">catchment</span><span class="o">.</span><span class="n">area</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ns_catchment_area</span>
+</span><span id="line-109">        <span class="c1"># TODO: How to deal with population? Currently assumed that the population</span>
+</span><span id="line-110">        <span class="c1"># stays the same because either there was no population within the reservoir contour</span>
+</span><span id="line-111">        <span class="c1"># (no relocation) or some people get relocated to new places within the catchment.</span>
+</span><span id="line-112">        <span class="k">return</span> <span class="n">catchment</span></div>
 </div>
 
-</span><span id="line-112">    
-</span><span id="line-113">
-</span><span id="line-114"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-</span><span id="line-115"><span class="w">    </span><span class="sd">&quot;&quot;&quot; &quot;&quot;&quot;</span>
-</span><span id="line-116">        
+</span><span id="line-113">    
+</span><span id="line-114">
+</span><span id="line-115"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+</span><span id="line-116"><span class="w">    </span><span class="sd">&quot;&quot;&quot; &quot;&quot;&quot;</span>
+</span><span id="line-117">        
 </span></code></pre></div>
     </div><div class="flex justify-between items-center pt-6 mt-12 border-t border-border gap-4">
 </div></div>

@@ -345,29 +345,27 @@
 </span><span id="line-146">        <span class="n">biogenic_factors</span> <span class="o">=</span> <span class="p">{}</span>
 </span><span id="line-147">        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span>
 </span><span id="line-148">            <span class="k">for</span> <span class="n">attribute_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_attributes</span><span class="p">():</span>
-</span><span id="line-149">                <span class="n">biogenic_factors</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-</span><span id="line-150">                    <span class="p">{</span><span class="n">attribute_name</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">attribute_name</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">})</span>
-</span><span id="line-151">        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span>
-</span><span id="line-152">            <span class="k">for</span> <span class="n">attribute_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_attributes</span><span class="p">():</span>
-</span><span id="line-153">                <span class="n">biogenic_factors</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-</span><span id="line-154">                    <span class="p">{</span><span class="n">attribute_name</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">attribute_name</span><span class="p">)</span><span class="o">.</span><span class="n">value</span><span class="p">})</span>
-</span><span id="line-155">        <span class="k">else</span><span class="p">:</span>
-</span><span id="line-156">            <span class="k">raise</span> <span class="n">ConversionMethodUnknownException</span><span class="p">(</span>
-</span><span id="line-157">                <span class="n">conversion_method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
-</span><span id="line-158">                <span class="n">available_methods</span><span class="o">=</span><span class="n">ToDictMethod</span><span class="o">.</span><span class="n">__args__</span><span class="p">)</span>
-</span><span id="line-159">        <span class="k">return</span> <span class="n">biogenic_factors</span></div>
+</span><span id="line-149">                <span class="n">biogenic_factors</span><span class="p">[</span><span class="n">attribute_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attribute_name</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
+</span><span id="line-150">        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span>
+</span><span id="line-151">            <span class="k">for</span> <span class="n">attribute_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_attributes</span><span class="p">():</span>
+</span><span id="line-152">                <span class="n">biogenic_factors</span><span class="p">[</span><span class="n">attribute_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attribute_name</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+</span><span id="line-153">        <span class="k">else</span><span class="p">:</span>
+</span><span id="line-154">            <span class="k">raise</span> <span class="n">ConversionMethodUnknownException</span><span class="p">(</span>
+</span><span id="line-155">                <span class="n">conversion_method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+</span><span id="line-156">                <span class="n">available_methods</span><span class="o">=</span><span class="n">ToDictMethod</span><span class="o">.</span><span class="n">__args__</span><span class="p">)</span>
+</span><span id="line-157">        <span class="k">return</span> <span class="n">biogenic_factors</span></div>
 
-</span><span id="line-160">
+</span><span id="line-158">
 <div class="viewcode-block" id="BiogenicFactors.__repr__">
 <a class="viewcode-back" href="../../api/reemission.biogenic.html#reemission.biogenic.BiogenicFactors.__repr__">[docs]</a>
-</span><span id="line-161">    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span id="line-162"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="line-163"><span class="sd">        Return a string representation of the BiogenicFactors instance.</span>
-</span><span id="line-164">
-</span><span id="line-165"><span class="sd">        Returns:</span>
-</span><span id="line-166"><span class="sd">            str: String representation of the instance.</span>
-</span><span id="line-167"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-168">        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Biogenic factors: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">todict</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span></div>
+</span><span id="line-159">    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="line-160"><span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="line-161"><span class="sd">        Return a string representation of the BiogenicFactors instance.</span>
+</span><span id="line-162">
+</span><span id="line-163"><span class="sd">        Returns:</span>
+</span><span id="line-164"><span class="sd">            str: String representation of the instance.</span>
+</span><span id="line-165"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-166">        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">todict</span><span class="p">()</span><span class="si">}</span><span class="s1">&#39;</span></div>
 </div>
 
 </span></code></pre></div>
