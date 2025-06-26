@@ -49,7 +49,7 @@ ext_writer_dict = {
 log = create_logger(logger_name=__name__)
 
 FIGLET: bool = True
-model_config = registry.main_config.get("model_config")
+model_config = registry.config.get("model_config")
 # Read default parameters from config
 p_export_cal = model_config.get("CALCULATIONS", "p_export_cal")
 nitrous_oxide_model = model_config.get("CALCULATIONS", "nitrous_oxide_model")
@@ -125,7 +125,7 @@ def calculate(input_file, output_files, output_config, author,
     input_data = Inputs.fromfile(input_file)
     # Use the default config file if not provided as an argument
     if not output_config:
-        output_config = registry.presenter_config.get("report_outputs")
+        output_config = registry.config.get("report_outputs")
     model = EmissionModel(
         inputs=input_data,
         presenter_config=output_config,
@@ -222,8 +222,8 @@ def log_to_pdf() -> None:
         # Output the PDF file
         pdf.output(filename, 'F')
     
-    log_path = registry.main_config.get("app_config")['logging']['log_dir']
-    log_filename = registry.main_config.get("app_config")['logging']['log_filename']
+    log_path = registry.config.get("app_config")['logging']['log_dir']
+    log_filename = registry.config.get("app_config")['logging']['log_filename']
     log_filename_no_ext = log_filename.split(".")[0]
     log_file_path = pathlib.Path.joinpath(log_path, log_filename)
     

@@ -146,12 +146,10 @@ class BiogenicFactors:
         biogenic_factors = {}
         if method == "name":
             for attribute_name in self.get_attributes():
-                biogenic_factors.update(
-                    {attribute_name: getattr(attribute_name).name})
+                biogenic_factors[attribute_name] = getattr(self, attribute_name).name
         elif method == "value":
             for attribute_name in self.get_attributes():
-                biogenic_factors.update(
-                    {attribute_name: getattr(attribute_name).value})
+                biogenic_factors[attribute_name] = getattr(self, attribute_name).value
         else:
             raise ConversionMethodUnknownException(
                 conversion_method=method,
@@ -165,4 +163,4 @@ class BiogenicFactors:
         Returns:
             str: String representation of the instance.
         """
-        return f'Biogenic factors: {self.todict()}'
+        return f'{self.todict()}'

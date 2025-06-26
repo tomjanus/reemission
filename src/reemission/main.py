@@ -24,7 +24,7 @@ def run_emissions() -> EmissionModel:
     """
     input_data = Inputs.fromfile(
         get_package_file('../../tests/test_data/inputs.json'))
-    output_config = registry.presenter_config.get("report_outputs")
+    output_config = registry.config.get("report_outputs")
     model = EmissionModel(inputs=input_data, config=output_config)
     model.calculate()
     model.add_presenter(

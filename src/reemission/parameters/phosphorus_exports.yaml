@@ -32,4 +32,10 @@ forest:
 no data:
   low intensity: 0.0
   high intensity: 0.0
+crop export coefficients:
+  coeff_1: 1.818
+  coeff_2: 0.227
+forest export coefficients:
+  coeff_1: 0.914
+  coeff_2: 0.014
 ...

@@ -129,11 +129,11 @@ class EmissionModel:
         """Initialize outputs dict and load presenter_config file if presenter_config is a path."""
         internal = {}
         if self.presenter_config is None:
-            self.presenter_config = registry.presenter_config.get("report_outputs")
+            self.presenter_config = registry.config.get("report_outputs")
         elif isinstance(self.presenter_config, (pathlib.Path, str)):
             self.presenter_config: dict = load_yaml(pathlib.Path(self.presenter_config))
         if self.model_config is None:
-            self.model_config = registry.main_config.get("model_config")
+            self.model_config = registry.config.get("model_config")
         elif isinstance(self.model_config, (pathlib.Path, str)):
             self.model_config: dict = read_config_dict(self.model_config)
         

@@ -27,7 +27,7 @@ from reemission import registry
 
 # Move this code inside create_logger
 
-APP_CONFIG = registry.main_config.get("app_config")
+APP_CONFIG = registry.config.get("app_config")
 # Set global logging settings from logging configuration
 try:
     # logging.getLogger('test').setLevel(APP_CONFIG['logging']['level'])

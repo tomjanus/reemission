@@ -24,7 +24,7 @@ from reemission import registry
 # Set up module logger
 log = logging.getLogger(__name__)
 
-internals_config = registry.presenter_config.get("report_internal")
+internals_config = registry.config.get("report_internal")
 
 CatchmentType = TypeVar('CatchmentType', bound='Catchment')
 
@@ -74,7 +74,7 @@ class Catchment:
         Note:
             If False, set area_fractions to None.
         """
-        config = registry.main_config.get("model_config")
+        config = registry.config.get("model_config")
         eps = float(config['CALCULATIONS']["eps_catchment_area_fractions"])
         try:
             assert len(self.area_fractions) == len(Landuse)
@@ -226,7 +226,7 @@ class Catchment:
         Returns:
             float: Phosphorus load in kgP/year.
         """
-        p_loads_pop = registry.tables.get("gres_p_loads") 
+        p_loads_pop = registry.config.get("gres_p_loads") 
         treatment_factor = self.biogenic_factors.treatment_factor
         load = 0.002 * 365.25 * self.population * \
             p_loads_pop[treatment_factor.value]
@@ -245,7 +245,7 @@ class Catchment:
         """
         intensity = self.biogenic_factors.landuse_intensity
         landuse_names = [landuse.value for landuse in Landuse]
-        p_exports = registry.tables.get("gres_p_exports") 
+        p_exports = registry.config.get("gres_p_exports") 
         # Area marging below which the output is output as zero
         EPS = 1e-6
 
@@ -265,9 +265,13 @@ class Catchment:
                 float: Phosphorus export coefficient.
             """
             if fun_name == 'crop export':
-                reg_coeffs = (1.818, 0.227)
+                reg_coeffs = (
+                    p_exports['crop export coefficients']['coeff_1'],
+                    p_exports['crop export coefficients']['coeff_2'])
             elif fun_name == 'forest export':
-                reg_coeffs = (0.914, 0.014)
+                reg_coeffs = (
+                    p_exports['forest export coefficients']['coeff_1'],
+                    p_exports['forest export coefficients']['coeff_2'])
             else:
                 log.error(
                     'Regression function %s unknown. Returning zero.',
@@ -333,7 +337,7 @@ class Catchment:
         crop_index = find_enum_index(enum=Landuse, to_find=Landuse.CROPS)
         crop_percent = 100.0 * self.area_fractions[crop_index]
         # Find coefficients from the McDowell table of regression coefficients
-        tp_coeff_table = registry.tables.get("mcdowell_p_exports") 
+        tp_coeff_table = registry.config.get("mcdowell_p_exports") 
         intercept = tp_coeff_table['intercept']['coeff']
         olsen_p = tp_coeff_table['olsen_p']['coeff']
         prec_coeff = tp_coeff_table['mean_prec']['coeff']
@@ -406,7 +410,7 @@ class Catchment:
             float: Median influent total nitrogen concentration in micrograms/L.
         """
         biome = self.biogenic_factors.biome
-        tn_coeff_table = registry.tables.get("mcdowell_n_exports")
+        tn_coeff_table = registry.config.get("mcdowell_n_exports")
         intercept = tn_coeff_table['intercept']['coeff']
         prec_coeff = tn_coeff_table['mean_prec']['coeff']
         slope_coeff = tn_coeff_table['mean_slope']['coeff']

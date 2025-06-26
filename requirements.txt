@@ -4,6 +4,7 @@ scipy
 pandas
 geopandas
 matplotlib
+seaborn
 pylatex
 notebook
 pyyaml
@@ -18,7 +19,9 @@ folium
 branca
 fpdf
 geojson
+rich
 rich-click
 pytest
 unittest2
 coverage
+pint

@@ -81,9 +81,10 @@ class NSCatchmentCreator:
             """
             num_landcovers_in_catchment = len(self.catchment.area_fractions)
             num_landcovers_in_reservoir = len(self.reservoir.area_fractions)
-            den = int(num_landcovers_in_reservoir/num_landcovers_in_catchment)
             return r_landcover_fractions.reshape(
-                den,num_landcovers_in_catchment).sum(axis=0)
+                int(num_landcovers_in_reservoir/num_landcovers_in_catchment),
+                num_landcovers_in_catchment)\
+                .sum(axis=0)
 
         c_landcover_fractions = np.array(self.catchment.area_fractions)
         r_landcover_fractions = _r_to_c_area_fractions(

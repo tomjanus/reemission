@@ -144,7 +144,7 @@ def _get_latex_compiler() -> str:
 
     """
     default_compiler = 'pdflatex'
-    app_config = registry.main_config.get("app_config")
+    app_config = registry.config.get("app_config")
     try:
         latex_options = app_config['latex']
         compiler = latex_options['compiler']
@@ -1606,7 +1606,7 @@ class LatexWriter(Writer):
             None
         """
         # Read data from configuration
-        app_config = registry.main_config.get("app_config")
+        app_config = registry.config.get("app_config")
         clean_tex = app_config['latex']['clean_tex']
         compilations = app_config['latex']['compilations']
         if not bool(self.outputs):
@@ -2110,11 +2110,11 @@ class Presenter:
 
     def __post_init__(self):
         """Loads configuration files after instance initialization."""
-        self.input_config = registry.presenter_config.get("report_inputs")
-        self.output_config = registry.presenter_config.get("report_outputs")
-        self.intern_vars_config = registry.presenter_config.get("report_internal")
-        self.parameter_config = registry.presenter_config.get("report_parameters")
-        self.config_ini = registry.main_config.get("model_config")
+        self.input_config = registry.config.get("report_inputs")
+        self.output_config = registry.config.get("report_outputs")
+        self.intern_vars_config = registry.config.get("report_internal")
+        self.parameter_config = registry.config.get("report_parameters")
+        self.config_ini = registry.config.get("model_config")
 
     def add_writer(self, writer: Type[Writer], output_file: str) -> None:
         """Adds a Writer object to the list of writers.

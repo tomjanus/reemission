@@ -28,7 +28,7 @@ from reemission import registry
 log = logging.getLogger(__name__)
 
 ReservoirType = TypeVar('ReservoirType', bound='Reservoir')
-internals_config = registry.presenter_config.get("report_internal")
+internals_config = registry.config.get("report_internal")
 
 
 @dataclass
@@ -85,7 +85,7 @@ class Reservoir:
             WrongSumOfAreasException: If the sum of area fractions does not equal 1 +/- EPS.
         """
         if not self.config:
-            self.config = registry.main_config.get("model_config")
+            self.config = registry.config.get("model_config")
         eps = safe_cast(self.config["CALCULATIONS"]["eps_reservoir_area_fractions"], float)
         try:
             assert len(self.area_fractions) == 3 * len(Landuse)
@@ -115,15 +115,15 @@ class Reservoir:
         """Validate object attributes and correct if necessary."""
         if self.water_intake_depth == "null" or self.water_intake_depth is None:
             # If water intake depth value is not given, assume that
-            # the intake is from deep in the reservoir and therefore,
-            # degassing occurs.
-            self.water_intake_depth = self.max_depth
+            # the intake is positioned deep in the reservoir and therefore,
+            # degassing occurs. We assume 80% if maximum depth.
+            self.water_intake_depth = 0.8 * self.max_depth
         elif self.water_intake_depth > self.max_depth:
             log.warning(
                 "Water intake depth in reservoir %s greater than max depth",
                 self.name)
             log.warning("Setting intake depth to max depth.")
-            self.water_intake_depth = self.max_depth
+            self.water_intake_depth = 0.8 * self.max_depth
 
     @classmethod
     def from_dict(cls: Type[ReservoirType], parameters: dict,
@@ -201,6 +201,9 @@ class Reservoir:
     def retention_coeff_larsen(self) -> float:
         """Retention coefficient using the model of Larsen and Mercier (1976) for Phosphorus retention.
 
+        .. math::
+            f_R = \frac{1}{1 + 1 / sqrt{WRT}}
+        
         Assumes residence time in years.
 
         Returns:
@@ -237,12 +240,12 @@ class Reservoir:
         Returns:
             float: Mean horizontal radiance in kWh/m$^2$/d.
         """
-        if 40 > self.latitude > -40:
-            radiance = self.mean_radiance
         if 40 < self.latitude:
             radiance = self.mean_radiance_may_sept
-        if -40 > self.latitude:
+        elif -40 > self.latitude:
             radiance = self.mean_radiance_nov_mar
+        else:
+            radiance = self.mean_radiance # 40 > self.latitude > -40
         return radiance
 
     @save_return(internal, internals_config['global_radiance']['include'])
@@ -259,10 +262,10 @@ class Reservoir:
         
         Caution:
             The multiplier of 30.4 was included in the published in `G-Res Technical Documentation`_ but not in Praire2021_.
-            This multiplier converts the unit of radiance from kWh/m$^2$/day to kWh/m$^2$/month. However, this results in very high CH$_4$ emission estimates. Hence, we set it to 1.0.
+            This multiplier converts the unit of radiance from kWh/m$^2$/day to kWh/m$^2$/month. 
+            However, this results in very high CH$_4$ emissions. Hence, we set it to 1.0.
         """
-        number_months_above_0 = self.temperature.number_months_above(
-            threshold=0)
+        number_months_above_0 = self.temperature.number_months_above(threshold=0)
         if period.lower() in ("d", "day"):
             multiplier = 1.0
         if period.lower() in ("m", "month"):
@@ -390,8 +393,10 @@ class Reservoir:
         return water_density(temp=self.surface_temperature())
 
     @save_return(internal, internals_config['thermocline_depth']['include'])
-    def thermocline_depth(self, wind_speed: Optional[float] = None,
-                          wind_height: float = 50) -> float:
+    def thermocline_depth(
+            self, 
+            wind_speed: Optional[float] = None,
+            wind_height: float = 50) -> float | None:
         """Calculate the thermocline depth required for the calculation of CH$_4$
         degassing.
 
@@ -414,6 +419,7 @@ class Reservoir:
 
         Returns:
             float: The thermocline depth of the reservoir, m.
+            None: If the reservoir is not stratified.
         """
         if wind_speed is None:
             #thermocline_depth = 10**(0.185 * math.log10(self.area) + 0.842)
@@ -422,8 +428,12 @@ class Reservoir:
         else:
             # Calculate CD coefficient and scale wind speed to 10m
             cd_coeff = cd_factor(wind_speed)
-            wind_at_10m = scale_windspeed(
-                wind_speed=wind_speed, wind_height=wind_height, new_height=10)
+            if wind_height != 10:
+                # Scale wind speed to 10m height
+                wind_at_10m = scale_windspeed(
+                    wind_speed=wind_speed, wind_height=wind_height, new_height=10)
+            else:
+                wind_at_10m = wind_speed
             # Find thermocline depth in metres
             aux_var_1 = cd_coeff * air_density(
                 self.temperature.mean_warmest(number_of_months=4)) * \
@@ -431,6 +441,9 @@ class Reservoir:
             # It is possible that the second auxiliary variable turns out negative
             # due to some previous empirical calculations not working properly for
             # some combinations of input variables.
+            eps_density: float = 5E-1 # to avoid numerical errors
+            if self.bottom_density() <= self.surface_density() + eps_density:
+                return None
             aux_var_2 = 9.80665 * (self.bottom_density() - self.surface_density())
             aux_var_3 = math.sqrt(self.area * 10**6)
             try:

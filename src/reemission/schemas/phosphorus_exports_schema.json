@@ -32,6 +32,12 @@
                 },
                 "no data": {
                     "$ref": "#/definitions/Intensity_numbers"
+                },
+                "crop export coefficients": {
+                    "$ref": "#/definitions/Export_coefficients"
+                },
+                "forest export coefficients": {
+                    "$ref": "#/definitions/Export_coefficients"
                 }
             },
             "required": [
@@ -43,7 +49,9 @@
                 "snow and ice",
                 "urban",
                 "water",
-                "wetlands"
+                "wetlands",
+                "crop export coefficients",
+                "forest export coefficients"
             ],
             "title": "P_exports"
         },
@@ -80,6 +88,23 @@
                 "low intensity"
             ],
             "title": "Intensity_with_function"
+        },
+        "Export_coefficients": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "coeff_1": {
+                    "type": "number"
+                },
+                "coeff_2": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "coeff_1",
+                "coeff_2"
+            ],
+            "title": "Export_coefficients"
         }
     }
 }
