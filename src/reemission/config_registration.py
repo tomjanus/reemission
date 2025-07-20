@@ -1,4 +1,7 @@
 """ """
+from typing import Optional
+import pathlib
+
 _has_registered = False
 
 def register_configs() -> None:
@@ -59,7 +62,7 @@ def register_configs() -> None:
         schema_file=get_package_file('schemas/phosphorus_loads_schema.json'))
 
     
-def reset():
+def reset_all() -> None:
     """Resets all configurations to their default state."""
     from reemission.registry import config as reemission_config
     global _has_registered                   # reset the guard
@@ -69,6 +72,11 @@ def reset():
     reemission_config._loaders.clear()
     # Re-register the default configurations
     register_configs()
+
+
+def reset(config_name: str, file_path: pathlib.Path, schema_file: Optional[pathlib.Path] = None) -> None:
+    """Reset config to its default state"""
+    config.override(name=config_name, file_path=file_path, schema_file=schema_file)
 
 
 if __name__ == "__main__":

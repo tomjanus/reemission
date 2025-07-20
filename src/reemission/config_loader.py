@@ -30,9 +30,17 @@ class ConfigLoader:
         """Creates a singleton instance of ConfigLoader."""
         if cls._instance is None:
             cls._instance = super(ConfigLoader, cls).__new__(cls)
-            cls._instance._configs: Configurations = {}
-            cls._instance._loaders: Loaders = {}
+            cls._instance._configs: Configurations = {} # type: ignore
+            cls._instance._loaders: Loaders = {} # type: ignore
         return cls._instance
+        
+    @property
+    def config_names(self) -> List[str]:
+        """Returns names of config loaders, i.e. supported configuration names.
+        Does not equal to self._configs as the _config field only lists registered
+        configs. Since configs are lazily loaded, they become available upon first access only -
+        otherwise they are not loaded."""
+        return list(config._loaders.keys())
     
     def is_registered(self, config_name: str) -> bool:
         """Checks if a configuration with the given name is registered.
