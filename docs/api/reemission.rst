@@ -22,5 +22,6 @@ ReEmission reference documentation.
    reemission.exceptions
    reemission.app_logger
    reemission.download
+   reemission.salib
    reemission.globals
    reemission.main
