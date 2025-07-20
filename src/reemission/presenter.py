@@ -731,11 +731,15 @@ class ExcelWriter(Writer):
         config = self.intern_vars_config
         data=self.intern_vars[reservoir_name]
         reservoir_df = self.dict_data_to_df(
-            id=reservoir_name, data=data, config=config, index_name='Name')
-        if self.intern_vars_df.empty:
+            id=reservoir_name, 
+            data=data, 
+            config=config,
+            index_name='Name').dropna(axis=1, how='all')
+        if len(self.intern_vars_df) == 0:
             self.intern_vars_df = reservoir_df
         else:
-            self.intern_vars_df = pd.concat([self.intern_vars_df, reservoir_df])
+            self.intern_vars_df = pd.concat(
+                [self.intern_vars_df, reservoir_df])
 
     def write(self) -> None:
         """

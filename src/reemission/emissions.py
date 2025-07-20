@@ -670,22 +670,18 @@ class MethaneEmission(Emission):
             # Create a list of emissions per area fraction, in kg CH4 yr-1
             emissions.append(area_landuse * coeff)
         # The below calculation assumes that the windspeed provided as an
-        # Attribute to the reservoir object is at 50m height. Put this in
+        # Attribute to the reservoir object is at 10m height. Put this in
         # documentation or allow wind speed at different heights and addd
         # one more argument which is the windspeed measurement height.
         if add_preemission:
             emissions.append(self.reservoir.ch4_preemission_factor() * \
             self.reservoir.area * 100)
         # Total emission needs to be in g CO2eq m-2 yr-1.
-        # To convert from CH4 to CO2
-        # the unit emission is multiplied by 44/16, i.e. molecular weight
-        # of CO2 divided by molecular weight of CH4.
-        # To convert to CO2,eq the value is additionally multiplied by
+        # To convert to CO2,eq the value is multiplied by
         # the Global Warming Potential of CH4 over the reservoir's lifespan
         # (100 years). Factor of 1/1000 convert the unit from kg/km2 to g/m2.
-        ch4_co2_ratio = self.par.weight_CH4 / self.par.weight_CO2
         tot_emission = sum(emissions) / self.reservoir.area * \
-            1e-3 * 1 / ch4_co2_ratio * self.par.ch4_gwp100
+            1e-3 * 1 * self.par.ch4_gwp100
         return tot_emission
 
 
@@ -742,7 +738,9 @@ class MethaneEmission(Emission):
         littoral_perc = self.reservoir.littoral_area_frac()
         # Calculate CH4 emission in mg CH4-C m-2 d-1
         emission_in_ch4 = 10 ** (
-            self.par.k1_ebull + self.par.k2_ebull * math.log10(littoral_perc / 100.0) + self.par.k3_ebull * self.reservoir.global_radiance()
+            self.par.k1_ebull + 
+            self.par.k2_ebull * math.log10(littoral_perc / 100.0) + 
+            self.par.k3_ebull * self.reservoir.global_radiance()
         )
         # Convert CH4 emission from mg CH4-C m-2 d-1 to g CO2eq m-2 yr-1
         co2_c_ratio = self.par.weight_CH4 / self.par.weight_C
@@ -912,7 +910,7 @@ class MethaneEmission(Emission):
         profile = [self.diffusion_flux(year) for year in years]
         return profile
 
-    def degassing_flux_int(self, time_horizon: int = 100) -> float:
+    def degassing_flux_int(self, time_horizon: int = 100, verbose: bool = False) -> float:
         r"""
         Calculate CH$_4$ emission per year via degassing, integrated over time
         horizon given in argument `time_horizon` in years.
@@ -951,23 +949,13 @@ class MethaneEmission(Emission):
 
         Args:
             time_horizon (int, optional): Time horizon in years (default: 100).
+            verbose (bool, optional): If True, print additional information. Defaults to True.
 
         Returns:
             float: Integrated degassing flux in g CO$_{2e}$ m$^{-2}$ yr$^{-1}$.
         """
-        # Time horizon is required to quantify GWP value, which differs
-        # depending on the number of years for which global warming potential
-        # is quantified.
-        if time_horizon != 100:
-            log.warning("Currently, the tool supports time horizon of 100 years only.")
-            gwp = self.par.ch4_gwp100
-        else:
-            gwp = self.par.ch4_gwp100
-
-        used_windspeed = self.reservoir.mean_monthly_windspeed
-        if self.reservoir.water_intake_depth is None or self.reservoir.thermocline_depth() is None:
-            return 0.0
-        if self.reservoir.water_intake_depth > self.reservoir.thermocline_depth(used_windspeed):
+        
+        def find_ch4_out_flux() -> float:
             # CH4 conc. difference in mg CH4-C L^(-1) (or gCH4-C m^(-3))
             ch4_conc_diff = 10 ** (
                 self.par.k1_degas
@@ -978,6 +966,43 @@ class MethaneEmission(Emission):
             ch4_out_flux = 0.9 * 1e-6 * ch4_conc_diff * self.reservoir.discharge
             # Degassing flux in gCO2,eq / m2 / year
             return ch4_out_flux * self.par.weight_CH4 / self.par.weight_C * gwp / self.reservoir.area
+        
+        # Time horizon is required to quantify GWP value, which differs
+        # depending on the number of years for which global warming potential
+        # is quantified.
+        if time_horizon != 100:
+            log.warning("Currently, the tool supports time horizon of 100 years only.")
+            gwp = self.par.ch4_gwp100
+        else:
+            gwp = self.par.ch4_gwp100
+
+        if self.reservoir.thermocline_depth() is None: # No stratification
+            return 0.0
+        if self.reservoir.water_intake_depth is None:
+            res_types_with_degassing = \
+                self.reservoir.config['CALCULATIONS']["res_types_with_degassing"]
+            if res_types_with_degassing.lower() == 'all':
+                return find_ch4_out_flux()
+            try:
+                degassing_types = [t.strip() for t in res_types_with_degassing.split(',')]
+            except AttributeError:
+                log.error(
+                    "Malformed 'res_types_with_degassing' parameter in config.ini. "
+                    "Expected a comma-separated list of reservoir types, e.g. 'tropical, temperate'."
+                    "Returning 0.0 for degassing flux.")
+                return 0.0
+            if self.reservoir.type.lower() not in degassing_types:
+                if verbose:
+                    log.warning(
+                        f"Reservoir type '{self.reservoir.type}' does not support degassing flux calculation"
+                        "if outflow depth not specified. Returning 0.0.")
+                return 0.0
+            else:
+                # Assume that degassing occurs, even though we don't have the information about the depth of the water intake
+                return find_ch4_out_flux()
+        # If water intake depth was provided, check degassing irrespectively of the reservoir's type
+        if self.reservoir.water_intake_depth > self.reservoir.thermocline_depth():
+            return find_ch4_out_flux()
         return 0.0
 
     def degassing_flux(self, year: float, time_horizon: int = 100) -> float:
@@ -1018,7 +1043,7 @@ class MethaneEmission(Emission):
         def init_flux() -> float:
             """Calculate initial degassing flux (degassing flux in year 0), g CO$_{2e}$ m$^{-2}$ yr$^{-1}$."""
             flux = (
-                self.degassing_flux_int(time_horizon=time_horizon)
+                self.degassing_flux_int(time_horizon=time_horizon, verbose=False)
                 * (-self.par.k4_degas * math.log(10) * time_horizon)
                 / (1 - 10 ** (time_horizon * self.par.k4_degas))
             )

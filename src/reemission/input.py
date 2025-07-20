@@ -180,6 +180,9 @@ class Inputs:
             self.inputs[reservoir_name] = new_input
         else:
             log.info("Key %s already in the inputs. Skipping", reservoir_name)
+            
+    def get_input(self, name: str) -> Input | None:
+        return self.inputs.get(name)
 
     @classmethod
     def fromfile(cls: Type[InputsType], file: str) -> InputsType:

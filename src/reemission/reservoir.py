@@ -9,7 +9,7 @@ import logging
 import math
 import inspect
 from enum import Enum
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Tuple, Optional, TypeVar, Type, Dict
 from reemission.temperature import MonthlyTemperature
 from reemission.auxiliary import (
@@ -48,8 +48,9 @@ class Reservoir:
         mean_radiance (float): Mean annual monthly horizontal radiance, kWh/m$^2$/d.
         mean_radiance_may_sept (float): Mean monthly horizontal radiance between May and September, kWh/m$^2$/d.
         mean_radiance_nov_mar (float): Mean monthly horizontal radiance between November and March, kWh/m$^2$/d.
-        mean_monthly_windspeed (float): Mean annual monthly wind speed, m/s (**assumed to be measured at the height of 50 metres.**)
-        water_intake_depth (float): Water intake depth below surface, m.
+        mean_monthly_windspeed (float): Mean annual monthly wind speed, m/s (**assumed to be measured at the height of 10 metres by default. If it's not measured at 10m it needs to be rescaled - see __post_init__'**)
+        water_intake_depth (float, optional): Water intake depth below surface, m.
+        type (str, default 'unknown') Type of the reservoir use, e.g. hydroelectric, potable, irrigation, etc.
         name (str): Reservoir name. Default is "n/a".
 
     Note:
@@ -70,10 +71,11 @@ class Reservoir:
     mean_radiance: float
     mean_radiance_may_sept: float
     mean_radiance_nov_mar: float
-    mean_monthly_windspeed: float
-    water_intake_depth: float
+    mean_monthly_windspeed: float # Should be provided at 10m (if not, then it will be rescaled)
+    water_intake_depth: float | None
     name: str = "n/a"
-    config: Optional[Dict] = None
+    type: str = "unknown"
+    config: Optional[Dict] = field(default=None, repr=False)
 
     def __post_init__(self):
         """Post-initialization checks and validations.
@@ -109,20 +111,29 @@ class Reservoir:
             self.coordinates = tuple(self.coordinates)
         # Validate input arguments
         self.validate_attributes()
+        # Rescale mean_monthly_windspeed to wind speed at 10m if input data is provided for different wind_height_config
+        # Wind speed height is provied in the config.
+        wind_height_config = safe_cast(self.config["CALCULATIONS"]["wind_height"], float)
+        if wind_height_config != 10:
+            self.mean_monthly_windspeed = scale_windspeed(
+                self.mean_monthly_windspeed, 
+                wind_height=wind_height_config, new_height=10)
 
-
-    def validate_attributes(self) -> None:
+    def validate_attributes(self, verbose: bool = False) -> None:
         """Validate object attributes and correct if necessary."""
         if self.water_intake_depth == "null" or self.water_intake_depth is None:
             # If water intake depth value is not given, assume that
             # the intake is positioned deep in the reservoir and therefore,
             # degassing occurs. We assume 80% if maximum depth.
-            self.water_intake_depth = 0.8 * self.max_depth
+            if verbose:
+                log.info(
+                    "Water intake depth is null."
+                    "Assumed intake depth position (shallow / deep) depends on the reservoir type.")
         elif self.water_intake_depth > self.max_depth:
             log.warning(
                 "Water intake depth in reservoir %s greater than max depth",
                 self.name)
-            log.warning("Setting intake depth to max depth.")
+            log.warning("Setting intake depth to 0.8 of max depth.")
             self.water_intake_depth = 0.8 * self.max_depth
 
     @classmethod
@@ -393,10 +404,7 @@ class Reservoir:
         return water_density(temp=self.surface_temperature())
 
     @save_return(internal, internals_config['thermocline_depth']['include'])
-    def thermocline_depth(
-            self, 
-            wind_speed: Optional[float] = None,
-            wind_height: float = 50) -> float | None:
+    def thermocline_depth(self) -> float | None:
         """Calculate the thermocline depth required for the calculation of CH$_4$
         degassing.
 
@@ -410,34 +418,24 @@ class Reservoir:
         Farrell M. Journal of Great Lakes ResearchOpen AccessVolume 15,
         Issue 2, Pages 233 - 245, 1989.
 
-        If wind_speed or monthly_temp is not supplied, a simplified equation
+        If data for the wind speed or monthly temperature is not provided (None), a simplified equation
         from Hanna 1990 is used, as implemented in G-Res_.
-
-        Args:
-            wind_speed (Optional[float]): Average annual wind speed at the location of the reservoir, m/s.
-            wind_height (float): Height at which wind_speed is measured, in meters. Default is 50 meters.
 
         Returns:
             float: The thermocline depth of the reservoir, m.
             None: If the reservoir is not stratified.
         """
-        if wind_speed is None:
+        if self.mean_monthly_windspeed is None:
             #thermocline_depth = 10**(0.185 * math.log10(self.area) + 0.842)
             thermocline_depth = 6.95 * self.area**0.185
             log.debug("Thermocline depth calculated with model of Hanna.")
         else:
             # Calculate CD coefficient and scale wind speed to 10m
-            cd_coeff = cd_factor(wind_speed)
-            if wind_height != 10:
-                # Scale wind speed to 10m height
-                wind_at_10m = scale_windspeed(
-                    wind_speed=wind_speed, wind_height=wind_height, new_height=10)
-            else:
-                wind_at_10m = wind_speed
+            cd_coeff = cd_factor(self.mean_monthly_windspeed)
             # Find thermocline depth in metres
             aux_var_1 = cd_coeff * air_density(
                 self.temperature.mean_warmest(number_of_months=4)) * \
-                wind_at_10m**2
+                self.mean_monthly_windspeed**2
             # It is possible that the second auxiliary variable turns out negative
             # due to some previous empirical calculations not working properly for
             # some combinations of input variables.
@@ -461,32 +459,19 @@ class Reservoir:
                 log.debug(main_msg, extra={'detail': extra_msg})
         return thermocline_depth
 
-    @staticmethod
-    def _k600_ch4(
-            waterbody_area: float, wind_speed: float,
-            wind_height: float) -> float:
+    def _k600_ch4(self, waterbody_area: float) -> float:
         """Estimate gas transfer velocity, k600 in cm/h for CH$_4$ from wind
         speed in m/s and waterbody area in km$^2$ and return the estimate in m/d.
         Refer to Table 2, p. 1760, Model B, Vachon and Prairie, 2013:
         https://cdnsciencepub.com/doi/10.1139/cjfas-2013-0241.
         Eq. A.16. in Praire2021_.
 
-        Args:
-            waterbody_area (float): The area of the waterbody, km$^2$.
-            wind_speed (float): The wind speed, m/s.
-            wind_height (float): The height at which the wind speed is measured, m.
-
         Returns:
             float: The gas transfer velocity, k600, m/d.
         """
-        if wind_height == 10:
-            wind_at_10m = wind_speed
-        else:
-            wind_at_10m = scale_windspeed(
-                wind_speed=wind_speed, wind_height=wind_height, new_height=10)
         # k600 in cm/h
-        k600 = 2.51 + 1.48 * wind_at_10m + 0.39 * wind_at_10m * \
-            math.log10(waterbody_area)
+        k600 = 2.51 + 1.48 * self.mean_monthly_windspeed + 0.39 * \
+            self.mean_monthly_windspeed * math.log10(waterbody_area)
         # return k600 in m/d
         return k600 * 0.24
 
@@ -543,7 +528,7 @@ class Reservoir:
         """
         return self._kh_ch4() * self._p_ch4(waterbody_area)
 
-    def ch4_preemission_factor(self, wind_height: float = 50) -> float:
+    def ch4_preemission_factor(self) -> float:
         r"""Calculate the CH$_4$ emission factor for the water body, in kg CH$_4$/ha/yr.
         Refer to Eq. A.20. in Praire2021_.
 
@@ -551,9 +536,6 @@ class Reservoir:
         emissions from water bodies present in the inundated area prior to
         inundation on top of what was emitted from soil (based on inundated
         soil land cover composition and soil type).
-
-        Args:
-            wind_height (float): The height at which the wind speed is measured, in meters. Default is 50 meters.
 
         Returns:
             float: The CH$_4$ emission factor for the water body, kg CH$_4$/ha/yr.
@@ -565,24 +547,25 @@ class Reservoir:
             return 0.0
         ch4_molar = 16  # g/mol
         em_factor = self.surface_ch4_conc(waterbody_area) * \
-            self._k600_ch4(
-                waterbody_area, self.mean_monthly_windspeed, wind_height) * \
-            ch4_molar * 365/100
+            self._k600_ch4(waterbody_area) * ch4_molar * 365/100
         # 365 converts from /d to /yr
         # 1/100 converts from 1/km2 to 1/ha
         return em_factor
 
 
     @save_return(internal, internals_config['retention_coeff']['include'])
-    def retention_coeff(self, method: str) -> float:
+    def retention_coeff(self, method: Optional[str] = None) -> float:
         """Return the retention coefficient using the chosen calculation method.
 
         Args:
-            method (str): Retention coefficient calculation method.
+            method (str, optional): Retention coefficient calculation method.
+                If method not given (is None), it will be read from config.
 
         Returns:
             float: The retention coefficient based on the selected method.
         """
+        if method is None:
+            method = self.config['CALCULATIONS']["ret_coeff_method"]
         if method == 'larsen':
             ret_coeff = self.retention_coeff_larsen
         elif method in ['emp', 'empirical']:
@@ -594,8 +577,7 @@ class Reservoir:
             ret_coeff = self.retention_coeff_larsen
         return ret_coeff
 
-    def reservoir_conc(self, inflow_conc: float,
-                     method: Optional[str] = None) -> float:
+    def reservoir_conc(self, inflow_conc: float, method: Optional[str] = None) -> float:
         """Calculate the reservoir concentration based on inflow concentration and
         the reservoir retention coefficient.
 

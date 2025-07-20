@@ -56,11 +56,59 @@ def cd_factor(wind_speed: float) -> float:
     Returns:
         float: CD coefficient, --.
     """
-    return 1.3E-3 if wind_speed < 5.0 else 1.5E-5
+    return 1.3E-3 if wind_speed < 5.0 else 1.5E-5 # Read 2011
 
 
-def scale_windspeed(wind_speed: float, wind_height: float,
-                    new_height: float) -> float:
+def scale_windspeed(
+    wind_speed: float,
+    wind_height: float,
+    new_height: float,
+    max_iter: int = 100,
+    tol: float = 1e-4) -> float:
+    """Scale wind speed to a new height using iterative method.
+
+    This function calculates wind speed at a new height using an iterative
+    approach, because the drag coefficient depends on the new wind speed.
+
+    Args:
+        wind_speed (float): Known wind speed, m/s.
+        wind_height (float): Known wind height, m.
+        new_height (float): Target height for which wind speed is calculated, m.
+        max_iter (int): Maximum number of iterations.
+        tol (float): Tolerance for convergence.
+
+    Returns:
+        float: Estimated wind speed at new_height, m/s.
+    """
+    if new_height == wind_height:
+        return wind_speed
+
+    # Initial guess: use power-law or linear scaling
+    new_wind_speed = wind_speed * (new_height / wind_height)**0.14
+
+    for ix in range(max_iter):
+        cd = cd_factor(new_wind_speed)
+        ln_ratio = math.log(new_height / wind_height)
+        delta = (math.sqrt(cd) / 0.4) * ln_ratio
+
+        if new_height > wind_height:
+            updated_speed = wind_speed * (1 + delta)
+        else:
+            updated_speed = wind_speed / (1 - delta)
+
+        # Check for convergence
+        if abs(updated_speed - new_wind_speed) < tol:
+            return updated_speed
+
+        new_wind_speed = updated_speed
+
+    raise RuntimeError("Wind speed scaling did not converge.")
+
+
+def scale_windspeed_noniter(
+    wind_speed: float, 
+    wind_height: float,
+    new_height: float) -> float:
     """Scale wind speed to a new height.
 
     This function calculates the wind speed at a desired height based on the 
@@ -77,8 +125,13 @@ def scale_windspeed(wind_speed: float, wind_height: float,
     Returns:
         float: Wind speed at new_height, m/s.
     """
-    return wind_speed / (1 - math.sqrt(cd_factor(wind_speed))/0.4 *
-                         math.log10(new_height / wind_height))
+    if new_height < wind_height:
+        new_wind_speed = wind_speed / (1 - math.sqrt(cd_factor(wind_speed))/0.4 * math.log(new_height / wind_height))
+    elif new_height > wind_height:
+        new_wind_speed = wind_speed * (1 + math.sqrt(cd_factor(wind_speed))/0.4 * math.log(new_height / wind_height))
+    else:
+        new_wind_speed = wind_speed
+    return new_wind_speed
 
 
 def rollout_nested_list(

@@ -315,6 +315,7 @@ class EmissionModel:
                     parameters=catchment_data,
                     name=model_input.name)
                 reservoir = Reservoir.from_dict(
+                    type = model_input.data['type'],
                     parameters=reservoir_data,
                     temperature=monthly_temp,
                     coordinates=model_input.data["coordinates"],

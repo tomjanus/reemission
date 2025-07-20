@@ -7,12 +7,12 @@ boreal:
   mineral:
     bare: 0.0
     crops: 0.0
-    forest: -0.4
+    forest: -0.4 # (-0.45)
     shrubs: 0.0
     urban: 0.0
     wetlands: 0.0
   organic:
-    bare: 2.8
+    bare: 2.8 # (3.0)
     crops: 7.9
     forest: 0.6
     shrubs: 5.7
@@ -37,12 +37,12 @@ temperate:
   mineral:
     bare: 0.0
     crops: 0.0
-    forest: -0.9
+    forest: -0.91
     shrubs: 0.0
     urban: 0.0
     wetlands: 0.0
   organic:
-    bare: 2.8
+    bare: 2.8 # (3.0)
     crops: 7.9
     forest: 0.0
     shrubs: 5.0
