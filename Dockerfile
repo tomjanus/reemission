@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
-# reemission requires python version 3.10 and higher
-ARG PYTHON_VERSION=3.10.12
+# reemission requires python version 3.11 and higher
+ARG PYTHON_VERSION=3.11.9
 FROM python:${PYTHON_VERSION}-slim AS base
 
 # Prevents Python from writing pyc files.
