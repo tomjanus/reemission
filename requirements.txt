@@ -25,3 +25,4 @@ pytest
 unittest2
 coverage
 pint
+salib
