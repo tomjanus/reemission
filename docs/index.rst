@@ -27,6 +27,7 @@ Version: |version|
 
    introduction.rst
    theory.rst
+   config.rst
    Installation <installation/index.rst>
    usage.rst
    running_docker.rst

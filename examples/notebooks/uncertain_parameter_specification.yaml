@@ -1,0 +1,54 @@
+## This file contains the definitions of selectd uncertain parameters for testing parametric uncertainty.
+# This file is only for demonstration purposes and includes a small fraction of model parameters
+k1_diff_co2:
+  key_path: [CARBON_DIOXIDE, k1_diff]
+  name: k1_diff CO2
+  par_type: config
+  config_name: model_config
+  include: true
+  fixed: false
+  distribution:
+    type: real-normal
+    mean: 1.860
+    std_dev: 0.32
+  group: CO2 diffusion
+  metadata: null
+k2_diff_co2:
+  key_path: [CARBON_DIOXIDE, k2_diff]
+  name: k2_diff CO2
+  par_type: config
+  config_name: model_config
+  include: true
+  fixed: false
+  distribution:
+    type: real-normal
+    mean: -0.330
+    std_dev: 0.050
+  group: CO2 diffusion
+  metadata: null
+k1_diff_ch4:
+  key_path: [METHANE, k1_diff]
+  name: k1_diff CH4
+  par_type: config
+  config_name: model_config
+  include: true
+  fixed: false
+  distribution:
+    type: real-normal
+    mean: 0.8032
+    std_dev: 0.15
+  group: CH4 diffusion
+  metadata: null
+k2_diff_ch4:
+  key_path: [METHANE, k2_diff]
+  name: k2_diff CH4
+  par_type: config
+  config_name: model_config
+  include: true
+  fixed: false
+  distribution:
+    type: real-normal
+    mean: -0.01419
+    std_dev: 0.002
+  group: CH4 diffusion
+  metadata: null

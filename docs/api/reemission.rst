@@ -2,7 +2,7 @@ ReEmission reference documentation.
 ===================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    reemission.model
    reemission.input
@@ -10,9 +10,9 @@ ReEmission reference documentation.
    reemission.catchment
    reemission.ns_catchment
    reemission.emissions
+   reemission.emission_profile
    reemission.temperature
    reemission.biogenic
-   reemission.profile
    reemission.presenter
    reemission.utils
    reemission.auxiliary
@@ -22,6 +22,7 @@ ReEmission reference documentation.
    reemission.exceptions
    reemission.app_logger
    reemission.download
-   reemission.salib
    reemission.globals
    reemission.main
+   reemission.salib
+   reemission.postprocessing
