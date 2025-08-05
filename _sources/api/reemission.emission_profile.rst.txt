@@ -1,9 +1,9 @@
 Emission Profile Calculator
 ===========================
-
+   
 .. autosummary::
    :toctree: generated/
 
-.. automodule:: reemission.profile
+.. automodule:: reemission.emission_profile
    :members:
    :undoc-members:

@@ -73,6 +73,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">About the Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../theory.html">Theoretical Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config.html">Configuration</a></li>
 <li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="../installation/index.html">Installation<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
 <li class="toctree-l2"><a class="reference internal" href="../installation/install_package.html">Installing RE-Emission</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation/using_docker.html">About Docker</a></li>
@@ -96,9 +97,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/reemission.catchment.html">Catchment Model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/reemission.ns_catchment.html">Post-impoundment catchment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/reemission.emissions.html">Emissions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.emission_profile.html">Emission Profile Calculator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/reemission.temperature.html">MonthlyTemperature</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/reemission.biogenic.html">Biogenic Factors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/reemission.profile.html">Emission Profile Calculator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/reemission.presenter.html">Presenter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/reemission.utils.html">Utility functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/reemission.auxiliary.html">Auxiliary functions</a></li>
@@ -110,6 +111,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/reemission.download.html">External Data Downloader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/reemission.globals.html">Global variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/reemission.main.html">Main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.salib.html">SALib Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.postprocessing.html">Postprocessing</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
@@ -135,12 +138,15 @@
 <div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">Import the required libraries and RE-Emission classes</span>
 </nav>
 <div id="content" role="main">
-<div><h1 style="text-align:center"><p>This is the main repository of notebooks which demonstrate the usage of dam-emission</p>
+</div><div><p><img alt="b5209d3f4ff94cb7b8bcb3a5c69211dd" class="no-scaled-link" src="../_images/logo-banner-bw1.png" style="width: 500px;"/></p>
+</div><div><h1 style="text-align:center"><p>This is the main repository of notebooks which demonstrate the usage of dam-emission</p>
 </h1><h3><p>This notebook demonstrates how to:</p>
 </h3><ol><li><p>Read input data and output configuration YAML file and instantiate the emission model</p>
 </li><li><p>Add LaTeX model presenter, calculate emissions and save results to TEX and PDF files</p>
 </li><li><p>Open the generated PDF document</p>
-</li></ol></div><section id="Import-the-required-libraries-and-RE-Emission-classes">
+</li></ol></div><p>&lt; <a class="reference internal" href="03-Saving-Results-To-JSON.html"><span class="doc">Saving Results To JSON</span></a> | <a class="reference internal" href="index.html"><span class="doc">Contents</span></a> | <a class="reference internal" href="05-Modifying-Configuration-Parameters.html"><span class="doc">Modifying configuration parameters</span></a> &gt;</p>
+<p><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg"/></p>
+<section id="Import-the-required-libraries-and-RE-Emission-classes">
 <h1>Import the required libraries and RE-Emission classes</h1>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">[1]:
@@ -150,18 +156,19 @@
 </span><span id="line-2"><span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
 </span><span id="line-3"><span class="kn">import</span><span class="w"> </span><span class="nn">gdown</span>
 </span><span id="line-4"><span class="kn">import</span><span class="w"> </span><span class="nn">webbrowser</span>
-</span><span id="line-5"><span class="k">try</span><span class="p">:</span>
-</span><span id="line-6">    <span class="kn">import</span><span class="w"> </span><span class="nn">reemission</span>
-</span><span id="line-7"><span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-</span><span id="line-8">    <span class="o">%</span><span class="k">pip</span> install git+https://github.com/tomjanus/reemission.git --quiet
-</span><span id="line-9"><span class="c1"># Import package file loader</span>
-</span><span id="line-10"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_package_file</span>
-</span><span id="line-11"><span class="c1"># Import from the model module</span>
-</span><span id="line-12"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmissionModel</span>
-</span><span id="line-13"><span class="c1"># Import from the input module</span>
-</span><span id="line-14"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.input</span><span class="w"> </span><span class="kn">import</span> <span class="n">Inputs</span>
-</span><span id="line-15"><span class="c1"># Import from the presenter module</span>
-</span><span id="line-16"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.presenter</span><span class="w"> </span><span class="kn">import</span> <span class="n">LatexWriter</span>
+</span><span id="line-5"><span class="kn">from</span><span class="w"> </span><span class="nn">rich</span><span class="w"> </span><span class="kn">import</span> <span class="nb">print</span> <span class="k">as</span> <span class="n">rprint</span>
+</span><span id="line-6"><span class="k">try</span><span class="p">:</span>
+</span><span id="line-7">    <span class="kn">import</span><span class="w"> </span><span class="nn">reemission</span>
+</span><span id="line-8"><span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+</span><span id="line-9">    <span class="o">%</span><span class="k">pip</span> install git+https://github.com/tomjanus/reemission.git --quiet
+</span><span id="line-10"><span class="c1"># Import package file loader</span>
+</span><span id="line-11"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_package_file</span>
+</span><span id="line-12"><span class="c1"># Import from the model module</span>
+</span><span id="line-13"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmissionModel</span>
+</span><span id="line-14"><span class="c1"># Import from the input module</span>
+</span><span id="line-15"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.input</span><span class="w"> </span><span class="kn">import</span> <span class="n">Inputs</span>
+</span><span id="line-16"><span class="c1"># Import from the presenter module</span>
+</span><span id="line-17"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.presenter</span><span class="w"> </span><span class="kn">import</span> <span class="n">LatexWriter</span>
 </span></code></pre></div>
 </div>
 </div>
@@ -228,22 +235,21 @@ ERROR:reemission.presenter:LaTeX compiler cannot be found in your environment.'.
 </span><span id="line-3"><span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">pdf_file</span><span class="p">):</span>
 </span><span id="line-4">    <span class="n">webbrowser</span><span class="o">.</span><span class="n">open_new</span><span class="p">(</span><span class="n">pdf_file</span><span class="p">)</span>
 </span><span id="line-5"><span class="k">else</span><span class="p">:</span>
-</span><span id="line-6">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"File: </span><span class="si">{</span><span class="n">pdf_file</span><span class="si">}</span><span class="s2"> does not exist."</span><span class="p">)</span>
+</span><span id="line-6">    <span class="n">rprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">"File: </span><span class="si">{</span><span class="n">pdf_file</span><span class="si">}</span><span class="s2"> does not exist."</span><span class="p">)</span>
 </span></code></pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-File: outputs/output.pdf does not exist.
-</pre></div></div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">File: outputs/output.pdf does not exist.
+</pre></div>
 </div>
 <p><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg"/></p>
 </section>
 </div><div class="flex justify-between items-center pt-6 mt-12 border-t border-border gap-4">
-</div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
+</div></main></div><aside class="hidden text-sm xl:block" id="right-sidebar">
 <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
 <ul>
 <li></li>
@@ -253,7 +259,7 @@ File: outputs/output.pdf does not exist.
 </ul>
 </div>
 </aside>
-</main>
+
 </div>
 </div><footer class="py-6 border-t border-border md:py-0">
 <div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
@@ -262,7 +268,7 @@ File: outputs/output.pdf does not exist.
 </div>
 </div>
 </footer>
-</div>
+
 <script src="../_static/documentation_options.js?v=8d563738"></script>
 <script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>

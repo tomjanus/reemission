@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+
+<html :class="{'dark': darkMode === 'dark' || (darkMode === 'system' &amp;&amp; window.matchMedia('(prefers-color-scheme: dark)').matches)}" class="scroll-smooth" data-content_root="../../" lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') || localStorage.setItem('darkMode', 'system'), activeSection: '' }" x-init="$watch('darkMode', val =&gt; localStorage.setItem('darkMode', val))">
+<head>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta charset="utf-8"/>
+<meta content="white" media="(prefers-color-scheme: light)" name="theme-color"/>
+<meta content="black" media="(prefers-color-scheme: dark)" name="theme-color"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>reemission.salib.runners | ReEmission 1.0.0 documentation</title>
+<meta content="reemission.salib.runners | ReEmission 1.0.0 documentation" property="og:title"/>
+<meta content="reemission.salib.runners | ReEmission 1.0.0 documentation" name="twitter:title"/>
+<link href="../../_static/pygments.css?v=1949e874" rel="stylesheet" type="text/css"/>
+<link href="../../_static/theme.css?v=42baaae4" rel="stylesheet" type="text/css"/>
+<link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="../../genindex.html" rel="index" title="Index"/>
+<link href="reemission.salib.visualize.html" rel="next" title="reemission.salib.visualize"/>
+<link href="reemission.salib.montecarlo.html" rel="prev" title="reemission.salib.montecarlo"/>
+<script>
+    <!-- Prevent Flash of wrong theme -->
+      const userPreference = localStorage.getItem('darkMode');
+      let mode;
+      if (userPreference === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        mode = 'dark';
+        document.documentElement.classList.add('dark');
+      } else {
+        mode = 'light';
+      }
+      if (!userPreference) {localStorage.setItem('darkMode', mode)}
+    </script>
+</head>
+<body :class="{ 'overflow-hidden': showSidebar }" class="min-h-screen font-sans antialiased bg-background text-foreground" x-data="{ showSidebar: false, showScrollTop: false }">
+<div @click.self="showSidebar = false" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" x-cloak="" x-show="showSidebar"></div><div class="relative flex flex-col min-h-screen" id="page"><a class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100" href="#content">
+      Skip to content
+    </a><header class="sticky top-0 z-40 w-full border-b shadow-sm border-border supports-backdrop-blur:bg-background/60 bg-background/95 backdrop-blur"><div class="container flex items-center h-14">
+<div class="hidden mr-4 md:flex">
+<a class="flex items-center mr-6" href="../../index.html"><span class="hidden font-bold sm:inline-block text-clip whitespace-nowrap">ReEmission 1.0.0 documentation</span>
+</a></div><button @click="showSidebar = true" class="inline-flex items-center justify-center h-10 px-0 py-2 mr-2 text-base font-medium transition-colors rounded-md hover:text-accent-foreground hover:bg-transparent md:hidden" type="button">
+<svg aria-hidden="true" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M152.587 825.087q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440Zm0-203.587q-19.152 0-32.326-13.174T107.087 576q0-19.152 13.174-32.326t32.326-13.174h320q19.152 0 32.326 13.174T518.087 576q0 19.152-13.174 32.326T472.587 621.5h-320Zm0-203.587q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440ZM708.913 576l112.174 112.174q12.674 12.674 12.674 31.826t-12.674 31.826Q808.413 764.5 789.261 764.5t-31.826-12.674l-144-144Q600 594.391 600 576t13.435-31.826l144-144q12.674-12.674 31.826-12.674t31.826 12.674q12.674 12.674 12.674 31.826t-12.674 31.826L708.913 576Z"></path>
+</svg>
+<span class="sr-only">Toggle navigation menu</span>
+</button>
+<div class="flex items-center justify-between flex-1 space-x-2 sm:space-x-4 md:justify-end">
+<div class="flex-1 w-full md:w-auto md:flex-none"><form @keydown.k.window.meta="$refs.search.focus()" action="../../search.html" class="relative flex items-center group" id="searchbox" method="get">
+<input aria-label="Search the docs" class="inline-flex items-center font-medium transition-colors bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background border border-input hover:bg-accent focus:bg-accent hover:text-accent-foreground focus:text-accent-foreground hover:placeholder-accent-foreground py-2 px-4 relative h-9 w-full justify-start rounded-[0.5rem] text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64" id="search-input" name="q" placeholder="Search ..." type="search" x-ref="search"/>
+<kbd class="pointer-events-none absolute right-1.5 top-2 hidden h-5 select-none text-muted-foreground items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex group-hover:bg-accent group-hover:text-accent-foreground">
+<span class="text-xs">⌘</span>
+    K
+  </kbd>
+</form>
+</div>
+<nav class="flex items-center space-x-1">
+<button @click="darkMode = darkMode === 'light' ? 'dark' : 'light'" aria-label="Color theme switcher" class="relative inline-flex items-center justify-center px-0 text-sm font-medium transition-colors rounded-md hover:bg-accent hover:text-accent-foreground h-9 w-9" type="button">
+<svg class="absolute transition-all scale-100 rotate-0 dark:-rotate-90 dark:scale-0" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 685q45.456 0 77.228-31.772Q589 621.456 589 576q0-45.456-31.772-77.228Q525.456 467 480 467q-45.456 0-77.228 31.772Q371 530.544 371 576q0 45.456 31.772 77.228Q434.544 685 480 685Zm0 91q-83 0-141.5-58.5T280 576q0-83 58.5-141.5T480 376q83 0 141.5 58.5T680 576q0 83-58.5 141.5T480 776ZM80 621.5q-19.152 0-32.326-13.174T34.5 576q0-19.152 13.174-32.326T80 530.5h80q19.152 0 32.326 13.174T205.5 576q0 19.152-13.174 32.326T160 621.5H80Zm720 0q-19.152 0-32.326-13.174T754.5 576q0-19.152 13.174-32.326T800 530.5h80q19.152 0 32.326 13.174T925.5 576q0 19.152-13.174 32.326T880 621.5h-80Zm-320-320q-19.152 0-32.326-13.174T434.5 256v-80q0-19.152 13.174-32.326T480 130.5q19.152 0 32.326 13.174T525.5 176v80q0 19.152-13.174 32.326T480 301.5Zm0 720q-19.152 0-32.326-13.17Q434.5 995.152 434.5 976v-80q0-19.152 13.174-32.326T480 850.5q19.152 0 32.326 13.174T525.5 896v80q0 19.152-13.174 32.33-13.174 13.17-32.326 13.17ZM222.174 382.065l-43-42Q165.5 327.391 166 308.239t13.174-33.065q13.435-13.674 32.587-13.674t32.065 13.674l42.239 43q12.674 13.435 12.555 31.706-.12 18.272-12.555 31.946-12.674 13.674-31.445 13.413-18.772-.261-32.446-13.174Zm494 494.761-42.239-43q-12.674-13.435-12.674-32.087t12.674-31.565Q686.609 756.5 705.38 757q18.772.5 32.446 13.174l43 41.761Q794.5 824.609 794 843.761t-13.174 33.065Q767.391 890.5 748.239 890.5t-32.065-13.674Zm-42-494.761Q660.5 369.391 661 350.62q.5-18.772 13.174-32.446l41.761-43Q728.609 261.5 747.761 262t33.065 13.174q13.674 13.435 13.674 32.587t-13.674 32.065l-43 42.239q-13.435 12.674-31.706 12.555-18.272-.12-31.946-12.555Zm-495 494.761Q165.5 863.391 165.5 844.239t13.674-32.065l43-42.239q13.435-12.674 32.087-12.674t31.565 12.674Q299.5 782.609 299 801.38q-.5 18.772-13.174 32.446l-41.761 43Q231.391 890.5 212.239 890t-33.065-13.174ZM480 576Z"></path>
+</svg>
+<svg class="absolute transition-all scale-0 rotate-90 dark:rotate-0 dark:scale-100" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 936q-151 0-255.5-104.5T120 576q0-138 90-239.5T440 218q25-3 39 18t-1 44q-17 26-25.5 55t-8.5 61q0 90 63 153t153 63q31 0 61.5-9t54.5-25q21-14 43-1.5t19 39.5q-14 138-117.5 229T480 936Zm0-80q88 0 158-48.5T740 681q-20 5-40 8t-40 3q-123 0-209.5-86.5T364 396q0-20 3-40t8-40q-78 32-126.5 102T200 576q0 116 82 198t198 82Zm-10-270Z"></path>
+</svg>
+</button>
+</nav>
+</div>
+</div>
+</header>
+<div class="flex-1"><div class="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10"><aside :aria-hidden="!showSidebar" :class="{ 'translate-x-0': showSidebar }" class="fixed inset-y-0 left-0 md:top-14 z-50 md:z-30 bg-background md:bg-transparent transition-all duration-100 -translate-x-full md:translate-x-0 ml-0 p-6 md:p-0 md:-ml-2 md:h-[calc(100vh-3.5rem)] w-5/6 md:w-full shrink-0 overflow-y-auto border-r border-border md:sticky" id="left-sidebar">
+<a class="!justify-start text-sm md:!hidden bg-background" href="../../index.html"><span class="font-bold text-clip whitespace-nowrap">ReEmission 1.0.0 documentation</span>
+</a>
+<div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
+<div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">About the Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../theory.html">Theoretical Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config.html">Configuration</a></li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="../../installation/index.html">Installation<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="../../installation/install_package.html">Installing RE-Emission</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation/using_docker.html">About Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation/building_image.html">Building the ReEmission Docker Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../installation/using_image.html">Using the ReEmission Docker Image</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../running_docker.html">Running the ReEmission Docker Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../demo.html">Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../json.html">JSON file format description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reporting.html">Reporting Calculation Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../geocaret_integration.html">Integration with GeoCARET</a></li>
+<li class="toctree-l1 current" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="../reemission.html">Python API reference<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul class="current" x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="../reemission.model.html">Model (Main)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reemission.input.html">Input Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reemission.reservoir.html">Reservoir Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reemission.catchment.html">Catchment Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reemission.ns_catchment.html">Post-impoundment catchment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reemission.emissions.html">Emissions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reemission.emission_profile.html">Emission Profile Calculator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reemission.temperature.html">MonthlyTemperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reemission.biogenic.html">Biogenic Factors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reemission.presenter.html">Presenter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reemission.utils.html">Utility functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reemission.auxiliary.html">Auxiliary functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reemission.constants.html">Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reemission.mixins.html">Mixins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reemission.document_compiler.html">Document <span class="math notranslate nohighlight">\(\LaTeX\)</span> Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reemission.exceptions.html">Custom Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reemission.app_logger.html">App Logger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reemission.download.html">External Data Downloader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reemission.globals.html">Global variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reemission.main.html">Main</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../reemission.salib.html">SALib Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reemission.postprocessing.html">Postprocessing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+</nav>
+</div>
+</div>
+<button @click="showSidebar = false" class="absolute md:hidden right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100" type="button">
+<svg class="h-4 w-4" fill="currentColor" height="24" stroke="none" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 632 284 828q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536 576l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480 632Z"></path>
+</svg>
+</button>
+</aside>
+<main class="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
+<div class="w-full min-w-0 mx-auto">
+<nav aria-label="breadcrumbs" class="flex items-center mb-4 space-x-1 text-sm text-muted-foreground">
+<a class="overflow-hidden text-ellipsis whitespace-nowrap hover:text-foreground" href="../../index.html">
+<span class="hidden md:inline">ReEmission 1.0.0 documentation</span>
+<svg aria-label="Home" class="md:hidden" fill="currentColor" height="18" stroke="none" viewbox="0 96 960 960" width="18" xmlns="http://www.w3.org/2000/svg">
+<path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z"></path>
+</svg>
+</a>
+<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap" href="../reemission.html">ReEmission reference documentation.</a>
+<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap" href="../reemission.salib.html">SALib Integration</a>
+<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">reemission.salib.runners</span>
+</nav>
+<div id="content" role="main">
+<section id="module-reemission.salib.runners">
+<span id="reemission-salib-runners"></span><h1>reemission.salib.runners</h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="reemission.salib.runners.SALibProblem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.salib.runners.</span></span><span class="sig-name descname"><span class="pre">SALibProblem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">names:</span> <span class="pre">~typing.List[str],</span> <span class="pre">bounds:</span> <span class="pre">~typing.List[~typing.Tuple[float,</span> <span class="pre">float]]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;,</span> <span class="pre">groups:</span> <span class="pre">~typing.Dict[str,</span> <span class="pre">~typing.List[int]]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">use_groups_in_sobol:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/reemission/salib/runners.html#SALibProblem"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A dataclass to represent a SALib problem definition and construct
+SALib <cite>problem</cite> dictionary.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SALibProblem.num_vars">
+<span class="sig-name descname"><span class="pre">num_vars</span></span></dt>
+<dd><p>Number of variables in the problem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SALibProblem.names">
+<span class="sig-name descname"><span class="pre">names</span></span></dt>
+<dd><p>List of variable names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SALibProblem.bounds">
+<span class="sig-name descname"><span class="pre">bounds</span></span></dt>
+<dd><p>List of bounds for each variable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[Tuple[float, float]]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SALibProblem.groups">
+<span class="sig-name descname"><span class="pre">groups</span></span></dt>
+<dd><p>Optional dictionary mapping group names to lists of variable indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, List[int]] | None</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SALibProblem.use_groups_in_sobol">
+<span class="sig-name descname"><span class="pre">use_groups_in_sobol</span></span></dt>
+<dd><p>If True, use groups in Sobol analysis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SALibProblem.using_unit_bounds">
+<span class="sig-name descname"><span class="pre">using_unit_bounds</span></span></dt>
+<dd><p>If True, all bounds are (0.0, 1.0).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.salib.runners.SALibProblem.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/reemission/salib/runners.html#SALibProblem.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Post-initialization to set the number of variables.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">bounds</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.salib.runners.SALibProblem.from_variables">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_variables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="reemission.salib.distributions.html#reemission.salib.distributions.Variable" title="reemission.salib.distributions.Variable"><span class="pre">Variable</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_groups_in_sobol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="#reemission.salib.runners.SALibProblem" title="reemission.salib.runners.SALibProblem"><span class="pre">SALibProblem</span></a></span></span><a class="reference internal" href="../../_modules/reemission/salib/runners.html#SALibProblem.from_variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Create a SALibProblem instance from a list of Variable objects.
+:param variables: A list of Variable objects defining the model parameters.
+:param use_groups_in_sobol: If True, use groups in Sobol analysis.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A SALibProblem instance.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If there are duplicate variable names or if the bounds are not defined.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">groups</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">num_vars</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.salib.runners.SALibProblem.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/reemission/salib/runners.html#SALibProblem.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert the SALibProblem instance to a dictionary.
+:returns: A dictionary representation of the SALib problem.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">use_groups_in_sobol</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">using_unit_bounds</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolAnalyser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.salib.runners.</span></span><span class="sig-name descname"><span class="pre">SobolAnalyser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#reemission.salib.runners.SALibProblem" title="reemission.salib.runners.SALibProblem"><span class="pre">SALibProblem</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">variables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="reemission.salib.distributions.html#reemission.salib.distributions.Variable" title="reemission.salib.distributions.Variable"><span class="pre">Variable</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="reemission.salib.wrappers.html#reemission.salib.wrappers.SALibModelWrapperProtocol" title="reemission.salib.wrappers.SALibModelWrapperProtocol"><span class="pre">SALibModelWrapperProtocol</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_second_order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/reemission/salib/runners.html#SobolAnalyser"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to perform Sobol sensitivity analysis using SALib.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolAnalyser.problem">
+<span class="sig-name descname"><span class="pre">problem</span></span></dt>
+<dd><p>A SALibProblem instance defining the problem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#reemission.salib.runners.SALibProblem" title="reemission.salib.runners.SALibProblem">reemission.salib.runners.SALibProblem</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolAnalyser.variables">
+<span class="sig-name descname"><span class="pre">variables</span></span></dt>
+<dd><p>A list of Variable objects defining the model parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="reemission.salib.distributions.html#reemission.salib.distributions.Variable" title="reemission.salib.distributions.Variable">reemission.salib.distributions.Variable</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolAnalyser.model">
+<span class="sig-name descname"><span class="pre">model</span></span></dt>
+<dd><p>A callable model function that takes a list of variables.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="reemission.salib.wrappers.html#reemission.salib.wrappers.SALibModelWrapperProtocol" title="reemission.salib.wrappers.SALibModelWrapperProtocol">reemission.salib.wrappers.SALibModelWrapperProtocol</a></p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolAnalyser.num_sampes">
+<span class="sig-name descname"><span class="pre">num_sampes</span></span></dt>
+<dd><p>Number of samples to generate with Sobol sampling.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolAnalyser.calc_second_order">
+<span class="sig-name descname"><span class="pre">calc_second_order</span></span></dt>
+<dd><p>If True, calculates second-order Sobol indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolAnalyser.group_indices">
+<span class="sig-name descname"><span class="pre">group_indices</span></span></dt>
+<dd><p>If True, groups Sobol indices by variable groups.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the number of variables in the problem does not match the number of variables
+    provided, or if the variable names do not match the names in the problem definition.</p>
+</dd>
+</dl>
+<dl>
+<dt>Usage:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">utils.salib</span><span class="w"> </span><span class="kn">import</span> <span class="n">SobolAnalyser</span><span class="p">,</span> <span class="n">SALibProblem</span>
+</span><span id="line-2"><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">utils.distributions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Variable</span><span class="p">,</span> <span class="n">NormalDistribution</span>
+</span><span id="line-3"><span class="gp">&gt;&gt;&gt; </span><span class="n">problem</span> <span class="o">=</span> <span class="n">SALibProblem</span><span class="o">.</span><span class="n">from_variables</span><span class="p">(</span>
+</span><span id="line-4"><span class="gp">... </span>    <span class="n">variables</span><span class="o">=</span><span class="p">[</span>
+</span><span id="line-5"><span class="gp">... </span>        <span class="n">Variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'a'</span><span class="p">,</span> <span class="n">distribution</span><span class="o">=</span><span class="n">NormalDistribution</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">std_dev</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)),</span>
+</span><span id="line-6"><span class="gp">... </span>        <span class="n">Variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'b'</span><span class="p">,</span> <span class="n">distribution</span><span class="o">=</span><span class="n">NormalDistribution</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">std_dev</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)),</span>
+</span><span id="line-7"><span class="gp">... </span>        <span class="n">Variable</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'c'</span><span class="p">,</span> <span class="n">distribution</span><span class="o">=</span><span class="n">DiscreteNormalDistribution</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">std_dev</span><span class="o">=</span><span class="mf">1.0</span><span class="p">))</span>
+</span><span id="line-8"><span class="gp">... </span>    <span class="p">]</span>
+</span><span id="line-9"><span class="gp">... </span><span class="p">)</span>
+</span><span id="line-10"><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">TestModelSALibWrapper</span><span class="o">.</span><span class="n">from_variables</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">variables</span><span class="p">)</span>
+</span><span id="line-11"><span class="gp">&gt;&gt;&gt; </span><span class="n">analyser</span> <span class="o">=</span> <span class="n">SobolAnalyser</span><span class="p">(</span>
+</span><span id="line-12"><span class="gp">... </span>    <span class="n">problem</span><span class="o">=</span><span class="n">problem</span><span class="p">,</span>
+</span><span id="line-13"><span class="gp">... </span>    <span class="n">variables</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">variables</span><span class="p">,</span>
+</span><span id="line-14"><span class="gp">... </span>    <span class="n">model</span><span class="o">=</span><span class="n">model</span><span class="p">,</span>
+</span><span id="line-15"><span class="gp">... </span>    <span class="n">num_samples</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+</span><span id="line-16"><span class="gp">... </span>    <span class="n">calc_second_order</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span id="line-17"><span class="gp">... </span>    <span class="n">group_indices</span><span class="o">=</span><span class="kc">True</span>
+</span><span id="line-18"><span class="gp">... </span><span class="p">)</span>
+</span><span id="line-19"><span class="gp">&gt;&gt;&gt; </span><span class="n">sobol_results</span> <span class="o">=</span> <span class="n">analyser</span><span class="o">.</span><span class="n">run_sobol_sensitivity</span><span class="p">()</span>
+</span><span id="line-20"><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sobol_results</span><span class="p">)</span>
+</span></code></pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolAnalyser.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/reemission/salib/runners.html#SobolAnalyser.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">calc_second_order</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolAnalyser.calculate_grouped_indices">
+<span class="sig-name descname"><span class="pre">calculate_grouped_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sobol_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ResultDict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'S1'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'S2'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'ST'</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Numerical</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/reemission/salib/runners.html#SobolAnalyser.calculate_grouped_indices"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Aggregate Sobol indices by variable groups.
+If no groups are defined, return the Sobol indices as is.
+:param sobol_indices: A dictionary containing Sobol indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A dictionary with aggregated Sobol indices by groups.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the sobol_indices do not contain the expected keys.</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolAnalyser.get_variable">
+<span class="sig-name descname"><span class="pre">get_variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="reemission.salib.distributions.html#reemission.salib.distributions.Variable" title="reemission.salib.distributions.Variable"><span class="pre">Variable</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/reemission/salib/runners.html#SobolAnalyser.get_variable"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Get a variable by its name, with memoization.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">group_indices</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">model</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="reemission.salib.wrappers.html#reemission.salib.wrappers.SALibModelWrapperProtocol" title="reemission.salib.wrappers.SALibModelWrapperProtocol"><span class="pre">SALibModelWrapperProtocol</span></a></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolAnalyser.num_samples">
+<span class="sig-name descname"><span class="pre">num_samples</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id9">
+<span class="sig-name descname"><span class="pre">problem</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#reemission.salib.runners.SALibProblem" title="reemission.salib.runners.SALibProblem"><span class="pre">SALibProblem</span></a></em></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolAnalyser.run_sobol">
+<span class="sig-name descname"><span class="pre">run_sobol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fix_variables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sobol_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'S1'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'S2'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'ST'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ST'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="#reemission.salib.runners.SobolResults" title="reemission.salib.runners.SobolResults"><span class="pre">SobolResults</span></a></span></span><a class="reference internal" href="../../_modules/reemission/salib/runners.html#SobolAnalyser.run_sobol"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Run Sobol sensitivity analysis.
+:param fix_variables: If True, fix the variables to their nominal values.
+:param sobol_index: The Sobol index type to use for estimating variance contributions.
+:param **kwargs: Additional keyword arguments to pass to the Sobol sampling function.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolAnalyser.run_sobol_sampling">
+<span class="sig-name descname"><span class="pre">run_sobol_sampling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">NumpyValue</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/reemission/salib/runners.html#SobolAnalyser.run_sobol_sampling"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Run Sobol sampling to generate input samples.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolAnalyser.run_sobol_scenarios">
+<span class="sig-name descname"><span class="pre">run_sobol_scenarios</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenarios</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Numerical</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pi_bounds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(0.25,</span> <span class="pre">0.975)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sobol_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'S1'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'S2'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'ST'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ST'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="#reemission.salib.runners.SobolScenarioResults" title="reemission.salib.runners.SobolScenarioResults"><span class="pre">SobolScenarioResults</span></a></span></span><a class="reference internal" href="../../_modules/reemission/salib/runners.html#SobolAnalyser.run_sobol_scenarios"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Run Sobol analysis for multiple scenarios, where each scenario fixes some variables.
+Returns a dictionary mapping scenario names to SobolResults.
+:param scenarios: A dictionary where keys are scenario names and values are dictionaries</p>
+<blockquote>
+<div><p>mapping variable names to fixed values for that scenario.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pi_bounds</strong> – A tuple of two floats representing the lower and upper bounds for the
+percentile interval to calculate the nominal output.</p></li>
+<li><p><strong>sobol_index</strong> – The Sobol index type to use for estimating variance contributions.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword arguments to pass to the Sobol sampling function.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id10">
+<span class="sig-name descname"><span class="pre">variables</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="reemission.salib.distributions.html#reemission.salib.distributions.Variable" title="reemission.salib.distributions.Variable"><span class="pre">Variable</span></a><span class="p"><span class="pre">]</span></span></em></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolBatchAnalyser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.salib.runners.</span></span><span class="sig-name descname"><span class="pre">SobolBatchAnalyser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#reemission.salib.runners.SALibProblem" title="reemission.salib.runners.SALibProblem"><span class="pre">SALibProblem</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_variables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="reemission.salib.distributions.html#reemission.salib.distributions.Variable" title="reemission.salib.distributions.Variable"><span class="pre">Variable</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">models</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="reemission.salib.wrappers.html#reemission.salib.wrappers.SALibModelWrapperProtocol" title="reemission.salib.wrappers.SALibModelWrapperProtocol"><span class="pre">SALibModelWrapperProtocol</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_second_order</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/reemission/salib/runners.html#SobolBatchAnalyser"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to perform Sobol sensitivity analysis for a batch of inputs.
+.. attribute:: problem</p>
+<blockquote>
+<div><p>A SALibProblem instance defining the problem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>reemission.salib.runners.SALibProblem</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolBatchAnalyser.batch_variables">
+<span class="sig-name descname"><span class="pre">batch_variables</span></span></dt>
+<dd><p>A dictionary mapping scenario names to lists of Variable objects defining the model parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, List[<a class="reference internal" href="reemission.salib.distributions.html#reemission.salib.distributions.Variable" title="reemission.salib.distributions.Variable">reemission.salib.distributions.Variable</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolBatchAnalyser.models">
+<span class="sig-name descname"><span class="pre">models</span></span></dt>
+<dd><p>A dictionary mapping scenario names to SALibModelWrapperProtocol instances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, <a class="reference internal" href="reemission.salib.wrappers.html#reemission.salib.wrappers.SALibModelWrapperProtocol" title="reemission.salib.wrappers.SALibModelWrapperProtocol">reemission.salib.wrappers.SALibModelWrapperProtocol</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolBatchAnalyser.num_samples">
+<span class="sig-name descname"><span class="pre">num_samples</span></span></dt>
+<dd><p>Number of samples to generate with Sobol sampling.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolBatchAnalyser.calc_second_order">
+<span class="sig-name descname"><span class="pre">calc_second_order</span></span></dt>
+<dd><p>If True, calculates second-order Sobol indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolBatchAnalyser.group_indices">
+<span class="sig-name descname"><span class="pre">group_indices</span></span></dt>
+<dd><p>If True, groups Sobol indices by variable groups.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the number of batch variables does not match the number of models,
+    or if the variable names do not match the model names.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolBatchAnalyser.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/reemission/salib/runners.html#SobolBatchAnalyser.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Post-initialization to validate the problem and batch variables.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id11">
+<span class="sig-name descname"><span class="pre">batch_variables</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="reemission.salib.distributions.html#reemission.salib.distributions.Variable" title="reemission.salib.distributions.Variable"><span class="pre">Variable</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id12">
+<span class="sig-name descname"><span class="pre">calc_second_order</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id13">
+<span class="sig-name descname"><span class="pre">group_indices</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id14">
+<span class="sig-name descname"><span class="pre">models</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="reemission.salib.wrappers.html#reemission.salib.wrappers.SALibModelWrapperProtocol" title="reemission.salib.wrappers.SALibModelWrapperProtocol"><span class="pre">SALibModelWrapperProtocol</span></a><span class="p"><span class="pre">]</span></span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id15">
+<span class="sig-name descname"><span class="pre">num_samples</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolBatchAnalyser.problem">
+<span class="sig-name descname"><span class="pre">problem</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#reemission.salib.runners.SALibProblem" title="reemission.salib.runners.SALibProblem"><span class="pre">SALibProblem</span></a></em></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolBatchAnalyser.run_sobol_batch">
+<span class="sig-name descname"><span class="pre">run_sobol_batch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fix_variables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="#reemission.salib.runners.SobolScenarioResults" title="reemission.salib.runners.SobolScenarioResults"><span class="pre">SobolScenarioResults</span></a></span></span><a class="reference internal" href="../../_modules/reemission/salib/runners.html#SobolBatchAnalyser.run_sobol_batch"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Run Sobol sensitivity analysis for a batch of inputs.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolResults">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.salib.runners.</span></span><span class="sig-name descname"><span class="pre">SobolResults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">outputs:</span> <span class="pre">NDArray,</span> <span class="pre">nominal_output:</span> <span class="pre">np.float</span> <span class="pre">|</span> <span class="pre">np.int,</span> <span class="pre">indices:</span> <span class="pre">ResultDict,</span> <span class="pre">var_names:</span> <span class="pre">List[str],</span> <span class="pre">fixed_var_names:</span> <span class="pre">Optional[List[str]]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">grouped_indices:</span> <span class="pre">Dict[str,</span> <span class="pre">ResultDict]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;,</span> <span class="pre">variance_contributions:</span> <span class="pre">Optional[VarianceContributions]</span> <span class="pre">=</span> <span class="pre">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/reemission/salib/runners.html#SobolResults"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to hold the results of Sobol sensitivity analysis.
+.. attribute:: outputs</p>
+<blockquote>
+<div><p>The model outputs for the Sobol samples.</p>
+<dl class="field-list simple">
+<dt class="field-odd">type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>NDArray</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolResults.nominal_output">
+<span class="sig-name descname"><span class="pre">nominal_output</span></span></dt>
+<dd><p>The model output for the nominal input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.float | np.int</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolResults.indices">
+<span class="sig-name descname"><span class="pre">indices</span></span></dt>
+<dd><p>A dictionary containing Sobol indices (first-order, second-order, total effect).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ResultDict</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolResults.var_names">
+<span class="sig-name descname"><span class="pre">var_names</span></span></dt>
+<dd><p>A list of variable names corresponding to the Sobol indices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolResults.grouped_indices">
+<span class="sig-name descname"><span class="pre">grouped_indices</span></span></dt>
+<dd><p>A dictionary containing grouped Sobol indices by variable groups.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, ResultDict]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolResults.variance_contributions">
+<span class="sig-name descname"><span class="pre">variance_contributions</span></span></dt>
+<dd><p>Optional VarianceContributions for the total variance and contributions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[<a class="reference internal" href="#reemission.salib.runners.VarianceContributions" title="reemission.salib.runners.VarianceContributions">VarianceContributions</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the indices do not contain the expected keys.</p>
+</dd>
+</dl>
+<dl>
+<dt>Usage:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">utils.salib</span><span class="w"> </span><span class="kn">import</span> <span class="n">SobolResults</span>
+</span><span id="line-2"><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">utils.distributions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Variable</span><span class="p">,</span> <span class="n">NormalDistribution</span>
+</span><span id="line-3"><span class="gp">&gt;&gt;&gt; </span><span class="n">outputs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">])</span>
+</span><span id="line-4"><span class="gp">&gt;&gt;&gt; </span><span class="n">nominal_output</span> <span class="o">=</span> <span class="mf">2.0</span>
+</span><span id="line-5"><span class="gp">&gt;&gt;&gt; </span><span class="n">indices</span> <span class="o">=</span> <span class="p">{</span>
+</span><span id="line-6"><span class="gp">... </span>    <span class="s1">'S1'</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span>
+</span><span id="line-7"><span class="gp">... </span>    <span class="s1">'S2'</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">],</span>
+</span><span id="line-8"><span class="gp">... </span>    <span class="s1">'ST'</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">]</span>
+</span><span id="line-9"><span class="gp">... </span><span class="p">}</span>
+</span><span id="line-10"><span class="gp">&gt;&gt;&gt; </span><span class="n">var_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'a'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">,</span> <span class="s1">'c'</span><span class="p">]</span>
+</span><span id="line-11"><span class="gp">&gt;&gt;&gt; </span><span class="n">sobol_results</span> <span class="o">=</span> <span class="n">SobolResults</span><span class="p">(</span>
+</span><span id="line-12"><span class="gp">... </span>    <span class="n">outputs</span><span class="o">=</span><span class="n">outputs</span><span class="p">,</span>
+</span><span id="line-13"><span class="gp">... </span>    <span class="n">nominal_output</span><span class="o">=</span><span class="n">nominal_output</span><span class="p">,</span>
+</span><span id="line-14"><span class="gp">... </span>    <span class="n">indices</span><span class="o">=</span><span class="n">indices</span><span class="p">,</span>
+</span><span id="line-15"><span class="gp">... </span>    <span class="n">var_names</span><span class="o">=</span><span class="n">var_names</span>
+</span><span id="line-16"><span class="gp">... </span><span class="p">)</span>
+</span><span id="line-17"><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">sobol_results</span><span class="o">.</span><span class="n">first_order</span><span class="p">)</span>  <span class="c1"># Output: [0.1, 0.2, 0.3]</span>
+</span></code></pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolResults.first_order">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">first_order</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Numerical</span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd><p>Returns the first-order Sobol indices.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolResults.fixed_var_names">
+<span class="sig-name descname"><span class="pre">fixed_var_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em></dt>
+<dd></dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolResults.fixed_variables">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fixed_variables</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd><p>Returns the names of fixed variables if any are defined.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id16">
+<span class="sig-name descname"><span class="pre">grouped_indices</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ResultDict</span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd></dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolResults.groups">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">groups</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd><p>Return the group names from the first entry in grouped_indices,
+or an empty list if grouped_indices is empty.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id17">
+<span class="sig-name descname"><span class="pre">indices</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ResultDict</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id18">
+<span class="sig-name descname"><span class="pre">nominal_output</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">np.float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">np.int</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolResults.outputs">
+<span class="sig-name descname"><span class="pre">outputs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">NDArray</span></em></dt>
+<dd></dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolResults.second_order">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">second_order</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Numerical</span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd><p>Returns the second-order Sobol indices.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolResults.total_effect">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">total_effect</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Numerical</span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd><p>Returns the total effect Sobol indices.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id19">
+<span class="sig-name descname"><span class="pre">var_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id20">
+<span class="sig-name descname"><span class="pre">variance_contributions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#reemission.salib.runners.VarianceContributions" title="reemission.salib.runners.VarianceContributions"><span class="pre">VarianceContributions</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolScenarioResults">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.salib.runners.</span></span><span class="sig-name descname"><span class="pre">SobolScenarioResults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#reemission.salib.runners.SobolResults" title="reemission.salib.runners.SobolResults"><span class="pre">SobolResults</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sc_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/reemission/salib/runners.html#SobolScenarioResults"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class to hold the results of Sobol sensitivity analysis for multiple scenarios.
+.. attribute:: results</p>
+<blockquote>
+<div><p>A list of SobolResults for each scenario.</p>
+<dl class="field-list simple">
+<dt class="field-odd">type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[reemission.salib.runners.SobolResults]</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolScenarioResults.sc_names">
+<span class="sig-name descname"><span class="pre">sc_names</span></span></dt>
+<dd><p>A list of scenario names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolScenarioResults.ix_to_name">
+<span class="sig-name descname"><span class="pre">ix_to_name</span></span></dt>
+<dd><p>A mapping from scenario index to scenario name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[int, str]</p>
+</dd>
+</dl>
+</dd></dl>
+<p>NOTE: This class is used to hold the results of Sobol sensitivity analysis for multiple
+scenarios, where each scenario can fix some variables to specific values.
+It contains a list of SobolResults for each scenario and a list of VarianceContributions
+for each scenario, which holds the total variance and contributions of each group to
+the total variance.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolScenarioResults.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/reemission/salib/runners.html#SobolScenarioResults.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolScenarioResults.group_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">group_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd><p>Returns the group names for the Sobol results.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id21">
+<span class="sig-name descname"><span class="pre">ix_to_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd></dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolScenarioResults.nominal_outputs">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nominal_outputs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Numerical</span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd><p>Returns the nominal outputs for each scenario.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolScenarioResults.results">
+<span class="sig-name descname"><span class="pre">results</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#reemission.salib.runners.SobolResults" title="reemission.salib.runners.SobolResults"><span class="pre">SobolResults</span></a><span class="p"><span class="pre">]</span></span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id22">
+<span class="sig-name descname"><span class="pre">sc_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd></dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolScenarioResults.scenario_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">scenario_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd><p>Returns the scenario names for the Sobol results.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolScenarioResults.var_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">var_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd><p>Returns the variable names for the scenarios.</p>
+</dd></dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="reemission.salib.runners.SobolScenarioResults.variances">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">variances</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#reemission.salib.runners.VarianceContributions" title="reemission.salib.runners.VarianceContributions"><span class="pre">VarianceContributions</span></a><span class="p"><span class="pre">]</span></span></em></dt>
+<dd><p>Contributions of variable groups to total variance</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="reemission.salib.runners.VarianceContributions">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.salib.runners.</span></span><span class="sig-name descname"><span class="pre">VarianceContributions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sobol_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'S1'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'S2'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'ST'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_variance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Numerical</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contributions_by_group</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Numerical</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/reemission/salib/runners.html#VarianceContributions"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A dataclass to hold variances for each scenario storing contributions of variable groups
+to total variance.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.VarianceContributions.sobol_index">
+<span class="sig-name descname"><span class="pre">sobol_index</span></span></dt>
+<dd><p>The Sobol index type (e.g., ‘S1’, ‘S2’, ‘ST’) used for estimating variance
+contributions to total variance from each variable group.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Literal[‘S1’, ‘S2’, ‘ST’]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.VarianceContributions.total_variance">
+<span class="sig-name descname"><span class="pre">total_variance</span></span></dt>
+<dd><p>The total variance of the output for this scenario.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>reemission.salib.runners.Numerical</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.salib.runners.VarianceContributions.contributions_by_group">
+<span class="sig-name descname"><span class="pre">contributions_by_group</span></span></dt>
+<dd><p>A dictionary mapping group names to their contributions to the total variance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict[str, reemission.salib.runners.Numerical]</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.salib.runners.VarianceContributions.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/reemission/salib/runners.html#VarianceContributions.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Post-initialization to validate the Sobol index.
+:raises ValueError: If the Sobol index is not one of the supported indices (‘S1’, ‘S2’, ‘ST’).</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id23">
+<span class="sig-name descname"><span class="pre">contributions_by_group</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Numerical</span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id24">
+<span class="sig-name descname"><span class="pre">sobol_index</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'S1'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'S2'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'ST'</span></span><span class="p"><span class="pre">]</span></span></em></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.salib.runners.VarianceContributions.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/reemission/salib/runners.html#VarianceContributions.to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert the <cite>VarianceContributions</cite> instance to a dictionary.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id25">
+<span class="sig-name descname"><span class="pre">total_variance</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Numerical</span></em></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="reemission.salib.runners.transform_uniform">
+<span class="sig-prename descclassname"><span class="pre">reemission.salib.runners.</span></span><span class="sig-name descname"><span class="pre">transform_uniform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uniform_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">NumpyValue</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variables</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="reemission.salib.distributions.html#reemission.salib.distributions.Variable" title="reemission.salib.distributions.Variable"><span class="pre">Variable</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-06</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">NumpyValue</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/reemission/salib/runners.html#transform_uniform"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Transforms uniform samples U to the distributions defined by the variables.
+:param uniform_samples: NDArray of uniform samples, shape (num_samples, num_variables)
+:param variables: List of Variable objects defining the distributions.
+:param eps: Small value to prevent numerical issues when transforming uniform samples.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>NDArray of transformed samples, shape (num_samples, num_variables).</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Variables in the <cite>variables</cite> list must be in the same order as the columns in <cite>uniform_samples</cite>.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>TypeError</strong> – If <cite>uniform_samples</cite> is not a numpy ndarray.</p></li>
+<li><p><strong>ValueError</strong> – If <cite>uniform_samples</cite> is not a 2D array or if the number of variables does not match the shape of <cite>uniform_samples</cite>.</p></li>
+<li><p><strong>ValueError</strong> – If <cite>variables</cite> list is empty or contains non-Variable objects.</p></li>
+<li><p><strong>ValueError</strong> – If a variable’s distribution type is not supported.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#reemission.salib.runners.transform_uniform" title="reemission.salib.runners.transform_uniform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform_uniform</span></code></a>(uniform_samples, variables)</p></td>
+<td><p>Transforms uniform samples U to the distributions defined by the variables.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#reemission.salib.runners.SALibProblem" title="reemission.salib.runners.SALibProblem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SALibProblem</span></code></a>(names, bounds, float]] =, ...)</p></td>
+<td><p>A dataclass to represent a SALib problem definition and construct SALib <cite>problem</cite> dictionary.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#reemission.salib.runners.SobolAnalyser" title="reemission.salib.runners.SobolAnalyser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SobolAnalyser</span></code></a>(problem, variables, model, ...)</p></td>
+<td><p>A class to perform Sobol sensitivity analysis using SALib.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#reemission.salib.runners.SobolBatchAnalyser" title="reemission.salib.runners.SobolBatchAnalyser"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SobolBatchAnalyser</span></code></a>(problem, batch_variables, ...)</p></td>
+<td><p>A class to perform Sobol sensitivity analysis for a batch of inputs.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#reemission.salib.runners.SobolResults" title="reemission.salib.runners.SobolResults"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SobolResults</span></code></a>(outputs, nominal_output, ...)</p></td>
+<td><p>A class to hold the results of Sobol sensitivity analysis.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#reemission.salib.runners.SobolScenarioResults" title="reemission.salib.runners.SobolScenarioResults"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SobolScenarioResults</span></code></a>(results, sc_names)</p></td>
+<td><p>A class to hold the results of Sobol sensitivity analysis for multiple scenarios.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#reemission.salib.runners.VarianceContributions" title="reemission.salib.runners.VarianceContributions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VarianceContributions</span></code></a>(sobol_index, ...)</p></td>
+<td><p>A dataclass to hold variances for each scenario storing contributions of variable groups to total variance.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</div><div class="flex justify-between items-center pt-6 mt-12 border-t border-border gap-4">
+<div class="mr-auto">
+<a class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input hover:bg-accent hover:text-accent-foreground py-2 px-4" href="reemission.salib.montecarlo.html">
+<svg class="mr-2 h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<polyline points="15 18 9 12 15 6"></polyline>
+</svg>
+        reemission.salib.montecarlo
+      </a>
+</div>
+<div class="ml-auto">
+<a class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input hover:bg-accent hover:text-accent-foreground py-2 px-4" href="reemission.salib.visualize.html">
+        reemission.salib.visualize
+        <svg class="ml-2 h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+<polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+</a>
+</div>
+</div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
+<div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
+<ul>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SALibProblem'" class="reference internal" href="#reemission.salib.runners.SALibProblem"><code class="docutils literal notranslate"><span class="pre">SALibProblem</span></code></a><ul>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SALibProblem.num_vars'" class="reference internal" href="#reemission.salib.runners.SALibProblem.num_vars"><code class="docutils literal notranslate"><span class="pre">SALibProblem.num_vars</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SALibProblem.names'" class="reference internal" href="#reemission.salib.runners.SALibProblem.names"><code class="docutils literal notranslate"><span class="pre">SALibProblem.names</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SALibProblem.bounds'" class="reference internal" href="#reemission.salib.runners.SALibProblem.bounds"><code class="docutils literal notranslate"><span class="pre">SALibProblem.bounds</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SALibProblem.groups'" class="reference internal" href="#reemission.salib.runners.SALibProblem.groups"><code class="docutils literal notranslate"><span class="pre">SALibProblem.groups</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SALibProblem.use_groups_in_sobol'" class="reference internal" href="#reemission.salib.runners.SALibProblem.use_groups_in_sobol"><code class="docutils literal notranslate"><span class="pre">SALibProblem.use_groups_in_sobol</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SALibProblem.using_unit_bounds'" class="reference internal" href="#reemission.salib.runners.SALibProblem.using_unit_bounds"><code class="docutils literal notranslate"><span class="pre">SALibProblem.using_unit_bounds</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SALibProblem.__post_init__'" class="reference internal" href="#reemission.salib.runners.SALibProblem.__post_init__"><code class="docutils literal notranslate"><span class="pre">SALibProblem.__post_init__()</span></code></a></li>
+<li><a :data-current="activeSection === '#id0'" class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">SALibProblem.bounds</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SALibProblem.from_variables'" class="reference internal" href="#reemission.salib.runners.SALibProblem.from_variables"><code class="docutils literal notranslate"><span class="pre">SALibProblem.from_variables()</span></code></a></li>
+<li><a :data-current="activeSection === '#id1'" class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">SALibProblem.groups</span></code></a></li>
+<li><a :data-current="activeSection === '#id2'" class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">SALibProblem.names</span></code></a></li>
+<li><a :data-current="activeSection === '#id3'" class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">SALibProblem.num_vars</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SALibProblem.to_dict'" class="reference internal" href="#reemission.salib.runners.SALibProblem.to_dict"><code class="docutils literal notranslate"><span class="pre">SALibProblem.to_dict()</span></code></a></li>
+<li><a :data-current="activeSection === '#id4'" class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">SALibProblem.use_groups_in_sobol</span></code></a></li>
+<li><a :data-current="activeSection === '#id5'" class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">SALibProblem.using_unit_bounds</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolAnalyser'" class="reference internal" href="#reemission.salib.runners.SobolAnalyser"><code class="docutils literal notranslate"><span class="pre">SobolAnalyser</span></code></a><ul>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolAnalyser.problem'" class="reference internal" href="#reemission.salib.runners.SobolAnalyser.problem"><code class="docutils literal notranslate"><span class="pre">SobolAnalyser.problem</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolAnalyser.variables'" class="reference internal" href="#reemission.salib.runners.SobolAnalyser.variables"><code class="docutils literal notranslate"><span class="pre">SobolAnalyser.variables</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolAnalyser.model'" class="reference internal" href="#reemission.salib.runners.SobolAnalyser.model"><code class="docutils literal notranslate"><span class="pre">SobolAnalyser.model</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolAnalyser.num_sampes'" class="reference internal" href="#reemission.salib.runners.SobolAnalyser.num_sampes"><code class="docutils literal notranslate"><span class="pre">SobolAnalyser.num_sampes</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolAnalyser.calc_second_order'" class="reference internal" href="#reemission.salib.runners.SobolAnalyser.calc_second_order"><code class="docutils literal notranslate"><span class="pre">SobolAnalyser.calc_second_order</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolAnalyser.group_indices'" class="reference internal" href="#reemission.salib.runners.SobolAnalyser.group_indices"><code class="docutils literal notranslate"><span class="pre">SobolAnalyser.group_indices</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolAnalyser.__post_init__'" class="reference internal" href="#reemission.salib.runners.SobolAnalyser.__post_init__"><code class="docutils literal notranslate"><span class="pre">SobolAnalyser.__post_init__()</span></code></a></li>
+<li><a :data-current="activeSection === '#id6'" class="reference internal" href="#id6"><code class="docutils literal notranslate"><span class="pre">SobolAnalyser.calc_second_order</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolAnalyser.calculate_grouped_indices'" class="reference internal" href="#reemission.salib.runners.SobolAnalyser.calculate_grouped_indices"><code class="docutils literal notranslate"><span class="pre">SobolAnalyser.calculate_grouped_indices()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolAnalyser.get_variable'" class="reference internal" href="#reemission.salib.runners.SobolAnalyser.get_variable"><code class="docutils literal notranslate"><span class="pre">SobolAnalyser.get_variable()</span></code></a></li>
+<li><a :data-current="activeSection === '#id7'" class="reference internal" href="#id7"><code class="docutils literal notranslate"><span class="pre">SobolAnalyser.group_indices</span></code></a></li>
+<li><a :data-current="activeSection === '#id8'" class="reference internal" href="#id8"><code class="docutils literal notranslate"><span class="pre">SobolAnalyser.model</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolAnalyser.num_samples'" class="reference internal" href="#reemission.salib.runners.SobolAnalyser.num_samples"><code class="docutils literal notranslate"><span class="pre">SobolAnalyser.num_samples</span></code></a></li>
+<li><a :data-current="activeSection === '#id9'" class="reference internal" href="#id9"><code class="docutils literal notranslate"><span class="pre">SobolAnalyser.problem</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolAnalyser.run_sobol'" class="reference internal" href="#reemission.salib.runners.SobolAnalyser.run_sobol"><code class="docutils literal notranslate"><span class="pre">SobolAnalyser.run_sobol()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolAnalyser.run_sobol_sampling'" class="reference internal" href="#reemission.salib.runners.SobolAnalyser.run_sobol_sampling"><code class="docutils literal notranslate"><span class="pre">SobolAnalyser.run_sobol_sampling()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolAnalyser.run_sobol_scenarios'" class="reference internal" href="#reemission.salib.runners.SobolAnalyser.run_sobol_scenarios"><code class="docutils literal notranslate"><span class="pre">SobolAnalyser.run_sobol_scenarios()</span></code></a></li>
+<li><a :data-current="activeSection === '#id10'" class="reference internal" href="#id10"><code class="docutils literal notranslate"><span class="pre">SobolAnalyser.variables</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolBatchAnalyser'" class="reference internal" href="#reemission.salib.runners.SobolBatchAnalyser"><code class="docutils literal notranslate"><span class="pre">SobolBatchAnalyser</span></code></a><ul>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolBatchAnalyser.batch_variables'" class="reference internal" href="#reemission.salib.runners.SobolBatchAnalyser.batch_variables"><code class="docutils literal notranslate"><span class="pre">SobolBatchAnalyser.batch_variables</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolBatchAnalyser.models'" class="reference internal" href="#reemission.salib.runners.SobolBatchAnalyser.models"><code class="docutils literal notranslate"><span class="pre">SobolBatchAnalyser.models</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolBatchAnalyser.num_samples'" class="reference internal" href="#reemission.salib.runners.SobolBatchAnalyser.num_samples"><code class="docutils literal notranslate"><span class="pre">SobolBatchAnalyser.num_samples</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolBatchAnalyser.calc_second_order'" class="reference internal" href="#reemission.salib.runners.SobolBatchAnalyser.calc_second_order"><code class="docutils literal notranslate"><span class="pre">SobolBatchAnalyser.calc_second_order</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolBatchAnalyser.group_indices'" class="reference internal" href="#reemission.salib.runners.SobolBatchAnalyser.group_indices"><code class="docutils literal notranslate"><span class="pre">SobolBatchAnalyser.group_indices</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolBatchAnalyser.__post_init__'" class="reference internal" href="#reemission.salib.runners.SobolBatchAnalyser.__post_init__"><code class="docutils literal notranslate"><span class="pre">SobolBatchAnalyser.__post_init__()</span></code></a></li>
+<li><a :data-current="activeSection === '#id11'" class="reference internal" href="#id11"><code class="docutils literal notranslate"><span class="pre">SobolBatchAnalyser.batch_variables</span></code></a></li>
+<li><a :data-current="activeSection === '#id12'" class="reference internal" href="#id12"><code class="docutils literal notranslate"><span class="pre">SobolBatchAnalyser.calc_second_order</span></code></a></li>
+<li><a :data-current="activeSection === '#id13'" class="reference internal" href="#id13"><code class="docutils literal notranslate"><span class="pre">SobolBatchAnalyser.group_indices</span></code></a></li>
+<li><a :data-current="activeSection === '#id14'" class="reference internal" href="#id14"><code class="docutils literal notranslate"><span class="pre">SobolBatchAnalyser.models</span></code></a></li>
+<li><a :data-current="activeSection === '#id15'" class="reference internal" href="#id15"><code class="docutils literal notranslate"><span class="pre">SobolBatchAnalyser.num_samples</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolBatchAnalyser.problem'" class="reference internal" href="#reemission.salib.runners.SobolBatchAnalyser.problem"><code class="docutils literal notranslate"><span class="pre">SobolBatchAnalyser.problem</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolBatchAnalyser.run_sobol_batch'" class="reference internal" href="#reemission.salib.runners.SobolBatchAnalyser.run_sobol_batch"><code class="docutils literal notranslate"><span class="pre">SobolBatchAnalyser.run_sobol_batch()</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolResults'" class="reference internal" href="#reemission.salib.runners.SobolResults"><code class="docutils literal notranslate"><span class="pre">SobolResults</span></code></a><ul>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolResults.nominal_output'" class="reference internal" href="#reemission.salib.runners.SobolResults.nominal_output"><code class="docutils literal notranslate"><span class="pre">SobolResults.nominal_output</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolResults.indices'" class="reference internal" href="#reemission.salib.runners.SobolResults.indices"><code class="docutils literal notranslate"><span class="pre">SobolResults.indices</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolResults.var_names'" class="reference internal" href="#reemission.salib.runners.SobolResults.var_names"><code class="docutils literal notranslate"><span class="pre">SobolResults.var_names</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolResults.grouped_indices'" class="reference internal" href="#reemission.salib.runners.SobolResults.grouped_indices"><code class="docutils literal notranslate"><span class="pre">SobolResults.grouped_indices</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolResults.variance_contributions'" class="reference internal" href="#reemission.salib.runners.SobolResults.variance_contributions"><code class="docutils literal notranslate"><span class="pre">SobolResults.variance_contributions</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolResults.first_order'" class="reference internal" href="#reemission.salib.runners.SobolResults.first_order"><code class="docutils literal notranslate"><span class="pre">SobolResults.first_order</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolResults.fixed_var_names'" class="reference internal" href="#reemission.salib.runners.SobolResults.fixed_var_names"><code class="docutils literal notranslate"><span class="pre">SobolResults.fixed_var_names</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolResults.fixed_variables'" class="reference internal" href="#reemission.salib.runners.SobolResults.fixed_variables"><code class="docutils literal notranslate"><span class="pre">SobolResults.fixed_variables</span></code></a></li>
+<li><a :data-current="activeSection === '#id16'" class="reference internal" href="#id16"><code class="docutils literal notranslate"><span class="pre">SobolResults.grouped_indices</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolResults.groups'" class="reference internal" href="#reemission.salib.runners.SobolResults.groups"><code class="docutils literal notranslate"><span class="pre">SobolResults.groups</span></code></a></li>
+<li><a :data-current="activeSection === '#id17'" class="reference internal" href="#id17"><code class="docutils literal notranslate"><span class="pre">SobolResults.indices</span></code></a></li>
+<li><a :data-current="activeSection === '#id18'" class="reference internal" href="#id18"><code class="docutils literal notranslate"><span class="pre">SobolResults.nominal_output</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolResults.outputs'" class="reference internal" href="#reemission.salib.runners.SobolResults.outputs"><code class="docutils literal notranslate"><span class="pre">SobolResults.outputs</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolResults.second_order'" class="reference internal" href="#reemission.salib.runners.SobolResults.second_order"><code class="docutils literal notranslate"><span class="pre">SobolResults.second_order</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolResults.total_effect'" class="reference internal" href="#reemission.salib.runners.SobolResults.total_effect"><code class="docutils literal notranslate"><span class="pre">SobolResults.total_effect</span></code></a></li>
+<li><a :data-current="activeSection === '#id19'" class="reference internal" href="#id19"><code class="docutils literal notranslate"><span class="pre">SobolResults.var_names</span></code></a></li>
+<li><a :data-current="activeSection === '#id20'" class="reference internal" href="#id20"><code class="docutils literal notranslate"><span class="pre">SobolResults.variance_contributions</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolScenarioResults'" class="reference internal" href="#reemission.salib.runners.SobolScenarioResults"><code class="docutils literal notranslate"><span class="pre">SobolScenarioResults</span></code></a><ul>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolScenarioResults.sc_names'" class="reference internal" href="#reemission.salib.runners.SobolScenarioResults.sc_names"><code class="docutils literal notranslate"><span class="pre">SobolScenarioResults.sc_names</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolScenarioResults.ix_to_name'" class="reference internal" href="#reemission.salib.runners.SobolScenarioResults.ix_to_name"><code class="docutils literal notranslate"><span class="pre">SobolScenarioResults.ix_to_name</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolScenarioResults.__post_init__'" class="reference internal" href="#reemission.salib.runners.SobolScenarioResults.__post_init__"><code class="docutils literal notranslate"><span class="pre">SobolScenarioResults.__post_init__()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolScenarioResults.group_names'" class="reference internal" href="#reemission.salib.runners.SobolScenarioResults.group_names"><code class="docutils literal notranslate"><span class="pre">SobolScenarioResults.group_names</span></code></a></li>
+<li><a :data-current="activeSection === '#id21'" class="reference internal" href="#id21"><code class="docutils literal notranslate"><span class="pre">SobolScenarioResults.ix_to_name</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolScenarioResults.nominal_outputs'" class="reference internal" href="#reemission.salib.runners.SobolScenarioResults.nominal_outputs"><code class="docutils literal notranslate"><span class="pre">SobolScenarioResults.nominal_outputs</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolScenarioResults.results'" class="reference internal" href="#reemission.salib.runners.SobolScenarioResults.results"><code class="docutils literal notranslate"><span class="pre">SobolScenarioResults.results</span></code></a></li>
+<li><a :data-current="activeSection === '#id22'" class="reference internal" href="#id22"><code class="docutils literal notranslate"><span class="pre">SobolScenarioResults.sc_names</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolScenarioResults.scenario_names'" class="reference internal" href="#reemission.salib.runners.SobolScenarioResults.scenario_names"><code class="docutils literal notranslate"><span class="pre">SobolScenarioResults.scenario_names</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolScenarioResults.var_names'" class="reference internal" href="#reemission.salib.runners.SobolScenarioResults.var_names"><code class="docutils literal notranslate"><span class="pre">SobolScenarioResults.var_names</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.SobolScenarioResults.variances'" class="reference internal" href="#reemission.salib.runners.SobolScenarioResults.variances"><code class="docutils literal notranslate"><span class="pre">SobolScenarioResults.variances</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.VarianceContributions'" class="reference internal" href="#reemission.salib.runners.VarianceContributions"><code class="docutils literal notranslate"><span class="pre">VarianceContributions</span></code></a><ul>
+<li><a :data-current="activeSection === '#reemission.salib.runners.VarianceContributions.sobol_index'" class="reference internal" href="#reemission.salib.runners.VarianceContributions.sobol_index"><code class="docutils literal notranslate"><span class="pre">VarianceContributions.sobol_index</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.VarianceContributions.total_variance'" class="reference internal" href="#reemission.salib.runners.VarianceContributions.total_variance"><code class="docutils literal notranslate"><span class="pre">VarianceContributions.total_variance</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.VarianceContributions.contributions_by_group'" class="reference internal" href="#reemission.salib.runners.VarianceContributions.contributions_by_group"><code class="docutils literal notranslate"><span class="pre">VarianceContributions.contributions_by_group</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.VarianceContributions.__post_init__'" class="reference internal" href="#reemission.salib.runners.VarianceContributions.__post_init__"><code class="docutils literal notranslate"><span class="pre">VarianceContributions.__post_init__()</span></code></a></li>
+<li><a :data-current="activeSection === '#id23'" class="reference internal" href="#id23"><code class="docutils literal notranslate"><span class="pre">VarianceContributions.contributions_by_group</span></code></a></li>
+<li><a :data-current="activeSection === '#id24'" class="reference internal" href="#id24"><code class="docutils literal notranslate"><span class="pre">VarianceContributions.sobol_index</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.VarianceContributions.to_dict'" class="reference internal" href="#reemission.salib.runners.VarianceContributions.to_dict"><code class="docutils literal notranslate"><span class="pre">VarianceContributions.to_dict()</span></code></a></li>
+<li><a :data-current="activeSection === '#id25'" class="reference internal" href="#id25"><code class="docutils literal notranslate"><span class="pre">VarianceContributions.total_variance</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#reemission.salib.runners.transform_uniform'" class="reference internal" href="#reemission.salib.runners.transform_uniform"><code class="docutils literal notranslate"><span class="pre">transform_uniform()</span></code></a></li>
+</ul>
+</div>
+</aside>
+</main>
+</div>
+</div><footer class="py-6 border-t border-border md:py-0">
+<div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+<div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
+<p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2024, Tomasz Janus, University of Manchester, United Kingdom Built with <a class="font-medium underline underline-offset-4" href="https://www.sphinx-doc.org" rel="noreferrer">Sphinx 8.1.3</a></p>
+</div>
+</div>
+</footer>
+</div>
+<script src="../../_static/documentation_options.js?v=8d563738"></script>
+<script src="../../_static/doctools.js?v=9bcbadda"></script>
+<script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../../_static/copybutton.js?v=f281be69"></script>
+<script src="../../_static/toggleprompt.js?v=5801b3bb"></script>
+<script defer="defer" src="../../_static/theme.js?v=073f68d9"></script>
+<script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+</body>
+</html>

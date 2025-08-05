@@ -105,6 +105,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../introduction.html">About the Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../theory.html">Theoretical Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation/index.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../installation/install_package.html">Installing RE-Emission</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../installation/using_docker.html">About Docker</a></li>
@@ -128,9 +129,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/reemission.catchment.html">Catchment Model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/reemission.ns_catchment.html">Post-impoundment catchment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/reemission.emissions.html">Emissions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.emission_profile.html">Emission Profile Calculator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/reemission.temperature.html">MonthlyTemperature</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/reemission.biogenic.html">Biogenic Factors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.profile.html">Emission Profile Calculator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/reemission.presenter.html">Presenter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/reemission.utils.html">Utility functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/reemission.auxiliary.html">Auxiliary functions</a></li>
@@ -142,6 +143,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/reemission.download.html">External Data Downloader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/reemission.globals.html">Global variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/reemission.main.html">Main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.salib.html">SALib Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.postprocessing.html">Postprocessing</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
@@ -383,31 +386,37 @@
 </span><span id="line-181">        <span class="k">else</span><span class="p">:</span>
 </span><span id="line-182">            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Key </span><span class="si">%s</span><span class="s2"> already in the inputs. Skipping&quot;</span><span class="p">,</span> <span class="n">reservoir_name</span><span class="p">)</span></div>
 
-</span><span id="line-183">
+</span><span id="line-183">            
+<div class="viewcode-block" id="Inputs.get_input">
+<a class="viewcode-back" href="../../api/reemission.input.html#reemission.input.Inputs.get_input">[docs]</a>
+</span><span id="line-184">    <span class="k">def</span><span class="w"> </span><span class="nf">get_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Input</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-185">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
+
+</span><span id="line-186">
 <div class="viewcode-block" id="Inputs.fromfile">
 <a class="viewcode-back" href="../../api/reemission.input.html#reemission.input.Inputs.fromfile">[docs]</a>
-</span><span id="line-184">    <span class="nd">@classmethod</span>
-</span><span id="line-185">    <span class="k">def</span><span class="w"> </span><span class="nf">fromfile</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">InputsType</span><span class="p">],</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InputsType</span><span class="p">:</span>
-</span><span id="line-186"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Load inputs dictionary from JSON file.</span>
-</span><span id="line-187">
-</span><span id="line-188"><span class="sd">        Args:</span>
-</span><span id="line-189"><span class="sd">            cls (Type[InputsType]): The class type.</span>
-</span><span id="line-190"><span class="sd">            file (str): Path to the input JSON file.</span>
-</span><span id="line-191">
-</span><span id="line-192"><span class="sd">        Returns:</span>
-</span><span id="line-193"><span class="sd">            InputsType: An instance of the Inputs class.</span>
-</span><span id="line-194"><span class="sd">        &quot;&quot;&quot;</span>
-</span><span id="line-195">        <span class="n">inputs</span> <span class="o">=</span> <span class="p">{}</span>
-</span><span id="line-196">        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
-</span><span id="line-197">            <span class="n">output_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
-</span><span id="line-198">            <span class="k">for</span> <span class="n">reservoir_name</span><span class="p">,</span> <span class="n">input_data</span> <span class="ow">in</span> <span class="n">output_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-</span><span id="line-199">                <span class="n">new_input</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">reservoir_name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">input_data</span><span class="p">)</span>
-</span><span id="line-200">                <span class="k">if</span> <span class="n">reservoir_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">:</span>
-</span><span id="line-201">                    <span class="n">inputs</span><span class="p">[</span><span class="n">reservoir_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_input</span>
-</span><span id="line-202">                <span class="k">else</span><span class="p">:</span>
-</span><span id="line-203">                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Key </span><span class="si">%s</span><span class="s2"> already in the inputs. Skipping&quot;</span><span class="p">,</span>
-</span><span id="line-204">                             <span class="n">reservoir_name</span><span class="p">)</span>
-</span><span id="line-205">        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">inputs</span><span class="p">)</span></div>
+</span><span id="line-187">    <span class="nd">@classmethod</span>
+</span><span id="line-188">    <span class="k">def</span><span class="w"> </span><span class="nf">fromfile</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">InputsType</span><span class="p">],</span> <span class="n">file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InputsType</span><span class="p">:</span>
+</span><span id="line-189"><span class="w">        </span><span class="sd">&quot;&quot;&quot;Load inputs dictionary from JSON file.</span>
+</span><span id="line-190">
+</span><span id="line-191"><span class="sd">        Args:</span>
+</span><span id="line-192"><span class="sd">            cls (Type[InputsType]): The class type.</span>
+</span><span id="line-193"><span class="sd">            file (str): Path to the input JSON file.</span>
+</span><span id="line-194">
+</span><span id="line-195"><span class="sd">        Returns:</span>
+</span><span id="line-196"><span class="sd">            InputsType: An instance of the Inputs class.</span>
+</span><span id="line-197"><span class="sd">        &quot;&quot;&quot;</span>
+</span><span id="line-198">        <span class="n">inputs</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span id="line-199">        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
+</span><span id="line-200">            <span class="n">output_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
+</span><span id="line-201">            <span class="k">for</span> <span class="n">reservoir_name</span><span class="p">,</span> <span class="n">input_data</span> <span class="ow">in</span> <span class="n">output_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+</span><span id="line-202">                <span class="n">new_input</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">reservoir_name</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">input_data</span><span class="p">)</span>
+</span><span id="line-203">                <span class="k">if</span> <span class="n">reservoir_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">:</span>
+</span><span id="line-204">                    <span class="n">inputs</span><span class="p">[</span><span class="n">reservoir_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_input</span>
+</span><span id="line-205">                <span class="k">else</span><span class="p">:</span>
+</span><span id="line-206">                    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Key </span><span class="si">%s</span><span class="s2"> already in the inputs. Skipping&quot;</span><span class="p">,</span>
+</span><span id="line-207">                             <span class="n">reservoir_name</span><span class="p">)</span>
+</span><span id="line-208">        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">inputs</span><span class="p">)</span></div>
 </div>
 
 </span></code></pre></div>

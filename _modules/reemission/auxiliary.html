@@ -105,6 +105,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../introduction.html">About the Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../theory.html">Theoretical Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config.html">Configuration</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../installation/index.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../installation/install_package.html">Installing RE-Emission</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../installation/using_docker.html">About Docker</a></li>
@@ -128,9 +129,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/reemission.catchment.html">Catchment Model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/reemission.ns_catchment.html">Post-impoundment catchment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/reemission.emissions.html">Emissions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.emission_profile.html">Emission Profile Calculator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/reemission.temperature.html">MonthlyTemperature</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/reemission.biogenic.html">Biogenic Factors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.profile.html">Emission Profile Calculator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/reemission.presenter.html">Presenter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/reemission.utils.html">Utility functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/reemission.auxiliary.html">Auxiliary functions</a></li>
@@ -142,6 +143,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../../api/reemission.download.html">External Data Downloader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/reemission.globals.html">Global variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../api/reemission.main.html">Main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.salib.html">SALib Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/reemission.postprocessing.html">Postprocessing</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
@@ -253,67 +256,123 @@
 </span><span id="line-56"><span class="sd">    Returns:</span>
 </span><span id="line-57"><span class="sd">        float: CD coefficient, --.</span>
 </span><span id="line-58"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="line-59">    <span class="k">return</span> <span class="mf">1.3E-3</span> <span class="k">if</span> <span class="n">wind_speed</span> <span class="o">&lt;</span> <span class="mf">5.0</span> <span class="k">else</span> <span class="mf">1.5E-5</span></div>
+</span><span id="line-59">    <span class="k">return</span> <span class="mf">1.3E-3</span> <span class="k">if</span> <span class="n">wind_speed</span> <span class="o">&lt;</span> <span class="mf">5.0</span> <span class="k">else</span> <span class="mf">1.5E-5</span> <span class="c1"># Read 2011</span></div>
 
 </span><span id="line-60">
 </span><span id="line-61">
 <div class="viewcode-block" id="scale_windspeed">
 <a class="viewcode-back" href="../../api/reemission.auxiliary.html#reemission.auxiliary.scale_windspeed">[docs]</a>
-</span><span id="line-62"><span class="k">def</span><span class="w"> </span><span class="nf">scale_windspeed</span><span class="p">(</span><span class="n">wind_speed</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">wind_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-</span><span id="line-63">                    <span class="n">new_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-</span><span id="line-64"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Scale wind speed to a new height.</span>
-</span><span id="line-65">
-</span><span id="line-66"><span class="sd">    This function calculates the wind speed at a desired height based on the </span>
-</span><span id="line-67"><span class="sd">    original wind speed at a known height.</span>
-</span><span id="line-68">
-</span><span id="line-69"><span class="sd">    Args:</span>
-</span><span id="line-70"><span class="sd">        wind_speed (float): Known wind speed, m/s.</span>
-</span><span id="line-71"><span class="sd">        wind_height (float): Known wind height, m.</span>
-</span><span id="line-72"><span class="sd">        new_height (float): New height for which wind speed is calculated, m.</span>
-</span><span id="line-73">
-</span><span id="line-74"><span class="sd">    Note:</span>
-</span><span id="line-75"><span class="sd">        Default wind height is 50m.</span>
-</span><span id="line-76">
-</span><span id="line-77"><span class="sd">    Returns:</span>
-</span><span id="line-78"><span class="sd">        float: Wind speed at new_height, m/s.</span>
-</span><span id="line-79"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="line-80">    <span class="k">return</span> <span class="n">wind_speed</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">cd_factor</span><span class="p">(</span><span class="n">wind_speed</span><span class="p">))</span><span class="o">/</span><span class="mf">0.4</span> <span class="o">*</span>
-</span><span id="line-81">                         <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">new_height</span> <span class="o">/</span> <span class="n">wind_height</span><span class="p">))</span></div>
+</span><span id="line-62"><span class="k">def</span><span class="w"> </span><span class="nf">scale_windspeed</span><span class="p">(</span>
+</span><span id="line-63">    <span class="n">wind_speed</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span id="line-64">    <span class="n">wind_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span id="line-65">    <span class="n">new_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span id="line-66">    <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
+</span><span id="line-67">    <span class="n">tol</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-4</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-68"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Scale wind speed to a new height using iterative method.</span>
+</span><span id="line-69">
+</span><span id="line-70"><span class="sd">    This function calculates wind speed at a new height using an iterative</span>
+</span><span id="line-71"><span class="sd">    approach, because the drag coefficient depends on the new wind speed.</span>
+</span><span id="line-72">
+</span><span id="line-73"><span class="sd">    Args:</span>
+</span><span id="line-74"><span class="sd">        wind_speed (float): Known wind speed, m/s.</span>
+</span><span id="line-75"><span class="sd">        wind_height (float): Known wind height, m.</span>
+</span><span id="line-76"><span class="sd">        new_height (float): Target height for which wind speed is calculated, m.</span>
+</span><span id="line-77"><span class="sd">        max_iter (int): Maximum number of iterations.</span>
+</span><span id="line-78"><span class="sd">        tol (float): Tolerance for convergence.</span>
+</span><span id="line-79">
+</span><span id="line-80"><span class="sd">    Returns:</span>
+</span><span id="line-81"><span class="sd">        float: Estimated wind speed at new_height, m/s.</span>
+</span><span id="line-82"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="line-83">    <span class="k">if</span> <span class="n">new_height</span> <span class="o">==</span> <span class="n">wind_height</span><span class="p">:</span>
+</span><span id="line-84">        <span class="k">return</span> <span class="n">wind_speed</span>
+</span><span id="line-85">
+</span><span id="line-86">    <span class="c1"># Initial guess: use power-law or linear scaling</span>
+</span><span id="line-87">    <span class="n">new_wind_speed</span> <span class="o">=</span> <span class="n">wind_speed</span> <span class="o">*</span> <span class="p">(</span><span class="n">new_height</span> <span class="o">/</span> <span class="n">wind_height</span><span class="p">)</span><span class="o">**</span><span class="mf">0.14</span>
+</span><span id="line-88">
+</span><span id="line-89">    <span class="k">for</span> <span class="n">ix</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_iter</span><span class="p">):</span>
+</span><span id="line-90">        <span class="n">cd</span> <span class="o">=</span> <span class="n">cd_factor</span><span class="p">(</span><span class="n">new_wind_speed</span><span class="p">)</span>
+</span><span id="line-91">        <span class="n">ln_ratio</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">new_height</span> <span class="o">/</span> <span class="n">wind_height</span><span class="p">)</span>
+</span><span id="line-92">        <span class="n">delta</span> <span class="o">=</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">cd</span><span class="p">)</span> <span class="o">/</span> <span class="mf">0.4</span><span class="p">)</span> <span class="o">*</span> <span class="n">ln_ratio</span>
+</span><span id="line-93">
+</span><span id="line-94">        <span class="k">if</span> <span class="n">new_height</span> <span class="o">&gt;</span> <span class="n">wind_height</span><span class="p">:</span>
+</span><span id="line-95">            <span class="n">updated_speed</span> <span class="o">=</span> <span class="n">wind_speed</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">delta</span><span class="p">)</span>
+</span><span id="line-96">        <span class="k">else</span><span class="p">:</span>
+</span><span id="line-97">            <span class="n">updated_speed</span> <span class="o">=</span> <span class="n">wind_speed</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">delta</span><span class="p">)</span>
+</span><span id="line-98">
+</span><span id="line-99">        <span class="c1"># Check for convergence</span>
+</span><span id="line-100">        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">updated_speed</span> <span class="o">-</span> <span class="n">new_wind_speed</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">:</span>
+</span><span id="line-101">            <span class="k">return</span> <span class="n">updated_speed</span>
+</span><span id="line-102">
+</span><span id="line-103">        <span class="n">new_wind_speed</span> <span class="o">=</span> <span class="n">updated_speed</span>
+</span><span id="line-104">
+</span><span id="line-105">    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Wind speed scaling did not converge.&quot;</span><span class="p">)</span></div>
 
-</span><span id="line-82">
-</span><span id="line-83">
+</span><span id="line-106">
+</span><span id="line-107">
+<div class="viewcode-block" id="scale_windspeed_noniter">
+<a class="viewcode-back" href="../../api/reemission.auxiliary.html#reemission.auxiliary.scale_windspeed_noniter">[docs]</a>
+</span><span id="line-108"><span class="k">def</span><span class="w"> </span><span class="nf">scale_windspeed_noniter</span><span class="p">(</span>
+</span><span id="line-109">    <span class="n">wind_speed</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
+</span><span id="line-110">    <span class="n">wind_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+</span><span id="line-111">    <span class="n">new_height</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+</span><span id="line-112"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Scale wind speed to a new height.</span>
+</span><span id="line-113">
+</span><span id="line-114"><span class="sd">    This function calculates the wind speed at a desired height based on the </span>
+</span><span id="line-115"><span class="sd">    original wind speed at a known height.</span>
+</span><span id="line-116">
+</span><span id="line-117"><span class="sd">    Args:</span>
+</span><span id="line-118"><span class="sd">        wind_speed (float): Known wind speed, m/s.</span>
+</span><span id="line-119"><span class="sd">        wind_height (float): Known wind height, m.</span>
+</span><span id="line-120"><span class="sd">        new_height (float): New height for which wind speed is calculated, m.</span>
+</span><span id="line-121">
+</span><span id="line-122"><span class="sd">    Note:</span>
+</span><span id="line-123"><span class="sd">        Default wind height is 50m.</span>
+</span><span id="line-124">
+</span><span id="line-125"><span class="sd">    Returns:</span>
+</span><span id="line-126"><span class="sd">        float: Wind speed at new_height, m/s.</span>
+</span><span id="line-127"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="line-128">    <span class="k">if</span> <span class="n">new_height</span> <span class="o">&lt;</span> <span class="n">wind_height</span><span class="p">:</span>
+</span><span id="line-129">        <span class="n">new_wind_speed</span> <span class="o">=</span> <span class="n">wind_speed</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">cd_factor</span><span class="p">(</span><span class="n">wind_speed</span><span class="p">))</span><span class="o">/</span><span class="mf">0.4</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">new_height</span> <span class="o">/</span> <span class="n">wind_height</span><span class="p">))</span>
+</span><span id="line-130">    <span class="k">elif</span> <span class="n">new_height</span> <span class="o">&gt;</span> <span class="n">wind_height</span><span class="p">:</span>
+</span><span id="line-131">        <span class="n">new_wind_speed</span> <span class="o">=</span> <span class="n">wind_speed</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">cd_factor</span><span class="p">(</span><span class="n">wind_speed</span><span class="p">))</span><span class="o">/</span><span class="mf">0.4</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">new_height</span> <span class="o">/</span> <span class="n">wind_height</span><span class="p">))</span>
+</span><span id="line-132">    <span class="k">else</span><span class="p">:</span>
+</span><span id="line-133">        <span class="n">new_wind_speed</span> <span class="o">=</span> <span class="n">wind_speed</span>
+</span><span id="line-134">    <span class="k">return</span> <span class="n">new_wind_speed</span></div>
+
+</span><span id="line-135">
+</span><span id="line-136">
 <div class="viewcode-block" id="rollout_nested_list">
 <a class="viewcode-back" href="../../api/reemission.auxiliary.html#reemission.auxiliary.rollout_nested_list">[docs]</a>
-</span><span id="line-84"><span class="k">def</span><span class="w"> </span><span class="nf">rollout_nested_list</span><span class="p">(</span>
-</span><span id="line-85">        <span class="n">nested_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
-</span><span id="line-86">        <span class="n">out_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
-</span><span id="line-87"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Flatten a nested list.</span>
-</span><span id="line-88">
-</span><span id="line-89"><span class="sd">    This function takes a nested list and returns a flattened version of that list.</span>
-</span><span id="line-90">
-</span><span id="line-91"><span class="sd">    Args:</span>
-</span><span id="line-92"><span class="sd">        nested_list (List[Any]): A list containing other lists and/or non-list elements.</span>
-</span><span id="line-93"><span class="sd">        out_list (Optional[List], optional): An empty list to store the flattened output.</span>
-</span><span id="line-94">
-</span><span id="line-95"><span class="sd">    Returns:</span>
-</span><span id="line-96"><span class="sd">        List[Any]: A flattened version of the nested_list.</span>
-</span><span id="line-97">
-</span><span id="line-98"><span class="sd">    Example:</span>
-</span><span id="line-99"><span class="sd">        .. code-block:: Python</span>
-</span><span id="line-100">
-</span><span id="line-101"><span class="sd">            nested_list = [1, [2, 3], 4, [[5, 6], 7]]</span>
-</span><span id="line-102"><span class="sd">            flattened_list = rollout_nested_list(nested_list)</span>
-</span><span id="line-103"><span class="sd">            print(flattened_list) # prints [1, 2, 3, 4, 5, 6, 7]</span>
-</span><span id="line-104"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span id="line-105">    <span class="k">if</span> <span class="n">out_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="line-106">        <span class="n">out_list</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="line-107">    <span class="k">while</span> <span class="n">nested_list</span><span class="p">:</span>
-</span><span id="line-108">        <span class="n">item</span> <span class="o">=</span> <span class="n">nested_list</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-</span><span id="line-109">        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">List</span><span class="p">):</span>
-</span><span id="line-110">            <span class="n">out_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
-</span><span id="line-111">        <span class="k">else</span><span class="p">:</span>
-</span><span id="line-112">            <span class="n">rollout_nested_list</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">out_list</span><span class="p">)</span>
-</span><span id="line-113">    <span class="k">return</span> <span class="n">out_list</span></div>
+</span><span id="line-137"><span class="k">def</span><span class="w"> </span><span class="nf">rollout_nested_list</span><span class="p">(</span>
+</span><span id="line-138">        <span class="n">nested_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">],</span>
+</span><span id="line-139">        <span class="n">out_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+</span><span id="line-140"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Flatten a nested list.</span>
+</span><span id="line-141">
+</span><span id="line-142"><span class="sd">    This function takes a nested list and returns a flattened version of that list.</span>
+</span><span id="line-143">
+</span><span id="line-144"><span class="sd">    Args:</span>
+</span><span id="line-145"><span class="sd">        nested_list (List[Any]): A list containing other lists and/or non-list elements.</span>
+</span><span id="line-146"><span class="sd">        out_list (Optional[List], optional): An empty list to store the flattened output.</span>
+</span><span id="line-147">
+</span><span id="line-148"><span class="sd">    Returns:</span>
+</span><span id="line-149"><span class="sd">        List[Any]: A flattened version of the nested_list.</span>
+</span><span id="line-150">
+</span><span id="line-151"><span class="sd">    Example:</span>
+</span><span id="line-152"><span class="sd">        .. code-block:: Python</span>
+</span><span id="line-153">
+</span><span id="line-154"><span class="sd">            nested_list = [1, [2, 3], 4, [[5, 6], 7]]</span>
+</span><span id="line-155"><span class="sd">            flattened_list = rollout_nested_list(nested_list)</span>
+</span><span id="line-156"><span class="sd">            print(flattened_list) # prints [1, 2, 3, 4, 5, 6, 7]</span>
+</span><span id="line-157"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="line-158">    <span class="k">if</span> <span class="n">out_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-159">        <span class="n">out_list</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="line-160">    <span class="k">while</span> <span class="n">nested_list</span><span class="p">:</span>
+</span><span id="line-161">        <span class="n">item</span> <span class="o">=</span> <span class="n">nested_list</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span><span id="line-162">        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">List</span><span class="p">):</span>
+</span><span id="line-163">            <span class="n">out_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+</span><span id="line-164">        <span class="k">else</span><span class="p">:</span>
+</span><span id="line-165">            <span class="n">rollout_nested_list</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">out_list</span><span class="p">)</span>
+</span><span id="line-166">    <span class="k">return</span> <span class="n">out_list</span></div>
 
 </span></code></pre></div>
     </div><div class="flex justify-between items-center pt-6 mt-12 border-t border-border gap-4">

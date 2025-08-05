@@ -7,17 +7,17 @@
 <meta content="white" media="(prefers-color-scheme: light)" name="theme-color"/>
 <meta content="black" media="(prefers-color-scheme: dark)" name="theme-color"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>Emission Profile Calculator | ReEmission 1.0.0 documentation</title>
-<meta content="Emission Profile Calculator | ReEmission 1.0.0 documentation" property="og:title"/>
-<meta content="Emission Profile Calculator | ReEmission 1.0.0 documentation" name="twitter:title"/>
+<title>Postprocessing | ReEmission 1.0.0 documentation</title>
+<meta content="Postprocessing | ReEmission 1.0.0 documentation" property="og:title"/>
+<meta content="Postprocessing | ReEmission 1.0.0 documentation" name="twitter:title"/>
 <link href="../_static/pygments.css?v=1949e874" rel="stylesheet" type="text/css"/>
 <link href="../_static/theme.css?v=42baaae4" rel="stylesheet" type="text/css"/>
 <link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
 <link href="../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
 <link href="../search.html" rel="search" title="Search"/>
 <link href="../genindex.html" rel="index" title="Index"/>
-<link href="reemission.presenter.html" rel="next" title="Presenter"/>
-<link href="reemission.biogenic.html" rel="prev" title="Biogenic Factors"/>
+<link href="generated/reemission.postprocessing.data_processing.html" rel="next" title="reemission.postprocessing.data_processing"/>
+<link href="generated/reemission.salib.wrappers.html" rel="prev" title="reemission.salib.wrappers"/>
 <script>
     <!-- Prevent Flash of wrong theme -->
       const userPreference = localStorage.getItem('darkMode');
@@ -74,6 +74,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">About the Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../theory.html">Theoretical Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config.html">Configuration</a></li>
 <li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="../installation/index.html">Installation<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
 <li class="toctree-l2"><a class="reference internal" href="../installation/install_package.html">Installing RE-Emission</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation/using_docker.html">About Docker</a></li>
@@ -97,9 +98,9 @@
 <li class="toctree-l2"><a class="reference internal" href="reemission.catchment.html">Catchment Model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.ns_catchment.html">Post-impoundment catchment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.emissions.html">Emissions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.emission_profile.html">Emission Profile Calculator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.temperature.html">MonthlyTemperature</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.biogenic.html">Biogenic Factors</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Emission Profile Calculator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.presenter.html">Presenter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.utils.html">Utility functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.auxiliary.html">Auxiliary functions</a></li>
@@ -111,6 +112,8 @@
 <li class="toctree-l2"><a class="reference internal" href="reemission.download.html">External Data Downloader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.globals.html">Global variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.main.html">Main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.salib.html">SALib Integration</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Postprocessing</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
@@ -134,28 +137,40 @@
 </svg>
 </a>
 <div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap" href="reemission.html">ReEmission reference documentation.</a>
-<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">Emission Profile Calculator</span>
+<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">Postprocessing</span>
 </nav>
 <div id="content" role="main">
-<section id="emission-profile-calculator">
-<h1>Emission Profile Calculator</h1>
-<table class="autosummary longtable docutils align-default">
-<tbody>
-</tbody>
-</table>
+<section id="postprocessing">
+<h1>Postprocessing</h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="generated/reemission.postprocessing.data_processing.html">reemission.postprocessing.data_processing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/reemission.postprocessing.data_processing.html#reemission.postprocessing.data_processing.ExtractFromJSON"><code class="docutils literal notranslate"><span class="pre">ExtractFromJSON</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/reemission.postprocessing.data_processing.html#reemission.postprocessing.data_processing.ShpToShpCopy"><code class="docutils literal notranslate"><span class="pre">ShpToShpCopy</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/reemission.postprocessing.data_processing.html#reemission.postprocessing.data_processing.TabToShpCopy"><code class="docutils literal notranslate"><span class="pre">TabToShpCopy</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/reemission.postprocessing.data_processing.html#reemission.postprocessing.data_processing.append_data_to_shapes"><code class="docutils literal notranslate"><span class="pre">append_data_to_shapes()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="generated/reemission.postprocessing.visualise.html">reemission.postprocessing.visualise</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="generated/reemission.postprocessing.visualise.html#reemission.postprocessing.visualise.FoliumLayer"><code class="docutils literal notranslate"><span class="pre">FoliumLayer</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/reemission.postprocessing.visualise.html#reemission.postprocessing.visualise.FoliumOutputMapper"><code class="docutils literal notranslate"><span class="pre">FoliumOutputMapper</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
 </section>
 </div><div class="flex justify-between items-center pt-6 mt-12 border-t border-border gap-4">
 <div class="mr-auto">
-<a class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input hover:bg-accent hover:text-accent-foreground py-2 px-4" href="reemission.biogenic.html">
+<a class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input hover:bg-accent hover:text-accent-foreground py-2 px-4" href="generated/reemission.salib.wrappers.html">
 <svg class="mr-2 h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
 <polyline points="15 18 9 12 15 6"></polyline>
 </svg>
-        Biogenic Factors
+        reemission.salib.wrappers
       </a>
 </div>
 <div class="ml-auto">
-<a class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input hover:bg-accent hover:text-accent-foreground py-2 px-4" href="reemission.presenter.html">
-        Presenter
+<a class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input hover:bg-accent hover:text-accent-foreground py-2 px-4" href="generated/reemission.postprocessing.data_processing.html">
+        reemission.postprocessing.data_processing
         <svg class="ml-2 h-4 w-4" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
 <polyline points="9 18 15 12 9 6"></polyline>
 </svg>

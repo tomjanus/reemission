@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+
+<html :class="{'dark': darkMode === 'dark' || (darkMode === 'system' &amp;&amp; window.matchMedia('(prefers-color-scheme: dark)').matches)}" class="scroll-smooth" data-content_root="../" lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') || localStorage.setItem('darkMode', 'system'), activeSection: '' }" x-init="$watch('darkMode', val =&gt; localStorage.setItem('darkMode', val))">
+<head>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta charset="utf-8"/>
+<meta content="white" media="(prefers-color-scheme: light)" name="theme-color"/>
+<meta content="black" media="(prefers-color-scheme: dark)" name="theme-color"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>reemission.tests package | ReEmission 1.0.0 documentation</title>
+<meta content="reemission.tests package | ReEmission 1.0.0 documentation" property="og:title"/>
+<meta content="reemission.tests package | ReEmission 1.0.0 documentation" name="twitter:title"/>
+<link href="../_static/pygments.css?v=1949e874" rel="stylesheet" type="text/css"/>
+<link href="../_static/theme.css?v=42baaae4" rel="stylesheet" type="text/css"/>
+<link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="../genindex.html" rel="index" title="Index"/>
+<script>
+    <!-- Prevent Flash of wrong theme -->
+      const userPreference = localStorage.getItem('darkMode');
+      let mode;
+      if (userPreference === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        mode = 'dark';
+        document.documentElement.classList.add('dark');
+      } else {
+        mode = 'light';
+      }
+      if (!userPreference) {localStorage.setItem('darkMode', mode)}
+    </script>
+</head>
+<body :class="{ 'overflow-hidden': showSidebar }" class="min-h-screen font-sans antialiased bg-background text-foreground" x-data="{ showSidebar: false, showScrollTop: false }">
+<div @click.self="showSidebar = false" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" x-cloak="" x-show="showSidebar"></div><div class="relative flex flex-col min-h-screen" id="page"><a class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100" href="#content">
+      Skip to content
+    </a><header class="sticky top-0 z-40 w-full border-b shadow-sm border-border supports-backdrop-blur:bg-background/60 bg-background/95 backdrop-blur"><div class="container flex items-center h-14">
+<div class="hidden mr-4 md:flex">
+<a class="flex items-center mr-6" href="../index.html"><span class="hidden font-bold sm:inline-block text-clip whitespace-nowrap">ReEmission 1.0.0 documentation</span>
+</a></div><button @click="showSidebar = true" class="inline-flex items-center justify-center h-10 px-0 py-2 mr-2 text-base font-medium transition-colors rounded-md hover:text-accent-foreground hover:bg-transparent md:hidden" type="button">
+<svg aria-hidden="true" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M152.587 825.087q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440Zm0-203.587q-19.152 0-32.326-13.174T107.087 576q0-19.152 13.174-32.326t32.326-13.174h320q19.152 0 32.326 13.174T518.087 576q0 19.152-13.174 32.326T472.587 621.5h-320Zm0-203.587q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440ZM708.913 576l112.174 112.174q12.674 12.674 12.674 31.826t-12.674 31.826Q808.413 764.5 789.261 764.5t-31.826-12.674l-144-144Q600 594.391 600 576t13.435-31.826l144-144q12.674-12.674 31.826-12.674t31.826 12.674q12.674 12.674 12.674 31.826t-12.674 31.826L708.913 576Z"></path>
+</svg>
+<span class="sr-only">Toggle navigation menu</span>
+</button>
+<div class="flex items-center justify-between flex-1 space-x-2 sm:space-x-4 md:justify-end">
+<div class="flex-1 w-full md:w-auto md:flex-none"><form @keydown.k.window.meta="$refs.search.focus()" action="../search.html" class="relative flex items-center group" id="searchbox" method="get">
+<input aria-label="Search the docs" class="inline-flex items-center font-medium transition-colors bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background border border-input hover:bg-accent focus:bg-accent hover:text-accent-foreground focus:text-accent-foreground hover:placeholder-accent-foreground py-2 px-4 relative h-9 w-full justify-start rounded-[0.5rem] text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64" id="search-input" name="q" placeholder="Search ..." type="search" x-ref="search"/>
+<kbd class="pointer-events-none absolute right-1.5 top-2 hidden h-5 select-none text-muted-foreground items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex group-hover:bg-accent group-hover:text-accent-foreground">
+<span class="text-xs">⌘</span>
+    K
+  </kbd>
+</form>
+</div>
+<nav class="flex items-center space-x-1">
+<button @click="darkMode = darkMode === 'light' ? 'dark' : 'light'" aria-label="Color theme switcher" class="relative inline-flex items-center justify-center px-0 text-sm font-medium transition-colors rounded-md hover:bg-accent hover:text-accent-foreground h-9 w-9" type="button">
+<svg class="absolute transition-all scale-100 rotate-0 dark:-rotate-90 dark:scale-0" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 685q45.456 0 77.228-31.772Q589 621.456 589 576q0-45.456-31.772-77.228Q525.456 467 480 467q-45.456 0-77.228 31.772Q371 530.544 371 576q0 45.456 31.772 77.228Q434.544 685 480 685Zm0 91q-83 0-141.5-58.5T280 576q0-83 58.5-141.5T480 376q83 0 141.5 58.5T680 576q0 83-58.5 141.5T480 776ZM80 621.5q-19.152 0-32.326-13.174T34.5 576q0-19.152 13.174-32.326T80 530.5h80q19.152 0 32.326 13.174T205.5 576q0 19.152-13.174 32.326T160 621.5H80Zm720 0q-19.152 0-32.326-13.174T754.5 576q0-19.152 13.174-32.326T800 530.5h80q19.152 0 32.326 13.174T925.5 576q0 19.152-13.174 32.326T880 621.5h-80Zm-320-320q-19.152 0-32.326-13.174T434.5 256v-80q0-19.152 13.174-32.326T480 130.5q19.152 0 32.326 13.174T525.5 176v80q0 19.152-13.174 32.326T480 301.5Zm0 720q-19.152 0-32.326-13.17Q434.5 995.152 434.5 976v-80q0-19.152 13.174-32.326T480 850.5q19.152 0 32.326 13.174T525.5 896v80q0 19.152-13.174 32.33-13.174 13.17-32.326 13.17ZM222.174 382.065l-43-42Q165.5 327.391 166 308.239t13.174-33.065q13.435-13.674 32.587-13.674t32.065 13.674l42.239 43q12.674 13.435 12.555 31.706-.12 18.272-12.555 31.946-12.674 13.674-31.445 13.413-18.772-.261-32.446-13.174Zm494 494.761-42.239-43q-12.674-13.435-12.674-32.087t12.674-31.565Q686.609 756.5 705.38 757q18.772.5 32.446 13.174l43 41.761Q794.5 824.609 794 843.761t-13.174 33.065Q767.391 890.5 748.239 890.5t-32.065-13.674Zm-42-494.761Q660.5 369.391 661 350.62q.5-18.772 13.174-32.446l41.761-43Q728.609 261.5 747.761 262t33.065 13.174q13.674 13.435 13.674 32.587t-13.674 32.065l-43 42.239q-13.435 12.674-31.706 12.555-18.272-.12-31.946-12.555Zm-495 494.761Q165.5 863.391 165.5 844.239t13.674-32.065l43-42.239q13.435-12.674 32.087-12.674t31.565 12.674Q299.5 782.609 299 801.38q-.5 18.772-13.174 32.446l-41.761 43Q231.391 890.5 212.239 890t-33.065-13.174ZM480 576Z"></path>
+</svg>
+<svg class="absolute transition-all scale-0 rotate-90 dark:rotate-0 dark:scale-100" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 936q-151 0-255.5-104.5T120 576q0-138 90-239.5T440 218q25-3 39 18t-1 44q-17 26-25.5 55t-8.5 61q0 90 63 153t153 63q31 0 61.5-9t54.5-25q21-14 43-1.5t19 39.5q-14 138-117.5 229T480 936Zm0-80q88 0 158-48.5T740 681q-20 5-40 8t-40 3q-123 0-209.5-86.5T364 396q0-20 3-40t8-40q-78 32-126.5 102T200 576q0 116 82 198t198 82Zm-10-270Z"></path>
+</svg>
+</button>
+</nav>
+</div>
+</div>
+</header>
+<div class="flex-1"><div class="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10"><aside :aria-hidden="!showSidebar" :class="{ 'translate-x-0': showSidebar }" class="fixed inset-y-0 left-0 md:top-14 z-50 md:z-30 bg-background md:bg-transparent transition-all duration-100 -translate-x-full md:translate-x-0 ml-0 p-6 md:p-0 md:-ml-2 md:h-[calc(100vh-3.5rem)] w-5/6 md:w-full shrink-0 overflow-y-auto border-r border-border md:sticky" id="left-sidebar">
+<a class="!justify-start text-sm md:!hidden bg-background" href="../index.html"><span class="font-bold text-clip whitespace-nowrap">ReEmission 1.0.0 documentation</span>
+</a>
+<div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
+<div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">About the Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Theoretical Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config.html">Configuration</a></li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="../installation/index.html">Installation<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="../installation/install_package.html">Installing RE-Emission</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation/using_docker.html">About Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation/building_image.html">Building the ReEmission Docker Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation/using_image.html">Using the ReEmission Docker Image</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../running_docker.html">Running the ReEmission Docker Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../demo.html">Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../json.html">JSON file format description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting.html">Reporting Calculation Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../geocaret_integration.html">Integration with GeoCARET</a></li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="reemission.html">Python API reference<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="reemission.model.html">Model (Main)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.input.html">Input Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.reservoir.html">Reservoir Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.catchment.html">Catchment Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.ns_catchment.html">Post-impoundment catchment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.emissions.html">Emissions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.emission_profile.html">Emission Profile Calculator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.temperature.html">MonthlyTemperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.biogenic.html">Biogenic Factors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.presenter.html">Presenter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.utils.html">Utility functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.auxiliary.html">Auxiliary functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.constants.html">Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.mixins.html">Mixins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.document_compiler.html">Document <span class="math notranslate nohighlight">\(\LaTeX\)</span> Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.exceptions.html">Custom Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.app_logger.html">App Logger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.download.html">External Data Downloader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.globals.html">Global variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.main.html">Main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.salib.html">SALib Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.postprocessing.html">Postprocessing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+</nav>
+</div>
+</div>
+<button @click="showSidebar = false" class="absolute md:hidden right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100" type="button">
+<svg class="h-4 w-4" fill="currentColor" height="24" stroke="none" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 632 284 828q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536 576l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480 632Z"></path>
+</svg>
+</button>
+</aside>
+<main class="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
+<div class="w-full min-w-0 mx-auto">
+<nav aria-label="breadcrumbs" class="flex items-center mb-4 space-x-1 text-sm text-muted-foreground">
+<a class="overflow-hidden text-ellipsis whitespace-nowrap hover:text-foreground" href="../index.html">
+<span class="hidden md:inline">ReEmission 1.0.0 documentation</span>
+<svg aria-label="Home" class="md:hidden" fill="currentColor" height="18" stroke="none" viewbox="0 96 960 960" width="18" xmlns="http://www.w3.org/2000/svg">
+<path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z"></path>
+</svg>
+</a>
+<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">reemission.tests package</span>
+</nav>
+<div id="content" role="main">
+<section id="reemission-tests-package">
+<h1>reemission.tests package</h1>
+<section id="submodules">
+<h2>Submodules</h2>
+</section>
+<section id="module-reemission.tests.test_biogenic">
+<span id="reemission-tests-test-biogenic-module"></span><h2>reemission.tests.test_biogenic module</h2>
+<p>Tests for BiogenicFactors</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="reemission.tests.test_biogenic.TestBiogenic">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.tests.test_biogenic.</span></span><span class="sig-name descname"><span class="pre">TestBiogenic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_biogenic.html#TestBiogenic"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<p>Test functionality of BiogenicFactors class</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_biogenic.TestBiogenic.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_biogenic.html#TestBiogenic.setUp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_biogenic.TestBiogenic.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_biogenic.html#TestBiogenic.setUpClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_biogenic.TestBiogenic.test_convert_to_dict">
+<span class="sig-name descname"><span class="pre">test_convert_to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/tests/test_biogenic.html#TestBiogenic.test_convert_to_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Test conversion to a dictionary</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_biogenic.TestBiogenic.test_read_from_dict">
+<span class="sig-name descname"><span class="pre">test_read_from_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/tests/test_biogenic.html#TestBiogenic.test_read_from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Test initialization of BiogenicFactors from dictionary</p>
+</dd></dl>
+</dd></dl>
+</section>
+<section id="module-reemission.tests.test_cli">
+<span id="reemission-tests-test-cli-module"></span><h2>reemission.tests.test_cli module</h2>
+<p>Tests for command line interface</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="reemission.tests.test_cli.test_main">
+<span class="sig-prename descclassname"><span class="pre">reemission.tests.test_cli.</span></span><span class="sig-name descname"><span class="pre">test_main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_cli.html#test_main"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+</section>
+<section id="module-reemission.tests.test_input">
+<span id="reemission-tests-test-input-module"></span><h2>reemission.tests.test_input module</h2>
+<p>Tests for the Input and Inputs classes</p>
+<p>TODO: Modify so that model loading involves parsing with InputModel.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="reemission.tests.test_input.TestInput">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.tests.test_input.</span></span><span class="sig-name descname"><span class="pre">TestInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_input.html#TestInput"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<p>Test class for testing Input class functionalities</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.tests.test_input.TestInput.input">
+<span class="sig-name descname"><span class="pre">input</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_input.TestInput.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/tests/test_input.html#TestInput.setUp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_input.TestInput.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_input.html#TestInput.setUpClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_input.TestInput.test_input_from_dict">
+<span class="sig-name descname"><span class="pre">test_input_from_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/tests/test_input.html#TestInput.test_input_from_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Test input object initialization from data in dict format</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_input.TestInput.test_input_fromfile">
+<span class="sig-name descname"><span class="pre">test_input_fromfile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/tests/test_input.html#TestInput.test_input_fromfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Test input object initialization
+Intented behaviour: Instantiating with wrong key should create a
+new input object with name=[Reservoir Name] and data={}</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_input.TestInput.test_read_yaml">
+<span class="sig-name descname"><span class="pre">test_read_yaml</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/tests/test_input.html#TestInput.test_read_yaml"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Test reading of yaml files</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_input.TestInput.test_retrieve_catchment_data">
+<span class="sig-name descname"><span class="pre">test_retrieve_catchment_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/tests/test_input.html#TestInput.test_retrieve_catchment_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Test catchment data retrieval</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_input.TestInput.test_retrieve_emission_factors">
+<span class="sig-name descname"><span class="pre">test_retrieve_emission_factors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/tests/test_input.html#TestInput.test_retrieve_emission_factors"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Test emission factors (list) data retrieval</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_input.TestInput.test_retrieve_monthly_temps">
+<span class="sig-name descname"><span class="pre">test_retrieve_monthly_temps</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/tests/test_input.html#TestInput.test_retrieve_monthly_temps"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Test retrieval of monthly temperatures (12x1 vector of floats)</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_input.TestInput.test_retrieve_reservoir_data">
+<span class="sig-name descname"><span class="pre">test_retrieve_reservoir_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/tests/test_input.html#TestInput.test_retrieve_reservoir_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Test reservoir data retrieval</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_input.TestInput.test_retrieve_year_vector">
+<span class="sig-name descname"><span class="pre">test_retrieve_year_vector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/tests/test_input.html#TestInput.test_retrieve_year_vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Test retrieval of the vector of years (for calculation of
+emission profiles)</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="reemission.tests.test_input.TestInputs">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.tests.test_input.</span></span><span class="sig-name descname"><span class="pre">TestInputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_input.html#TestInputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<p>Test class for testing Inputs class functionalities</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.tests.test_input.TestInputs.inputs">
+<span class="sig-name descname"><span class="pre">inputs</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_input.TestInputs.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/tests/test_input.html#TestInputs.setUp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_input.TestInputs.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/tests/test_input.html#TestInputs.setUpClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_input.TestInputs.test_add_new_data">
+<span class="sig-name descname"><span class="pre">test_add_new_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/tests/test_input.html#TestInputs.test_add_new_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Initialize inputs from file and add a new reservoir dict</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_input.TestInputs.test_inputs_fromfile">
+<span class="sig-name descname"><span class="pre">test_inputs_fromfile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/tests/test_input.html#TestInputs.test_inputs_fromfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Test input object initialization</p>
+</dd></dl>
+</dd></dl>
+</section>
+<section id="module-reemission.tests.test_model">
+<span id="reemission-tests-test-model-module"></span><h2>reemission.tests.test_model module</h2>
+<p>Tests for the EmissionModel class functionalities</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="reemission.tests.test_model.TestEmissionModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.tests.test_model.</span></span><span class="sig-name descname"><span class="pre">TestEmissionModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_model.html#TestEmissionModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<p>Test class for testing EmissionModel class functionalities</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.tests.test_model.TestEmissionModel.em_model">
+<span class="sig-name descname"><span class="pre">em_model</span></span></dt>
+<dd><p>alias of <a class="reference internal" href="reemission.model.html#reemission.model.EmissionModel" title="reemission.model.EmissionModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">EmissionModel</span></code></a></p>
+</dd></dl>
+</dd></dl>
+</section>
+<section id="module-reemission.tests.test_n_exports">
+<span id="reemission-tests-test-n-exports-module"></span><h2>reemission.tests.test_n_exports module</h2>
+</section>
+<section id="module-reemission.tests.test_p_exports">
+<span id="reemission-tests-test-p-exports-module"></span><h2>reemission.tests.test_p_exports module</h2>
+</section>
+<section id="module-reemission.tests.test_preimpoundment">
+<span id="reemission-tests-test-preimpoundment-module"></span><h2>reemission.tests.test_preimpoundment module</h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="reemission.tests.test_preimpoundment.TestLanduseMapping">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.tests.test_preimpoundment.</span></span><span class="sig-name descname"><span class="pre">TestLanduseMapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_preimpoundment.html#TestLanduseMapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<p>Checks if data mapping from geocaret to re-emission and pre-impoundment
+emission calculation in re-emission produce correct results</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_preimpoundment.TestLanduseMapping.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_preimpoundment.html#TestLanduseMapping.setUpClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_preimpoundment.TestLanduseMapping.test_catchment_landuse_mapping">
+<span class="sig-name descname"><span class="pre">test_catchment_landuse_mapping</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_preimpoundment.html#TestLanduseMapping.test_catchment_landuse_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Test mapping between geocaret and re-emission
+Re-emission landuse map is shown below:</p>
+<blockquote>
+<div><p>“bare”,
+“snow and ice”
+“urban”
+“water”
+“wetlands”
+“crops”
+“shrubs”
+“forest”
+“no data”</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Heet landuse map is as follows:</dt><dd><p>c_landcover_0       ‘No Data’
+c_landcover_1       ‘Croplands’
+c_landcover_2       ‘Grassland/Shrubland’
+c_landcover_3       ‘Forest’
+c_landcover_4       ‘Wetlands’
+c_landcover_5       ‘Settlements’
+c_landcover_6       ‘Bare Areas’
+c_landcover_7       ‘Water Bodies’
+c_landcover_8       ‘Permanent snow and ice’</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_preimpoundment.TestLanduseMapping.test_reservoir_landuse_mapping">
+<span class="sig-name descname"><span class="pre">test_reservoir_landuse_mapping</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_preimpoundment.html#TestLanduseMapping.test_reservoir_landuse_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Reservoir landuse mapping follows the same order as catchment landuse mapping
+but the vector is 3 x 9 = 27 long as the landuse mapping is divided into three
+categories based on soil type: Mineral -&gt; Organic -&gt; No Data</p>
+</dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="reemission.tests.test_preimpoundment.TestPreimpoundment">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.tests.test_preimpoundment.</span></span><span class="sig-name descname"><span class="pre">TestPreimpoundment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_preimpoundment.html#TestPreimpoundment"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<p>Checks calculation of pre-impoundment emissions with re-emission using
+re-emission inputs.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_preimpoundment.TestPreimpoundment.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_preimpoundment.html#TestPreimpoundment.setUpClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Load pre-impoundment-emission-tables</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_preimpoundment.TestPreimpoundment.test_preimpoundment_ch4_emissions">
+<span class="sig-name descname"><span class="pre">test_preimpoundment_ch4_emissions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_preimpoundment.html#TestPreimpoundment.test_preimpoundment_ch4_emissions"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_preimpoundment.TestPreimpoundment.test_preimpoundment_co2_emissions">
+<span class="sig-name descname"><span class="pre">test_preimpoundment_co2_emissions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_preimpoundment.html#TestPreimpoundment.test_preimpoundment_co2_emissions"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+</dd></dl>
+</section>
+<section id="module-reemission.tests.test_presenter">
+<span id="reemission-tests-test-presenter-module"></span><h2>reemission.tests.test_presenter module</h2>
+<p>Tests for the Presenter and Writer classes</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="reemission.tests.test_presenter.TestPresenter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.tests.test_presenter.</span></span><span class="sig-name descname"><span class="pre">TestPresenter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_presenter.html#TestPresenter"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<p>Class for testing the Presenter functionality</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.tests.test_presenter.TestPresenter.input_file_path">
+<span class="sig-name descname"><span class="pre">input_file_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/home/runner/work/reemission/reemission/tests/test_data/inputs.json'</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.tests.test_presenter.TestPresenter.inputs">
+<span class="sig-name descname"><span class="pre">inputs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="reemission.input.html#reemission.input.Inputs" title="reemission.input.Inputs"><span class="pre">Inputs</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.tests.test_presenter.TestPresenter.output_file_path">
+<span class="sig-name descname"><span class="pre">output_file_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/home/runner/work/reemission/reemission/tests/test_data/test_outputs.json'</span></em></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.tests.test_presenter.TestPresenter.outputs">
+<span class="sig-name descname"><span class="pre">outputs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_presenter.TestPresenter.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_presenter.html#TestPresenter.setUpClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_presenter.TestPresenter.tearDownClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tearDownClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_presenter.html#TestPresenter.tearDownClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_presenter.TestPresenter.test_excel">
+<span class="sig-name descname"><span class="pre">test_excel</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_presenter.html#TestPresenter.test_excel"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Test writing output data to .xlsx using Pandas</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_presenter.TestPresenter.test_latex">
+<span class="sig-name descname"><span class="pre">test_latex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_presenter.html#TestPresenter.test_latex"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Test writing output data to .tex / .pdf using LatexWriter</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_presenter.TestPresenter.test_presenter_config">
+<span class="sig-name descname"><span class="pre">test_presenter_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_presenter.html#TestPresenter.test_presenter_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Check Presenter config data load in post init</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_presenter.TestPresenter.test_presenter_init">
+<span class="sig-name descname"><span class="pre">test_presenter_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_presenter.html#TestPresenter.test_presenter_init"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Check if initializations from dict and json produce the same data
+sets</p>
+</dd></dl>
+</dd></dl>
+</section>
+<section id="module-reemission.tests.test_temperature">
+<span id="reemission-tests-test-temperature-module"></span><h2>reemission.tests.test_temperature module</h2>
+<p>Tests for the Emission classes</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="reemission.tests.test_temperature.TestTemperature">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.tests.test_temperature.</span></span><span class="sig-name descname"><span class="pre">TestTemperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_temperature.html#TestTemperature"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_temperature.TestTemperature.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_temperature.html#TestTemperature.setUp"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_temperature.TestTemperature.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_temperature.html#TestTemperature.setUpClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_temperature.TestTemperature.tearDown">
+<span class="sig-name descname"><span class="pre">tearDown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_temperature.html#TestTemperature.tearDown"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Hook method for deconstructing the test fixture after testing it.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_temperature.TestTemperature.tearDownClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tearDownClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_temperature.html#TestTemperature.tearDownClass"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="reemission.tests.test_temperature.TestTemperature.test_coldest">
+<span class="sig-name descname"><span class="pre">test_coldest</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/tests/test_temperature.html#TestTemperature.test_coldest"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+</dd></dl>
+</section>
+<section id="module-reemission.tests">
+<span id="module-contents"></span><h2>Module contents</h2>
+</section>
+</section>
+</div><div class="flex justify-between items-center pt-6 mt-12 border-t border-border gap-4">
+</div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
+<div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
+<ul>
+<li><a :data-current="activeSection === '#submodules'" class="reference internal" href="#submodules">Submodules</a></li>
+<li><a :data-current="activeSection === '#module-reemission.tests.test_biogenic'" class="reference internal" href="#module-reemission.tests.test_biogenic">reemission.tests.test_biogenic module</a><ul>
+<li><a :data-current="activeSection === '#reemission.tests.test_biogenic.TestBiogenic'" class="reference internal" href="#reemission.tests.test_biogenic.TestBiogenic"><code class="docutils literal notranslate"><span class="pre">TestBiogenic</span></code></a><ul>
+<li><a :data-current="activeSection === '#reemission.tests.test_biogenic.TestBiogenic.setUp'" class="reference internal" href="#reemission.tests.test_biogenic.TestBiogenic.setUp"><code class="docutils literal notranslate"><span class="pre">TestBiogenic.setUp()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_biogenic.TestBiogenic.setUpClass'" class="reference internal" href="#reemission.tests.test_biogenic.TestBiogenic.setUpClass"><code class="docutils literal notranslate"><span class="pre">TestBiogenic.setUpClass()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_biogenic.TestBiogenic.test_convert_to_dict'" class="reference internal" href="#reemission.tests.test_biogenic.TestBiogenic.test_convert_to_dict"><code class="docutils literal notranslate"><span class="pre">TestBiogenic.test_convert_to_dict()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_biogenic.TestBiogenic.test_read_from_dict'" class="reference internal" href="#reemission.tests.test_biogenic.TestBiogenic.test_read_from_dict"><code class="docutils literal notranslate"><span class="pre">TestBiogenic.test_read_from_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#module-reemission.tests.test_cli'" class="reference internal" href="#module-reemission.tests.test_cli">reemission.tests.test_cli module</a><ul>
+<li><a :data-current="activeSection === '#reemission.tests.test_cli.test_main'" class="reference internal" href="#reemission.tests.test_cli.test_main"><code class="docutils literal notranslate"><span class="pre">test_main()</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#module-reemission.tests.test_input'" class="reference internal" href="#module-reemission.tests.test_input">reemission.tests.test_input module</a><ul>
+<li><a :data-current="activeSection === '#reemission.tests.test_input.TestInput'" class="reference internal" href="#reemission.tests.test_input.TestInput"><code class="docutils literal notranslate"><span class="pre">TestInput</span></code></a><ul>
+<li><a :data-current="activeSection === '#reemission.tests.test_input.TestInput.input'" class="reference internal" href="#reemission.tests.test_input.TestInput.input"><code class="docutils literal notranslate"><span class="pre">TestInput.input</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_input.TestInput.setUp'" class="reference internal" href="#reemission.tests.test_input.TestInput.setUp"><code class="docutils literal notranslate"><span class="pre">TestInput.setUp()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_input.TestInput.setUpClass'" class="reference internal" href="#reemission.tests.test_input.TestInput.setUpClass"><code class="docutils literal notranslate"><span class="pre">TestInput.setUpClass()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_input.TestInput.test_input_from_dict'" class="reference internal" href="#reemission.tests.test_input.TestInput.test_input_from_dict"><code class="docutils literal notranslate"><span class="pre">TestInput.test_input_from_dict()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_input.TestInput.test_input_fromfile'" class="reference internal" href="#reemission.tests.test_input.TestInput.test_input_fromfile"><code class="docutils literal notranslate"><span class="pre">TestInput.test_input_fromfile()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_input.TestInput.test_read_yaml'" class="reference internal" href="#reemission.tests.test_input.TestInput.test_read_yaml"><code class="docutils literal notranslate"><span class="pre">TestInput.test_read_yaml()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_input.TestInput.test_retrieve_catchment_data'" class="reference internal" href="#reemission.tests.test_input.TestInput.test_retrieve_catchment_data"><code class="docutils literal notranslate"><span class="pre">TestInput.test_retrieve_catchment_data()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_input.TestInput.test_retrieve_emission_factors'" class="reference internal" href="#reemission.tests.test_input.TestInput.test_retrieve_emission_factors"><code class="docutils literal notranslate"><span class="pre">TestInput.test_retrieve_emission_factors()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_input.TestInput.test_retrieve_monthly_temps'" class="reference internal" href="#reemission.tests.test_input.TestInput.test_retrieve_monthly_temps"><code class="docutils literal notranslate"><span class="pre">TestInput.test_retrieve_monthly_temps()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_input.TestInput.test_retrieve_reservoir_data'" class="reference internal" href="#reemission.tests.test_input.TestInput.test_retrieve_reservoir_data"><code class="docutils literal notranslate"><span class="pre">TestInput.test_retrieve_reservoir_data()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_input.TestInput.test_retrieve_year_vector'" class="reference internal" href="#reemission.tests.test_input.TestInput.test_retrieve_year_vector"><code class="docutils literal notranslate"><span class="pre">TestInput.test_retrieve_year_vector()</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#reemission.tests.test_input.TestInputs'" class="reference internal" href="#reemission.tests.test_input.TestInputs"><code class="docutils literal notranslate"><span class="pre">TestInputs</span></code></a><ul>
+<li><a :data-current="activeSection === '#reemission.tests.test_input.TestInputs.inputs'" class="reference internal" href="#reemission.tests.test_input.TestInputs.inputs"><code class="docutils literal notranslate"><span class="pre">TestInputs.inputs</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_input.TestInputs.setUp'" class="reference internal" href="#reemission.tests.test_input.TestInputs.setUp"><code class="docutils literal notranslate"><span class="pre">TestInputs.setUp()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_input.TestInputs.setUpClass'" class="reference internal" href="#reemission.tests.test_input.TestInputs.setUpClass"><code class="docutils literal notranslate"><span class="pre">TestInputs.setUpClass()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_input.TestInputs.test_add_new_data'" class="reference internal" href="#reemission.tests.test_input.TestInputs.test_add_new_data"><code class="docutils literal notranslate"><span class="pre">TestInputs.test_add_new_data()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_input.TestInputs.test_inputs_fromfile'" class="reference internal" href="#reemission.tests.test_input.TestInputs.test_inputs_fromfile"><code class="docutils literal notranslate"><span class="pre">TestInputs.test_inputs_fromfile()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#module-reemission.tests.test_model'" class="reference internal" href="#module-reemission.tests.test_model">reemission.tests.test_model module</a><ul>
+<li><a :data-current="activeSection === '#reemission.tests.test_model.TestEmissionModel'" class="reference internal" href="#reemission.tests.test_model.TestEmissionModel"><code class="docutils literal notranslate"><span class="pre">TestEmissionModel</span></code></a><ul>
+<li><a :data-current="activeSection === '#reemission.tests.test_model.TestEmissionModel.em_model'" class="reference internal" href="#reemission.tests.test_model.TestEmissionModel.em_model"><code class="docutils literal notranslate"><span class="pre">TestEmissionModel.em_model</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#module-reemission.tests.test_n_exports'" class="reference internal" href="#module-reemission.tests.test_n_exports">reemission.tests.test_n_exports module</a></li>
+<li><a :data-current="activeSection === '#module-reemission.tests.test_p_exports'" class="reference internal" href="#module-reemission.tests.test_p_exports">reemission.tests.test_p_exports module</a></li>
+<li><a :data-current="activeSection === '#module-reemission.tests.test_preimpoundment'" class="reference internal" href="#module-reemission.tests.test_preimpoundment">reemission.tests.test_preimpoundment module</a><ul>
+<li><a :data-current="activeSection === '#reemission.tests.test_preimpoundment.TestLanduseMapping'" class="reference internal" href="#reemission.tests.test_preimpoundment.TestLanduseMapping"><code class="docutils literal notranslate"><span class="pre">TestLanduseMapping</span></code></a><ul>
+<li><a :data-current="activeSection === '#reemission.tests.test_preimpoundment.TestLanduseMapping.setUpClass'" class="reference internal" href="#reemission.tests.test_preimpoundment.TestLanduseMapping.setUpClass"><code class="docutils literal notranslate"><span class="pre">TestLanduseMapping.setUpClass()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_preimpoundment.TestLanduseMapping.test_catchment_landuse_mapping'" class="reference internal" href="#reemission.tests.test_preimpoundment.TestLanduseMapping.test_catchment_landuse_mapping"><code class="docutils literal notranslate"><span class="pre">TestLanduseMapping.test_catchment_landuse_mapping()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_preimpoundment.TestLanduseMapping.test_reservoir_landuse_mapping'" class="reference internal" href="#reemission.tests.test_preimpoundment.TestLanduseMapping.test_reservoir_landuse_mapping"><code class="docutils literal notranslate"><span class="pre">TestLanduseMapping.test_reservoir_landuse_mapping()</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#reemission.tests.test_preimpoundment.TestPreimpoundment'" class="reference internal" href="#reemission.tests.test_preimpoundment.TestPreimpoundment"><code class="docutils literal notranslate"><span class="pre">TestPreimpoundment</span></code></a><ul>
+<li><a :data-current="activeSection === '#reemission.tests.test_preimpoundment.TestPreimpoundment.setUpClass'" class="reference internal" href="#reemission.tests.test_preimpoundment.TestPreimpoundment.setUpClass"><code class="docutils literal notranslate"><span class="pre">TestPreimpoundment.setUpClass()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_preimpoundment.TestPreimpoundment.test_preimpoundment_ch4_emissions'" class="reference internal" href="#reemission.tests.test_preimpoundment.TestPreimpoundment.test_preimpoundment_ch4_emissions"><code class="docutils literal notranslate"><span class="pre">TestPreimpoundment.test_preimpoundment_ch4_emissions()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_preimpoundment.TestPreimpoundment.test_preimpoundment_co2_emissions'" class="reference internal" href="#reemission.tests.test_preimpoundment.TestPreimpoundment.test_preimpoundment_co2_emissions"><code class="docutils literal notranslate"><span class="pre">TestPreimpoundment.test_preimpoundment_co2_emissions()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#module-reemission.tests.test_presenter'" class="reference internal" href="#module-reemission.tests.test_presenter">reemission.tests.test_presenter module</a><ul>
+<li><a :data-current="activeSection === '#reemission.tests.test_presenter.TestPresenter'" class="reference internal" href="#reemission.tests.test_presenter.TestPresenter"><code class="docutils literal notranslate"><span class="pre">TestPresenter</span></code></a><ul>
+<li><a :data-current="activeSection === '#reemission.tests.test_presenter.TestPresenter.input_file_path'" class="reference internal" href="#reemission.tests.test_presenter.TestPresenter.input_file_path"><code class="docutils literal notranslate"><span class="pre">TestPresenter.input_file_path</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_presenter.TestPresenter.inputs'" class="reference internal" href="#reemission.tests.test_presenter.TestPresenter.inputs"><code class="docutils literal notranslate"><span class="pre">TestPresenter.inputs</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_presenter.TestPresenter.output_file_path'" class="reference internal" href="#reemission.tests.test_presenter.TestPresenter.output_file_path"><code class="docutils literal notranslate"><span class="pre">TestPresenter.output_file_path</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_presenter.TestPresenter.outputs'" class="reference internal" href="#reemission.tests.test_presenter.TestPresenter.outputs"><code class="docutils literal notranslate"><span class="pre">TestPresenter.outputs</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_presenter.TestPresenter.setUpClass'" class="reference internal" href="#reemission.tests.test_presenter.TestPresenter.setUpClass"><code class="docutils literal notranslate"><span class="pre">TestPresenter.setUpClass()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_presenter.TestPresenter.tearDownClass'" class="reference internal" href="#reemission.tests.test_presenter.TestPresenter.tearDownClass"><code class="docutils literal notranslate"><span class="pre">TestPresenter.tearDownClass()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_presenter.TestPresenter.test_excel'" class="reference internal" href="#reemission.tests.test_presenter.TestPresenter.test_excel"><code class="docutils literal notranslate"><span class="pre">TestPresenter.test_excel()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_presenter.TestPresenter.test_latex'" class="reference internal" href="#reemission.tests.test_presenter.TestPresenter.test_latex"><code class="docutils literal notranslate"><span class="pre">TestPresenter.test_latex()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_presenter.TestPresenter.test_presenter_config'" class="reference internal" href="#reemission.tests.test_presenter.TestPresenter.test_presenter_config"><code class="docutils literal notranslate"><span class="pre">TestPresenter.test_presenter_config()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_presenter.TestPresenter.test_presenter_init'" class="reference internal" href="#reemission.tests.test_presenter.TestPresenter.test_presenter_init"><code class="docutils literal notranslate"><span class="pre">TestPresenter.test_presenter_init()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#module-reemission.tests.test_temperature'" class="reference internal" href="#module-reemission.tests.test_temperature">reemission.tests.test_temperature module</a><ul>
+<li><a :data-current="activeSection === '#reemission.tests.test_temperature.TestTemperature'" class="reference internal" href="#reemission.tests.test_temperature.TestTemperature"><code class="docutils literal notranslate"><span class="pre">TestTemperature</span></code></a><ul>
+<li><a :data-current="activeSection === '#reemission.tests.test_temperature.TestTemperature.setUp'" class="reference internal" href="#reemission.tests.test_temperature.TestTemperature.setUp"><code class="docutils literal notranslate"><span class="pre">TestTemperature.setUp()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_temperature.TestTemperature.setUpClass'" class="reference internal" href="#reemission.tests.test_temperature.TestTemperature.setUpClass"><code class="docutils literal notranslate"><span class="pre">TestTemperature.setUpClass()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_temperature.TestTemperature.tearDown'" class="reference internal" href="#reemission.tests.test_temperature.TestTemperature.tearDown"><code class="docutils literal notranslate"><span class="pre">TestTemperature.tearDown()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_temperature.TestTemperature.tearDownClass'" class="reference internal" href="#reemission.tests.test_temperature.TestTemperature.tearDownClass"><code class="docutils literal notranslate"><span class="pre">TestTemperature.tearDownClass()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.tests.test_temperature.TestTemperature.test_coldest'" class="reference internal" href="#reemission.tests.test_temperature.TestTemperature.test_coldest"><code class="docutils literal notranslate"><span class="pre">TestTemperature.test_coldest()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#module-reemission.tests'" class="reference internal" href="#module-reemission.tests">Module contents</a></li>
+</ul>
+</div>
+</aside>
+</main>
+</div>
+</div><footer class="py-6 border-t border-border md:py-0">
+<div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+<div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
+<p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2024, Tomasz Janus, University of Manchester, United Kingdom Built with <a class="font-medium underline underline-offset-4" href="https://www.sphinx-doc.org" rel="noreferrer">Sphinx 8.1.3</a></p>
+</div>
+</div>
+</footer>
+</div>
+<script src="../_static/documentation_options.js?v=8d563738"></script>
+<script src="../_static/doctools.js?v=9bcbadda"></script>
+<script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../_static/copybutton.js?v=f281be69"></script>
+<script src="../_static/toggleprompt.js?v=5801b3bb"></script>
+<script defer="defer" src="../_static/theme.js?v=073f68d9"></script>
+<script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+</body>
+</html>

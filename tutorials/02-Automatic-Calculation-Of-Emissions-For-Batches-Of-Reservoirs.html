@@ -73,6 +73,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">About the Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../theory.html">Theoretical Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config.html">Configuration</a></li>
 <li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="../installation/index.html">Installation<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
 <li class="toctree-l2"><a class="reference internal" href="../installation/install_package.html">Installing RE-Emission</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation/using_docker.html">About Docker</a></li>
@@ -96,9 +97,9 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/reemission.catchment.html">Catchment Model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/reemission.ns_catchment.html">Post-impoundment catchment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/reemission.emissions.html">Emissions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.emission_profile.html">Emission Profile Calculator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/reemission.temperature.html">MonthlyTemperature</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/reemission.biogenic.html">Biogenic Factors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api/reemission.profile.html">Emission Profile Calculator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/reemission.presenter.html">Presenter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/reemission.utils.html">Utility functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/reemission.auxiliary.html">Auxiliary functions</a></li>
@@ -110,6 +111,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/reemission.download.html">External Data Downloader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/reemission.globals.html">Global variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/reemission.main.html">Main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.salib.html">SALib Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.postprocessing.html">Postprocessing</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
@@ -135,14 +138,17 @@
 <div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">Import the required libraries and RE-Emission classes</span>
 </nav>
 <div id="content" role="main">
-<div><h1 style="text-align:center"><p>Automatic calculation of emissions for batches of reservoirs</p>
+</div><div><p><img alt="680d877f1a51424592ea4d6a2d8b63a7" class="no-scaled-link" src="../_images/logo-banner-bw1.png" style="width: 500px;"/></p>
+</div><div><h1 style="text-align:center"><p>Automatic calculation of emissions for batches of reservoirs</p>
 </h1><h3 style="text-align:center"><p>Input data is defined in JSON file whilst outputs data configuration is specified in YAML config file.</p>
 </h3><h3><p>This notebook demonstrates how to:</p>
 </h3><ol><li><p>Read input data in JSON format and output configuration YAML file</p>
 </li><li><p>Instantiate the emission model object from input data output configuration file</p>
 </li><li><p>Calculate emissions</p>
 </li><li><p>Display model ouptputs</p>
-</li></ol></div><section id="Import-the-required-libraries-and-RE-Emission-classes">
+</li></ol></div><p>&lt; <a class="reference internal" href="01-Step-By-Step-Manual-Calculations.html"><span class="doc">Manual Step-By-Step Calculations</span></a> | <a class="reference internal" href="index.html"><span class="doc">Contents</span></a> | <a class="reference internal" href="03-Saving-Results-To-JSON.html"><span class="doc">Saving Results To JSON</span></a> &gt;</p>
+<p><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg"/></p>
+<section id="Import-the-required-libraries-and-RE-Emission-classes">
 <h1>Import the required libraries and RE-Emission classes</h1>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">[1]:
@@ -163,8 +169,6 @@
 </span><span id="line-13"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">EmissionModel</span>
 </span><span id="line-14"><span class="c1"># Import from the input module</span>
 </span><span id="line-15"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.input</span><span class="w"> </span><span class="kn">import</span> <span class="n">Inputs</span>
-</span><span id="line-16"><span class="c1"># Import from the presenter module</span>
-</span><span id="line-17"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.presenter</span><span class="w"> </span><span class="kn">import</span> <span class="n">LatexWriter</span><span class="p">,</span> <span class="n">JSONWriter</span>
 </span></code></pre></div>
 </div>
 </div>
@@ -221,40 +225,40 @@
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-{'Reservoir 1': {'ch4_degassing': 4247.529844440521,
+{'Reservoir 1': {'ch4_degassing': 0.0,
                  'ch4_diffusion': 229.50728895021928,
                  'ch4_ebullition': 321.2319562880549,
-                 'ch4_net': 4798.269089678795,
+                 'ch4_net': 550.7392452382742,
                  'ch4_preimp': 0.0,
-                 'ch4_profile': [15037.538803908017,
-                                 13234.917873312756,
-                                 11288.903866240284,
-                                 8232.44194734772,
-                                 6027.752360164751,
-                                 4437.463880888554,
-                                 3290.355706291948,
-                                 2140.182925317766,
-                                 1435.5616063934115,
-                                 901.0218112214025],
-                 'ch4_total_lifetime': 769.6423619844787,
-                 'ch4_total_per_year': 7696.423619844788,
+                 'ch4_profile': [1075.7638713949952,
+                                 983.3228492856958,
+                                 883.5313487045227,
+                                 726.8036292777338,
+                                 613.7600723593921,
+                                 532.224745950718,
+                                 473.41547248304676,
+                                 414.4537841630906,
+                                 378.33609877105505,
+                                 350.9395594718922],
+                 'ch4_total_lifetime': 88.33857493621919,
+                 'ch4_total_per_year': 883.3857493621919,
                  'co2_diffusion': 572.7646642529623,
                  'co2_diffusion_nonanthro': 393.12744599578104,
                  'co2_minus_nonanthro': 179.6372182571813,
-                 'co2_net': 311.6372182571813,
-                 'co2_preimp': -132.00000000000003,
-                 'co2_profile': [1535.8116797855287,
-                                 795.3817060605891,
-                                 579.3641298860341,
-                                 407.51426690686856,
-                                 323.7748832811502,
-                                 270.8014311786585,
-                                 233.03901151252305,
-                                 192.05382930950483,
-                                 162.0413825592751,
-                                 132.00000000000003],
-                 'co2_total_lifetime': 49.98660980845189,
-                 'co2_total_per_year': 499.86609808451885,
+                 'co2_net': 313.103884923848,
+                 'co2_preimp': -133.4666666666667,
+                 'co2_profile': [1537.2783464521954,
+                                 796.8483727272558,
+                                 580.8307965527008,
+                                 408.98093357353525,
+                                 325.2415499478169,
+                                 272.2680978453252,
+                                 234.50567817918972,
+                                 193.5204959761715,
+                                 163.50804922594176,
+                                 133.4666666666667],
+                 'co2_total_lifetime': 50.22186314178522,
+                 'co2_total_per_year': 502.21863141785224,
                  'n2o_mean': 0.04569849137014073,
                  'n2o_methodA': 0.043280912406044016,
                  'n2o_methodB': 0.048116070334237454,
@@ -270,23 +274,23 @@
                                  0.043280912406044016],
                  'n2o_total_lifetime': 0.00694225834992946,
                  'n2o_total_per_year': 0.0694225834992946},
- 'Reservoir 2': {'ch4_degassing': 827.4542257275465,
+ 'Reservoir 2': {'ch4_degassing': 0.0,
                  'ch4_diffusion': 136.10915204619948,
                  'ch4_ebullition': 90.94433704616341,
-                 'ch4_net': 1054.5077148199093,
+                 'ch4_net': 227.0534890923629,
                  'ch4_preimp': 0.0,
-                 'ch4_profile': [3258.2891678085275,
-                                 2870.3097742242635,
-                                 2451.4689517569577,
-                                 1793.6292798288143,
-                                 1319.1187852130984,
-                                 976.8466188494463,
-                                 729.9601173612991,
-                                 482.4159071534167,
-                                 330.7662555693782,
-                                 215.72302098425348],
-                 'ch4_total_lifetime': 1832.5235068140385,
-                 'ch4_total_per_year': 18325.235068140384,
+                 'ch4_profile': [538.4190104073056,
+                                 483.5969209166755,
+                                 424.4156348335686,
+                                 331.46836030085456,
+                                 264.42795061792253,
+                                 216.0734770408248,
+                                 181.1966747364153,
+                                 146.2294829005942,
+                                 124.80991250234145,
+                                 108.56241225925223],
+                 'ch4_total_lifetime': 394.5735533447083,
+                 'ch4_total_per_year': 3945.7355334470826,
                  'co2_diffusion': 796.9654854957547,
                  'co2_diffusion_nonanthro': 547.0117579064897,
                  'co2_minus_nonanthro': 249.953727589265,
@@ -319,23 +323,23 @@
                                  0.35553527541406443],
                  'n2o_total_lifetime': 0.6178492016145611,
                  'n2o_total_per_year': 6.178492016145611},
- 'Reservoir 3': {'ch4_degassing': 847.6508199549853,
+ 'Reservoir 3': {'ch4_degassing': 0.0,
                  'ch4_diffusion': 238.65463850593412,
                  'ch4_ebullition': 210.60761679419937,
-                 'ch4_net': 1296.9130752551187,
+                 'ch4_net': 449.26225530013346,
                  'ch4_preimp': 0.0,
-                 'ch4_profile': [3781.469556760416,
-                                 3344.0551177505276,
-                                 2871.8481344638835,
-                                 2130.1934484630237,
-                                 1595.228714997142,
-                                 1209.352010260699,
-                                 931.0143515978866,
-                                 651.9370369875498,
-                                 480.97107687442974,
-                                 351.2754567775871],
-                 'ch4_total_lifetime': 5731.577644782472,
-                 'ch4_total_per_year': 57315.77644782472,
+                 'ch4_profile': [995.2125078401448,
+                                 899.0871132371035,
+                                 795.3182760637874,
+                                 632.3439435502227,
+                                 514.7948699013089,
+                                 430.0098334933974,
+                                 368.8566301924427,
+                                 307.5449373217607,
+                                 269.9877286146468,
+                                 241.49926006681994],
+                 'ch4_total_lifetime': 1985.4696110734096,
+                 'ch4_total_per_year': 19854.696110734098,
                  'co2_diffusion': 1001.8691408378094,
                  'co2_diffusion_nonanthro': 687.6511089825283,
                  'co2_minus_nonanthro': 314.2180318552811,
@@ -368,40 +372,40 @@
                                  3.6100903829982802],
                  'n2o_total_lifetime': 15.954433438622601,
                  'n2o_total_per_year': 159.544334386226},
- 'Reservoir 4': {'ch4_degassing': 485.87517473985247,
+ 'Reservoir 4': {'ch4_degassing': 0.0,
                  'ch4_diffusion': 114.55798902807442,
                  'ch4_ebullition': 35.770362020378734,
-                 'ch4_net': 636.2035257883056,
+                 'ch4_net': 150.32835104845316,
                  'ch4_preimp': 0.0,
-                 'ch4_profile': [2009.4812892531536,
-                                 1767.7120096789718,
-                                 1506.711836827945,
-                                 1096.7808317473907,
-                                 801.0919176227009,
-                                 587.807406529236,
-                                 433.9623330994227,
-                                 279.70805642717863,
-                                 185.20983637711493,
-                                 113.5227771377119],
-                 'ch4_total_lifetime': 16810.087660141504,
-                 'ch4_total_per_year': 168100.87660141505,
+                 'ch4_profile': [412.3930795276272,
+                                 366.25137463895084,
+                                 316.44069681271134,
+                                 238.2104478101028,
+                                 181.7850392212071,
+                                 141.08688505429816,
+                                 111.73238334991092,
+                                 82.30180415336366,
+                                 64.27375186018486,
+                                 50.5988378180367],
+                 'ch4_total_lifetime': 3972.0508555777537,
+                 'ch4_total_per_year': 39720.50855577754,
                  'co2_diffusion': 556.5994481893181,
                  'co2_diffusion_nonanthro': 382.0321559024945,
                  'co2_minus_nonanthro': 174.5672922868236,
-                 'co2_net': 347.15729228682363,
-                 'co2_preimp': -172.59000000000003,
-                 'co2_profile': [1536.7817092588934,
-                                 817.248992736217,
-                                 607.3281103878444,
-                                 440.3283897776909,
-                                 358.95239431788053,
-                                 307.47401925543494,
-                                 270.77737356434943,
-                                 230.94892180765413,
-                                 201.78352047868628,
-                                 172.59000000000003],
-                 'co2_total_lifetime': 9172.763555448599,
-                 'co2_total_per_year': 91727.63555448598,
+                 'co2_net': 349.0749589534903,
+                 'co2_preimp': -174.5076666666667,
+                 'co2_profile': [1538.6993759255602,
+                                 819.1666594028836,
+                                 609.245777054511,
+                                 442.2460564443576,
+                                 360.8700609845472,
+                                 309.3916859221016,
+                                 272.6950402310161,
+                                 232.8665884743208,
+                                 203.70118714535295,
+                                 174.5076666666667],
+                 'co2_total_lifetime': 9223.433102948598,
+                 'co2_total_per_year': 92234.33102948598,
                  'n2o_mean': 0.0035568256933053745,
                  'n2o_methodA': 0.003956510851593258,
                  'n2o_methodB': 0.0031571405350174914,
@@ -422,7 +426,7 @@
 <p><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg"/></p>
 </section>
 </div><div class="flex justify-between items-center pt-6 mt-12 border-t border-border gap-4">
-</div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
+</div></main></div><aside class="hidden text-sm xl:block" id="right-sidebar">
 <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
 <ul>
 <li></li>
@@ -433,7 +437,7 @@
 </ul>
 </div>
 </aside>
-</main>
+
 </div>
 </div><footer class="py-6 border-t border-border md:py-0">
 <div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
@@ -442,7 +446,7 @@
 </div>
 </div>
 </footer>
-</div>
+
 <script src="../_static/documentation_options.js?v=8d563738"></script>
 <script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>

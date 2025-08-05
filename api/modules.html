@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+
+<html :class="{'dark': darkMode === 'dark' || (darkMode === 'system' &amp;&amp; window.matchMedia('(prefers-color-scheme: dark)').matches)}" class="scroll-smooth" data-content_root="../" lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') || localStorage.setItem('darkMode', 'system'), activeSection: '' }" x-init="$watch('darkMode', val =&gt; localStorage.setItem('darkMode', val))">
+<head>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta charset="utf-8"/>
+<meta content="white" media="(prefers-color-scheme: light)" name="theme-color"/>
+<meta content="black" media="(prefers-color-scheme: dark)" name="theme-color"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>reemission | ReEmission 1.0.0 documentation</title>
+<meta content="reemission | ReEmission 1.0.0 documentation" property="og:title"/>
+<meta content="reemission | ReEmission 1.0.0 documentation" name="twitter:title"/>
+<link href="../_static/pygments.css?v=1949e874" rel="stylesheet" type="text/css"/>
+<link href="../_static/theme.css?v=42baaae4" rel="stylesheet" type="text/css"/>
+<link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="../genindex.html" rel="index" title="Index"/>
+<script>
+    <!-- Prevent Flash of wrong theme -->
+      const userPreference = localStorage.getItem('darkMode');
+      let mode;
+      if (userPreference === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        mode = 'dark';
+        document.documentElement.classList.add('dark');
+      } else {
+        mode = 'light';
+      }
+      if (!userPreference) {localStorage.setItem('darkMode', mode)}
+    </script>
+</head>
+<body :class="{ 'overflow-hidden': showSidebar }" class="min-h-screen font-sans antialiased bg-background text-foreground" x-data="{ showSidebar: false, showScrollTop: false }">
+<div @click.self="showSidebar = false" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" x-cloak="" x-show="showSidebar"></div><div class="relative flex flex-col min-h-screen" id="page"><a class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100" href="#content">
+      Skip to content
+    </a><header class="sticky top-0 z-40 w-full border-b shadow-sm border-border supports-backdrop-blur:bg-background/60 bg-background/95 backdrop-blur"><div class="container flex items-center h-14">
+<div class="hidden mr-4 md:flex">
+<a class="flex items-center mr-6" href="../index.html"><span class="hidden font-bold sm:inline-block text-clip whitespace-nowrap">ReEmission 1.0.0 documentation</span>
+</a></div><button @click="showSidebar = true" class="inline-flex items-center justify-center h-10 px-0 py-2 mr-2 text-base font-medium transition-colors rounded-md hover:text-accent-foreground hover:bg-transparent md:hidden" type="button">
+<svg aria-hidden="true" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M152.587 825.087q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440Zm0-203.587q-19.152 0-32.326-13.174T107.087 576q0-19.152 13.174-32.326t32.326-13.174h320q19.152 0 32.326 13.174T518.087 576q0 19.152-13.174 32.326T472.587 621.5h-320Zm0-203.587q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440ZM708.913 576l112.174 112.174q12.674 12.674 12.674 31.826t-12.674 31.826Q808.413 764.5 789.261 764.5t-31.826-12.674l-144-144Q600 594.391 600 576t13.435-31.826l144-144q12.674-12.674 31.826-12.674t31.826 12.674q12.674 12.674 12.674 31.826t-12.674 31.826L708.913 576Z"></path>
+</svg>
+<span class="sr-only">Toggle navigation menu</span>
+</button>
+<div class="flex items-center justify-between flex-1 space-x-2 sm:space-x-4 md:justify-end">
+<div class="flex-1 w-full md:w-auto md:flex-none"><form @keydown.k.window.meta="$refs.search.focus()" action="../search.html" class="relative flex items-center group" id="searchbox" method="get">
+<input aria-label="Search the docs" class="inline-flex items-center font-medium transition-colors bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background border border-input hover:bg-accent focus:bg-accent hover:text-accent-foreground focus:text-accent-foreground hover:placeholder-accent-foreground py-2 px-4 relative h-9 w-full justify-start rounded-[0.5rem] text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64" id="search-input" name="q" placeholder="Search ..." type="search" x-ref="search"/>
+<kbd class="pointer-events-none absolute right-1.5 top-2 hidden h-5 select-none text-muted-foreground items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex group-hover:bg-accent group-hover:text-accent-foreground">
+<span class="text-xs">⌘</span>
+    K
+  </kbd>
+</form>
+</div>
+<nav class="flex items-center space-x-1">
+<button @click="darkMode = darkMode === 'light' ? 'dark' : 'light'" aria-label="Color theme switcher" class="relative inline-flex items-center justify-center px-0 text-sm font-medium transition-colors rounded-md hover:bg-accent hover:text-accent-foreground h-9 w-9" type="button">
+<svg class="absolute transition-all scale-100 rotate-0 dark:-rotate-90 dark:scale-0" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 685q45.456 0 77.228-31.772Q589 621.456 589 576q0-45.456-31.772-77.228Q525.456 467 480 467q-45.456 0-77.228 31.772Q371 530.544 371 576q0 45.456 31.772 77.228Q434.544 685 480 685Zm0 91q-83 0-141.5-58.5T280 576q0-83 58.5-141.5T480 376q83 0 141.5 58.5T680 576q0 83-58.5 141.5T480 776ZM80 621.5q-19.152 0-32.326-13.174T34.5 576q0-19.152 13.174-32.326T80 530.5h80q19.152 0 32.326 13.174T205.5 576q0 19.152-13.174 32.326T160 621.5H80Zm720 0q-19.152 0-32.326-13.174T754.5 576q0-19.152 13.174-32.326T800 530.5h80q19.152 0 32.326 13.174T925.5 576q0 19.152-13.174 32.326T880 621.5h-80Zm-320-320q-19.152 0-32.326-13.174T434.5 256v-80q0-19.152 13.174-32.326T480 130.5q19.152 0 32.326 13.174T525.5 176v80q0 19.152-13.174 32.326T480 301.5Zm0 720q-19.152 0-32.326-13.17Q434.5 995.152 434.5 976v-80q0-19.152 13.174-32.326T480 850.5q19.152 0 32.326 13.174T525.5 896v80q0 19.152-13.174 32.33-13.174 13.17-32.326 13.17ZM222.174 382.065l-43-42Q165.5 327.391 166 308.239t13.174-33.065q13.435-13.674 32.587-13.674t32.065 13.674l42.239 43q12.674 13.435 12.555 31.706-.12 18.272-12.555 31.946-12.674 13.674-31.445 13.413-18.772-.261-32.446-13.174Zm494 494.761-42.239-43q-12.674-13.435-12.674-32.087t12.674-31.565Q686.609 756.5 705.38 757q18.772.5 32.446 13.174l43 41.761Q794.5 824.609 794 843.761t-13.174 33.065Q767.391 890.5 748.239 890.5t-32.065-13.674Zm-42-494.761Q660.5 369.391 661 350.62q.5-18.772 13.174-32.446l41.761-43Q728.609 261.5 747.761 262t33.065 13.174q13.674 13.435 13.674 32.587t-13.674 32.065l-43 42.239q-13.435 12.674-31.706 12.555-18.272-.12-31.946-12.555Zm-495 494.761Q165.5 863.391 165.5 844.239t13.674-32.065l43-42.239q13.435-12.674 32.087-12.674t31.565 12.674Q299.5 782.609 299 801.38q-.5 18.772-13.174 32.446l-41.761 43Q231.391 890.5 212.239 890t-33.065-13.174ZM480 576Z"></path>
+</svg>
+<svg class="absolute transition-all scale-0 rotate-90 dark:rotate-0 dark:scale-100" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 936q-151 0-255.5-104.5T120 576q0-138 90-239.5T440 218q25-3 39 18t-1 44q-17 26-25.5 55t-8.5 61q0 90 63 153t153 63q31 0 61.5-9t54.5-25q21-14 43-1.5t19 39.5q-14 138-117.5 229T480 936Zm0-80q88 0 158-48.5T740 681q-20 5-40 8t-40 3q-123 0-209.5-86.5T364 396q0-20 3-40t8-40q-78 32-126.5 102T200 576q0 116 82 198t198 82Zm-10-270Z"></path>
+</svg>
+</button>
+</nav>
+</div>
+</div>
+</header>
+<div class="flex-1"><div class="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10"><aside :aria-hidden="!showSidebar" :class="{ 'translate-x-0': showSidebar }" class="fixed inset-y-0 left-0 md:top-14 z-50 md:z-30 bg-background md:bg-transparent transition-all duration-100 -translate-x-full md:translate-x-0 ml-0 p-6 md:p-0 md:-ml-2 md:h-[calc(100vh-3.5rem)] w-5/6 md:w-full shrink-0 overflow-y-auto border-r border-border md:sticky" id="left-sidebar">
+<a class="!justify-start text-sm md:!hidden bg-background" href="../index.html"><span class="font-bold text-clip whitespace-nowrap">ReEmission 1.0.0 documentation</span>
+</a>
+<div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
+<div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">About the Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Theoretical Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config.html">Configuration</a></li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="../installation/index.html">Installation<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="../installation/install_package.html">Installing RE-Emission</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation/using_docker.html">About Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation/building_image.html">Building the ReEmission Docker Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation/using_image.html">Using the ReEmission Docker Image</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../running_docker.html">Running the ReEmission Docker Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../demo.html">Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../json.html">JSON file format description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting.html">Reporting Calculation Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../geocaret_integration.html">Integration with GeoCARET</a></li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="reemission.html">Python API reference<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="reemission.model.html">Model (Main)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.input.html">Input Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.reservoir.html">Reservoir Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.catchment.html">Catchment Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.ns_catchment.html">Post-impoundment catchment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.emissions.html">Emissions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.emission_profile.html">Emission Profile Calculator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.temperature.html">MonthlyTemperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.biogenic.html">Biogenic Factors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.presenter.html">Presenter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.utils.html">Utility functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.auxiliary.html">Auxiliary functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.constants.html">Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.mixins.html">Mixins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.document_compiler.html">Document <span class="math notranslate nohighlight">\(\LaTeX\)</span> Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.exceptions.html">Custom Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.app_logger.html">App Logger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.download.html">External Data Downloader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.globals.html">Global variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.main.html">Main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.salib.html">SALib Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.postprocessing.html">Postprocessing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+</nav>
+</div>
+</div>
+<button @click="showSidebar = false" class="absolute md:hidden right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100" type="button">
+<svg class="h-4 w-4" fill="currentColor" height="24" stroke="none" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 632 284 828q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536 576l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480 632Z"></path>
+</svg>
+</button>
+</aside>
+<main class="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
+<div class="w-full min-w-0 mx-auto">
+<nav aria-label="breadcrumbs" class="flex items-center mb-4 space-x-1 text-sm text-muted-foreground">
+<a class="overflow-hidden text-ellipsis whitespace-nowrap hover:text-foreground" href="../index.html">
+<span class="hidden md:inline">ReEmission 1.0.0 documentation</span>
+<svg aria-label="Home" class="md:hidden" fill="currentColor" height="18" stroke="none" viewbox="0 96 960 960" width="18" xmlns="http://www.w3.org/2000/svg">
+<path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z"></path>
+</svg>
+</a>
+<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">reemission</span>
+</nav>
+<div id="content" role="main">
+<section id="reemission">
+<h1>reemission</h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="reemission.html">ReEmission reference documentation.</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reemission.model.html">Model (Main)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reemission.model.html#reemission.model.EmissionModel"><code class="docutils literal notranslate"><span class="pre">EmissionModel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#reemission.model.EmissionModel.inputs"><code class="docutils literal notranslate"><span class="pre">EmissionModel.inputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#reemission.model.EmissionModel.model_config"><code class="docutils literal notranslate"><span class="pre">EmissionModel.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#reemission.model.EmissionModel.presenter_config"><code class="docutils literal notranslate"><span class="pre">EmissionModel.presenter_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#reemission.model.EmissionModel.outputs"><code class="docutils literal notranslate"><span class="pre">EmissionModel.outputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#reemission.model.EmissionModel.internal"><code class="docutils literal notranslate"><span class="pre">EmissionModel.internal</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#reemission.model.EmissionModel.author"><code class="docutils literal notranslate"><span class="pre">EmissionModel.author</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#reemission.model.EmissionModel.report_title"><code class="docutils literal notranslate"><span class="pre">EmissionModel.report_title</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#reemission.model.EmissionModel.ret_coeff"><code class="docutils literal notranslate"><span class="pre">EmissionModel.ret_coeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#reemission.model.EmissionModel.p_model"><code class="docutils literal notranslate"><span class="pre">EmissionModel.p_model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#reemission.model.EmissionModel.n2o_model"><code class="docutils literal notranslate"><span class="pre">EmissionModel.n2o_model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#reemission.model.EmissionModel.presenter"><code class="docutils literal notranslate"><span class="pre">EmissionModel.presenter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#reemission.model.EmissionModel.__post_init__"><code class="docutils literal notranslate"><span class="pre">EmissionModel.__post_init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#reemission.model.EmissionModel.add_presenter"><code class="docutils literal notranslate"><span class="pre">EmissionModel.add_presenter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#id0"><code class="docutils literal notranslate"><span class="pre">EmissionModel.author</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#reemission.model.EmissionModel.calculate"><code class="docutils literal notranslate"><span class="pre">EmissionModel.calculate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#reemission.model.EmissionModel.create_exec_dictionary"><code class="docutils literal notranslate"><span class="pre">EmissionModel.create_exec_dictionary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#reemission.model.EmissionModel.get_inputs"><code class="docutils literal notranslate"><span class="pre">EmissionModel.get_inputs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#reemission.model.EmissionModel.get_internal_vars"><code class="docutils literal notranslate"><span class="pre">EmissionModel.get_internal_vars()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#reemission.model.EmissionModel.get_outputs"><code class="docutils literal notranslate"><span class="pre">EmissionModel.get_outputs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#id1"><code class="docutils literal notranslate"><span class="pre">EmissionModel.inputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#id2"><code class="docutils literal notranslate"><span class="pre">EmissionModel.internal</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#id3"><code class="docutils literal notranslate"><span class="pre">EmissionModel.model_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#id4"><code class="docutils literal notranslate"><span class="pre">EmissionModel.n2o_model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#id5"><code class="docutils literal notranslate"><span class="pre">EmissionModel.outputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#id6"><code class="docutils literal notranslate"><span class="pre">EmissionModel.p_model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#id7"><code class="docutils literal notranslate"><span class="pre">EmissionModel.presenter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#id8"><code class="docutils literal notranslate"><span class="pre">EmissionModel.presenter_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#id9"><code class="docutils literal notranslate"><span class="pre">EmissionModel.report_title</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#id10"><code class="docutils literal notranslate"><span class="pre">EmissionModel.ret_coeff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.model.html#reemission.model.EmissionModel.save_results"><code class="docutils literal notranslate"><span class="pre">EmissionModel.save_results()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.input.html">Input Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reemission.input.html#reemission.input.Input"><code class="docutils literal notranslate"><span class="pre">Input</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.input.html#reemission.input.Input.name"><code class="docutils literal notranslate"><span class="pre">Input.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.input.html#reemission.input.Input.data"><code class="docutils literal notranslate"><span class="pre">Input.data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.input.html#reemission.input.Input.enum_load_method"><code class="docutils literal notranslate"><span class="pre">Input.enum_load_method</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.input.html#reemission.input.Input.__post_init__"><code class="docutils literal notranslate"><span class="pre">Input.__post_init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.input.html#reemission.input.Input.catchment_data"><code class="docutils literal notranslate"><span class="pre">Input.catchment_data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.input.html#id0"><code class="docutils literal notranslate"><span class="pre">Input.data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.input.html#id1"><code class="docutils literal notranslate"><span class="pre">Input.enum_load_method</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.input.html#reemission.input.Input.fromfile"><code class="docutils literal notranslate"><span class="pre">Input.fromfile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.input.html#reemission.input.Input.gasses"><code class="docutils literal notranslate"><span class="pre">Input.gasses</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.input.html#reemission.input.Input.monthly_temps"><code class="docutils literal notranslate"><span class="pre">Input.monthly_temps</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.input.html#id2"><code class="docutils literal notranslate"><span class="pre">Input.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.input.html#reemission.input.Input.reservoir_data"><code class="docutils literal notranslate"><span class="pre">Input.reservoir_data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.input.html#reemission.input.Input.year_vector"><code class="docutils literal notranslate"><span class="pre">Input.year_vector</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.input.html#reemission.input.Inputs"><code class="docutils literal notranslate"><span class="pre">Inputs</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.input.html#reemission.input.Inputs.inputs"><code class="docutils literal notranslate"><span class="pre">Inputs.inputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.input.html#reemission.input.Inputs.add_input"><code class="docutils literal notranslate"><span class="pre">Inputs.add_input()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.input.html#reemission.input.Inputs.fromfile"><code class="docutils literal notranslate"><span class="pre">Inputs.fromfile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.input.html#reemission.input.Inputs.get_input"><code class="docutils literal notranslate"><span class="pre">Inputs.get_input()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.input.html#id3"><code class="docutils literal notranslate"><span class="pre">Inputs.inputs</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.reservoir.html">Reservoir Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir"><code class="docutils literal notranslate"><span class="pre">Reservoir</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.coordinates"><code class="docutils literal notranslate"><span class="pre">Reservoir.coordinates</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.temperature"><code class="docutils literal notranslate"><span class="pre">Reservoir.temperature</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.volume"><code class="docutils literal notranslate"><span class="pre">Reservoir.volume</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.max_depth"><code class="docutils literal notranslate"><span class="pre">Reservoir.max_depth</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.mean_depth"><code class="docutils literal notranslate"><span class="pre">Reservoir.mean_depth</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.inflow_rate"><code class="docutils literal notranslate"><span class="pre">Reservoir.inflow_rate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.area"><code class="docutils literal notranslate"><span class="pre">Reservoir.area</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.soil_carbon"><code class="docutils literal notranslate"><span class="pre">Reservoir.soil_carbon</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.area_fractions"><code class="docutils literal notranslate"><span class="pre">Reservoir.area_fractions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.mean_radiance"><code class="docutils literal notranslate"><span class="pre">Reservoir.mean_radiance</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.mean_radiance_may_sept"><code class="docutils literal notranslate"><span class="pre">Reservoir.mean_radiance_may_sept</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.mean_radiance_nov_mar"><code class="docutils literal notranslate"><span class="pre">Reservoir.mean_radiance_nov_mar</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.mean_monthly_windspeed"><code class="docutils literal notranslate"><span class="pre">Reservoir.mean_monthly_windspeed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.water_intake_depth"><code class="docutils literal notranslate"><span class="pre">Reservoir.water_intake_depth</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.type"><code class="docutils literal notranslate"><span class="pre">Reservoir.type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.name"><code class="docutils literal notranslate"><span class="pre">Reservoir.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.__post_init__"><code class="docutils literal notranslate"><span class="pre">Reservoir.__post_init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#id0"><code class="docutils literal notranslate"><span class="pre">Reservoir.area</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#id1"><code class="docutils literal notranslate"><span class="pre">Reservoir.area_fractions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.bottom_density"><code class="docutils literal notranslate"><span class="pre">Reservoir.bottom_density()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.bottom_temperature"><code class="docutils literal notranslate"><span class="pre">Reservoir.bottom_temperature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.ch4_preemission_factor"><code class="docutils literal notranslate"><span class="pre">Reservoir.ch4_preemission_factor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.check_geometry"><code class="docutils literal notranslate"><span class="pre">Reservoir.check_geometry()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.compare_mean_depth"><code class="docutils literal notranslate"><span class="pre">Reservoir.compare_mean_depth()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.config"><code class="docutils literal notranslate"><span class="pre">Reservoir.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#id2"><code class="docutils literal notranslate"><span class="pre">Reservoir.coordinates</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.discharge"><code class="docutils literal notranslate"><span class="pre">Reservoir.discharge</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.from_dict"><code class="docutils literal notranslate"><span class="pre">Reservoir.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.global_radiance"><code class="docutils literal notranslate"><span class="pre">Reservoir.global_radiance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#id3"><code class="docutils literal notranslate"><span class="pre">Reservoir.inflow_rate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.latitude"><code class="docutils literal notranslate"><span class="pre">Reservoir.latitude</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.littoral_area_frac"><code class="docutils literal notranslate"><span class="pre">Reservoir.littoral_area_frac()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.longitude"><code class="docutils literal notranslate"><span class="pre">Reservoir.longitude</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#id4"><code class="docutils literal notranslate"><span class="pre">Reservoir.max_depth</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#id5"><code class="docutils literal notranslate"><span class="pre">Reservoir.mean_depth</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#id6"><code class="docutils literal notranslate"><span class="pre">Reservoir.mean_monthly_windspeed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#id7"><code class="docutils literal notranslate"><span class="pre">Reservoir.mean_radiance</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.mean_radiance_lat"><code class="docutils literal notranslate"><span class="pre">Reservoir.mean_radiance_lat()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#id8"><code class="docutils literal notranslate"><span class="pre">Reservoir.mean_radiance_may_sept</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#id9"><code class="docutils literal notranslate"><span class="pre">Reservoir.mean_radiance_nov_mar</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#id10"><code class="docutils literal notranslate"><span class="pre">Reservoir.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.q_bath_shape"><code class="docutils literal notranslate"><span class="pre">Reservoir.q_bath_shape()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.reservoir_conc"><code class="docutils literal notranslate"><span class="pre">Reservoir.reservoir_conc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.residence_time"><code class="docutils literal notranslate"><span class="pre">Reservoir.residence_time</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.retention_coeff"><code class="docutils literal notranslate"><span class="pre">Reservoir.retention_coeff()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.retention_coeff_emp"><code class="docutils literal notranslate"><span class="pre">Reservoir.retention_coeff_emp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.retention_coeff_larsen"><code class="docutils literal notranslate"><span class="pre">Reservoir.retention_coeff_larsen</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#id11"><code class="docutils literal notranslate"><span class="pre">Reservoir.soil_carbon</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.surface_ch4_conc"><code class="docutils literal notranslate"><span class="pre">Reservoir.surface_ch4_conc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.surface_density"><code class="docutils literal notranslate"><span class="pre">Reservoir.surface_density()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.surface_temperature"><code class="docutils literal notranslate"><span class="pre">Reservoir.surface_temperature()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#id12"><code class="docutils literal notranslate"><span class="pre">Reservoir.temperature</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.thermocline_depth"><code class="docutils literal notranslate"><span class="pre">Reservoir.thermocline_depth()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.trophic_status"><code class="docutils literal notranslate"><span class="pre">Reservoir.trophic_status()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#id13"><code class="docutils literal notranslate"><span class="pre">Reservoir.type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.validate_attributes"><code class="docutils literal notranslate"><span class="pre">Reservoir.validate_attributes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#id14"><code class="docutils literal notranslate"><span class="pre">Reservoir.volume</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.volume_km3"><code class="docutils literal notranslate"><span class="pre">Reservoir.volume_km3</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#reemission.reservoir.Reservoir.wat_area_frac_pre"><code class="docutils literal notranslate"><span class="pre">Reservoir.wat_area_frac_pre</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.reservoir.html#id15"><code class="docutils literal notranslate"><span class="pre">Reservoir.water_intake_depth</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.catchment.html">Catchment Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment"><code class="docutils literal notranslate"><span class="pre">Catchment</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.area"><code class="docutils literal notranslate"><span class="pre">Catchment.area</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.riv_length"><code class="docutils literal notranslate"><span class="pre">Catchment.riv_length</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.runoff"><code class="docutils literal notranslate"><span class="pre">Catchment.runoff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.population"><code class="docutils literal notranslate"><span class="pre">Catchment.population</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.slope"><code class="docutils literal notranslate"><span class="pre">Catchment.slope</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.precip"><code class="docutils literal notranslate"><span class="pre">Catchment.precip</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.etransp"><code class="docutils literal notranslate"><span class="pre">Catchment.etransp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.soil_wetness"><code class="docutils literal notranslate"><span class="pre">Catchment.soil_wetness</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.mean_olsen"><code class="docutils literal notranslate"><span class="pre">Catchment.mean_olsen</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.area_fractions"><code class="docutils literal notranslate"><span class="pre">Catchment.area_fractions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.biogenic_factors"><code class="docutils literal notranslate"><span class="pre">Catchment.biogenic_factors</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.name"><code class="docutils literal notranslate"><span class="pre">Catchment.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.__post_init__"><code class="docutils literal notranslate"><span class="pre">Catchment.__post_init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#id0"><code class="docutils literal notranslate"><span class="pre">Catchment.area</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#id1"><code class="docutils literal notranslate"><span class="pre">Catchment.area_fractions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.area_ha"><code class="docutils literal notranslate"><span class="pre">Catchment.area_ha</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#id2"><code class="docutils literal notranslate"><span class="pre">Catchment.biogenic_factors</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.discharge"><code class="docutils literal notranslate"><span class="pre">Catchment.discharge</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.discharge_cumecs"><code class="docutils literal notranslate"><span class="pre">Catchment.discharge_cumecs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#id3"><code class="docutils literal notranslate"><span class="pre">Catchment.etransp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.from_dict"><code class="docutils literal notranslate"><span class="pre">Catchment.from_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.inflow_n_conc"><code class="docutils literal notranslate"><span class="pre">Catchment.inflow_n_conc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.inflow_p_conc"><code class="docutils literal notranslate"><span class="pre">Catchment.inflow_p_conc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.inflow_p_conc_gres"><code class="docutils literal notranslate"><span class="pre">Catchment.inflow_p_conc_gres()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.inflow_p_conc_mcdowell"><code class="docutils literal notranslate"><span class="pre">Catchment.inflow_p_conc_mcdowell()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.landuse_area"><code class="docutils literal notranslate"><span class="pre">Catchment.landuse_area()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.landuse_area_ha"><code class="docutils literal notranslate"><span class="pre">Catchment.landuse_area_ha()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#id4"><code class="docutils literal notranslate"><span class="pre">Catchment.mean_olsen</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#id5"><code class="docutils literal notranslate"><span class="pre">Catchment.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.nitrogen_load"><code class="docutils literal notranslate"><span class="pre">Catchment.nitrogen_load()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.p_human_input_gres"><code class="docutils literal notranslate"><span class="pre">Catchment.p_human_input_gres()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.p_input_gres"><code class="docutils literal notranslate"><span class="pre">Catchment.p_input_gres()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.p_input_mcdowell"><code class="docutils literal notranslate"><span class="pre">Catchment.p_input_mcdowell()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.p_land_input_gres"><code class="docutils literal notranslate"><span class="pre">Catchment.p_land_input_gres()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.phosphorus_load"><code class="docutils literal notranslate"><span class="pre">Catchment.phosphorus_load()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#id6"><code class="docutils literal notranslate"><span class="pre">Catchment.population</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.population_density"><code class="docutils literal notranslate"><span class="pre">Catchment.population_density</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#id7"><code class="docutils literal notranslate"><span class="pre">Catchment.precip</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#id8"><code class="docutils literal notranslate"><span class="pre">Catchment.riv_length</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#reemission.catchment.Catchment.river_area_before_impoundment"><code class="docutils literal notranslate"><span class="pre">Catchment.river_area_before_impoundment()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#id9"><code class="docutils literal notranslate"><span class="pre">Catchment.runoff</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#id10"><code class="docutils literal notranslate"><span class="pre">Catchment.slope</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.catchment.html#id11"><code class="docutils literal notranslate"><span class="pre">Catchment.soil_wetness</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.ns_catchment.html">Post-impoundment catchment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reemission.ns_catchment.html#reemission.ns_catchment.NSCatchmentCreator"><code class="docutils literal notranslate"><span class="pre">NSCatchmentCreator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.ns_catchment.html#reemission.ns_catchment.NSCatchmentCreator.catchment"><code class="docutils literal notranslate"><span class="pre">NSCatchmentCreator.catchment</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.ns_catchment.html#reemission.ns_catchment.NSCatchmentCreator.reservoir"><code class="docutils literal notranslate"><span class="pre">NSCatchmentCreator.reservoir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.ns_catchment.html#id0"><code class="docutils literal notranslate"><span class="pre">NSCatchmentCreator.catchment</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.ns_catchment.html#reemission.ns_catchment.NSCatchmentCreator.get_catchment"><code class="docutils literal notranslate"><span class="pre">NSCatchmentCreator.get_catchment()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.ns_catchment.html#reemission.ns_catchment.NSCatchmentCreator.ns_catchment_area"><code class="docutils literal notranslate"><span class="pre">NSCatchmentCreator.ns_catchment_area</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.ns_catchment.html#id1"><code class="docutils literal notranslate"><span class="pre">NSCatchmentCreator.reservoir</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.emissions.html">Emissions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.eff_temp"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.eff_temp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.p_calc_method"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.p_calc_method</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.par"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.par</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.pre_impoundment_table"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.pre_impoundment_table</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.use_red_area"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.use_red_area</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.__abstractmethods__"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.__abstractmethods__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.__annotations__"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.__annotations__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.__dataclass_fields__"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.__dataclass_fields__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.__dataclass_params__"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.__dataclass_params__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.__eq__"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.__eq__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.__hash__"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.__hash__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.__init__"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.__match_args__"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.__match_args__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.__module__"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.__module__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.__repr__"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.__repr__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission._abc_impl"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission._abc_impl</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission._diffusion_flux_profile"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission._diffusion_flux_profile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.diffusion_flux"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.diffusion_flux()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.diffusion_flux_int"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.diffusion_flux_int()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.diffusion_flux_nonanthro"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.diffusion_flux_nonanthro()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#id0"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.eff_temp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.factor"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.factor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.net_total"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.net_total()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#id1"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.p_calc_method</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#id2"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.par</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.pre_impoundment"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.pre_impoundment()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#id3"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.pre_impoundment_table</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.profile"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.profile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.reservoir_tn"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.reservoir_tn</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.reservoir_tp"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.reservoir_tp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.total_emission_per_year"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.total_emission_per_year()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.CarbonDioxideEmission.total_lifetime_emission"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.total_lifetime_emission()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#id4"><code class="docutils literal notranslate"><span class="pre">CarbonDioxideEmission.use_red_area</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.Emission"><code class="docutils literal notranslate"><span class="pre">Emission</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.Emission.catchment"><code class="docutils literal notranslate"><span class="pre">Emission.catchment</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.Emission.reservoir"><code class="docutils literal notranslate"><span class="pre">Emission.reservoir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.Emission.preinund_area"><code class="docutils literal notranslate"><span class="pre">Emission.preinund_area</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.Emission.config"><code class="docutils literal notranslate"><span class="pre">Emission.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.Emission.__abstractmethods__"><code class="docutils literal notranslate"><span class="pre">Emission.__abstractmethods__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.Emission.__annotations__"><code class="docutils literal notranslate"><span class="pre">Emission.__annotations__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.Emission.__dataclass_fields__"><code class="docutils literal notranslate"><span class="pre">Emission.__dataclass_fields__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.Emission.__dataclass_params__"><code class="docutils literal notranslate"><span class="pre">Emission.__dataclass_params__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.Emission.__dict__"><code class="docutils literal notranslate"><span class="pre">Emission.__dict__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.Emission.__eq__"><code class="docutils literal notranslate"><span class="pre">Emission.__eq__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.Emission.__hash__"><code class="docutils literal notranslate"><span class="pre">Emission.__hash__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.Emission.__init__"><code class="docutils literal notranslate"><span class="pre">Emission.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.Emission.__match_args__"><code class="docutils literal notranslate"><span class="pre">Emission.__match_args__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.Emission.__module__"><code class="docutils literal notranslate"><span class="pre">Emission.__module__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.Emission.__repr__"><code class="docutils literal notranslate"><span class="pre">Emission.__repr__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.Emission.__weakref__"><code class="docutils literal notranslate"><span class="pre">Emission.__weakref__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.Emission._abc_impl"><code class="docutils literal notranslate"><span class="pre">Emission._abc_impl</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.Emission._par_from_config"><code class="docutils literal notranslate"><span class="pre">Emission._par_from_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.Emission.cast_to_float"><code class="docutils literal notranslate"><span class="pre">Emission.cast_to_float()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#id5"><code class="docutils literal notranslate"><span class="pre">Emission.catchment</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#id6"><code class="docutils literal notranslate"><span class="pre">Emission.config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.Emission.factor"><code class="docutils literal notranslate"><span class="pre">Emission.factor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#id7"><code class="docutils literal notranslate"><span class="pre">Emission.preinund_area</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.Emission.profile"><code class="docutils literal notranslate"><span class="pre">Emission.profile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#id8"><code class="docutils literal notranslate"><span class="pre">Emission.reservoir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.Emission.total_emission_per_year"><code class="docutils literal notranslate"><span class="pre">Emission.total_emission_per_year()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.Emission.total_lifetime_emission"><code class="docutils literal notranslate"><span class="pre">Emission.total_lifetime_emission()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission"><code class="docutils literal notranslate"><span class="pre">MethaneEmission</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.monthly_temp"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.monthly_temp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.mean_ir"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.mean_ir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.pre_impoundment_table"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.pre_impoundment_table</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.par"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.par</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.__abstractmethods__"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.__abstractmethods__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.__annotations__"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.__annotations__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.__dataclass_fields__"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.__dataclass_fields__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.__dataclass_params__"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.__dataclass_params__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.__eq__"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.__eq__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.__hash__"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.__hash__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.__init__"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.__match_args__"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.__match_args__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.__module__"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.__module__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.__repr__"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.__repr__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission._abc_impl"><code class="docutils literal notranslate"><span class="pre">MethaneEmission._abc_impl</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission._degassing_flux_profile"><code class="docutils literal notranslate"><span class="pre">MethaneEmission._degassing_flux_profile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission._diffusion_flux_profile"><code class="docutils literal notranslate"><span class="pre">MethaneEmission._diffusion_flux_profile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission._ebullition_flux_profile"><code class="docutils literal notranslate"><span class="pre">MethaneEmission._ebullition_flux_profile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.degassing_flux"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.degassing_flux()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.degassing_flux_int"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.degassing_flux_int()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.diffusion_flux"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.diffusion_flux()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.diffusion_flux_int"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.diffusion_flux_int()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.ebullition_flux"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.ebullition_flux()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.ebullition_flux_int"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.ebullition_flux_int()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.emission_factor"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.emission_factor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.factor"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.factor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#id9"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.monthly_temp</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.pre_impoundment"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.pre_impoundment()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.profile"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.profile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.total_emission_per_year"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.total_emission_per_year()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.MethaneEmission.total_lifetime_emission"><code class="docutils literal notranslate"><span class="pre">MethaneEmission.total_lifetime_emission()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission.available_models"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission.available_models</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission.model"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission.model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission.p_export_model"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission.p_export_model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission.__abstractmethods__"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission.__abstractmethods__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission.__annotations__"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission.__annotations__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission.__dataclass_fields__"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission.__dataclass_fields__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission.__dataclass_params__"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission.__dataclass_params__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission.__eq__"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission.__eq__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission.__hash__"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission.__hash__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission.__init__"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission.__match_args__"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission.__match_args__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission.__module__"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission.__module__</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission.__repr__"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission.__repr__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission._abc_impl"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission._abc_impl</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission._n2o_denitrification_m1"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission._n2o_denitrification_m1()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission._n2o_denitrification_m2"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission._n2o_denitrification_m2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission._n2o_emission_m1_co2"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission._n2o_emission_m1_co2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission._n2o_emission_m2_co2"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission._n2o_emission_m2_co2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission._n2o_emission_m2_n"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission._n2o_emission_m2_n()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission._n2o_nitrification_m1"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission._n2o_nitrification_m1()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission._n2o_nitrification_m2"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission._n2o_nitrification_m2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission._total_to_unit"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission._total_to_unit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission._unit_n2o_emission_m2"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission._unit_n2o_emission_m2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission._unit_to_total"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission._unit_to_total()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#id10"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission.available_models</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission.factor"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission.factor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#id11"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission.model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission.nitrogen_downstream_conc"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission.nitrogen_downstream_conc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission.nitrogen_downstream_load"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission.nitrogen_downstream_load()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#id12"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission.p_export_model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission.profile"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission.profile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission.tn_fixation_load"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission.tn_fixation_load()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission.total_emission_per_year"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission.total_emission_per_year()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.NitrousOxideEmission.total_lifetime_emission"><code class="docutils literal notranslate"><span class="pre">NitrousOxideEmission.total_lifetime_emission()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.emissions.html#reemission.emissions.check_preimpoundment_area"><code class="docutils literal notranslate"><span class="pre">check_preimpoundment_area()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.emission_profile.html">Emission Profile Calculator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.Emission"><code class="docutils literal notranslate"><span class="pre">Emission</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.Emission.value"><code class="docutils literal notranslate"><span class="pre">Emission.value</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.Emission.unit"><code class="docutils literal notranslate"><span class="pre">Emission.unit</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.Emission.set_unit"><code class="docutils literal notranslate"><span class="pre">Emission.set_unit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.Emission.__add__"><code class="docutils literal notranslate"><span class="pre">Emission.__add__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.Emission.__sub__"><code class="docutils literal notranslate"><span class="pre">Emission.__sub__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#id0"><code class="docutils literal notranslate"><span class="pre">Emission.__add__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#id1"><code class="docutils literal notranslate"><span class="pre">Emission.__sub__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.Emission.copy"><code class="docutils literal notranslate"><span class="pre">Emission.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#id2"><code class="docutils literal notranslate"><span class="pre">Emission.set_unit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#id3"><code class="docutils literal notranslate"><span class="pre">Emission.unit</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#id4"><code class="docutils literal notranslate"><span class="pre">Emission.value</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.EmissionProfile"><code class="docutils literal notranslate"><span class="pre">EmissionProfile</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.EmissionProfile.values"><code class="docutils literal notranslate"><span class="pre">EmissionProfile.values</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.EmissionProfile.years"><code class="docutils literal notranslate"><span class="pre">EmissionProfile.years</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.EmissionProfile.__next__"><code class="docutils literal notranslate"><span class="pre">EmissionProfile.__next__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.EmissionProfile.convert_unit"><code class="docutils literal notranslate"><span class="pre">EmissionProfile.convert_unit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.EmissionProfile.unit"><code class="docutils literal notranslate"><span class="pre">EmissionProfile.unit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.EmissionProfile._is_equally_spaced"><code class="docutils literal notranslate"><span class="pre">EmissionProfile._is_equally_spaced()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.EmissionProfile.interpolate"><code class="docutils literal notranslate"><span class="pre">EmissionProfile.interpolate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.EmissionProfile.plot"><code class="docutils literal notranslate"><span class="pre">EmissionProfile.plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.EmissionProfile.to_series"><code class="docutils literal notranslate"><span class="pre">EmissionProfile.to_series()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#id5"><code class="docutils literal notranslate"><span class="pre">EmissionProfile.__next__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.EmissionProfile.from_profile_function"><code class="docutils literal notranslate"><span class="pre">EmissionProfile.from_profile_function()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.EmissionProfile.integrate"><code class="docutils literal notranslate"><span class="pre">EmissionProfile.integrate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#id6"><code class="docutils literal notranslate"><span class="pre">EmissionProfile.interpolate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#id7"><code class="docutils literal notranslate"><span class="pre">EmissionProfile.plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.EmissionProfile.set_unit"><code class="docutils literal notranslate"><span class="pre">EmissionProfile.set_unit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#id8"><code class="docutils literal notranslate"><span class="pre">EmissionProfile.to_series()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#id9"><code class="docutils literal notranslate"><span class="pre">EmissionProfile.unit</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#id10"><code class="docutils literal notranslate"><span class="pre">EmissionProfile.values</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#id11"><code class="docutils literal notranslate"><span class="pre">EmissionProfile.years</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.EmissionProfileSeries"><code class="docutils literal notranslate"><span class="pre">EmissionProfileSeries</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.EmissionProfileSeries.values"><code class="docutils literal notranslate"><span class="pre">EmissionProfileSeries.values</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.EmissionProfileSeries.unit"><code class="docutils literal notranslate"><span class="pre">EmissionProfileSeries.unit</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.EmissionProfileSeries.plot"><code class="docutils literal notranslate"><span class="pre">EmissionProfileSeries.plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.EmissionProfileSeries.__add__"><code class="docutils literal notranslate"><span class="pre">EmissionProfileSeries.__add__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.EmissionProfileSeries.combine"><code class="docutils literal notranslate"><span class="pre">EmissionProfileSeries.combine()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#id12"><code class="docutils literal notranslate"><span class="pre">EmissionProfileSeries.__add__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#id13"><code class="docutils literal notranslate"><span class="pre">EmissionProfileSeries.combine()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#id14"><code class="docutils literal notranslate"><span class="pre">EmissionProfileSeries.plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#id15"><code class="docutils literal notranslate"><span class="pre">EmissionProfileSeries.unit</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.emission_profile.html#id16"><code class="docutils literal notranslate"><span class="pre">EmissionProfileSeries.values</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.YearsNotEquallySpacedError"><code class="docutils literal notranslate"><span class="pre">YearsNotEquallySpacedError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.calculate_age"><code class="docutils literal notranslate"><span class="pre">calculate_age()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.calculate_status"><code class="docutils literal notranslate"><span class="pre">calculate_status()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.emission_profile.html#reemission.emission_profile.pretty_unit"><code class="docutils literal notranslate"><span class="pre">pretty_unit()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.temperature.html">MonthlyTemperature</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reemission.temperature.html#reemission.temperature.MonthlyTemperature"><code class="docutils literal notranslate"><span class="pre">MonthlyTemperature</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.temperature.html#reemission.temperature.MonthlyTemperature.temp_profile"><code class="docutils literal notranslate"><span class="pre">MonthlyTemperature.temp_profile</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.temperature.html#reemission.temperature.MonthlyTemperature.eff_temp_coeffs"><code class="docutils literal notranslate"><span class="pre">MonthlyTemperature.eff_temp_coeffs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.temperature.html#reemission.temperature.MonthlyTemperature.__post_init__"><code class="docutils literal notranslate"><span class="pre">MonthlyTemperature.__post_init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.temperature.html#reemission.temperature.MonthlyTemperature.coldest"><code class="docutils literal notranslate"><span class="pre">MonthlyTemperature.coldest</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.temperature.html#reemission.temperature.MonthlyTemperature.eff_temp"><code class="docutils literal notranslate"><span class="pre">MonthlyTemperature.eff_temp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.temperature.html#id0"><code class="docutils literal notranslate"><span class="pre">MonthlyTemperature.eff_temp_coeffs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.temperature.html#reemission.temperature.MonthlyTemperature.mean_warmest"><code class="docutils literal notranslate"><span class="pre">MonthlyTemperature.mean_warmest()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.temperature.html#reemission.temperature.MonthlyTemperature.number_months_above"><code class="docutils literal notranslate"><span class="pre">MonthlyTemperature.number_months_above()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.temperature.html#id1"><code class="docutils literal notranslate"><span class="pre">MonthlyTemperature.temp_profile</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.biogenic.html">Biogenic Factors</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reemission.biogenic.html#reemission.biogenic.BiogenicFactors"><code class="docutils literal notranslate"><span class="pre">BiogenicFactors</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.biogenic.html#reemission.biogenic.BiogenicFactors.biome"><code class="docutils literal notranslate"><span class="pre">BiogenicFactors.biome</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.biogenic.html#reemission.biogenic.BiogenicFactors.climate"><code class="docutils literal notranslate"><span class="pre">BiogenicFactors.climate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.biogenic.html#reemission.biogenic.BiogenicFactors.soil_type"><code class="docutils literal notranslate"><span class="pre">BiogenicFactors.soil_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.biogenic.html#reemission.biogenic.BiogenicFactors.treatment_factor"><code class="docutils literal notranslate"><span class="pre">BiogenicFactors.treatment_factor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.biogenic.html#reemission.biogenic.BiogenicFactors.landuse_intensity"><code class="docutils literal notranslate"><span class="pre">BiogenicFactors.landuse_intensity</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.biogenic.html#reemission.biogenic.BiogenicFactors.__repr__"><code class="docutils literal notranslate"><span class="pre">BiogenicFactors.__repr__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.biogenic.html#id0"><code class="docutils literal notranslate"><span class="pre">BiogenicFactors.biome</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.biogenic.html#id1"><code class="docutils literal notranslate"><span class="pre">BiogenicFactors.climate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.biogenic.html#reemission.biogenic.BiogenicFactors.fromdict"><code class="docutils literal notranslate"><span class="pre">BiogenicFactors.fromdict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.biogenic.html#reemission.biogenic.BiogenicFactors.get_attributes"><code class="docutils literal notranslate"><span class="pre">BiogenicFactors.get_attributes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.biogenic.html#id2"><code class="docutils literal notranslate"><span class="pre">BiogenicFactors.landuse_intensity</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.biogenic.html#id3"><code class="docutils literal notranslate"><span class="pre">BiogenicFactors.soil_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.biogenic.html#reemission.biogenic.BiogenicFactors.todict"><code class="docutils literal notranslate"><span class="pre">BiogenicFactors.todict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.biogenic.html#id4"><code class="docutils literal notranslate"><span class="pre">BiogenicFactors.treatment_factor</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.presenter.html">Presenter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.ExcelWriter"><code class="docutils literal notranslate"><span class="pre">ExcelWriter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.ExcelWriter.inputs"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.inputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.ExcelWriter.outputs"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.outputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.ExcelWriter.intern_vars"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.intern_vars</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.ExcelWriter.output_file_path"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.output_file_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.ExcelWriter.output_config"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.output_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.ExcelWriter.input_config"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.input_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.ExcelWriter.intern_vars_config"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.intern_vars_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.ExcelWriter.parameter_config"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.parameter_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.ExcelWriter.config_ini"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.config_ini</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.ExcelWriter.author"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.author</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.ExcelWriter.title"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.title</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.ExcelWriter.output_df"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.output_df</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.ExcelWriter.input_df"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.input_df</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.ExcelWriter.intern_vars_df"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.intern_vars_df</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.ExcelWriter.__post_init__"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.__post_init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.ExcelWriter.add_inputs"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.add_inputs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.ExcelWriter.add_internals"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.add_internals()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.ExcelWriter.add_outputs"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.add_outputs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id0"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.author</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id1"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.config_ini</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.ExcelWriter.dict_data_to_df"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.dict_data_to_df()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id2"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.input_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id3"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.input_df</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id4"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.inputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id5"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.intern_vars</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id6"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.intern_vars_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id7"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.intern_vars_df</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id8"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.output_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id9"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.output_df</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id10"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.output_file_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id11"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.outputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id12"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.parameter_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id13"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.title</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.ExcelWriter.write"><code class="docutils literal notranslate"><span class="pre">ExcelWriter.write()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter"><code class="docutils literal notranslate"><span class="pre">HTMLWriter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter.__post_init__"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.__post_init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter.add_inputs_table"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.add_inputs_table()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter.add_intern_vars_table"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.add_intern_vars_table()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter.add_landcover_piecharts"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.add_landcover_piecharts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter.add_outputs_table"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.add_outputs_table()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter.add_plot"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.add_plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter.add_plots"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.add_plots()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter.add_section"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.add_section()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter.add_subsection"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.add_subsection()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter.add_table"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.add_table()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter.author"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.author</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter.config_ini"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.config_ini</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter.html_fragments"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.html_fragments</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter.input_config"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.input_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter.inputs"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.inputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter.intern_vars"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.intern_vars</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter.intern_vars_config"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.intern_vars_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter.output_config"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.output_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter.output_file_path"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.output_file_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter.outputs"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.outputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter.parameter_config"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.parameter_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter.plot_emission_bars"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.plot_emission_bars()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter.title"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.title</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.HTMLWriter.write"><code class="docutils literal notranslate"><span class="pre">HTMLWriter.write()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.JSONWriter"><code class="docutils literal notranslate"><span class="pre">JSONWriter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.JSONWriter.inputs"><code class="docutils literal notranslate"><span class="pre">JSONWriter.inputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.JSONWriter.outputs"><code class="docutils literal notranslate"><span class="pre">JSONWriter.outputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.JSONWriter.intern_vars"><code class="docutils literal notranslate"><span class="pre">JSONWriter.intern_vars</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.JSONWriter.output_file_path"><code class="docutils literal notranslate"><span class="pre">JSONWriter.output_file_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.JSONWriter.output_config"><code class="docutils literal notranslate"><span class="pre">JSONWriter.output_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.JSONWriter.input_config"><code class="docutils literal notranslate"><span class="pre">JSONWriter.input_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.JSONWriter.intern_vars_config"><code class="docutils literal notranslate"><span class="pre">JSONWriter.intern_vars_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.JSONWriter.parameter_config"><code class="docutils literal notranslate"><span class="pre">JSONWriter.parameter_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.JSONWriter.config_ini"><code class="docutils literal notranslate"><span class="pre">JSONWriter.config_ini</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.JSONWriter.author"><code class="docutils literal notranslate"><span class="pre">JSONWriter.author</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.JSONWriter.title"><code class="docutils literal notranslate"><span class="pre">JSONWriter.title</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.JSONWriter.json_dict"><code class="docutils literal notranslate"><span class="pre">JSONWriter.json_dict</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.JSONWriter.__post_init__"><code class="docutils literal notranslate"><span class="pre">JSONWriter.__post_init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.JSONWriter.add_inputs"><code class="docutils literal notranslate"><span class="pre">JSONWriter.add_inputs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.JSONWriter.add_internals"><code class="docutils literal notranslate"><span class="pre">JSONWriter.add_internals()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.JSONWriter.add_outputs"><code class="docutils literal notranslate"><span class="pre">JSONWriter.add_outputs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id14"><code class="docutils literal notranslate"><span class="pre">JSONWriter.author</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id15"><code class="docutils literal notranslate"><span class="pre">JSONWriter.config_ini</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id16"><code class="docutils literal notranslate"><span class="pre">JSONWriter.input_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id17"><code class="docutils literal notranslate"><span class="pre">JSONWriter.inputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id18"><code class="docutils literal notranslate"><span class="pre">JSONWriter.intern_vars</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id19"><code class="docutils literal notranslate"><span class="pre">JSONWriter.intern_vars_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id20"><code class="docutils literal notranslate"><span class="pre">JSONWriter.json_dict</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id21"><code class="docutils literal notranslate"><span class="pre">JSONWriter.output_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id22"><code class="docutils literal notranslate"><span class="pre">JSONWriter.output_file_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id23"><code class="docutils literal notranslate"><span class="pre">JSONWriter.outputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id24"><code class="docutils literal notranslate"><span class="pre">JSONWriter.parameter_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.JSONWriter.parse_dict_data"><code class="docutils literal notranslate"><span class="pre">JSONWriter.parse_dict_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id25"><code class="docutils literal notranslate"><span class="pre">JSONWriter.title</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.JSONWriter.write"><code class="docutils literal notranslate"><span class="pre">JSONWriter.write()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter"><code class="docutils literal notranslate"><span class="pre">LatexWriter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.inputs"><code class="docutils literal notranslate"><span class="pre">LatexWriter.inputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.outputs"><code class="docutils literal notranslate"><span class="pre">LatexWriter.outputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.intern_vars"><code class="docutils literal notranslate"><span class="pre">LatexWriter.intern_vars</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.output_file_path"><code class="docutils literal notranslate"><span class="pre">LatexWriter.output_file_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.output_config"><code class="docutils literal notranslate"><span class="pre">LatexWriter.output_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.input_config"><code class="docutils literal notranslate"><span class="pre">LatexWriter.input_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.intern_vars_config"><code class="docutils literal notranslate"><span class="pre">LatexWriter.intern_vars_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.parameter_config"><code class="docutils literal notranslate"><span class="pre">LatexWriter.parameter_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.config_ini"><code class="docutils literal notranslate"><span class="pre">LatexWriter.config_ini</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.author"><code class="docutils literal notranslate"><span class="pre">LatexWriter.author</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.title"><code class="docutils literal notranslate"><span class="pre">LatexWriter.title</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.document"><code class="docutils literal notranslate"><span class="pre">LatexWriter.document</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.__post_init__"><code class="docutils literal notranslate"><span class="pre">LatexWriter.__post_init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.add_header"><code class="docutils literal notranslate"><span class="pre">LatexWriter.add_header()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.add_inputs_subsection"><code class="docutils literal notranslate"><span class="pre">LatexWriter.add_inputs_subsection()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.add_inputs_table"><code class="docutils literal notranslate"><span class="pre">LatexWriter.add_inputs_table()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.add_intern_var_subsection"><code class="docutils literal notranslate"><span class="pre">LatexWriter.add_intern_var_subsection()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.add_intern_vars_table"><code class="docutils literal notranslate"><span class="pre">LatexWriter.add_intern_vars_table()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.add_landcover_charts"><code class="docutils literal notranslate"><span class="pre">LatexWriter.add_landcover_charts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.add_outputs_subsection"><code class="docutils literal notranslate"><span class="pre">LatexWriter.add_outputs_subsection()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.add_outputs_table"><code class="docutils literal notranslate"><span class="pre">LatexWriter.add_outputs_table()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.add_parameters"><code class="docutils literal notranslate"><span class="pre">LatexWriter.add_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.add_parameters_section"><code class="docutils literal notranslate"><span class="pre">LatexWriter.add_parameters_section()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.add_plots"><code class="docutils literal notranslate"><span class="pre">LatexWriter.add_plots()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.add_title_section"><code class="docutils literal notranslate"><span class="pre">LatexWriter.add_title_section()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id26"><code class="docutils literal notranslate"><span class="pre">LatexWriter.author</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id27"><code class="docutils literal notranslate"><span class="pre">LatexWriter.config_ini</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.geometry"><code class="docutils literal notranslate"><span class="pre">LatexWriter.geometry()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id28"><code class="docutils literal notranslate"><span class="pre">LatexWriter.input_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id29"><code class="docutils literal notranslate"><span class="pre">LatexWriter.inputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id30"><code class="docutils literal notranslate"><span class="pre">LatexWriter.intern_vars</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id31"><code class="docutils literal notranslate"><span class="pre">LatexWriter.intern_vars_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id32"><code class="docutils literal notranslate"><span class="pre">LatexWriter.output_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id33"><code class="docutils literal notranslate"><span class="pre">LatexWriter.output_file_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id34"><code class="docutils literal notranslate"><span class="pre">LatexWriter.outputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id35"><code class="docutils literal notranslate"><span class="pre">LatexWriter.parameter_config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.plot_emission_bars"><code class="docutils literal notranslate"><span class="pre">LatexWriter.plot_emission_bars()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.plot_landcover_piecharts"><code class="docutils literal notranslate"><span class="pre">LatexWriter.plot_landcover_piecharts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.plot_profile"><code class="docutils literal notranslate"><span class="pre">LatexWriter.plot_profile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id36"><code class="docutils literal notranslate"><span class="pre">LatexWriter.title</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.LatexWriter.write"><code class="docutils literal notranslate"><span class="pre">LatexWriter.write()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.Presenter"><code class="docutils literal notranslate"><span class="pre">Presenter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.Presenter.inputs"><code class="docutils literal notranslate"><span class="pre">Presenter.inputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.Presenter.outputs"><code class="docutils literal notranslate"><span class="pre">Presenter.outputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.Presenter.intern_vars"><code class="docutils literal notranslate"><span class="pre">Presenter.intern_vars</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.Presenter.writers"><code class="docutils literal notranslate"><span class="pre">Presenter.writers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.Presenter.author"><code class="docutils literal notranslate"><span class="pre">Presenter.author</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.Presenter.title"><code class="docutils literal notranslate"><span class="pre">Presenter.title</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.Presenter.__post_init__"><code class="docutils literal notranslate"><span class="pre">Presenter.__post_init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.Presenter.add_writer"><code class="docutils literal notranslate"><span class="pre">Presenter.add_writer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id37"><code class="docutils literal notranslate"><span class="pre">Presenter.author</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.Presenter.fromfiles"><code class="docutils literal notranslate"><span class="pre">Presenter.fromfiles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id38"><code class="docutils literal notranslate"><span class="pre">Presenter.inputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id39"><code class="docutils literal notranslate"><span class="pre">Presenter.intern_vars</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.Presenter.output"><code class="docutils literal notranslate"><span class="pre">Presenter.output()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id40"><code class="docutils literal notranslate"><span class="pre">Presenter.outputs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id41"><code class="docutils literal notranslate"><span class="pre">Presenter.title</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#id42"><code class="docutils literal notranslate"><span class="pre">Presenter.writers</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.Writer"><code class="docutils literal notranslate"><span class="pre">Writer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.Writer.rollout"><code class="docutils literal notranslate"><span class="pre">Writer.rollout()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.Writer.round_parameter"><code class="docutils literal notranslate"><span class="pre">Writer.round_parameter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.Writer.write"><code class="docutils literal notranslate"><span class="pre">Writer.write()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.Writer.write_par_to_dict"><code class="docutils literal notranslate"><span class="pre">Writer.write_par_to_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.emission_bars"><code class="docutils literal notranslate"><span class="pre">emission_bars()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.emission_profile"><code class="docutils literal notranslate"><span class="pre">emission_profile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.enforce_unity_sum"><code class="docutils literal notranslate"><span class="pre">enforce_unity_sum()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.format_number"><code class="docutils literal notranslate"><span class="pre">format_number()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.landcover_pie"><code class="docutils literal notranslate"><span class="pre">landcover_pie()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.presenter.html#reemission.presenter.parse_landcover_composition"><code class="docutils literal notranslate"><span class="pre">parse_landcover_composition()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.utils.html">Utility functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reemission.utils.html#reemission.utils.add_version"><code class="docutils literal notranslate"><span class="pre">add_version()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.utils.html#reemission.utils.clean_folder"><code class="docutils literal notranslate"><span class="pre">clean_folder()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.utils.html#reemission.utils.debug_on_exception"><code class="docutils literal notranslate"><span class="pre">debug_on_exception()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.utils.html#reemission.utils.find_enum_index"><code class="docutils literal notranslate"><span class="pre">find_enum_index()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.utils.html#reemission.utils.get_folder_size"><code class="docutils literal notranslate"><span class="pre">get_folder_size()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.utils.html#reemission.utils.get_package_file"><code class="docutils literal notranslate"><span class="pre">get_package_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.utils.html#reemission.utils.is_directory"><code class="docutils literal notranslate"><span class="pre">is_directory()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.utils.html#reemission.utils.is_latex_installed"><code class="docutils literal notranslate"><span class="pre">is_latex_installed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.utils.html#reemission.utils.load_csv"><code class="docutils literal notranslate"><span class="pre">load_csv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.utils.html#reemission.utils.load_geojson"><code class="docutils literal notranslate"><span class="pre">load_geojson()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.utils.html#reemission.utils.load_json"><code class="docutils literal notranslate"><span class="pre">load_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.utils.html#reemission.utils.load_shape"><code class="docutils literal notranslate"><span class="pre">load_shape()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.utils.html#reemission.utils.load_toml"><code class="docutils literal notranslate"><span class="pre">load_toml()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.utils.html#reemission.utils.load_yaml"><code class="docutils literal notranslate"><span class="pre">load_yaml()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.utils.html#reemission.utils.md5"><code class="docutils literal notranslate"><span class="pre">md5()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.utils.html#reemission.utils.read_config"><code class="docutils literal notranslate"><span class="pre">read_config()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.utils.html#reemission.utils.read_config_dict"><code class="docutils literal notranslate"><span class="pre">read_config_dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.utils.html#reemission.utils.read_table"><code class="docutils literal notranslate"><span class="pre">read_table()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.utils.html#reemission.utils.safe_cast"><code class="docutils literal notranslate"><span class="pre">safe_cast()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.utils.html#reemission.utils.save_return"><code class="docutils literal notranslate"><span class="pre">save_return()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.utils.html#reemission.utils.save_to_json"><code class="docutils literal notranslate"><span class="pre">save_to_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.utils.html#reemission.utils.split_path"><code class="docutils literal notranslate"><span class="pre">split_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.utils.html#reemission.utils.strip_double_quotes"><code class="docutils literal notranslate"><span class="pre">strip_double_quotes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.utils.html#reemission.utils.timeit"><code class="docutils literal notranslate"><span class="pre">timeit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.utils.html#reemission.utils.validate"><code class="docutils literal notranslate"><span class="pre">validate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.auxiliary.html">Auxiliary functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reemission.auxiliary.html#reemission.auxiliary.air_density"><code class="docutils literal notranslate"><span class="pre">air_density()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.auxiliary.html#reemission.auxiliary.cd_factor"><code class="docutils literal notranslate"><span class="pre">cd_factor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.auxiliary.html#reemission.auxiliary.rollout_nested_list"><code class="docutils literal notranslate"><span class="pre">rollout_nested_list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.auxiliary.html#reemission.auxiliary.scale_windspeed"><code class="docutils literal notranslate"><span class="pre">scale_windspeed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.auxiliary.html#reemission.auxiliary.scale_windspeed_noniter"><code class="docutils literal notranslate"><span class="pre">scale_windspeed_noniter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.auxiliary.html#reemission.auxiliary.water_density"><code class="docutils literal notranslate"><span class="pre">water_density()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.constants.html">Constants</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reemission.constants.html#reemission.constants.AssetConstructionStage"><code class="docutils literal notranslate"><span class="pre">AssetConstructionStage</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.AssetConstructionStage.EXISTING"><code class="docutils literal notranslate"><span class="pre">AssetConstructionStage.EXISTING</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.AssetConstructionStage.FUTURE"><code class="docutils literal notranslate"><span class="pre">AssetConstructionStage.FUTURE</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.constants.html#reemission.constants.Biome"><code class="docutils literal notranslate"><span class="pre">Biome</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.Biome.DESERTS"><code class="docutils literal notranslate"><span class="pre">Biome.DESERTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.Biome.MEDFORESTS"><code class="docutils literal notranslate"><span class="pre">Biome.MEDFORESTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.Biome.MONTANEGRASSLANDS"><code class="docutils literal notranslate"><span class="pre">Biome.MONTANEGRASSLANDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.Biome.TEMPERATEBROADLEAFANDMIXED"><code class="docutils literal notranslate"><span class="pre">Biome.TEMPERATEBROADLEAFANDMIXED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.Biome.TEMPERATECONIFER"><code class="docutils literal notranslate"><span class="pre">Biome.TEMPERATECONIFER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.Biome.TEMPERATEGRASSLANDS"><code class="docutils literal notranslate"><span class="pre">Biome.TEMPERATEGRASSLANDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.Biome.TROPICALDRYBROADFLEAF"><code class="docutils literal notranslate"><span class="pre">Biome.TROPICALDRYBROADFLEAF</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.Biome.TROPICALGRASSLANDS"><code class="docutils literal notranslate"><span class="pre">Biome.TROPICALGRASSLANDS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.Biome.TROPICALMOISTBROADLEAF"><code class="docutils literal notranslate"><span class="pre">Biome.TROPICALMOISTBROADLEAF</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.Biome.TUNDRA"><code class="docutils literal notranslate"><span class="pre">Biome.TUNDRA</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.constants.html#reemission.constants.BuildStatus"><code class="docutils literal notranslate"><span class="pre">BuildStatus</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.BuildStatus.EXISTING"><code class="docutils literal notranslate"><span class="pre">BuildStatus.EXISTING</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.BuildStatus.PLANNED"><code class="docutils literal notranslate"><span class="pre">BuildStatus.PLANNED</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.constants.html#reemission.constants.Climate"><code class="docutils literal notranslate"><span class="pre">Climate</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.Climate.BOREAL"><code class="docutils literal notranslate"><span class="pre">Climate.BOREAL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.Climate.SUBTROPICAL"><code class="docutils literal notranslate"><span class="pre">Climate.SUBTROPICAL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.Climate.TEMPERATE"><code class="docutils literal notranslate"><span class="pre">Climate.TEMPERATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.Climate.TROPICAL"><code class="docutils literal notranslate"><span class="pre">Climate.TROPICAL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.Climate.UNKNOWN"><code class="docutils literal notranslate"><span class="pre">Climate.UNKNOWN</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.constants.html#reemission.constants.Landuse"><code class="docutils literal notranslate"><span class="pre">Landuse</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.Landuse.BARE"><code class="docutils literal notranslate"><span class="pre">Landuse.BARE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.Landuse.CROPS"><code class="docutils literal notranslate"><span class="pre">Landuse.CROPS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.Landuse.FOREST"><code class="docutils literal notranslate"><span class="pre">Landuse.FOREST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.Landuse.NODATA"><code class="docutils literal notranslate"><span class="pre">Landuse.NODATA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.Landuse.SHRUBS"><code class="docutils literal notranslate"><span class="pre">Landuse.SHRUBS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.Landuse.SNOW_ICE"><code class="docutils literal notranslate"><span class="pre">Landuse.SNOW_ICE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.Landuse.URBAN"><code class="docutils literal notranslate"><span class="pre">Landuse.URBAN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.Landuse.WATER"><code class="docutils literal notranslate"><span class="pre">Landuse.WATER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.Landuse.WETLANDS"><code class="docutils literal notranslate"><span class="pre">Landuse.WETLANDS</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.constants.html#reemission.constants.LanduseIntensity"><code class="docutils literal notranslate"><span class="pre">LanduseIntensity</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.LanduseIntensity.HIGH"><code class="docutils literal notranslate"><span class="pre">LanduseIntensity.HIGH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.LanduseIntensity.LOW"><code class="docutils literal notranslate"><span class="pre">LanduseIntensity.LOW</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.constants.html#reemission.constants.ReservoirType"><code class="docutils literal notranslate"><span class="pre">ReservoirType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.ReservoirType.FLOOD_CONTROL"><code class="docutils literal notranslate"><span class="pre">ReservoirType.FLOOD_CONTROL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.ReservoirType.HP"><code class="docutils literal notranslate"><span class="pre">ReservoirType.HP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.ReservoirType.IRRIGATION"><code class="docutils literal notranslate"><span class="pre">ReservoirType.IRRIGATION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.ReservoirType.MULTI"><code class="docutils literal notranslate"><span class="pre">ReservoirType.MULTI</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.ReservoirType.POTABLE"><code class="docutils literal notranslate"><span class="pre">ReservoirType.POTABLE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.ReservoirType.UNKNOWN"><code class="docutils literal notranslate"><span class="pre">ReservoirType.UNKNOWN</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.constants.html#reemission.constants.SoilType"><code class="docutils literal notranslate"><span class="pre">SoilType</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.SoilType.MINERAL"><code class="docutils literal notranslate"><span class="pre">SoilType.MINERAL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.SoilType.NODATA"><code class="docutils literal notranslate"><span class="pre">SoilType.NODATA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.SoilType.ORGANIC"><code class="docutils literal notranslate"><span class="pre">SoilType.ORGANIC</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.constants.html#reemission.constants.TreatmentFactor"><code class="docutils literal notranslate"><span class="pre">TreatmentFactor</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.TreatmentFactor.NONE"><code class="docutils literal notranslate"><span class="pre">TreatmentFactor.NONE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.TreatmentFactor.PRIMARY"><code class="docutils literal notranslate"><span class="pre">TreatmentFactor.PRIMARY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.TreatmentFactor.SECONDARY"><code class="docutils literal notranslate"><span class="pre">TreatmentFactor.SECONDARY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.TreatmentFactor.TERTIARY"><code class="docutils literal notranslate"><span class="pre">TreatmentFactor.TERTIARY</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.constants.html#reemission.constants.TrophicStatus"><code class="docutils literal notranslate"><span class="pre">TrophicStatus</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.TrophicStatus.EUTROPHIC"><code class="docutils literal notranslate"><span class="pre">TrophicStatus.EUTROPHIC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.TrophicStatus.HYPER_EUTROPHIC"><code class="docutils literal notranslate"><span class="pre">TrophicStatus.HYPER_EUTROPHIC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.TrophicStatus.MESOTROPHIC"><code class="docutils literal notranslate"><span class="pre">TrophicStatus.MESOTROPHIC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.constants.html#reemission.constants.TrophicStatus.OLIGOTROPHIC"><code class="docutils literal notranslate"><span class="pre">TrophicStatus.OLIGOTROPHIC</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.mixins.html">Mixins</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reemission.mixins.html#reemission.mixins.EnumGetterMixin"><code class="docutils literal notranslate"><span class="pre">EnumGetterMixin</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.mixins.html#reemission.mixins.EnumGetterMixin.from_value"><code class="docutils literal notranslate"><span class="pre">EnumGetterMixin.from_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.mixins.html#reemission.mixins.EnumGetterMixin.from_key"><code class="docutils literal notranslate"><span class="pre">EnumGetterMixin.from_key()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.mixins.html#reemission.mixins.EnumGetterMixin.__init_subclass__"><code class="docutils literal notranslate"><span class="pre">EnumGetterMixin.__init_subclass__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.mixins.html#id0"><code class="docutils literal notranslate"><span class="pre">EnumGetterMixin.from_key()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.mixins.html#id1"><code class="docutils literal notranslate"><span class="pre">EnumGetterMixin.from_value()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.document_compiler.html">Document <span class="math notranslate nohighlight">\(\LaTeX\)</span> Compiler</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reemission.document_compiler.html#reemission.document_compiler.BatchCompiler"><code class="docutils literal notranslate"><span class="pre">BatchCompiler</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.document_compiler.html#reemission.document_compiler.BatchCompiler.document"><code class="docutils literal notranslate"><span class="pre">BatchCompiler.document</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.document_compiler.html#reemission.document_compiler.BatchCompiler.generate_pdf"><code class="docutils literal notranslate"><span class="pre">BatchCompiler.generate_pdf()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.exceptions.html">Custom Exceptions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reemission.exceptions.html#reemission.exceptions.ConversionMethodUnknownException"><code class="docutils literal notranslate"><span class="pre">ConversionMethodUnknownException</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.exceptions.html#reemission.exceptions.ConversionMethodUnknownException.conversion_method"><code class="docutils literal notranslate"><span class="pre">ConversionMethodUnknownException.conversion_method</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.exceptions.html#reemission.exceptions.GasNotRecognizedException"><code class="docutils literal notranslate"><span class="pre">GasNotRecognizedException</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.exceptions.html#reemission.exceptions.GasNotRecognizedException.permitted_gases"><code class="docutils literal notranslate"><span class="pre">GasNotRecognizedException.permitted_gases</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.exceptions.html#reemission.exceptions.GasNotRecognizedException.message"><code class="docutils literal notranslate"><span class="pre">GasNotRecognizedException.message</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.exceptions.html#reemission.exceptions.TableNotReadException"><code class="docutils literal notranslate"><span class="pre">TableNotReadException</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.exceptions.html#reemission.exceptions.TableNotReadException.table"><code class="docutils literal notranslate"><span class="pre">TableNotReadException.table</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.exceptions.html#reemission.exceptions.WrongAreaFractionsException"><code class="docutils literal notranslate"><span class="pre">WrongAreaFractionsException</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.exceptions.html#reemission.exceptions.WrongAreaFractionsException.number_of_fractions"><code class="docutils literal notranslate"><span class="pre">WrongAreaFractionsException.number_of_fractions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.exceptions.html#reemission.exceptions.WrongAreaFractionsException.number_of_landuses"><code class="docutils literal notranslate"><span class="pre">WrongAreaFractionsException.number_of_landuses</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.exceptions.html#reemission.exceptions.WrongN2OModelError"><code class="docutils literal notranslate"><span class="pre">WrongN2OModelError</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.exceptions.html#reemission.exceptions.WrongN2OModelError.permitted_models"><code class="docutils literal notranslate"><span class="pre">WrongN2OModelError.permitted_models</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.exceptions.html#reemission.exceptions.WrongN2OModelError.message"><code class="docutils literal notranslate"><span class="pre">WrongN2OModelError.message</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.exceptions.html#reemission.exceptions.WrongSumOfAreasException"><code class="docutils literal notranslate"><span class="pre">WrongSumOfAreasException</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.exceptions.html#reemission.exceptions.WrongSumOfAreasException.fractions"><code class="docutils literal notranslate"><span class="pre">WrongSumOfAreasException.fractions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.exceptions.html#reemission.exceptions.WrongSumOfAreasException.accuracy"><code class="docutils literal notranslate"><span class="pre">WrongSumOfAreasException.accuracy</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.exceptions.html#reemission.exceptions.append_message"><code class="docutils literal notranslate"><span class="pre">append_message()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.exceptions.html#reemission.exceptions.replace_message"><code class="docutils literal notranslate"><span class="pre">replace_message()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.app_logger.html">App Logger</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reemission.app_logger.html#reemission.app_logger.create_logger"><code class="docutils literal notranslate"><span class="pre">create_logger()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.download.html">External Data Downloader</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reemission.download.html#reemission.download.GDriveCachedFileDownloader"><code class="docutils literal notranslate"><span class="pre">GDriveCachedFileDownloader</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.download.html#reemission.download.GDriveCachedFileDownloader.__call__"><code class="docutils literal notranslate"><span class="pre">GDriveCachedFileDownloader.__call__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.download.html#reemission.download.GDriveCachedFileDownloader.extract"><code class="docutils literal notranslate"><span class="pre">GDriveCachedFileDownloader.extract</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.download.html#reemission.download.GDriveCachedFileDownloader.md5"><code class="docutils literal notranslate"><span class="pre">GDriveCachedFileDownloader.md5</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.download.html#reemission.download.GDriveCachedFileDownloader.quiet"><code class="docutils literal notranslate"><span class="pre">GDriveCachedFileDownloader.quiet</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.download.html#reemission.download.GDriveDirDownloader"><code class="docutils literal notranslate"><span class="pre">GDriveDirDownloader</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.download.html#reemission.download.GDriveDirDownloader.__call__"><code class="docutils literal notranslate"><span class="pre">GDriveDirDownloader.__call__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.download.html#reemission.download.GDriveDirDownloader.quiet"><code class="docutils literal notranslate"><span class="pre">GDriveDirDownloader.quiet</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.download.html#reemission.download.GDriveDirDownloader.remaining_ok"><code class="docutils literal notranslate"><span class="pre">GDriveDirDownloader.remaining_ok</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.download.html#reemission.download.GDriveFileDownloader"><code class="docutils literal notranslate"><span class="pre">GDriveFileDownloader</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.download.html#reemission.download.GDriveFileDownloader.__call__"><code class="docutils literal notranslate"><span class="pre">GDriveFileDownloader.__call__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.download.html#reemission.download.GDriveFileDownloader.fuzzy"><code class="docutils literal notranslate"><span class="pre">GDriveFileDownloader.fuzzy</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.download.html#reemission.download.GDriveFileDownloader.quiet"><code class="docutils literal notranslate"><span class="pre">GDriveFileDownloader.quiet</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="reemission.download.html#reemission.download.GDriveFileDownloader.resume"><code class="docutils literal notranslate"><span class="pre">GDriveFileDownloader.resume</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.download.html#reemission.download.URL_Downloader"><code class="docutils literal notranslate"><span class="pre">URL_Downloader</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="reemission.download.html#reemission.download.URL_Downloader.__call__"><code class="docutils literal notranslate"><span class="pre">URL_Downloader.__call__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.download.html#reemission.download.create_directory_tree"><code class="docutils literal notranslate"><span class="pre">create_directory_tree()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.download.html#reemission.download.download_from_url"><code class="docutils literal notranslate"><span class="pre">download_from_url()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="reemission.download.html#reemission.download.file_valid"><code class="docutils literal notranslate"><span class="pre">file_valid()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.globals.html">Global variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.main.html">Main</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="reemission.main.html#reemission.main.run_emissions"><code class="docutils literal notranslate"><span class="pre">run_emissions()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.salib.html">SALib Integration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/reemission.salib.common.html">reemission.salib.common</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.common.html#reemission.salib.common.load_yaml"><code class="docutils literal notranslate"><span class="pre">load_yaml()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="generated/reemission.salib.accessors.html">reemission.salib.accessors</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.accessors.html#reemission.salib.accessors.AccessProtocol"><code class="docutils literal notranslate"><span class="pre">AccessProtocol</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.accessors.html#reemission.salib.accessors.ConfigParameterAccess"><code class="docutils literal notranslate"><span class="pre">ConfigParameterAccess</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.accessors.html#reemission.salib.accessors.InputAccess"><code class="docutils literal notranslate"><span class="pre">InputAccess</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.accessors.html#reemission.salib.accessors.ReadOnlyInputError"><code class="docutils literal notranslate"><span class="pre">ReadOnlyInputError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.accessors.html#reemission.salib.accessors.ReadOnlyParameterError"><code class="docutils literal notranslate"><span class="pre">ReadOnlyParameterError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.accessors.html#reemission.salib.accessors.get_input_value"><code class="docutils literal notranslate"><span class="pre">get_input_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.accessors.html#reemission.salib.accessors.rprint"><code class="docutils literal notranslate"><span class="pre">rprint()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="generated/reemission.salib.distributions.html">reemission.salib.distributions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.distributions.html#reemission.salib.distributions.CategoricalConversionMixin"><code class="docutils literal notranslate"><span class="pre">CategoricalConversionMixin</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.distributions.html#reemission.salib.distributions.CategoricalHistogramDistribution"><code class="docutils literal notranslate"><span class="pre">CategoricalHistogramDistribution</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.distributions.html#reemission.salib.distributions.CategoricalNormalDistribution"><code class="docutils literal notranslate"><span class="pre">CategoricalNormalDistribution</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.distributions.html#reemission.salib.distributions.CategoricalUniformDistribution"><code class="docutils literal notranslate"><span class="pre">CategoricalUniformDistribution</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.distributions.html#reemission.salib.distributions.DiscreteHistogramDistribution"><code class="docutils literal notranslate"><span class="pre">DiscreteHistogramDistribution</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.distributions.html#reemission.salib.distributions.DiscreteNormalDistribution"><code class="docutils literal notranslate"><span class="pre">DiscreteNormalDistribution</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.distributions.html#reemission.salib.distributions.DiscreteUniformDistribution"><code class="docutils literal notranslate"><span class="pre">DiscreteUniformDistribution</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.distributions.html#reemission.salib.distributions.Distribution"><code class="docutils literal notranslate"><span class="pre">Distribution</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.distributions.html#reemission.salib.distributions.DistributionType"><code class="docutils literal notranslate"><span class="pre">DistributionType</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.distributions.html#reemission.salib.distributions.NormalDistribution"><code class="docutils literal notranslate"><span class="pre">NormalDistribution</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.distributions.html#reemission.salib.distributions.UniformDistribution"><code class="docutils literal notranslate"><span class="pre">UniformDistribution</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.distributions.html#reemission.salib.distributions.Variable"><code class="docutils literal notranslate"><span class="pre">Variable</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="generated/reemission.salib.montecarlo.html">reemission.salib.montecarlo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/reemission.salib.runners.html">reemission.salib.runners</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.runners.html#reemission.salib.runners.SALibProblem"><code class="docutils literal notranslate"><span class="pre">SALibProblem</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.runners.html#reemission.salib.runners.SobolAnalyser"><code class="docutils literal notranslate"><span class="pre">SobolAnalyser</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.runners.html#reemission.salib.runners.SobolBatchAnalyser"><code class="docutils literal notranslate"><span class="pre">SobolBatchAnalyser</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.runners.html#reemission.salib.runners.SobolResults"><code class="docutils literal notranslate"><span class="pre">SobolResults</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.runners.html#reemission.salib.runners.SobolScenarioResults"><code class="docutils literal notranslate"><span class="pre">SobolScenarioResults</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.runners.html#reemission.salib.runners.VarianceContributions"><code class="docutils literal notranslate"><span class="pre">VarianceContributions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.runners.html#reemission.salib.runners.transform_uniform"><code class="docutils literal notranslate"><span class="pre">transform_uniform()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="generated/reemission.salib.visualize.html">reemission.salib.visualize</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.visualize.html#reemission.salib.visualize.SobolResultVisualizer"><code class="docutils literal notranslate"><span class="pre">SobolResultVisualizer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.visualize.html#reemission.salib.visualize.SobolScenarioResultsVisualizer"><code class="docutils literal notranslate"><span class="pre">SobolScenarioResultsVisualizer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.visualize.html#reemission.salib.visualize.bootstrap_ci"><code class="docutils literal notranslate"><span class="pre">bootstrap_ci()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.visualize.html#reemission.salib.visualize.calculate_pr_half_width"><code class="docutils literal notranslate"><span class="pre">calculate_pr_half_width()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="generated/reemission.salib.specloaders.html">reemission.salib.specloaders</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.specloaders.html#reemission.salib.specloaders.ReEmissionSALibSpecLoader"><code class="docutils literal notranslate"><span class="pre">ReEmissionSALibSpecLoader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.specloaders.html#reemission.salib.specloaders.TestModelSALibSpecLoader"><code class="docutils literal notranslate"><span class="pre">TestModelSALibSpecLoader</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.specloaders.html#reemission.salib.specloaders.fix_distribution"><code class="docutils literal notranslate"><span class="pre">fix_distribution()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.specloaders.html#reemission.salib.specloaders.freeze"><code class="docutils literal notranslate"><span class="pre">freeze()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.specloaders.html#reemission.salib.specloaders.set_unit_input_distribution_using_rel_diffrence"><code class="docutils literal notranslate"><span class="pre">set_unit_input_distribution_using_rel_diffrence()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="generated/reemission.salib.wrappers.html">reemission.salib.wrappers</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.wrappers.html#reemission.salib.wrappers.MCModelWrapperProtocol"><code class="docutils literal notranslate"><span class="pre">MCModelWrapperProtocol</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.wrappers.html#reemission.salib.wrappers.ReEmissionSALibWrapper"><code class="docutils literal notranslate"><span class="pre">ReEmissionSALibWrapper</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.wrappers.html#reemission.salib.wrappers.SALibModelWrapperProtocol"><code class="docutils literal notranslate"><span class="pre">SALibModelWrapperProtocol</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.salib.wrappers.html#reemission.salib.wrappers.TestModelSALibWrapper"><code class="docutils literal notranslate"><span class="pre">TestModelSALibWrapper</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.postprocessing.html">Postprocessing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/reemission.postprocessing.data_processing.html">reemission.postprocessing.data_processing</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.postprocessing.data_processing.html#reemission.postprocessing.data_processing.ExtractFromJSON"><code class="docutils literal notranslate"><span class="pre">ExtractFromJSON</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.postprocessing.data_processing.html#reemission.postprocessing.data_processing.ShpToShpCopy"><code class="docutils literal notranslate"><span class="pre">ShpToShpCopy</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.postprocessing.data_processing.html#reemission.postprocessing.data_processing.TabToShpCopy"><code class="docutils literal notranslate"><span class="pre">TabToShpCopy</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.postprocessing.data_processing.html#reemission.postprocessing.data_processing.append_data_to_shapes"><code class="docutils literal notranslate"><span class="pre">append_data_to_shapes()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="generated/reemission.postprocessing.visualise.html">reemission.postprocessing.visualise</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.postprocessing.visualise.html#reemission.postprocessing.visualise.FoliumLayer"><code class="docutils literal notranslate"><span class="pre">FoliumLayer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/reemission.postprocessing.visualise.html#reemission.postprocessing.visualise.FoliumOutputMapper"><code class="docutils literal notranslate"><span class="pre">FoliumOutputMapper</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</div><div class="flex justify-between items-center pt-6 mt-12 border-t border-border gap-4">
+</div></div>
+</main>
+</div>
+</div><footer class="py-6 border-t border-border md:py-0">
+<div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+<div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
+<p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2024, Tomasz Janus, University of Manchester, United Kingdom Built with <a class="font-medium underline underline-offset-4" href="https://www.sphinx-doc.org" rel="noreferrer">Sphinx 8.1.3</a></p>
+</div>
+</div>
+</footer>
+</div>
+<script src="../_static/documentation_options.js?v=8d563738"></script>
+<script src="../_static/doctools.js?v=9bcbadda"></script>
+<script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../_static/copybutton.js?v=f281be69"></script>
+<script src="../_static/toggleprompt.js?v=5801b3bb"></script>
+<script defer="defer" src="../_static/theme.js?v=073f68d9"></script>
+<script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+<script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+<script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+</html>

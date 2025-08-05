@@ -45,3 +45,25 @@ Tutorials
  * Read input data and output configuration ``YAML`` file and instantiate the emission model
  * Add $\LaTeX$ model presenter, calculate emissions and save results to $\LaTeX$ and PDF files.
  * Open the generated ``PDF`` document.
+
+5. `Modification of configuration parameters <05-Modifying-Configuration-Parameters.ipynb>`_
+--------------------------------------------------------------------------------------------
+.. image:: https://colab.research.google.com/assets/colab-badge.svg
+   :target: https://colab.research.google.com/github/tomjanus/reemission/blob/master/docs/notebooks/index.ipynb
+
+  **This Notebook demonstrates how to:**
+  * Read a custom configuration file from a user's file-system to update model parameters
+  * Update selected config variables after loading the configuration file
+  * Run step-by-step manual calculations with different model parameterizations
+  * Run calculations for batches of reservoirs with custom configurations
+
+6. `Sensitivity Analysis and Probabilistic Estimation of Reservoir Emissions <06-Parametric-Uncertainty.ipynb>`_
+----------------------------------------------------------------------------------------------------------------
+.. image:: https://colab.research.google.com/assets/colab-badge.svg
+   :target: https://colab.research.google.com/github/tomjanus/reemission/blob/master/docs/notebooks/index.ipynb
+
+  **This Notebook demonstrates how to:**
+  * Run parametric uncertainty analysis with SALib and the Sobol method
+  * Visualize the parametric sensitivity / uncertainty on various plots
+  * Compute the sensitivities across many scenarios (e.g. reservoirs)
+  * Present emission predictions as probability density plots

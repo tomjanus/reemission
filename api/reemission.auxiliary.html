@@ -74,6 +74,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">About the Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../theory.html">Theoretical Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config.html">Configuration</a></li>
 <li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="../installation/index.html">Installation<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
 <li class="toctree-l2"><a class="reference internal" href="../installation/install_package.html">Installing RE-Emission</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation/using_docker.html">About Docker</a></li>
@@ -97,9 +98,9 @@
 <li class="toctree-l2"><a class="reference internal" href="reemission.catchment.html">Catchment Model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.ns_catchment.html">Post-impoundment catchment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.emissions.html">Emissions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.emission_profile.html">Emission Profile Calculator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.temperature.html">MonthlyTemperature</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.biogenic.html">Biogenic Factors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.profile.html">Emission Profile Calculator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.presenter.html">Presenter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.utils.html">Utility functions</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Auxiliary functions</a></li>
@@ -111,6 +112,8 @@
 <li class="toctree-l2"><a class="reference internal" href="reemission.download.html">External Data Downloader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.globals.html">Global variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.main.html">Main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.salib.html">SALib Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.postprocessing.html">Postprocessing</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
@@ -209,7 +212,31 @@ warmest months in a year.</p>
 </dd></dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="reemission.auxiliary.scale_windspeed">
-<span class="sig-prename descclassname"><span class="pre">reemission.auxiliary.</span></span><span class="sig-name descname"><span class="pre">scale_windspeed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wind_speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wind_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/reemission/auxiliary.html#scale_windspeed"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">reemission.auxiliary.</span></span><span class="sig-name descname"><span class="pre">scale_windspeed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wind_speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wind_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0001</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/reemission/auxiliary.html#scale_windspeed"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Scale wind speed to a new height using iterative method.</p>
+<p>This function calculates wind speed at a new height using an iterative
+approach, because the drag coefficient depends on the new wind speed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>wind_speed</strong> (<em>float</em>) – Known wind speed, m/s.</p></li>
+<li><p><strong>wind_height</strong> (<em>float</em>) – Known wind height, m.</p></li>
+<li><p><strong>new_height</strong> (<em>float</em>) – Target height for which wind speed is calculated, m.</p></li>
+<li><p><strong>max_iter</strong> (<em>int</em>) – Maximum number of iterations.</p></li>
+<li><p><strong>tol</strong> (<em>float</em>) – Tolerance for convergence.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Estimated wind speed at new_height, m/s.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="reemission.auxiliary.scale_windspeed_noniter">
+<span class="sig-prename descclassname"><span class="pre">reemission.auxiliary.</span></span><span class="sig-name descname"><span class="pre">scale_windspeed_noniter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wind_speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wind_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/reemission/auxiliary.html#scale_windspeed_noniter"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Scale wind speed to a new height.</p>
 <p>This function calculates the wind speed at a desired height based on the
 original wind speed at a known height.</p>
@@ -278,6 +305,7 @@ temperature in degrees Celsius using the equation A.3 from <a class="reference e
 <li><a :data-current="activeSection === '#reemission.auxiliary.cd_factor'" class="reference internal" href="#reemission.auxiliary.cd_factor"><code class="docutils literal notranslate"><span class="pre">cd_factor()</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.auxiliary.rollout_nested_list'" class="reference internal" href="#reemission.auxiliary.rollout_nested_list"><code class="docutils literal notranslate"><span class="pre">rollout_nested_list()</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.auxiliary.scale_windspeed'" class="reference internal" href="#reemission.auxiliary.scale_windspeed"><code class="docutils literal notranslate"><span class="pre">scale_windspeed()</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.auxiliary.scale_windspeed_noniter'" class="reference internal" href="#reemission.auxiliary.scale_windspeed_noniter"><code class="docutils literal notranslate"><span class="pre">scale_windspeed_noniter()</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.auxiliary.water_density'" class="reference internal" href="#reemission.auxiliary.water_density"><code class="docutils literal notranslate"><span class="pre">water_density()</span></code></a></li>
 </ul>
 </div>

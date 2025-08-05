@@ -1,0 +1,328 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "</div>\n",
+    "<div>\n",
+    "<img src=\"graphics/logo-banner-bw.png\" width=\"500\"/>\n",
+    "</div>\n",
+    "<div>\n",
+    "    <h2 style=\"text-align:center\"> Modification of configuration options via custom configuration files and on-the-fly</h2>\n",
+    "    <h3> This notebook demonstrates how to: </h3>\n",
+    " <ol>\n",
+    "  <li>Read a custom configuration file from a user's file-system to update model parameters</li>\n",
+    "  <li>Update selected config variables after loading the configuration file</li>\n",
+    "  <li>Run step-by-step manual calculations with different model parameterizations</li>\n",
+    "  <li>Run calculations for batches of reservoirs with custom configurations</li>\n",
+    "</ol> \n",
+    "</div>"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<!--NAVIGATION-->\n",
+    "<font size=\"3\"> < [Saving Results To LaTeX](04-Saving-Results-To-LaTeX.ipynb) | [Contents](index.ipynb) | [Parametric Uncertainty](06-Parametric-Uncertainty.ipynb) > </font>\n",
+    "\n",
+    "<a href=\"https://colab.research.google.com/github/tomjanus/re-emission/blob/master/docs/notebooks/05-Modifying-Configuration-Parameters.ipynb\"><img align=\"left\" src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open in Colab\" title=\"Open and Execute in Google Colaboratory\"></a>\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from dataclasses import dataclass\n",
+    "from os.path import exists\n",
+    "import pathlib\n",
+    "import gdown\n",
+    "from typing import List, Dict, Tuple, Any, NamedTuple\n",
+    "from rich import print as rprint\n",
+    "try:\n",
+    "    import reemission\n",
+    "except ImportError:\n",
+    "    print(\"Unable to import reemission. Please ensure it is installed.\")\n",
+    "    %pip install git+https://github.com/tomjanus/reemission.git --quiet\n",
+    "\n",
+    "DEV_MODE = False\n",
+    "\n",
+    "if  DEV_MODE:\n",
+    "    import importlib\n",
+    "    importlib.reload(reemission)\n",
+    "\n",
+    "# Import from the temperature module\n",
+    "from reemission.temperature import MonthlyTemperature\n",
+    "# Import from the emissions module\n",
+    "from reemission.emissions import CarbonDioxideEmission, MethaneEmission\n",
+    "# Import from the constants module\n",
+    "from reemission.constants import Climate, SoilType, Biome, TreatmentFactor, LanduseIntensity\n",
+    "# Import from the catchment module\n",
+    "from reemission.catchment import Catchment\n",
+    "# Import from the reservoir module\n",
+    "from reemission.reservoir import Reservoir\n",
+    "# Import from the biogenic module\n",
+    "from reemission.biogenic import BiogenicFactors\n",
+    "# Import function for resetting configuration to default settings\n",
+    "from reemission.config_registration import reset_all as reset_all_configs\n",
+    "from reemission.registry import config\n",
+    "# Import from the model module\n",
+    "from reemission.model import EmissionModel\n",
+    "# Import from the input module\n",
+    "from reemission.input import Inputs\n",
+    "\n",
+    "# Helper class to encapsulate inputs for running emissions calculation with different input values\n",
+    "@dataclass\n",
+    "class ReemissionInputs:\n",
+    "    mt: MonthlyTemperature\n",
+    "    coordinates: List[float]\n",
+    "    catchment_inputs: Dict[str, Any]\n",
+    "    reservoir_inputs: Dict[str, Any]\n",
+    "    year_profile: Tuple[int | float, ...]\n",
+    "    \n",
+    "# Helper class to encapsulate the results of emissions calculations\n",
+    "class EmissionResults(NamedTuple):\n",
+    "    net_co2: float\n",
+    "    net_ch4: float\n",
+    "    net_total: float\n",
+    "\n",
+    "    def __str__(self):\n",
+    "        return (\n",
+    "            f\"Net areal CO2 emissions: {self.net_co2:.2f} g CO2e m-2 yr-1\\n\"\n",
+    "            f\"Net areal CH4 emissions: {self.net_ch4:.2f} g CO2e m-2 yr-1\\n\"\n",
+    "            f\"Net areal total emissions: {self.net_total:.2f} g CO2e m-2 yr-1\"\n",
+    "        )\n",
+    "\n",
+    "    __repr__ = __str__"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### 1. Define inputs for the step-by-step emissions calculations\n",
+    "\n",
+    "see [01-Step-By-Step-Manual-Calculations.ipynb](01-Step-By-Step-Manual-Calculations.ipynb) for more details\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Define inputs (see 01-Step-By-Step-Manual-Calculations.ipynb for more details)\n",
+    "mt = MonthlyTemperature([10.56,11.99,15.46,18.29,20.79,22.09,22.46,22.66,21.93,19.33,15.03,11.66])\n",
+    "coordinates = [22.6, 94.7]\n",
+    "biogenic_factors = BiogenicFactors(\n",
+    "    biome = Biome.TROPICALMOISTBROADLEAF,\n",
+    "    climate = Climate.TROPICAL,\n",
+    "    soil_type=SoilType.MINERAL,\n",
+    "    treatment_factor = TreatmentFactor.NONE,\n",
+    "    landuse_intensity = LanduseIntensity.LOW)\n",
+    "catchment_area_fractions = [\n",
+    "    0.0, 0.0, 0.0, 0.0, 0.0, 0.01092, 0.11996, 0.867257, 0.0]\n",
+    "reservoir_area_fractions = [\n",
+    "    0.0, 0.0, 0.0, 0.0, 0.0, 0.45, 0.15, 0.4, 0.0, \n",
+    "    0.0, 0.0, 0.0, 0.0, 0.0, 0.0,  0.0,  0.0, 0.0, \n",
+    "    0.0, 0.0, 0.0, 0.0, 0.0, 0.0,  0.0,  0.0, 0.0]\n",
+    "catchment_inputs = {\n",
+    "    'runoff': 1685.5619, 'area': 78203.0, 'population': 8463, 'riv_length': 9.2, \n",
+    "    'area_fractions': catchment_area_fractions, 'slope': 8.0, 'precip': 2000.0, \n",
+    "    'etransp': 400.0, 'soil_wetness': 140.0, 'mean_olsen': 5.85,\n",
+    "    'biogenic_factors': biogenic_factors}\n",
+    "reservoir_inputs = {\n",
+    "    'volume': 7663812, 'area': 100.56470, 'max_depth': 32.0, 'mean_depth': 13.6,\n",
+    "    'area_fractions': reservoir_area_fractions, 'soil_carbon': 10.228,\n",
+    "    'mean_radiance': 4.5, 'mean_radiance_may_sept': 4.5, 'mean_radiance_nov_mar': 3.2,\n",
+    "    'mean_monthly_windspeed': 3.8, 'water_intake_depth': 20.0}\n",
+    "year_profile = (1, 5, 10, 20, 30, 40, 50, 65, 80, 100)\n",
+    "\n",
+    "inputs = ReemissionInputs(\n",
+    "    mt=mt,\n",
+    "    coordinates=coordinates,\n",
+    "    catchment_inputs=catchment_inputs,\n",
+    "    reservoir_inputs=reservoir_inputs,\n",
+    "    year_profile=year_profile\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### 2. Define a function that goes through all steps of emission calculations and returns net areal CO2, CH4 emissions and total net aerial emissions"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "\n",
+    "def calculate_emissions_step_by_step(\n",
+    "        inputs: ReemissionInputs, \n",
+    "        p_calc_method: str = 'g-res') -> EmissionResults:\n",
+    "    \"\"\" \"\"\"\n",
+    "    # Initialize the catchment and reservoir objects with input data\n",
+    "    catchment_1 = Catchment(**inputs.catchment_inputs)\n",
+    "    rprint(catchment_1.biogenic_factors)\n",
+    "    reservoir_1 = Reservoir(\n",
+    "        **inputs.reservoir_inputs, \n",
+    "        temperature = inputs.mt,\n",
+    "        coordinates=inputs.coordinates,\n",
+    "        inflow_rate=catchment_1.discharge)\n",
+    "    # Calculate net areal CO2 an CH4 emissions\n",
+    "    em_co2 = CarbonDioxideEmission(\n",
+    "        catchment=catchment_1,\n",
+    "        reservoir=reservoir_1,\n",
+    "        eff_temp=inputs.mt.eff_temp(gas='co2'),\n",
+    "        p_calc_method=p_calc_method)\n",
+    "    em_ch4 = MethaneEmission(\n",
+    "        catchment=catchment_1,\n",
+    "        reservoir=reservoir_1,\n",
+    "        monthly_temp=inputs.mt)\n",
+    "    net_areal_co2 = em_co2.factor(\n",
+    "        number_of_years = inputs.year_profile[-1])\n",
+    "    net_areal_ch4 = em_ch4.factor()\n",
+    "    net_areal_total = net_areal_co2 + net_areal_ch4\n",
+    "    return EmissionResults(\n",
+    "        net_co2=net_areal_co2,\n",
+    "        net_ch4=net_areal_ch4,\n",
+    "        net_total=net_areal_total\n",
+    "    )"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### 3. Source inputs and instantiate the `EmissionModel` object for batch emission calculations"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "if not exists(pathlib.Path('./inputs.json')):\n",
+    "    # Download the required input file from an external link\n",
+    "    !gdown 1T9Pal8h9Ce6phw1qdPM5AkuZM_hnvBGT\n",
+    "input_data = Inputs.fromfile('inputs.json')\n",
+    "model_batch = EmissionModel(inputs=input_data, p_model='g-res')"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### 4. Modify individual configuration parameters in global `config` on-the-fly using `config.update`"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Calculate emissions with manually defined inputs and inputs sourced from inputs .json file\n",
+    "rprint(\"Calculating emissions with the default `k1_diff` value\")\n",
+    "reset_all_configs() # Resets config to defaults\n",
+    "model_outputs_step_by_step = calculate_emissions_step_by_step(inputs, p_calc_method='g-res')\n",
+    "rprint(model_outputs_step_by_step)\n",
+    "model_batch.calculate()\n",
+    "outputs_batch = model_batch.outputs\n",
+    "rprint(\"\")\n",
+    "rprint(\"Reservoir 1 CO2 net emissions: \", outputs_batch['Reservoir 1']['co2_net'])\n",
+    "rprint(\"Reservoir 1 CH4 net emissions: \", outputs_batch['Reservoir 1']['ch4_net'])\n",
+    "rprint(\"Reservoir 1 total net emissions: \", outputs_batch['Reservoir 1']['co2_net'] + outputs_batch['Reservoir 1']['ch4_net'])\n",
+    "# Recalculate emissions after modifying the value of k1_diff parameter for CO2 emission calculations\n",
+    "rprint(\"\\nCalculating emissions with the modified `k1_diff` value\")\n",
+    "config.update(\"model_config\", {(\"CARBON_DIOXIDE\",): {\"k1_diff\": 0.5}})\n",
+    "model_outputs_step_by_step = calculate_emissions_step_by_step(inputs, p_calc_method='g-res')\n",
+    "rprint(model_outputs_step_by_step)\n",
+    "model_batch.calculate()\n",
+    "outputs_batch = model_batch.outputs\n",
+    "rprint(\"\")\n",
+    "rprint(\"Reservoir 1 CO2 net emissions: \", outputs_batch['Reservoir 1']['co2_net'])\n",
+    "rprint(\"Reservoir 1 CH4 net emissions: \", outputs_batch['Reservoir 1']['ch4_net'])\n",
+    "rprint(\"Reservoir 1 total net emissions: \", outputs_batch['Reservoir 1']['co2_net'] + outputs_batch['Reservoir 1']['ch4_net'])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "#### 5. Run the model with the updated `k1_diff` value by overriding config with `custom_config.ini` and `config.override` method"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Calculate emissions with manually defined inputs and inputs sourced from inputs .json file\n",
+    "rprint(\"Calculating emissions with the default 'model_config'\")\n",
+    "reset_all_configs() # Resets config to defaults\n",
+    "model_outputs_step_by_step = calculate_emissions_step_by_step(inputs, p_calc_method='g-res')\n",
+    "rprint(model_outputs_step_by_step)\n",
+    "model_batch.calculate()\n",
+    "outputs_batch = model_batch.outputs\n",
+    "rprint(\"\")\n",
+    "rprint(\"Reservoir 1 CO2 net emissions: \", outputs_batch['Reservoir 1']['co2_net'])\n",
+    "rprint(\"Reservoir 1 CH4 net emissions: \", outputs_batch['Reservoir 1']['ch4_net'])\n",
+    "rprint(\"Reservoir 1 total net emissions: \", \n",
+    "      outputs_batch['Reservoir 1']['co2_net'] + outputs_batch['Reservoir 1']['ch4_net'])\n",
+    "# Recalculate emissions after modifying the value of k1_diff parameter for CO2 emission calculations\n",
+    "rprint(\"\\nCalculating emissions with custom 'model_config' containing modified `k1_diff` value\")\n",
+    "config.override(\"model_config\", 'custom_config.ini')\n",
+    "\n",
+    "model_outputs_step_by_step = calculate_emissions_step_by_step(inputs, p_calc_method='g-res')\n",
+    "rprint(model_outputs_step_by_step)\n",
+    "model_batch.calculate()\n",
+    "outputs_batch = model_batch.outputs\n",
+    "rprint(\"\")\n",
+    "rprint(\"Reservoir 1 CO2 net emissions: \", outputs_batch['Reservoir 1']['co2_net'])\n",
+    "rprint(\"Reservoir 1 CH4 net emissions: \", outputs_batch['Reservoir 1']['ch4_net'])\n",
+    "rprint(\"Reservoir 1 total net emissions: \", \n",
+    "      outputs_batch['Reservoir 1']['co2_net'] + outputs_batch['Reservoir 1']['ch4_net'])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<a href=\"https://colab.research.google.com/github/tomjanus/re-emission/blob/master/docs/notebooks/05-Modifying-Configuration-Parameters.ipynb\"><img align=\"left\" src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open in Colab\" title=\"Open and Execute in Google Colaboratory\"></a>"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "reemission_deploy",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.11.1"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}

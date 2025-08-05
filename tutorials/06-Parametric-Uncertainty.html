@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+
+<html :class="{'dark': darkMode === 'dark' || (darkMode === 'system' &amp;&amp; window.matchMedia('(prefers-color-scheme: dark)').matches)}" class="scroll-smooth" data-content_root="../" lang="en" x-data="{ darkMode: localStorage.getItem('darkMode') || localStorage.setItem('darkMode', 'system'), activeSection: '' }" x-init="$watch('darkMode', val =&gt; localStorage.setItem('darkMode', val))">
+<head>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta charset="utf-8"/>
+<meta content="white" media="(prefers-color-scheme: light)" name="theme-color"/>
+<meta content="black" media="(prefers-color-scheme: dark)" name="theme-color"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>NOTE: | ReEmission 1.0.0 documentation</title>
+<meta content="NOTE: | ReEmission 1.0.0 documentation" property="og:title"/>
+<meta content="NOTE: | ReEmission 1.0.0 documentation" name="twitter:title"/>
+<link href="../_static/pygments.css?v=1949e874" rel="stylesheet" type="text/css"/>
+<link href="../_static/theme.css?v=42baaae4" rel="stylesheet" type="text/css"/>
+<link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../_static/plot_directive.css" rel="stylesheet" type="text/css"/>
+<link href="../_static/nbsphinx-code-cells.css?v=2aa19091" rel="stylesheet" type="text/css"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="../genindex.html" rel="index" title="Index"/>
+<script>
+    <!-- Prevent Flash of wrong theme -->
+      const userPreference = localStorage.getItem('darkMode');
+      let mode;
+      if (userPreference === 'dark' || window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        mode = 'dark';
+        document.documentElement.classList.add('dark');
+      } else {
+        mode = 'light';
+      }
+      if (!userPreference) {localStorage.setItem('darkMode', mode)}
+    </script>
+</head>
+<body :class="{ 'overflow-hidden': showSidebar }" class="min-h-screen font-sans antialiased bg-background text-foreground" x-data="{ showSidebar: false, showScrollTop: false }">
+<div @click.self="showSidebar = false" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" x-cloak="" x-show="showSidebar"></div><div class="relative flex flex-col min-h-screen" id="page"><a class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100" href="#content">
+      Skip to content
+    </a><header class="sticky top-0 z-40 w-full border-b shadow-sm border-border supports-backdrop-blur:bg-background/60 bg-background/95 backdrop-blur"><div class="container flex items-center h-14">
+<div class="hidden mr-4 md:flex">
+<a class="flex items-center mr-6" href="../index.html"><span class="hidden font-bold sm:inline-block text-clip whitespace-nowrap">ReEmission 1.0.0 documentation</span>
+</a></div><button @click="showSidebar = true" class="inline-flex items-center justify-center h-10 px-0 py-2 mr-2 text-base font-medium transition-colors rounded-md hover:text-accent-foreground hover:bg-transparent md:hidden" type="button">
+<svg aria-hidden="true" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M152.587 825.087q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440Zm0-203.587q-19.152 0-32.326-13.174T107.087 576q0-19.152 13.174-32.326t32.326-13.174h320q19.152 0 32.326 13.174T518.087 576q0 19.152-13.174 32.326T472.587 621.5h-320Zm0-203.587q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440ZM708.913 576l112.174 112.174q12.674 12.674 12.674 31.826t-12.674 31.826Q808.413 764.5 789.261 764.5t-31.826-12.674l-144-144Q600 594.391 600 576t13.435-31.826l144-144q12.674-12.674 31.826-12.674t31.826 12.674q12.674 12.674 12.674 31.826t-12.674 31.826L708.913 576Z"></path>
+</svg>
+<span class="sr-only">Toggle navigation menu</span>
+</button>
+<div class="flex items-center justify-between flex-1 space-x-2 sm:space-x-4 md:justify-end">
+<div class="flex-1 w-full md:w-auto md:flex-none"><form @keydown.k.window.meta="$refs.search.focus()" action="../search.html" class="relative flex items-center group" id="searchbox" method="get">
+<input aria-label="Search the docs" class="inline-flex items-center font-medium transition-colors bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background border border-input hover:bg-accent focus:bg-accent hover:text-accent-foreground focus:text-accent-foreground hover:placeholder-accent-foreground py-2 px-4 relative h-9 w-full justify-start rounded-[0.5rem] text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64" id="search-input" name="q" placeholder="Search ..." type="search" x-ref="search"/>
+<kbd class="pointer-events-none absolute right-1.5 top-2 hidden h-5 select-none text-muted-foreground items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex group-hover:bg-accent group-hover:text-accent-foreground">
+<span class="text-xs">⌘</span>
+    K
+  </kbd>
+</form>
+</div>
+<nav class="flex items-center space-x-1">
+<button @click="darkMode = darkMode === 'light' ? 'dark' : 'light'" aria-label="Color theme switcher" class="relative inline-flex items-center justify-center px-0 text-sm font-medium transition-colors rounded-md hover:bg-accent hover:text-accent-foreground h-9 w-9" type="button">
+<svg class="absolute transition-all scale-100 rotate-0 dark:-rotate-90 dark:scale-0" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 685q45.456 0 77.228-31.772Q589 621.456 589 576q0-45.456-31.772-77.228Q525.456 467 480 467q-45.456 0-77.228 31.772Q371 530.544 371 576q0 45.456 31.772 77.228Q434.544 685 480 685Zm0 91q-83 0-141.5-58.5T280 576q0-83 58.5-141.5T480 376q83 0 141.5 58.5T680 576q0 83-58.5 141.5T480 776ZM80 621.5q-19.152 0-32.326-13.174T34.5 576q0-19.152 13.174-32.326T80 530.5h80q19.152 0 32.326 13.174T205.5 576q0 19.152-13.174 32.326T160 621.5H80Zm720 0q-19.152 0-32.326-13.174T754.5 576q0-19.152 13.174-32.326T800 530.5h80q19.152 0 32.326 13.174T925.5 576q0 19.152-13.174 32.326T880 621.5h-80Zm-320-320q-19.152 0-32.326-13.174T434.5 256v-80q0-19.152 13.174-32.326T480 130.5q19.152 0 32.326 13.174T525.5 176v80q0 19.152-13.174 32.326T480 301.5Zm0 720q-19.152 0-32.326-13.17Q434.5 995.152 434.5 976v-80q0-19.152 13.174-32.326T480 850.5q19.152 0 32.326 13.174T525.5 896v80q0 19.152-13.174 32.33-13.174 13.17-32.326 13.17ZM222.174 382.065l-43-42Q165.5 327.391 166 308.239t13.174-33.065q13.435-13.674 32.587-13.674t32.065 13.674l42.239 43q12.674 13.435 12.555 31.706-.12 18.272-12.555 31.946-12.674 13.674-31.445 13.413-18.772-.261-32.446-13.174Zm494 494.761-42.239-43q-12.674-13.435-12.674-32.087t12.674-31.565Q686.609 756.5 705.38 757q18.772.5 32.446 13.174l43 41.761Q794.5 824.609 794 843.761t-13.174 33.065Q767.391 890.5 748.239 890.5t-32.065-13.674Zm-42-494.761Q660.5 369.391 661 350.62q.5-18.772 13.174-32.446l41.761-43Q728.609 261.5 747.761 262t33.065 13.174q13.674 13.435 13.674 32.587t-13.674 32.065l-43 42.239q-13.435 12.674-31.706 12.555-18.272-.12-31.946-12.555Zm-495 494.761Q165.5 863.391 165.5 844.239t13.674-32.065l43-42.239q13.435-12.674 32.087-12.674t31.565 12.674Q299.5 782.609 299 801.38q-.5 18.772-13.174 32.446l-41.761 43Q231.391 890.5 212.239 890t-33.065-13.174ZM480 576Z"></path>
+</svg>
+<svg class="absolute transition-all scale-0 rotate-90 dark:rotate-0 dark:scale-100" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 936q-151 0-255.5-104.5T120 576q0-138 90-239.5T440 218q25-3 39 18t-1 44q-17 26-25.5 55t-8.5 61q0 90 63 153t153 63q31 0 61.5-9t54.5-25q21-14 43-1.5t19 39.5q-14 138-117.5 229T480 936Zm0-80q88 0 158-48.5T740 681q-20 5-40 8t-40 3q-123 0-209.5-86.5T364 396q0-20 3-40t8-40q-78 32-126.5 102T200 576q0 116 82 198t198 82Zm-10-270Z"></path>
+</svg>
+</button>
+</nav>
+</div>
+</div>
+</header>
+<div class="flex-1"><div class="container flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10"><aside :aria-hidden="!showSidebar" :class="{ 'translate-x-0': showSidebar }" class="fixed inset-y-0 left-0 md:top-14 z-50 md:z-30 bg-background md:bg-transparent transition-all duration-100 -translate-x-full md:translate-x-0 ml-0 p-6 md:p-0 md:-ml-2 md:h-[calc(100vh-3.5rem)] w-5/6 md:w-full shrink-0 overflow-y-auto border-r border-border md:sticky" id="left-sidebar">
+<a class="!justify-start text-sm md:!hidden bg-background" href="../index.html"><span class="font-bold text-clip whitespace-nowrap">ReEmission 1.0.0 documentation</span>
+</a>
+<div class="relative overflow-hidden md:overflow-auto my-4 md:my-0 h-[calc(100vh-8rem)] md:h-auto">
+<div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">About the Library</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../theory.html">Theoretical Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config.html">Configuration</a></li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="../installation/index.html">Installation<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="../installation/install_package.html">Installing RE-Emission</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation/using_docker.html">About Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation/building_image.html">Building the ReEmission Docker Image</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../installation/using_image.html">Using the ReEmission Docker Image</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../running_docker.html">Running the ReEmission Docker Container</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../demo.html">Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../json.html">JSON file format description</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reporting.html">Reporting Calculation Outputs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../visualisation.html">Visualisation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../geocaret_integration.html">Integration with GeoCARET</a></li>
+<li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="../api/reemission.html">Python API reference<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.model.html">Model (Main)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.input.html">Input Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.reservoir.html">Reservoir Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.catchment.html">Catchment Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.ns_catchment.html">Post-impoundment catchment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.emissions.html">Emissions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.emission_profile.html">Emission Profile Calculator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.temperature.html">MonthlyTemperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.biogenic.html">Biogenic Factors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.presenter.html">Presenter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.utils.html">Utility functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.auxiliary.html">Auxiliary functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.constants.html">Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.mixins.html">Mixins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.document_compiler.html">Document <span class="math notranslate nohighlight">\(\LaTeX\)</span> Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.exceptions.html">Custom Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.app_logger.html">App Logger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.download.html">External Data Downloader</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.globals.html">Global variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.main.html">Main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.salib.html">SALib Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/reemission.postprocessing.html">Postprocessing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
+</ul>
+</nav>
+</div>
+</div>
+<button @click="showSidebar = false" class="absolute md:hidden right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100" type="button">
+<svg class="h-4 w-4" fill="currentColor" height="24" stroke="none" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 632 284 828q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536 576l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480 632Z"></path>
+</svg>
+</button>
+</aside>
+<main class="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
+<div class="w-full min-w-0 mx-auto">
+<nav aria-label="breadcrumbs" class="flex items-center mb-4 space-x-1 text-sm text-muted-foreground">
+<a class="overflow-hidden text-ellipsis whitespace-nowrap hover:text-foreground" href="../index.html">
+<span class="hidden md:inline">ReEmission 1.0.0 documentation</span>
+<svg aria-label="Home" class="md:hidden" fill="currentColor" height="18" stroke="none" viewbox="0 96 960 960" width="18" xmlns="http://www.w3.org/2000/svg">
+<path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z"></path>
+</svg>
+</a>
+<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">NOTE:</span>
+</nav>
+<div id="content" role="main">
+</div><div><p><img alt="bdfc08b349cd4ca5861650da4c9d9291" class="no-scaled-link" src="../_images/logo-banner-bw1.png" style="width: 500px;"/></p>
+</div><div><h2 style="text-align:center"><p>Sensitivity Analysis and Probabilistic Estimation of Reservoir Emissions</p>
+</h2><h3><p>This notebook demonstrates how to:</p>
+</h3><ol><li><p>Run parametric uncertainty analysis with SALib and the Sobol method</p>
+</li><li><p>Visualize the parametric sensitivity / uncertainty on various plots</p>
+</li><li><p>Compute the sensitivities across many scenarios (e.g. reservoirs)</p>
+</li><li><p>Present emission predictions as probability density plots</p>
+</li></ol></div><section id="NOTE:">
+<h1>NOTE:</h1>
+<ul class="simple">
+<li><p>Requires <strong>SALib</strong> library - Python implementations of commonly used sensitivity analysis methods, including Sobol, Morris, and FAST methods - see: <a class="reference external" href="https://app.readthedocs.org/projects/salib/downloads/pdf/stable/">https://app.readthedocs.org/projects/salib/downloads/pdf/stable/</a></p></li>
+</ul>
+<p>&lt; <a class="reference internal" href="05-Modifying-Configuration-Parameters.html"><span class="doc">Modifying Configuration Parametrers</span></a> | <a class="reference internal" href="index.html"><span class="doc">Contents</span></a></p>
+<p><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg"/></p>
+</section>
+<section id="QUICK-DESCRIPTION:">
+<h1>QUICK DESCRIPTION:</h1>
+<p>In this example, we leverage Re-Emission’s capability to dynamically alter its configuration parameters, such as emission model regression coefficients, pre-impoundment emissions or nutrient exports to perform sensitivity analysis and Monte-Carlo simulations of reservoir emissions under parametric uncertainties. The analysis is performed using Python’s <strong>SALib</strong> package. ReEmission’s <code class="docutils literal notranslate"><span class="pre">salib</span></code> module contains interfaces to <strong>SALib</strong> methods and functions allowing seamless integration with
+<strong>SALib</strong> enabling global sensitivity analysis to parametric uncertainties as well as input uncertainties.</p>
+<p>This notebook performs a simple analysis to briefly demonstrate the capability of ReEmission’s <code class="docutils literal notranslate"><span class="pre">salib</span></code> module. For simplicity, it is restricted to testing model sensitivity to parametric uncertainties stemming from emission regression equations only. Sensitivity to other parametric uncertainties and to input uncertainties have not been investigated here.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">[1]:
+</span></code></pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="kn">import</span><span class="w"> </span><span class="nn">pathlib</span>
+</span><span id="line-2"><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+</span><span id="line-3"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+</span><span id="line-4"><span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+</span><span id="line-5"><span class="kn">import</span><span class="w"> </span><span class="nn">gdown</span>
+</span><span id="line-6"><span class="kn">from</span><span class="w"> </span><span class="nn">rich</span><span class="w"> </span><span class="kn">import</span> <span class="nb">print</span> <span class="k">as</span> <span class="n">rprint</span>
+</span><span id="line-7"><span class="o">%</span><span class="k">matplotlib</span> inline
+</span><span id="line-8"><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+</span><span id="line-9"><span class="k">try</span><span class="p">:</span>
+</span><span id="line-10">    <span class="kn">import</span><span class="w"> </span><span class="nn">reemission</span>
+</span><span id="line-11"><span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+</span><span id="line-12">    <span class="nb">print</span><span class="p">(</span><span class="s2">"Unable to import reemission. Please ensure it is installed."</span><span class="p">)</span>
+</span><span id="line-13">    <span class="o">%</span><span class="k">pip</span> install git+https://github.com/tomjanus/reemission.git --quiet
+</span><span id="line-14"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.salib.runners</span><span class="w"> </span><span class="kn">import</span> <span class="n">SALibProblem</span><span class="p">,</span> <span class="n">SobolAnalyser</span> <span class="c1"># type: ignore</span>
+</span><span id="line-15"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.salib.wrappers</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReEmissionSALibWrapper</span> <span class="c1"># type: ignore</span>
+</span><span id="line-16"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.salib.visualize</span><span class="w"> </span><span class="kn">import</span> <span class="n">SobolResultVisualizer</span><span class="p">,</span> <span class="n">SobolScenarioResultsVisualizer</span> <span class="c1"># type: ignore</span>
+</span><span id="line-17"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.salib.specloaders</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span id="line-18">    <span class="n">ReEmissionSALibSpecLoader</span><span class="p">,</span>
+</span><span id="line-19">    <span class="n">set_unit_input_distribution_using_rel_diffrence</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+</span><span id="line-20"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.input</span><span class="w"> </span><span class="kn">import</span> <span class="n">Inputs</span>  <span class="c1"># type: ignore</span>
+</span><span id="line-21"><span class="kn">from</span><span class="w"> </span><span class="nn">reemission.salib.runners</span><span class="w"> </span><span class="kn">import</span> <span class="n">SobolResults</span><span class="p">,</span> <span class="n">SobolScenarioResults</span>  <span class="c1"># type: ignore</span>
+</span><span id="line-22">
+</span><span id="line-23"><span class="c1"># Constants</span>
+</span><span id="line-24"><span class="n">REL_DIFF</span> <span class="o">=</span> <span class="mf">0.1</span>
+</span><span id="line-25">
+</span><span id="line-26"><span class="c1"># Get the directory where this notebook is located</span>
+</span><span id="line-27"><span class="n">notebook_dir</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+</span><span id="line-28">
+</span><span id="line-29"><span class="c1"># Define file paths relative to notebook location</span>
+</span><span id="line-30"><span class="n">inputs_file</span> <span class="o">=</span> <span class="n">notebook_dir</span> <span class="o">/</span> <span class="s1">'inputs_sensitivity_test.json'</span>
+</span><span id="line-31"><span class="n">spec_file</span> <span class="o">=</span> <span class="n">notebook_dir</span> <span class="o">/</span> <span class="s1">'uncertain_parameter_specification.yaml'</span>
+</span><span id="line-32">
+</span><span id="line-33"><span class="k">if</span> <span class="ow">not</span> <span class="n">inputs_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+</span><span id="line-34">    <span class="c1"># Download the required input file from an external link</span>
+</span><span id="line-35">    <span class="o">!</span>gdown<span class="w"> </span>1YHjA9HfulLV6wqwzryHZiFFc1kvXKFWL<span class="w"> </span>-O<span class="w"> </span><span class="o">{</span>str<span class="o">(</span>inputs_file<span class="o">)}</span>
+</span><span id="line-36">
+</span><span id="line-37"><span class="k">if</span> <span class="ow">not</span> <span class="n">spec_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+</span><span id="line-38">    <span class="c1"># Download the required input file from an external link</span>
+</span><span id="line-39">    <span class="o">!</span>gdown<span class="w"> </span>1punHksgsZhj7Tq7IPPLCLqa0AHkDrLmx<span class="w"> </span>-O<span class="w"> </span><span class="o">{</span>str<span class="o">(</span>spec_file<span class="o">)}</span>
+</span></code></pre></div>
+</div>
+</div>
+<section id="2.-Sensitivity-Analysis-using-Re-Emission">
+<h2>2. Sensitivity Analysis using Re-Emission</h2>
+<ul class="simple">
+<li><p>Confidence intervals for some parameters were derived from <a class="reference external" href="https://www.hydropower.org/publications/the-ghg-reservoir-tool-g-res-technical-documentation">G-Res Tool Technical Documentation</a></p></li>
+</ul>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span><code><span id="line-1">[2]:
+</span></code></pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><code><span id="line-1"><span class="n">sc_results</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SobolResults</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="line-2"><span class="n">sc_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="line-3"><span class="n">seed</span> <span class="o">=</span> <span class="mi">42</span>
+</span><span id="line-4"><span class="n">selected_reservoir_index</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span id="line-5"><span class="c1"># Run SOBOL analysis for a subset of UK reservoirs - can take a bit of time</span>
+</span><span id="line-6"><span class="n">inputs</span> <span class="o">=</span> <span class="n">Inputs</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="s2">"inputs_sensitivity_test.json"</span><span class="p">)</span>
+</span><span id="line-7"><span class="n">reservoirs_list_uk</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">inputs</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+</span><span id="line-8"><span class="n">rprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Number of reservoirs: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">reservoirs_list_uk</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="line-9"><span class="n">selected_reservoirs</span> <span class="o">=</span> <span class="n">reservoirs_list_uk</span><span class="p">[:]</span>
+</span><span id="line-10"><span class="n">uk_input_file</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="s2">"inputs_sensitivity_test.json"</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+</span><span id="line-11"><span class="n">spec_file</span> <span class="o">=</span> <span class="s2">"uncertain_parameter_specification.yaml"</span>
+</span><span id="line-12"><span class="n">inputs</span> <span class="o">=</span> <span class="n">Inputs</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="n">uk_input_file</span><span class="p">)</span>
+</span><span id="line-13">
+</span><span id="line-14"><span class="k">for</span> <span class="n">res_no</span><span class="p">,</span> <span class="n">reservoir</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">selected_reservoirs</span><span class="p">):</span>
+</span><span id="line-15">    <span class="n">rprint</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Running SOBOL analysis for reservoir: </span><span class="si">{</span><span class="n">reservoir</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">res_no</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> out of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">selected_reservoirs</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="line-16">    <span class="n">selected_input</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">get_input</span><span class="p">(</span><span class="n">reservoir</span><span class="p">)</span> <span class="c1"># Use a single reservoir</span>
+</span><span id="line-17">    <span class="c1"># Set the relative +/- difference for the inputs with missing distributions</span>
+</span><span id="line-18">    <span class="n">rel_difference</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span>
+</span><span id="line-19">    <span class="c1"># Load the SALib specification for the re-emission model</span>
+</span><span id="line-20">    <span class="n">reemission_salib_spec</span> <span class="o">=</span> <span class="n">ReEmissionSALibSpecLoader</span><span class="p">(</span>
+</span><span id="line-21">        <span class="n">spec_file</span><span class="o">=</span><span class="n">spec_file</span><span class="p">,</span>
+</span><span id="line-22">        <span class="nb">input</span><span class="o">=</span><span class="n">selected_input</span><span class="p">,</span>
+</span><span id="line-23">        <span class="n">missing_input_dist_handler</span> <span class="o">=</span>
+</span><span id="line-24">            <span class="n">partial</span><span class="p">(</span>
+</span><span id="line-25">                <span class="n">set_unit_input_distribution_using_rel_diffrence</span><span class="p">,</span>
+</span><span id="line-26">                <span class="n">rel_difference</span><span class="o">=</span><span class="n">rel_difference</span><span class="p">)</span>
+</span><span id="line-27">    <span class="p">)</span>
+</span><span id="line-28">    <span class="c1"># Var names for visualization</span>
+</span><span id="line-29">    <span class="n">var_names</span> <span class="o">=</span> <span class="n">reemission_salib_spec</span><span class="o">.</span><span class="n">var_name_map</span>
+</span><span id="line-30">    <span class="c1"># Create a list of variables from the SALib specification</span>
+</span><span id="line-31">    <span class="n">reemission_variables</span> <span class="o">=</span> <span class="n">reemission_salib_spec</span><span class="o">.</span><span class="n">list_of_variables</span>
+</span><span id="line-32">    <span class="c1"># Create a list of accessors from the SALib specification</span>
+</span><span id="line-33">    <span class="n">accessors</span> <span class="o">=</span> <span class="n">reemission_salib_spec</span><span class="o">.</span><span class="n">accessors</span>
+</span><span id="line-34">    <span class="n">reemission_salib_problem</span> <span class="o">=</span> <span class="n">SALibProblem</span><span class="o">.</span><span class="n">from_variables</span><span class="p">(</span>
+</span><span id="line-35">        <span class="n">reemission_variables</span>
+</span><span id="line-36">    <span class="p">)</span>
+</span><span id="line-37">    <span class="n">reemission_salib_model</span> <span class="o">=</span> <span class="n">ReEmissionSALibWrapper</span><span class="o">.</span><span class="n">from_variables</span><span class="p">(</span>
+</span><span id="line-38">        <span class="n">variables</span> <span class="o">=</span> <span class="n">reemission_variables</span><span class="p">,</span>
+</span><span id="line-39">        <span class="nb">input</span> <span class="o">=</span> <span class="n">selected_input</span><span class="p">,</span>
+</span><span id="line-40">        <span class="n">emission</span> <span class="o">=</span> <span class="s1">'total_net'</span><span class="p">,</span>
+</span><span id="line-41">        <span class="n">accessors</span> <span class="o">=</span> <span class="n">accessors</span>
+</span><span id="line-42">    <span class="p">)</span>
+</span><span id="line-43">    <span class="n">analyser</span> <span class="o">=</span> <span class="n">SobolAnalyser</span><span class="p">(</span>
+</span><span id="line-44">        <span class="n">problem</span> <span class="o">=</span> <span class="n">reemission_salib_problem</span><span class="p">,</span>
+</span><span id="line-45">        <span class="n">variables</span> <span class="o">=</span> <span class="n">reemission_variables</span><span class="p">,</span>
+</span><span id="line-46">        <span class="n">model</span> <span class="o">=</span> <span class="n">reemission_salib_model</span><span class="p">,</span>
+</span><span id="line-47">        <span class="n">num_samples</span> <span class="o">=</span> <span class="mi">512</span>
+</span><span id="line-48">    <span class="p">)</span>
+</span><span id="line-49">    <span class="n">sc_result</span> <span class="o">=</span> <span class="n">analyser</span><span class="o">.</span><span class="n">run_sobol</span><span class="p">()</span>
+</span><span id="line-50">    <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="n">sc_result</span><span class="p">,</span> <span class="s1">'nominal_output'</span><span class="p">,</span> <span class="n">sc_result</span><span class="o">.</span><span class="n">nominal_output</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</span><span id="line-51">    <span class="n">sc_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sc_result</span><span class="p">)</span>
+</span><span id="line-52">    <span class="n">sc_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reservoir</span><span class="p">)</span>
+</span><span id="line-53">
+</span><span id="line-54"><span class="n">sc_results</span> <span class="o">=</span> <span class="n">SobolScenarioResults</span><span class="p">(</span>
+</span><span id="line-55">    <span class="n">sc_names</span><span class="o">=</span><span class="n">sc_names</span><span class="p">,</span>
+</span><span id="line-56">    <span class="n">results</span><span class="o">=</span><span class="n">sc_results</span>
+</span><span id="line-57"><span class="p">)</span>
+</span><span id="line-58"><span class="n">var_names</span> <span class="o">=</span> <span class="n">sc_results</span><span class="o">.</span><span class="n">var_names</span>
+</span><span id="line-59"><span class="n">visualizer</span> <span class="o">=</span> <span class="n">SobolResultVisualizer</span><span class="p">(</span>
+</span><span id="line-60">    <span class="n">sc_results</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">selected_reservoir_index</span><span class="p">],</span>
+</span><span id="line-61">    <span class="n">par_name_map</span> <span class="o">=</span> <span class="n">var_names</span><span class="p">)</span>
+</span><span id="line-62"><span class="n">scenario_visualizer</span> <span class="o">=</span> <span class="n">SobolScenarioResultsVisualizer</span><span class="p">(</span><span class="n">sc_results</span><span class="p">)</span>
+</span><span id="line-63">
+</span><span id="line-64"><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+</span><span id="line-65"><span class="n">axes</span> <span class="o">=</span> <span class="n">axes</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+</span><span id="line-66"><span class="n">scenario_visualizer</span><span class="o">.</span><span class="n">plot_S1_ST</span><span class="p">(</span>
+</span><span id="line-67">    <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+</span><span id="line-68">    <span class="n">x_label_rotation</span> <span class="o">=</span> <span class="mi">90</span><span class="p">,</span>
+</span><span id="line-69">    <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s1">'Sobol Indices for regression coefficients'</span><span class="p">)</span>
+</span><span id="line-70">
+</span><span id="line-71"><span class="n">scenario_visualizer</span><span class="o">.</span><span class="n">plot_variance_contributions_by_group</span><span class="p">(</span>
+</span><span id="line-72">    <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+</span><span id="line-73">    <span class="n">title</span><span class="o">=</span><span class="s2">"Variance contributions by uncertainty group"</span><span class="p">,)</span>
+</span><span id="line-74">
+</span><span id="line-75"><span class="n">scenario_visualizer</span><span class="o">.</span><span class="n">plot_outputs_per_scenarios</span><span class="p">(</span>
+</span><span id="line-76">    <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+</span><span id="line-77">    <span class="c1">#scenario_names = [f'{ix}' for ix in range(len(sc_results.scenario_names))],</span>
+</span><span id="line-78">    <span class="n">x_label_rotation</span> <span class="o">=</span> <span class="mi">90</span><span class="p">,</span>
+</span><span id="line-79">    <span class="n">sorting</span><span class="o">=</span><span class="s1">'desc'</span><span class="p">,</span>
+</span><span id="line-80">    <span class="n">title</span><span class="o">=</span><span class="s2">"Total net emission predictions for multiple reservoirs"</span><span class="p">,</span>
+</span><span id="line-81">    <span class="n">width</span><span class="o">=</span><span class="mf">0.085</span><span class="p">,</span>
+</span><span id="line-82">    <span class="n">component_colors</span><span class="o">=</span><span class="p">[</span><span class="s1">'#ff7f0e'</span><span class="p">,</span> <span class="s1">'#1f77b4'</span><span class="p">,</span> <span class="s1">'#2ca02c'</span><span class="p">,</span> <span class="s1">'#9467bd'</span><span class="p">,</span> <span class="s1">'#d62728'</span><span class="p">,</span> <span class="s1">'#8c564b'</span><span class="p">])</span>
+</span><span id="line-83">
+</span><span id="line-84"><span class="n">visualizer</span><span class="o">.</span><span class="n">plot_output_kde</span><span class="p">(</span>
+</span><span id="line-85">    <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+</span><span id="line-86">    <span class="n">xlims</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1400</span><span class="p">,</span><span class="o">-</span><span class="mi">1000</span><span class="p">),</span>
+</span><span id="line-87">    <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Total net emissions under parameter uncertainty - </span><span class="si">{</span><span class="n">sc_names</span><span class="p">[</span><span class="n">selected_reservoir_index</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="line-88">
+</span><span id="line-89"><span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="s1">'reemission_sobol_paper.png'</span><span class="p">))</span>
+</span></code></pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">Number of reservoirs: <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">5</span>
+</pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">Running SOBOL analysis for reservoir: Katrine - <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> out of <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">5</span>
+</pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area stderr docutils container">
+<div class="highlight"><pre>
+/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/SALib/util/__init__.py:274: FutureWarning: unique with argument that is not not a Series, Index, ExtensionArray, or np.ndarray is deprecated and will raise in a future version.
+  names = list(pd.unique(groups))
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">Running SOBOL analysis for reservoir: Black Esk - <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">2</span> out of <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">5</span>
+</pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">Running SOBOL analysis for reservoir: Whiteadder - <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">3</span> out of <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">5</span>
+</pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">Running SOBOL analysis for reservoir: St Mary's - <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">4</span> out of <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">5</span>
+</pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">Running SOBOL analysis for reservoir: Alaw - <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">5</span> out of <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">5</span>
+</pre></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">FileNotFoundError</span>                         Traceback (most recent call last)
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/texmanager.py:250</span>, in <span class="ansi-cyan-fg">TexManager._run_checked_subprocess</span><span class="ansi-blue-fg">(cls, command, tex, cwd)</span>
+<span class="ansi-green-fg">    249</span> <span class="ansi-bold" style="color: rgb(0,135,0)">try</span>:
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">250</span>     report = <span class="ansi-yellow-bg">subprocess</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">check_output</span><span class="ansi-yellow-bg">(</span>
+<span class="ansi-green-fg">    251</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">command</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">cwd</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">cwd</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">if</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">cwd</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(175,0,255)">is</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(175,0,255)">not</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">None</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">else</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">cls</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_texcache</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">    252</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">stderr</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">subprocess</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">STDOUT</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    253</span> <span class="ansi-bold" style="color: rgb(0,135,0)">except</span> <span class="ansi-bold" style="color: rgb(215,95,95)">FileNotFoundError</span> <span class="ansi-bold" style="color: rgb(0,135,0)">as</span> exc:
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/subprocess.py:466</span>, in <span class="ansi-cyan-fg">check_output</span><span class="ansi-blue-fg">(timeout, *popenargs, **kwargs)</span>
+<span class="ansi-green-fg">    464</span>     kwargs[<span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">input</span><span class="ansi-yellow-fg">'</span>] = empty
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">466</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">run</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">popenargs</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">stdout</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">PIPE</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">timeout</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">timeout</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">check</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">True</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">    467</span> <span class="ansi-yellow-bg">           </span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span>.stdout
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/subprocess.py:548</span>, in <span class="ansi-cyan-fg">run</span><span class="ansi-blue-fg">(input, capture_output, timeout, check, *popenargs, **kwargs)</span>
+<span class="ansi-green-fg">    546</span>     kwargs[<span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">stderr</span><span class="ansi-yellow-fg">'</span>] = PIPE
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">548</span> <span class="ansi-bold" style="color: rgb(0,135,0)">with</span> <span class="ansi-yellow-bg">Popen</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">popenargs</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span> <span class="ansi-bold" style="color: rgb(0,135,0)">as</span> process:
+<span class="ansi-green-fg">    549</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">try</span>:
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/subprocess.py:1026</span>, in <span class="ansi-cyan-fg">Popen.__init__</span><span class="ansi-blue-fg">(self, args, bufsize, executable, stdin, stdout, stderr, preexec_fn, close_fds, shell, cwd, env, universal_newlines, startupinfo, creationflags, restore_signals, start_new_session, pass_fds, user, group, extra_groups, encoding, errors, text, umask, pipesize, process_group)</span>
+<span class="ansi-green-fg">   1023</span>             <span style="color: rgb(0,135,0)">self</span>.stderr = io.TextIOWrapper(<span style="color: rgb(0,135,0)">self</span>.stderr,
+<span class="ansi-green-fg">   1024</span>                     encoding=encoding, errors=errors)
+<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">1026</span>     <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_execute_child</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">executable</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">preexec_fn</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">close_fds</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">   1027</span> <span class="ansi-yellow-bg">                        </span><span class="ansi-yellow-bg">pass_fds</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">cwd</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">env</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">   1028</span> <span class="ansi-yellow-bg">                        </span><span class="ansi-yellow-bg">startupinfo</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">creationflags</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">shell</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">   1029</span> <span class="ansi-yellow-bg">                        </span><span class="ansi-yellow-bg">p2cread</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">p2cwrite</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">   1030</span> <span class="ansi-yellow-bg">                        </span><span class="ansi-yellow-bg">c2pread</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">c2pwrite</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">   1031</span> <span class="ansi-yellow-bg">                        </span><span class="ansi-yellow-bg">errread</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">errwrite</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">   1032</span> <span class="ansi-yellow-bg">                        </span><span class="ansi-yellow-bg">restore_signals</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">   1033</span> <span class="ansi-yellow-bg">                        </span><span class="ansi-yellow-bg">gid</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">gids</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">uid</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">umask</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">   1034</span> <span class="ansi-yellow-bg">                        </span><span class="ansi-yellow-bg">start_new_session</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">process_group</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">   1035</span> <span class="ansi-bold" style="color: rgb(0,135,0)">except</span>:
+<span class="ansi-green-fg">   1036</span>     <span style="color: rgb(95,135,135)"># Cleanup if the child failed starting.</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/subprocess.py:1955</span>, in <span class="ansi-cyan-fg">Popen._execute_child</span><span class="ansi-blue-fg">(self, args, executable, preexec_fn, close_fds, pass_fds, cwd, env, startupinfo, creationflags, shell, p2cread, p2cwrite, c2pread, c2pwrite, errread, errwrite, restore_signals, gid, gids, uid, umask, start_new_session, process_group)</span>
+<span class="ansi-green-fg">   1954</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> err_filename <span class="ansi-bold" style="color: rgb(175,0,255)">is</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>:
+<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">1955</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">raise</span> child_exception_type(errno_num, err_msg, err_filename)
+<span class="ansi-green-fg">   1956</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:
+
+<span class="ansi-red-fg">FileNotFoundError</span>: [Errno 2] No such file or directory: 'latex'
+
+The above exception was the direct cause of the following exception:
+
+<span class="ansi-red-fg">RuntimeError</span>                              Traceback (most recent call last)
+<span class="ansi-cyan-fg">Cell</span><span class="ansi-cyan-fg"> </span><span class="ansi-green-fg">In[2]</span><span class="ansi-green-fg">, line 66</span>
+<span class="ansi-green-fg">     64</span> fig, axes = plt.subplots(<span class="ansi-green-fg">2</span>, <span class="ansi-green-fg">2</span>, figsize=(<span class="ansi-green-fg">10</span>, <span class="ansi-green-fg">8</span>))
+<span class="ansi-green-fg">     65</span> axes = axes.flatten()
+<span class="ansi-green-fg">---&gt; </span><span class="ansi-green-fg">66</span> <span class="ansi-yellow-bg">scenario_visualizer</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">plot_S1_ST</span><span class="ansi-yellow-bg">(</span>
+<span class="ansi-green-fg">     67</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">ax</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">axes</span><span class="ansi-yellow-bg">[</span><span class="ansi-green-fg ansi-yellow-bg">0</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">     68</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">x_label_rotation</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg"> </span><span class="ansi-green-fg ansi-yellow-bg">90</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">     69</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">title</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-fg ansi-yellow-bg">f</span><span class="ansi-yellow-fg ansi-yellow-bg">'</span><span class="ansi-yellow-fg ansi-yellow-bg">Sobol Indices for regression coefficients</span><span class="ansi-yellow-fg ansi-yellow-bg">'</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">     71</span> scenario_visualizer.plot_variance_contributions_by_group(
+<span class="ansi-green-fg">     72</span>     ax=axes[<span class="ansi-green-fg">1</span>],
+<span class="ansi-green-fg">     73</span>     title=<span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">Variance contributions by uncertainty group</span><span class="ansi-yellow-fg">"</span>,)
+<span class="ansi-green-fg">     75</span> scenario_visualizer.plot_outputs_per_scenarios(
+<span class="ansi-green-fg">     76</span>     ax=axes[<span class="ansi-green-fg">2</span>],
+<span class="ansi-green-fg">     77</span>     <span style="color: rgb(95,135,135)">#scenario_names = [f'{ix}' for ix in range(len(sc_results.scenario_names))],</span>
+<span class="ansi-green-fg">   (...)</span><span class="ansi-green-fg">     81</span>     width=<span class="ansi-green-fg">0.085</span>,
+<span class="ansi-green-fg">     82</span>     component_colors=[<span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">#ff7f0e</span><span class="ansi-yellow-fg">'</span>, <span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">#1f77b4</span><span class="ansi-yellow-fg">'</span>, <span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">#2ca02c</span><span class="ansi-yellow-fg">'</span>, <span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">#9467bd</span><span class="ansi-yellow-fg">'</span>, <span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">#d62728</span><span class="ansi-yellow-fg">'</span>, <span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">#8c564b</span><span class="ansi-yellow-fg">'</span>])
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">~/work/reemission/reemission/src/reemission/salib/visualize.py:131</span>, in <span class="ansi-cyan-fg">SobolScenarioResultsVisualizer.plot_S1_ST</span><span class="ansi-blue-fg">(self, ax, title, x_label_rotation, confidence_level, tight_layout)</span>
+<span class="ansi-green-fg">    129</span> ax.legend()
+<span class="ansi-green-fg">    130</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> tight_layout:
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">131</span>     <span class="ansi-yellow-bg">plt</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">tight_layout</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    132</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> ax
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/pyplot.py:2844</span>, in <span class="ansi-cyan-fg">tight_layout</span><span class="ansi-blue-fg">(pad, h_pad, w_pad, rect)</span>
+<span class="ansi-green-fg">   2836</span> <span style="color: rgb(175,0,255)">@_copy_docstring_and_deprecators</span>(Figure.tight_layout)
+<span class="ansi-green-fg">   2837</span> <span class="ansi-bold" style="color: rgb(0,135,0)">def</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-blue-fg">tight_layout</span>(
+<span class="ansi-green-fg">   2838</span>     *,
+<span class="ansi-green-fg">   (...)</span><span class="ansi-green-fg">   2842</span>     rect: <span style="color: rgb(0,135,0)">tuple</span>[<span style="color: rgb(0,135,0)">float</span>, <span style="color: rgb(0,135,0)">float</span>, <span style="color: rgb(0,135,0)">float</span>, <span style="color: rgb(0,135,0)">float</span>] | <span class="ansi-bold" style="color: rgb(0,135,0)">None</span> = <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>,
+<span class="ansi-green-fg">   2843</span> ) -&gt; <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>:
+<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">2844</span>     <span class="ansi-yellow-bg">gcf</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">tight_layout</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">pad</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">pad</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">h_pad</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">h_pad</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">w_pad</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">w_pad</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">rect</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">rect</span><span class="ansi-yellow-bg">)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/figure.py:3640</span>, in <span class="ansi-cyan-fg">Figure.tight_layout</span><span class="ansi-blue-fg">(self, pad, h_pad, w_pad, rect)</span>
+<span class="ansi-green-fg">   3638</span> previous_engine = <span style="color: rgb(0,135,0)">self</span>.get_layout_engine()
+<span class="ansi-green-fg">   3639</span> <span style="color: rgb(0,135,0)">self</span>.set_layout_engine(engine)
+<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">3640</span> <span class="ansi-yellow-bg">engine</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">execute</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">   3641</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> previous_engine <span class="ansi-bold" style="color: rgb(175,0,255)">is</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span> <span class="ansi-bold" style="color: rgb(175,0,255)">and</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span style="color: rgb(0,135,0)">isinstance</span>(
+<span class="ansi-green-fg">   3642</span>     previous_engine, (TightLayoutEngine, PlaceHolderLayoutEngine)
+<span class="ansi-green-fg">   3643</span> ):
+<span class="ansi-green-fg">   3644</span>     _api.warn_external(<span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">The figure layout has changed to tight</span><span class="ansi-yellow-fg">'</span>)
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/layout_engine.py:188</span>, in <span class="ansi-cyan-fg">TightLayoutEngine.execute</span><span class="ansi-blue-fg">(self, fig)</span>
+<span class="ansi-green-fg">    186</span> renderer = fig._get_renderer()
+<span class="ansi-green-fg">    187</span> <span class="ansi-bold" style="color: rgb(0,135,0)">with</span> <span style="color: rgb(0,135,0)">getattr</span>(renderer, <span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">_draw_disabled</span><span class="ansi-yellow-fg">"</span>, nullcontext)():
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">188</span>     kwargs = <span class="ansi-yellow-bg">get_tight_layout_figure</span><span class="ansi-yellow-bg">(</span>
+<span class="ansi-green-fg">    189</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">fig</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">fig</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">axes</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">get_subplotspec_list</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">fig</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">axes</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">    190</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">pad</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">info</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-fg ansi-yellow-bg">'</span><span class="ansi-yellow-fg ansi-yellow-bg">pad</span><span class="ansi-yellow-fg ansi-yellow-bg">'</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">h_pad</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">info</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-fg ansi-yellow-bg">'</span><span class="ansi-yellow-fg ansi-yellow-bg">h_pad</span><span class="ansi-yellow-fg ansi-yellow-bg">'</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">w_pad</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">info</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-fg ansi-yellow-bg">'</span><span class="ansi-yellow-fg ansi-yellow-bg">w_pad</span><span class="ansi-yellow-fg ansi-yellow-bg">'</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">    191</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">rect</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">info</span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-fg ansi-yellow-bg">'</span><span class="ansi-yellow-fg ansi-yellow-bg">rect</span><span class="ansi-yellow-fg ansi-yellow-bg">'</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    192</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> kwargs:
+<span class="ansi-green-fg">    193</span>     fig.subplots_adjust(**kwargs)
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/_tight_layout.py:266</span>, in <span class="ansi-cyan-fg">get_tight_layout_figure</span><span class="ansi-blue-fg">(fig, axes_list, subplotspec_list, renderer, pad, h_pad, w_pad, rect)</span>
+<span class="ansi-green-fg">    261</span>         <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> {}
+<span class="ansi-green-fg">    262</span>     span_pairs.append((
+<span class="ansi-green-fg">    263</span>         <span style="color: rgb(0,135,0)">slice</span>(ss.rowspan.start * div_row, ss.rowspan.stop * div_row),
+<span class="ansi-green-fg">    264</span>         <span style="color: rgb(0,135,0)">slice</span>(ss.colspan.start * div_col, ss.colspan.stop * div_col)))
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">266</span> kwargs = <span class="ansi-yellow-bg">_auto_adjust_subplotpars</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">fig</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">    267</span> <span class="ansi-yellow-bg">                                  </span><span class="ansi-yellow-bg">shape</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">max_nrows</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">max_ncols</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">    268</span> <span class="ansi-yellow-bg">                                  </span><span class="ansi-yellow-bg">span_pairs</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">span_pairs</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">    269</span> <span class="ansi-yellow-bg">                                  </span><span class="ansi-yellow-bg">subplot_list</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">subplot_list</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">    270</span> <span class="ansi-yellow-bg">                                  </span><span class="ansi-yellow-bg">ax_bbox_list</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">ax_bbox_list</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">    271</span> <span class="ansi-yellow-bg">                                  </span><span class="ansi-yellow-bg">pad</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">pad</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">h_pad</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">h_pad</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">w_pad</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">w_pad</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    273</span> <span style="color: rgb(95,135,135)"># kwargs can be none if tight_layout fails...</span>
+<span class="ansi-green-fg">    274</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> rect <span class="ansi-bold" style="color: rgb(175,0,255)">is</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span> <span class="ansi-bold" style="color: rgb(175,0,255)">and</span> kwargs <span class="ansi-bold" style="color: rgb(175,0,255)">is</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>:
+<span class="ansi-green-fg">    275</span>     <span style="color: rgb(95,135,135)"># if rect is given, the whole subplots area (including</span>
+<span class="ansi-green-fg">    276</span>     <span style="color: rgb(95,135,135)"># labels) will fit into the rect instead of the</span>
+<span class="ansi-green-fg">   (...)</span><span class="ansi-green-fg">    280</span>     <span style="color: rgb(95,135,135)"># auto_adjust_subplotpars twice, where the second run</span>
+<span class="ansi-green-fg">    281</span>     <span style="color: rgb(95,135,135)"># with adjusted rect parameters.</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/_tight_layout.py:82</span>, in <span class="ansi-cyan-fg">_auto_adjust_subplotpars</span><span class="ansi-blue-fg">(fig, renderer, shape, span_pairs, subplot_list, ax_bbox_list, pad, h_pad, w_pad, rect)</span>
+<span class="ansi-green-fg">     80</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> ax <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> subplots:
+<span class="ansi-green-fg">     81</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> ax.get_visible():
+<span class="ansi-green-fg">---&gt; </span><span class="ansi-green-fg">82</span>         bb += [<span class="ansi-yellow-bg">martist</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_get_tightbbox_for_layout_only</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">ax</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">)</span>]
+<span class="ansi-green-fg">     84</span> tight_bbox_raw = Bbox.union(bb)
+<span class="ansi-green-fg">     85</span> tight_bbox = fig.transFigure.inverted().transform_bbox(tight_bbox_raw)
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/artist.py:1402</span>, in <span class="ansi-cyan-fg">_get_tightbbox_for_layout_only</span><span class="ansi-blue-fg">(obj, *args, **kwargs)</span>
+<span class="ansi-green-fg">   1396</span> <span class="ansi-yellow-fg">"""</span>
+<span class="ansi-green-fg">   1397</span> <span class="ansi-yellow-fg">Matplotlib's `.Axes.get_tightbbox` and `.Axis.get_tightbbox` support a</span>
+<span class="ansi-green-fg">   1398</span> <span class="ansi-yellow-fg">*for_layout_only* kwarg; this helper tries to use the kwarg but skips it</span>
+<span class="ansi-green-fg">   1399</span> <span class="ansi-yellow-fg">when encountering third-party subclasses that do not support it.</span>
+<span class="ansi-green-fg">   1400</span> <span class="ansi-yellow-fg">"""</span>
+<span class="ansi-green-fg">   1401</span> <span class="ansi-bold" style="color: rgb(0,135,0)">try</span>:
+<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">1402</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">obj</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">get_tightbbox</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">{</span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-fg ansi-yellow-bg">for_layout_only</span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-bg">:</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">True</span><span class="ansi-yellow-bg">}</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">   1403</span> <span class="ansi-bold" style="color: rgb(0,135,0)">except</span> <span class="ansi-bold" style="color: rgb(215,95,95)">TypeError</span>:
+<span class="ansi-green-fg">   1404</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> obj.get_tightbbox(*args, **kwargs)
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/axes/_base.py:4564</span>, in <span class="ansi-cyan-fg">_AxesBase.get_tightbbox</span><span class="ansi-blue-fg">(self, renderer, call_axes_locator, bbox_extra_artists, for_layout_only)</span>
+<span class="ansi-green-fg">   4562</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> axis <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span>._axis_map.values():
+<span class="ansi-green-fg">   4563</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">self</span>.axison <span class="ansi-bold" style="color: rgb(175,0,255)">and</span> axis.get_visible():
+<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">4564</span>         ba = <span class="ansi-yellow-bg">martist</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_get_tightbbox_for_layout_only</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">axis</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">   4565</span>         <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> ba:
+<span class="ansi-green-fg">   4566</span>             bb.append(ba)
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/artist.py:1402</span>, in <span class="ansi-cyan-fg">_get_tightbbox_for_layout_only</span><span class="ansi-blue-fg">(obj, *args, **kwargs)</span>
+<span class="ansi-green-fg">   1396</span> <span class="ansi-yellow-fg">"""</span>
+<span class="ansi-green-fg">   1397</span> <span class="ansi-yellow-fg">Matplotlib's `.Axes.get_tightbbox` and `.Axis.get_tightbbox` support a</span>
+<span class="ansi-green-fg">   1398</span> <span class="ansi-yellow-fg">*for_layout_only* kwarg; this helper tries to use the kwarg but skips it</span>
+<span class="ansi-green-fg">   1399</span> <span class="ansi-yellow-fg">when encountering third-party subclasses that do not support it.</span>
+<span class="ansi-green-fg">   1400</span> <span class="ansi-yellow-fg">"""</span>
+<span class="ansi-green-fg">   1401</span> <span class="ansi-bold" style="color: rgb(0,135,0)">try</span>:
+<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">1402</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">obj</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">get_tightbbox</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">{</span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-fg ansi-yellow-bg">for_layout_only</span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-bg">:</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">True</span><span class="ansi-yellow-bg">}</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">   1403</span> <span class="ansi-bold" style="color: rgb(0,135,0)">except</span> <span class="ansi-bold" style="color: rgb(215,95,95)">TypeError</span>:
+<span class="ansi-green-fg">   1404</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> obj.get_tightbbox(*args, **kwargs)
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/axis.py:1353</span>, in <span class="ansi-cyan-fg">Axis.get_tightbbox</span><span class="ansi-blue-fg">(self, renderer, for_layout_only)</span>
+<span class="ansi-green-fg">   1350</span>     renderer = <span style="color: rgb(0,135,0)">self</span>.get_figure(root=<span class="ansi-bold" style="color: rgb(0,135,0)">True</span>)._get_renderer()
+<span class="ansi-green-fg">   1351</span> ticks_to_draw = <span style="color: rgb(0,135,0)">self</span>._update_ticks()
+<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">1353</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_update_label_position</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">   1355</span> <span style="color: rgb(95,135,135)"># go back to just this axis's tick labels</span>
+<span class="ansi-green-fg">   1356</span> tlb1, tlb2 = <span style="color: rgb(0,135,0)">self</span>._get_ticklabel_bboxes(ticks_to_draw, renderer)
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/axis.py:2448</span>, in <span class="ansi-cyan-fg">XAxis._update_label_position</span><span class="ansi-blue-fg">(self, renderer)</span>
+<span class="ansi-green-fg">   2444</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span>
+<span class="ansi-green-fg">   2446</span> <span style="color: rgb(95,135,135)"># get bounding boxes for this axis and any siblings</span>
+<span class="ansi-green-fg">   2447</span> <span style="color: rgb(95,135,135)"># that have been set by `fig.align_xlabels()`</span>
+<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">2448</span> bboxes, bboxes2 = <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_get_tick_boxes_siblings</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">   2449</span> x, y = <span style="color: rgb(0,135,0)">self</span>.label.get_position()
+<span class="ansi-green-fg">   2451</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">self</span>.label_position == <span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">bottom</span><span class="ansi-yellow-fg">'</span>:
+<span class="ansi-green-fg">   2452</span>     <span style="color: rgb(95,135,135)"># Union with extents of the bottom spine if present, of the axes otherwise.</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/axis.py:2241</span>, in <span class="ansi-cyan-fg">Axis._get_tick_boxes_siblings</span><span class="ansi-blue-fg">(self, renderer)</span>
+<span class="ansi-green-fg">   2239</span> axis = ax._axis_map[name]
+<span class="ansi-green-fg">   2240</span> ticks_to_draw = axis._update_ticks()
+<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">2241</span> tlb, tlb2 = <span class="ansi-yellow-bg">axis</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_get_ticklabel_bboxes</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">ticks_to_draw</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">   2242</span> bboxes.extend(tlb)
+<span class="ansi-green-fg">   2243</span> bboxes2.extend(tlb2)
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/axis.py:1332</span>, in <span class="ansi-cyan-fg">Axis._get_ticklabel_bboxes</span><span class="ansi-blue-fg">(self, ticks, renderer)</span>
+<span class="ansi-green-fg">   1330</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> renderer <span class="ansi-bold" style="color: rgb(175,0,255)">is</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>:
+<span class="ansi-green-fg">   1331</span>     renderer = <span style="color: rgb(0,135,0)">self</span>.get_figure(root=<span class="ansi-bold" style="color: rgb(0,135,0)">True</span>)._get_renderer()
+<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">1332</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> (<span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">tick</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">label1</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">get_window_extent</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">   1333</span> <span class="ansi-yellow-bg">         </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">for</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">tick</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(175,0,255)">in</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">ticks</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">if</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">tick</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">label1</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">get_visible</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">]</span>,
+<span class="ansi-green-fg">   1334</span>         [tick.label2.get_window_extent(renderer)
+<span class="ansi-green-fg">   1335</span>          <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> tick <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> ticks <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> tick.label2.get_visible()])
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/axis.py:1332</span>, in <span class="ansi-cyan-fg">&lt;listcomp&gt;</span><span class="ansi-blue-fg">(.0)</span>
+<span class="ansi-green-fg">   1330</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> renderer <span class="ansi-bold" style="color: rgb(175,0,255)">is</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>:
+<span class="ansi-green-fg">   1331</span>     renderer = <span style="color: rgb(0,135,0)">self</span>.get_figure(root=<span class="ansi-bold" style="color: rgb(0,135,0)">True</span>)._get_renderer()
+<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">1332</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> ([<span class="ansi-yellow-bg">tick</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">label1</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">get_window_extent</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">   1333</span>          <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> tick <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> ticks <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> tick.label1.get_visible()],
+<span class="ansi-green-fg">   1334</span>         [tick.label2.get_window_extent(renderer)
+<span class="ansi-green-fg">   1335</span>          <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> tick <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> ticks <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> tick.label2.get_visible()])
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/text.py:969</span>, in <span class="ansi-cyan-fg">Text.get_window_extent</span><span class="ansi-blue-fg">(self, renderer, dpi)</span>
+<span class="ansi-green-fg">    964</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">raise</span> <span class="ansi-bold" style="color: rgb(215,95,95)">RuntimeError</span>(
+<span class="ansi-green-fg">    965</span>         <span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">Cannot get window extent of text w/o renderer. You likely </span><span class="ansi-yellow-fg">"</span>
+<span class="ansi-green-fg">    966</span>         <span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">want to call </span><span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">figure.draw_without_rendering()</span><span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg"> first.</span><span class="ansi-yellow-fg">"</span>)
+<span class="ansi-green-fg">    968</span> <span class="ansi-bold" style="color: rgb(0,135,0)">with</span> cbook._setattr_cm(fig, dpi=dpi):
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">969</span>     bbox, info, descent = <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_get_layout</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_renderer</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    970</span>     x, y = <span style="color: rgb(0,135,0)">self</span>.get_unitless_position()
+<span class="ansi-green-fg">    971</span>     x, y = <span style="color: rgb(0,135,0)">self</span>.get_transform().transform((x, y))
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/text.py:373</span>, in <span class="ansi-cyan-fg">Text._get_layout</span><span class="ansi-blue-fg">(self, renderer)</span>
+<span class="ansi-green-fg">    370</span> ys = []
+<span class="ansi-green-fg">    372</span> <span style="color: rgb(95,135,135)"># Full vertical extent of font, including ascenders and descenders:</span>
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">373</span> _, lp_h, lp_d = <span class="ansi-yellow-bg">_get_text_metrics_with_cache</span><span class="ansi-yellow-bg">(</span>
+<span class="ansi-green-fg">    374</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-fg ansi-yellow-bg">lp</span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_fontproperties</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">    375</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">ismath</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-fg ansi-yellow-bg">TeX</span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">if</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">get_usetex</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">else</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">False</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">    376</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">dpi</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">get_figure</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">root</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">True</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">dpi</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    377</span> min_dy = (lp_h - lp_d) * <span style="color: rgb(0,135,0)">self</span>._linespacing
+<span class="ansi-green-fg">    379</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> i, line <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">enumerate</span>(lines):
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/text.py:69</span>, in <span class="ansi-cyan-fg">_get_text_metrics_with_cache</span><span class="ansi-blue-fg">(renderer, text, fontprop, ismath, dpi)</span>
+<span class="ansi-green-fg">     66</span> <span class="ansi-yellow-fg">"""Call ``renderer.get_text_width_height_descent``, caching the results."""</span>
+<span class="ansi-green-fg">     67</span> <span style="color: rgb(95,135,135)"># Cached based on a copy of fontprop so that later in-place mutations of</span>
+<span class="ansi-green-fg">     68</span> <span style="color: rgb(95,135,135)"># the passed-in argument do not mess up the cache.</span>
+<span class="ansi-green-fg">---&gt; </span><span class="ansi-green-fg">69</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">_get_text_metrics_with_cache_impl</span><span class="ansi-yellow-bg">(</span>
+<span class="ansi-green-fg">     70</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">weakref</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">ref</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">text</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">fontprop</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">copy</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">ismath</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">dpi</span><span class="ansi-yellow-bg">)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/text.py:77</span>, in <span class="ansi-cyan-fg">_get_text_metrics_with_cache_impl</span><span class="ansi-blue-fg">(renderer_ref, text, fontprop, ismath, dpi)</span>
+<span class="ansi-green-fg">     73</span> <span style="color: rgb(175,0,255)">@functools</span>.lru_cache(<span class="ansi-green-fg">4096</span>)
+<span class="ansi-green-fg">     74</span> <span class="ansi-bold" style="color: rgb(0,135,0)">def</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-blue-fg">_get_text_metrics_with_cache_impl</span>(
+<span class="ansi-green-fg">     75</span>         renderer_ref, text, fontprop, ismath, dpi):
+<span class="ansi-green-fg">     76</span>     <span style="color: rgb(95,135,135)"># dpi is unused, but participates in cache invalidation (via the renderer).</span>
+<span class="ansi-green-fg">---&gt; </span><span class="ansi-green-fg">77</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">renderer_ref</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">get_text_width_height_descent</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">text</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">fontprop</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">ismath</span><span class="ansi-yellow-bg">)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/backends/backend_agg.py:211</span>, in <span class="ansi-cyan-fg">RendererAgg.get_text_width_height_descent</span><span class="ansi-blue-fg">(self, s, prop, ismath)</span>
+<span class="ansi-green-fg">    209</span> _api.check_in_list([<span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">TeX</span><span class="ansi-yellow-fg">"</span>, <span class="ansi-bold" style="color: rgb(0,135,0)">True</span>, <span class="ansi-bold" style="color: rgb(0,135,0)">False</span>], ismath=ismath)
+<span class="ansi-green-fg">    210</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> ismath == <span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">TeX</span><span class="ansi-yellow-fg">"</span>:
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">211</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">super</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">get_text_width_height_descent</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">s</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">prop</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">ismath</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    213</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> ismath:
+<span class="ansi-green-fg">    214</span>     ox, oy, width, height, descent, font_image = \
+<span class="ansi-green-fg">    215</span>         <span style="color: rgb(0,135,0)">self</span>.mathtext_parser.parse(s, <span style="color: rgb(0,135,0)">self</span>.dpi, prop)
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/backend_bases.py:566</span>, in <span class="ansi-cyan-fg">RendererBase.get_text_width_height_descent</span><span class="ansi-blue-fg">(self, s, prop, ismath)</span>
+<span class="ansi-green-fg">    562</span> fontsize = prop.get_size_in_points()
+<span class="ansi-green-fg">    564</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> ismath == <span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">TeX</span><span class="ansi-yellow-fg">'</span>:
+<span class="ansi-green-fg">    565</span>     <span style="color: rgb(95,135,135)"># todo: handle properties</span>
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">566</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">get_texmanager</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">get_text_width_height_descent</span><span class="ansi-yellow-bg">(</span>
+<span class="ansi-green-fg">    567</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">s</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">fontsize</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    569</span> dpi = <span style="color: rgb(0,135,0)">self</span>.points_to_pixels(<span class="ansi-green-fg">72</span>)
+<span class="ansi-green-fg">    570</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> ismath:
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/texmanager.py:363</span>, in <span class="ansi-cyan-fg">TexManager.get_text_width_height_descent</span><span class="ansi-blue-fg">(cls, tex, fontsize, renderer)</span>
+<span class="ansi-green-fg">    361</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> tex.strip() == <span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">'</span>:
+<span class="ansi-green-fg">    362</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-green-fg">0</span>, <span class="ansi-green-fg">0</span>, <span class="ansi-green-fg">0</span>
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">363</span> dvifile = <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">cls</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">make_dvi</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">tex</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">fontsize</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    364</span> dpi_fraction = renderer.points_to_pixels(<span class="ansi-green-fg">1.</span>) <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> renderer <span class="ansi-bold" style="color: rgb(0,135,0)">else</span> <span class="ansi-green-fg">1</span>
+<span class="ansi-green-fg">    365</span> <span class="ansi-bold" style="color: rgb(0,135,0)">with</span> dviread.Dvi(dvifile, <span class="ansi-green-fg">72</span> * dpi_fraction) <span class="ansi-bold" style="color: rgb(0,135,0)">as</span> dvi:
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/texmanager.py:295</span>, in <span class="ansi-cyan-fg">TexManager.make_dvi</span><span class="ansi-blue-fg">(cls, tex, fontsize)</span>
+<span class="ansi-green-fg">    293</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">with</span> TemporaryDirectory(<span style="color: rgb(0,135,0)">dir</span>=cwd) <span class="ansi-bold" style="color: rgb(0,135,0)">as</span> tmpdir:
+<span class="ansi-green-fg">    294</span>         tmppath = Path(tmpdir)
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">295</span>         <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">cls</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_run_checked_subprocess</span><span class="ansi-yellow-bg">(</span>
+<span class="ansi-green-fg">    296</span> <span class="ansi-yellow-bg">            </span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-fg ansi-yellow-bg">latex</span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-fg ansi-yellow-bg">-interaction=nonstopmode</span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-fg ansi-yellow-bg">--halt-on-error</span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">    297</span> <span class="ansi-yellow-bg">             </span><span class="ansi-yellow-fg ansi-yellow-bg">f</span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-fg ansi-yellow-bg">--output-directory=</span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(175,95,135)">{</span><span class="ansi-yellow-bg">tmppath</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">name</span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(175,95,135)">}</span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">    298</span> <span class="ansi-yellow-bg">             </span><span class="ansi-yellow-fg ansi-yellow-bg">f</span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(175,95,135)">{</span><span class="ansi-yellow-bg">texfile</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">name</span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(175,95,135)">}</span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">tex</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">cwd</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">cwd</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    299</span>         (tmppath / Path(dvifile).name).replace(dvifile)
+<span class="ansi-green-fg">    300</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> dvifile
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/texmanager.py:254</span>, in <span class="ansi-cyan-fg">TexManager._run_checked_subprocess</span><span class="ansi-blue-fg">(cls, command, tex, cwd)</span>
+<span class="ansi-green-fg">    250</span>     report = subprocess.check_output(
+<span class="ansi-green-fg">    251</span>         command, cwd=cwd <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> cwd <span class="ansi-bold" style="color: rgb(175,0,255)">is</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span> <span style="color: rgb(0,135,0)">cls</span>._texcache,
+<span class="ansi-green-fg">    252</span>         stderr=subprocess.STDOUT)
+<span class="ansi-green-fg">    253</span> <span class="ansi-bold" style="color: rgb(0,135,0)">except</span> <span class="ansi-bold" style="color: rgb(215,95,95)">FileNotFoundError</span> <span class="ansi-bold" style="color: rgb(0,135,0)">as</span> exc:
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">254</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">raise</span> <span class="ansi-bold" style="color: rgb(215,95,95)">RuntimeError</span>(
+<span class="ansi-green-fg">    255</span>         <span class="ansi-yellow-fg">f</span><span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">Failed to process string with tex because </span><span class="ansi-bold" style="color: rgb(175,95,135)">{</span>command[<span class="ansi-green-fg">0</span>]<span class="ansi-bold" style="color: rgb(175,95,135)">}</span><span class="ansi-yellow-fg"> </span><span class="ansi-yellow-fg">'</span>
+<span class="ansi-green-fg">    256</span>         <span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">could not be found</span><span class="ansi-yellow-fg">'</span>) <span class="ansi-bold" style="color: rgb(0,135,0)">from</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-blue-intense-fg ansi-bold">exc</span>
+<span class="ansi-green-fg">    257</span> <span class="ansi-bold" style="color: rgb(0,135,0)">except</span> subprocess.CalledProcessError <span class="ansi-bold" style="color: rgb(0,135,0)">as</span> exc:
+<span class="ansi-green-fg">    258</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">raise</span> <span class="ansi-bold" style="color: rgb(215,95,95)">RuntimeError</span>(
+<span class="ansi-green-fg">    259</span>         <span class="ansi-yellow-fg">'</span><span class="ansi-bold" style="color: rgb(175,95,135)">{prog}</span><span class="ansi-yellow-fg"> was not able to process the following string:</span><span class="ansi-bold" style="color: rgb(175,95,0)">\n</span><span class="ansi-yellow-fg">'</span>
+<span class="ansi-green-fg">    260</span>         <span class="ansi-yellow-fg">'</span><span class="ansi-bold" style="color: rgb(175,95,135)">{tex!r}</span><span class="ansi-bold" style="color: rgb(175,95,0)">\n</span><span class="ansi-bold" style="color: rgb(175,95,0)">\n</span><span class="ansi-yellow-fg">'</span>
+<span class="ansi-green-fg">   (...)</span><span class="ansi-green-fg">    267</span>             exc=exc.output.decode(<span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">utf-8</span><span class="ansi-yellow-fg">'</span>, <span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">backslashreplace</span><span class="ansi-yellow-fg">'</span>))
+<span class="ansi-green-fg">    268</span>         ) <span class="ansi-bold" style="color: rgb(0,135,0)">from</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-bold" style="color: rgb(0,135,0)">None</span>
+
+<span class="ansi-red-fg">RuntimeError</span>: Failed to process string with tex because latex could not be found
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Error in callback &lt;function _draw_all_if_interactive at 0x7f74ba828400&gt; (for post_execute), with arguments args (),kwargs {}:
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">FileNotFoundError</span>                         Traceback (most recent call last)
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/texmanager.py:250</span>, in <span class="ansi-cyan-fg">TexManager._run_checked_subprocess</span><span class="ansi-blue-fg">(cls, command, tex, cwd)</span>
+<span class="ansi-green-fg">    249</span> <span class="ansi-bold" style="color: rgb(0,135,0)">try</span>:
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">250</span>     report = <span class="ansi-yellow-bg">subprocess</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">check_output</span><span class="ansi-yellow-bg">(</span>
+<span class="ansi-green-fg">    251</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">command</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">cwd</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">cwd</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">if</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">cwd</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(175,0,255)">is</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(175,0,255)">not</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">None</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">else</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">cls</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_texcache</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">    252</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">stderr</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">subprocess</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">STDOUT</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    253</span> <span class="ansi-bold" style="color: rgb(0,135,0)">except</span> <span class="ansi-bold" style="color: rgb(215,95,95)">FileNotFoundError</span> <span class="ansi-bold" style="color: rgb(0,135,0)">as</span> exc:
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/subprocess.py:466</span>, in <span class="ansi-cyan-fg">check_output</span><span class="ansi-blue-fg">(timeout, *popenargs, **kwargs)</span>
+<span class="ansi-green-fg">    464</span>     kwargs[<span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">input</span><span class="ansi-yellow-fg">'</span>] = empty
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">466</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">run</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">popenargs</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">stdout</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">PIPE</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">timeout</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">timeout</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">check</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">True</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">    467</span> <span class="ansi-yellow-bg">           </span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span>.stdout
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/subprocess.py:548</span>, in <span class="ansi-cyan-fg">run</span><span class="ansi-blue-fg">(input, capture_output, timeout, check, *popenargs, **kwargs)</span>
+<span class="ansi-green-fg">    546</span>     kwargs[<span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">stderr</span><span class="ansi-yellow-fg">'</span>] = PIPE
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">548</span> <span class="ansi-bold" style="color: rgb(0,135,0)">with</span> <span class="ansi-yellow-bg">Popen</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">popenargs</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span> <span class="ansi-bold" style="color: rgb(0,135,0)">as</span> process:
+<span class="ansi-green-fg">    549</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">try</span>:
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/subprocess.py:1026</span>, in <span class="ansi-cyan-fg">Popen.__init__</span><span class="ansi-blue-fg">(self, args, bufsize, executable, stdin, stdout, stderr, preexec_fn, close_fds, shell, cwd, env, universal_newlines, startupinfo, creationflags, restore_signals, start_new_session, pass_fds, user, group, extra_groups, encoding, errors, text, umask, pipesize, process_group)</span>
+<span class="ansi-green-fg">   1023</span>             <span style="color: rgb(0,135,0)">self</span>.stderr = io.TextIOWrapper(<span style="color: rgb(0,135,0)">self</span>.stderr,
+<span class="ansi-green-fg">   1024</span>                     encoding=encoding, errors=errors)
+<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">1026</span>     <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_execute_child</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">executable</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">preexec_fn</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">close_fds</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">   1027</span> <span class="ansi-yellow-bg">                        </span><span class="ansi-yellow-bg">pass_fds</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">cwd</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">env</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">   1028</span> <span class="ansi-yellow-bg">                        </span><span class="ansi-yellow-bg">startupinfo</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">creationflags</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">shell</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">   1029</span> <span class="ansi-yellow-bg">                        </span><span class="ansi-yellow-bg">p2cread</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">p2cwrite</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">   1030</span> <span class="ansi-yellow-bg">                        </span><span class="ansi-yellow-bg">c2pread</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">c2pwrite</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">   1031</span> <span class="ansi-yellow-bg">                        </span><span class="ansi-yellow-bg">errread</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">errwrite</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">   1032</span> <span class="ansi-yellow-bg">                        </span><span class="ansi-yellow-bg">restore_signals</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">   1033</span> <span class="ansi-yellow-bg">                        </span><span class="ansi-yellow-bg">gid</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">gids</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">uid</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">umask</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">   1034</span> <span class="ansi-yellow-bg">                        </span><span class="ansi-yellow-bg">start_new_session</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">process_group</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">   1035</span> <span class="ansi-bold" style="color: rgb(0,135,0)">except</span>:
+<span class="ansi-green-fg">   1036</span>     <span style="color: rgb(95,135,135)"># Cleanup if the child failed starting.</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/subprocess.py:1955</span>, in <span class="ansi-cyan-fg">Popen._execute_child</span><span class="ansi-blue-fg">(self, args, executable, preexec_fn, close_fds, pass_fds, cwd, env, startupinfo, creationflags, shell, p2cread, p2cwrite, c2pread, c2pwrite, errread, errwrite, restore_signals, gid, gids, uid, umask, start_new_session, process_group)</span>
+<span class="ansi-green-fg">   1954</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> err_filename <span class="ansi-bold" style="color: rgb(175,0,255)">is</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>:
+<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">1955</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">raise</span> child_exception_type(errno_num, err_msg, err_filename)
+<span class="ansi-green-fg">   1956</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:
+
+<span class="ansi-red-fg">FileNotFoundError</span>: [Errno 2] No such file or directory: 'latex'
+
+The above exception was the direct cause of the following exception:
+
+<span class="ansi-red-fg">RuntimeError</span>                              Traceback (most recent call last)
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/pyplot.py:279</span>, in <span class="ansi-cyan-fg">_draw_all_if_interactive</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">    277</span> <span class="ansi-bold" style="color: rgb(0,135,0)">def</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-blue-fg">_draw_all_if_interactive</span>() -&gt; <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>:
+<span class="ansi-green-fg">    278</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> matplotlib.is_interactive():
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">279</span>         <span class="ansi-yellow-bg">draw_all</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/_pylab_helpers.py:131</span>, in <span class="ansi-cyan-fg">Gcf.draw_all</span><span class="ansi-blue-fg">(cls, force)</span>
+<span class="ansi-green-fg">    129</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> manager <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">cls</span>.get_all_fig_managers():
+<span class="ansi-green-fg">    130</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> force <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> manager.canvas.figure.stale:
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">131</span>         <span class="ansi-yellow-bg">manager</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">canvas</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">draw_idle</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/backend_bases.py:1893</span>, in <span class="ansi-cyan-fg">FigureCanvasBase.draw_idle</span><span class="ansi-blue-fg">(self, *args, **kwargs)</span>
+<span class="ansi-green-fg">   1891</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span style="color: rgb(0,135,0)">self</span>._is_idle_drawing:
+<span class="ansi-green-fg">   1892</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">with</span> <span style="color: rgb(0,135,0)">self</span>._idle_draw_cntx():
+<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">1893</span>         <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">draw</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/backends/backend_agg.py:382</span>, in <span class="ansi-cyan-fg">FigureCanvasAgg.draw</span><span class="ansi-blue-fg">(self)</span>
+<span class="ansi-green-fg">    379</span> <span style="color: rgb(95,135,135)"># Acquire a lock on the shared font cache.</span>
+<span class="ansi-green-fg">    380</span> <span class="ansi-bold" style="color: rgb(0,135,0)">with</span> (<span style="color: rgb(0,135,0)">self</span>.toolbar._wait_cursor_for_draw_cm() <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">self</span>.toolbar
+<span class="ansi-green-fg">    381</span>       <span class="ansi-bold" style="color: rgb(0,135,0)">else</span> nullcontext()):
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">382</span>     <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">figure</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">draw</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    383</span>     <span style="color: rgb(95,135,135)"># A GUI class may be need to update a window using this draw, so</span>
+<span class="ansi-green-fg">    384</span>     <span style="color: rgb(95,135,135)"># don't forget to call the superclass.</span>
+<span class="ansi-green-fg">    385</span>     <span style="color: rgb(0,135,0)">super</span>().draw()
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/artist.py:94</span>, in <span class="ansi-cyan-fg">_finalize_rasterization.&lt;locals&gt;.draw_wrapper</span><span class="ansi-blue-fg">(artist, renderer, *args, **kwargs)</span>
+<span class="ansi-green-fg">     92</span> <span style="color: rgb(175,0,255)">@wraps</span>(draw)
+<span class="ansi-green-fg">     93</span> <span class="ansi-bold" style="color: rgb(0,135,0)">def</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-blue-fg">draw_wrapper</span>(artist, renderer, *args, **kwargs):
+<span class="ansi-green-fg">---&gt; </span><span class="ansi-green-fg">94</span>     result = <span class="ansi-yellow-bg">draw</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">artist</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">args</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">*</span><span class="ansi-yellow-bg">kwargs</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">     95</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> renderer._rasterizing:
+<span class="ansi-green-fg">     96</span>         renderer.stop_rasterizing()
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/artist.py:71</span>, in <span class="ansi-cyan-fg">allow_rasterization.&lt;locals&gt;.draw_wrapper</span><span class="ansi-blue-fg">(artist, renderer)</span>
+<span class="ansi-green-fg">     68</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> artist.get_agg_filter() <span class="ansi-bold" style="color: rgb(175,0,255)">is</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>:
+<span class="ansi-green-fg">     69</span>         renderer.start_filter()
+<span class="ansi-green-fg">---&gt; </span><span class="ansi-green-fg">71</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">draw</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">artist</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">     72</span> <span class="ansi-bold" style="color: rgb(0,135,0)">finally</span>:
+<span class="ansi-green-fg">     73</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> artist.get_agg_filter() <span class="ansi-bold" style="color: rgb(175,0,255)">is</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>:
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/figure.py:3257</span>, in <span class="ansi-cyan-fg">Figure.draw</span><span class="ansi-blue-fg">(self, renderer)</span>
+<span class="ansi-green-fg">   3254</span>             <span style="color: rgb(95,135,135)"># ValueError can occur when resizing a window.</span>
+<span class="ansi-green-fg">   3256</span>     <span style="color: rgb(0,135,0)">self</span>.patch.draw(renderer)
+<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">3257</span>     <span class="ansi-yellow-bg">mimage</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_draw_list_compositing_images</span><span class="ansi-yellow-bg">(</span>
+<span class="ansi-green-fg">   3258</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">artists</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">suppressComposite</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">   3260</span>     renderer.close_group(<span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">figure</span><span class="ansi-yellow-fg">'</span>)
+<span class="ansi-green-fg">   3261</span> <span class="ansi-bold" style="color: rgb(0,135,0)">finally</span>:
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/image.py:134</span>, in <span class="ansi-cyan-fg">_draw_list_compositing_images</span><span class="ansi-blue-fg">(renderer, parent, artists, suppress_composite)</span>
+<span class="ansi-green-fg">    132</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> not_composite <span class="ansi-bold" style="color: rgb(175,0,255)">or</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> has_images:
+<span class="ansi-green-fg">    133</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> a <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> artists:
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">134</span>         <span class="ansi-yellow-bg">a</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">draw</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    135</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span>:
+<span class="ansi-green-fg">    136</span>     <span style="color: rgb(95,135,135)"># Composite any adjacent images together</span>
+<span class="ansi-green-fg">    137</span>     image_group = []
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/artist.py:71</span>, in <span class="ansi-cyan-fg">allow_rasterization.&lt;locals&gt;.draw_wrapper</span><span class="ansi-blue-fg">(artist, renderer)</span>
+<span class="ansi-green-fg">     68</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> artist.get_agg_filter() <span class="ansi-bold" style="color: rgb(175,0,255)">is</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>:
+<span class="ansi-green-fg">     69</span>         renderer.start_filter()
+<span class="ansi-green-fg">---&gt; </span><span class="ansi-green-fg">71</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">draw</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">artist</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">     72</span> <span class="ansi-bold" style="color: rgb(0,135,0)">finally</span>:
+<span class="ansi-green-fg">     73</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> artist.get_agg_filter() <span class="ansi-bold" style="color: rgb(175,0,255)">is</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>:
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/axes/_base.py:3190</span>, in <span class="ansi-cyan-fg">_AxesBase.draw</span><span class="ansi-blue-fg">(self, renderer)</span>
+<span class="ansi-green-fg">   3187</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> spine <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span>.spines.values():
+<span class="ansi-green-fg">   3188</span>         artists.remove(spine)
+<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">3190</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_update_title_position</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">   3192</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span style="color: rgb(0,135,0)">self</span>.axison:
+<span class="ansi-green-fg">   3193</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> _axis <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">self</span>._axis_map.values():
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/axes/_base.py:3134</span>, in <span class="ansi-cyan-fg">_AxesBase._update_title_position</span><span class="ansi-blue-fg">(self, renderer)</span>
+<span class="ansi-green-fg">   3132</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> title.get_text():
+<span class="ansi-green-fg">   3133</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> ax <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> axs:
+<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">3134</span>         <span class="ansi-yellow-bg">ax</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">yaxis</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">get_tightbbox</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">)</span>  <span style="color: rgb(95,135,135)"># update offsetText</span>
+<span class="ansi-green-fg">   3135</span>         <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> ax.yaxis.offsetText.get_text():
+<span class="ansi-green-fg">   3136</span>             bb = ax.yaxis.offsetText.get_tightbbox(renderer)
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/axis.py:1353</span>, in <span class="ansi-cyan-fg">Axis.get_tightbbox</span><span class="ansi-blue-fg">(self, renderer, for_layout_only)</span>
+<span class="ansi-green-fg">   1350</span>     renderer = <span style="color: rgb(0,135,0)">self</span>.get_figure(root=<span class="ansi-bold" style="color: rgb(0,135,0)">True</span>)._get_renderer()
+<span class="ansi-green-fg">   1351</span> ticks_to_draw = <span style="color: rgb(0,135,0)">self</span>._update_ticks()
+<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">1353</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_update_label_position</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">   1355</span> <span style="color: rgb(95,135,135)"># go back to just this axis's tick labels</span>
+<span class="ansi-green-fg">   1356</span> tlb1, tlb2 = <span style="color: rgb(0,135,0)">self</span>._get_ticklabel_bboxes(ticks_to_draw, renderer)
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/axis.py:2675</span>, in <span class="ansi-cyan-fg">YAxis._update_label_position</span><span class="ansi-blue-fg">(self, renderer)</span>
+<span class="ansi-green-fg">   2671</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span>
+<span class="ansi-green-fg">   2673</span> <span style="color: rgb(95,135,135)"># get bounding boxes for this axis and any siblings</span>
+<span class="ansi-green-fg">   2674</span> <span style="color: rgb(95,135,135)"># that have been set by `fig.align_ylabels()`</span>
+<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">2675</span> bboxes, bboxes2 = <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_get_tick_boxes_siblings</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">   2676</span> x, y = <span style="color: rgb(0,135,0)">self</span>.label.get_position()
+<span class="ansi-green-fg">   2678</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> <span style="color: rgb(0,135,0)">self</span>.label_position == <span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">left</span><span class="ansi-yellow-fg">'</span>:
+<span class="ansi-green-fg">   2679</span>     <span style="color: rgb(95,135,135)"># Union with extents of the left spine if present, of the axes otherwise.</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/axis.py:2241</span>, in <span class="ansi-cyan-fg">Axis._get_tick_boxes_siblings</span><span class="ansi-blue-fg">(self, renderer)</span>
+<span class="ansi-green-fg">   2239</span> axis = ax._axis_map[name]
+<span class="ansi-green-fg">   2240</span> ticks_to_draw = axis._update_ticks()
+<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">2241</span> tlb, tlb2 = <span class="ansi-yellow-bg">axis</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_get_ticklabel_bboxes</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">ticks_to_draw</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">   2242</span> bboxes.extend(tlb)
+<span class="ansi-green-fg">   2243</span> bboxes2.extend(tlb2)
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/axis.py:1332</span>, in <span class="ansi-cyan-fg">Axis._get_ticklabel_bboxes</span><span class="ansi-blue-fg">(self, ticks, renderer)</span>
+<span class="ansi-green-fg">   1330</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> renderer <span class="ansi-bold" style="color: rgb(175,0,255)">is</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>:
+<span class="ansi-green-fg">   1331</span>     renderer = <span style="color: rgb(0,135,0)">self</span>.get_figure(root=<span class="ansi-bold" style="color: rgb(0,135,0)">True</span>)._get_renderer()
+<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">1332</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> (<span class="ansi-yellow-bg">[</span><span class="ansi-yellow-bg">tick</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">label1</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">get_window_extent</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">   1333</span> <span class="ansi-yellow-bg">         </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">for</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">tick</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(175,0,255)">in</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">ticks</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">if</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">tick</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">label1</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">get_visible</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">]</span>,
+<span class="ansi-green-fg">   1334</span>         [tick.label2.get_window_extent(renderer)
+<span class="ansi-green-fg">   1335</span>          <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> tick <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> ticks <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> tick.label2.get_visible()])
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/axis.py:1332</span>, in <span class="ansi-cyan-fg">&lt;listcomp&gt;</span><span class="ansi-blue-fg">(.0)</span>
+<span class="ansi-green-fg">   1330</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> renderer <span class="ansi-bold" style="color: rgb(175,0,255)">is</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span>:
+<span class="ansi-green-fg">   1331</span>     renderer = <span style="color: rgb(0,135,0)">self</span>.get_figure(root=<span class="ansi-bold" style="color: rgb(0,135,0)">True</span>)._get_renderer()
+<span class="ansi-green-fg">-&gt; </span><span class="ansi-green-fg">1332</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> ([<span class="ansi-yellow-bg">tick</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">label1</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">get_window_extent</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">   1333</span>          <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> tick <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> ticks <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> tick.label1.get_visible()],
+<span class="ansi-green-fg">   1334</span>         [tick.label2.get_window_extent(renderer)
+<span class="ansi-green-fg">   1335</span>          <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> tick <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> ticks <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> tick.label2.get_visible()])
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/text.py:969</span>, in <span class="ansi-cyan-fg">Text.get_window_extent</span><span class="ansi-blue-fg">(self, renderer, dpi)</span>
+<span class="ansi-green-fg">    964</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">raise</span> <span class="ansi-bold" style="color: rgb(215,95,95)">RuntimeError</span>(
+<span class="ansi-green-fg">    965</span>         <span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">Cannot get window extent of text w/o renderer. You likely </span><span class="ansi-yellow-fg">"</span>
+<span class="ansi-green-fg">    966</span>         <span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">want to call </span><span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">figure.draw_without_rendering()</span><span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg"> first.</span><span class="ansi-yellow-fg">"</span>)
+<span class="ansi-green-fg">    968</span> <span class="ansi-bold" style="color: rgb(0,135,0)">with</span> cbook._setattr_cm(fig, dpi=dpi):
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">969</span>     bbox, info, descent = <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_get_layout</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_renderer</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    970</span>     x, y = <span style="color: rgb(0,135,0)">self</span>.get_unitless_position()
+<span class="ansi-green-fg">    971</span>     x, y = <span style="color: rgb(0,135,0)">self</span>.get_transform().transform((x, y))
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/text.py:373</span>, in <span class="ansi-cyan-fg">Text._get_layout</span><span class="ansi-blue-fg">(self, renderer)</span>
+<span class="ansi-green-fg">    370</span> ys = []
+<span class="ansi-green-fg">    372</span> <span style="color: rgb(95,135,135)"># Full vertical extent of font, including ascenders and descenders:</span>
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">373</span> _, lp_h, lp_d = <span class="ansi-yellow-bg">_get_text_metrics_with_cache</span><span class="ansi-yellow-bg">(</span>
+<span class="ansi-green-fg">    374</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-fg ansi-yellow-bg">lp</span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_fontproperties</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">    375</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">ismath</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-fg ansi-yellow-bg">TeX</span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">if</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">get_usetex</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">else</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">False</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">    376</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">dpi</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">get_figure</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">root</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(0,135,0)">True</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">dpi</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    377</span> min_dy = (lp_h - lp_d) * <span style="color: rgb(0,135,0)">self</span>._linespacing
+<span class="ansi-green-fg">    379</span> <span class="ansi-bold" style="color: rgb(0,135,0)">for</span> i, line <span class="ansi-bold" style="color: rgb(175,0,255)">in</span> <span style="color: rgb(0,135,0)">enumerate</span>(lines):
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/text.py:69</span>, in <span class="ansi-cyan-fg">_get_text_metrics_with_cache</span><span class="ansi-blue-fg">(renderer, text, fontprop, ismath, dpi)</span>
+<span class="ansi-green-fg">     66</span> <span class="ansi-yellow-fg">"""Call ``renderer.get_text_width_height_descent``, caching the results."""</span>
+<span class="ansi-green-fg">     67</span> <span style="color: rgb(95,135,135)"># Cached based on a copy of fontprop so that later in-place mutations of</span>
+<span class="ansi-green-fg">     68</span> <span style="color: rgb(95,135,135)"># the passed-in argument do not mess up the cache.</span>
+<span class="ansi-green-fg">---&gt; </span><span class="ansi-green-fg">69</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">_get_text_metrics_with_cache_impl</span><span class="ansi-yellow-bg">(</span>
+<span class="ansi-green-fg">     70</span> <span class="ansi-yellow-bg">    </span><span class="ansi-yellow-bg">weakref</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">ref</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">text</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">fontprop</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">copy</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">ismath</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">dpi</span><span class="ansi-yellow-bg">)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/text.py:77</span>, in <span class="ansi-cyan-fg">_get_text_metrics_with_cache_impl</span><span class="ansi-blue-fg">(renderer_ref, text, fontprop, ismath, dpi)</span>
+<span class="ansi-green-fg">     73</span> <span style="color: rgb(175,0,255)">@functools</span>.lru_cache(<span class="ansi-green-fg">4096</span>)
+<span class="ansi-green-fg">     74</span> <span class="ansi-bold" style="color: rgb(0,135,0)">def</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-blue-fg">_get_text_metrics_with_cache_impl</span>(
+<span class="ansi-green-fg">     75</span>         renderer_ref, text, fontprop, ismath, dpi):
+<span class="ansi-green-fg">     76</span>     <span style="color: rgb(95,135,135)"># dpi is unused, but participates in cache invalidation (via the renderer).</span>
+<span class="ansi-green-fg">---&gt; </span><span class="ansi-green-fg">77</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg">renderer_ref</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">get_text_width_height_descent</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">text</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">fontprop</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">ismath</span><span class="ansi-yellow-bg">)</span>
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/backends/backend_agg.py:211</span>, in <span class="ansi-cyan-fg">RendererAgg.get_text_width_height_descent</span><span class="ansi-blue-fg">(self, s, prop, ismath)</span>
+<span class="ansi-green-fg">    209</span> _api.check_in_list([<span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">TeX</span><span class="ansi-yellow-fg">"</span>, <span class="ansi-bold" style="color: rgb(0,135,0)">True</span>, <span class="ansi-bold" style="color: rgb(0,135,0)">False</span>], ismath=ismath)
+<span class="ansi-green-fg">    210</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> ismath == <span class="ansi-yellow-fg">"</span><span class="ansi-yellow-fg">TeX</span><span class="ansi-yellow-fg">"</span>:
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">211</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">super</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">get_text_width_height_descent</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">s</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">prop</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">ismath</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    213</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> ismath:
+<span class="ansi-green-fg">    214</span>     ox, oy, width, height, descent, font_image = \
+<span class="ansi-green-fg">    215</span>         <span style="color: rgb(0,135,0)">self</span>.mathtext_parser.parse(s, <span style="color: rgb(0,135,0)">self</span>.dpi, prop)
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/backend_bases.py:566</span>, in <span class="ansi-cyan-fg">RendererBase.get_text_width_height_descent</span><span class="ansi-blue-fg">(self, s, prop, ismath)</span>
+<span class="ansi-green-fg">    562</span> fontsize = prop.get_size_in_points()
+<span class="ansi-green-fg">    564</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> ismath == <span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">TeX</span><span class="ansi-yellow-fg">'</span>:
+<span class="ansi-green-fg">    565</span>     <span style="color: rgb(95,135,135)"># todo: handle properties</span>
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">566</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">get_texmanager</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">)</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">get_text_width_height_descent</span><span class="ansi-yellow-bg">(</span>
+<span class="ansi-green-fg">    567</span> <span class="ansi-yellow-bg">        </span><span class="ansi-yellow-bg">s</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">fontsize</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">renderer</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg" style="color: rgb(0,135,0)">self</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    569</span> dpi = <span style="color: rgb(0,135,0)">self</span>.points_to_pixels(<span class="ansi-green-fg">72</span>)
+<span class="ansi-green-fg">    570</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> ismath:
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/texmanager.py:363</span>, in <span class="ansi-cyan-fg">TexManager.get_text_width_height_descent</span><span class="ansi-blue-fg">(cls, tex, fontsize, renderer)</span>
+<span class="ansi-green-fg">    361</span> <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> tex.strip() == <span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">'</span>:
+<span class="ansi-green-fg">    362</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> <span class="ansi-green-fg">0</span>, <span class="ansi-green-fg">0</span>, <span class="ansi-green-fg">0</span>
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">363</span> dvifile = <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">cls</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">make_dvi</span><span class="ansi-yellow-bg">(</span><span class="ansi-yellow-bg">tex</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">fontsize</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    364</span> dpi_fraction = renderer.points_to_pixels(<span class="ansi-green-fg">1.</span>) <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> renderer <span class="ansi-bold" style="color: rgb(0,135,0)">else</span> <span class="ansi-green-fg">1</span>
+<span class="ansi-green-fg">    365</span> <span class="ansi-bold" style="color: rgb(0,135,0)">with</span> dviread.Dvi(dvifile, <span class="ansi-green-fg">72</span> * dpi_fraction) <span class="ansi-bold" style="color: rgb(0,135,0)">as</span> dvi:
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/texmanager.py:295</span>, in <span class="ansi-cyan-fg">TexManager.make_dvi</span><span class="ansi-blue-fg">(cls, tex, fontsize)</span>
+<span class="ansi-green-fg">    293</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">with</span> TemporaryDirectory(<span style="color: rgb(0,135,0)">dir</span>=cwd) <span class="ansi-bold" style="color: rgb(0,135,0)">as</span> tmpdir:
+<span class="ansi-green-fg">    294</span>         tmppath = Path(tmpdir)
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">295</span>         <span class="ansi-yellow-bg" style="color: rgb(0,135,0)">cls</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">_run_checked_subprocess</span><span class="ansi-yellow-bg">(</span>
+<span class="ansi-green-fg">    296</span> <span class="ansi-yellow-bg">            </span><span class="ansi-yellow-bg">[</span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-fg ansi-yellow-bg">latex</span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-fg ansi-yellow-bg">-interaction=nonstopmode</span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-fg ansi-yellow-bg">--halt-on-error</span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">    297</span> <span class="ansi-yellow-bg">             </span><span class="ansi-yellow-fg ansi-yellow-bg">f</span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-fg ansi-yellow-bg">--output-directory=</span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(175,95,135)">{</span><span class="ansi-yellow-bg">tmppath</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">name</span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(175,95,135)">}</span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-bg">,</span>
+<span class="ansi-green-fg">    298</span> <span class="ansi-yellow-bg">             </span><span class="ansi-yellow-fg ansi-yellow-bg">f</span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(175,95,135)">{</span><span class="ansi-yellow-bg">texfile</span><span class="ansi-yellow-bg">.</span><span class="ansi-yellow-bg">name</span><span class="ansi-yellow-bg ansi-bold" style="color: rgb(175,95,135)">}</span><span class="ansi-yellow-fg ansi-yellow-bg">"</span><span class="ansi-yellow-bg">]</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">tex</span><span class="ansi-yellow-bg">,</span><span class="ansi-yellow-bg"> </span><span class="ansi-yellow-bg">cwd</span><span class="ansi-yellow-bg">=</span><span class="ansi-yellow-bg">cwd</span><span class="ansi-yellow-bg">)</span>
+<span class="ansi-green-fg">    299</span>         (tmppath / Path(dvifile).name).replace(dvifile)
+<span class="ansi-green-fg">    300</span> <span class="ansi-bold" style="color: rgb(0,135,0)">return</span> dvifile
+
+<span class="ansi-cyan-fg">File </span><span class="ansi-green-fg">/opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages/matplotlib/texmanager.py:254</span>, in <span class="ansi-cyan-fg">TexManager._run_checked_subprocess</span><span class="ansi-blue-fg">(cls, command, tex, cwd)</span>
+<span class="ansi-green-fg">    250</span>     report = subprocess.check_output(
+<span class="ansi-green-fg">    251</span>         command, cwd=cwd <span class="ansi-bold" style="color: rgb(0,135,0)">if</span> cwd <span class="ansi-bold" style="color: rgb(175,0,255)">is</span> <span class="ansi-bold" style="color: rgb(175,0,255)">not</span> <span class="ansi-bold" style="color: rgb(0,135,0)">None</span> <span class="ansi-bold" style="color: rgb(0,135,0)">else</span> <span style="color: rgb(0,135,0)">cls</span>._texcache,
+<span class="ansi-green-fg">    252</span>         stderr=subprocess.STDOUT)
+<span class="ansi-green-fg">    253</span> <span class="ansi-bold" style="color: rgb(0,135,0)">except</span> <span class="ansi-bold" style="color: rgb(215,95,95)">FileNotFoundError</span> <span class="ansi-bold" style="color: rgb(0,135,0)">as</span> exc:
+<span class="ansi-green-fg">--&gt; </span><span class="ansi-green-fg">254</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">raise</span> <span class="ansi-bold" style="color: rgb(215,95,95)">RuntimeError</span>(
+<span class="ansi-green-fg">    255</span>         <span class="ansi-yellow-fg">f</span><span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">Failed to process string with tex because </span><span class="ansi-bold" style="color: rgb(175,95,135)">{</span>command[<span class="ansi-green-fg">0</span>]<span class="ansi-bold" style="color: rgb(175,95,135)">}</span><span class="ansi-yellow-fg"> </span><span class="ansi-yellow-fg">'</span>
+<span class="ansi-green-fg">    256</span>         <span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">could not be found</span><span class="ansi-yellow-fg">'</span>) <span class="ansi-bold" style="color: rgb(0,135,0)">from</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-blue-intense-fg ansi-bold">exc</span>
+<span class="ansi-green-fg">    257</span> <span class="ansi-bold" style="color: rgb(0,135,0)">except</span> subprocess.CalledProcessError <span class="ansi-bold" style="color: rgb(0,135,0)">as</span> exc:
+<span class="ansi-green-fg">    258</span>     <span class="ansi-bold" style="color: rgb(0,135,0)">raise</span> <span class="ansi-bold" style="color: rgb(215,95,95)">RuntimeError</span>(
+<span class="ansi-green-fg">    259</span>         <span class="ansi-yellow-fg">'</span><span class="ansi-bold" style="color: rgb(175,95,135)">{prog}</span><span class="ansi-yellow-fg"> was not able to process the following string:</span><span class="ansi-bold" style="color: rgb(175,95,0)">\n</span><span class="ansi-yellow-fg">'</span>
+<span class="ansi-green-fg">    260</span>         <span class="ansi-yellow-fg">'</span><span class="ansi-bold" style="color: rgb(175,95,135)">{tex!r}</span><span class="ansi-bold" style="color: rgb(175,95,0)">\n</span><span class="ansi-bold" style="color: rgb(175,95,0)">\n</span><span class="ansi-yellow-fg">'</span>
+<span class="ansi-green-fg">   (...)</span><span class="ansi-green-fg">    267</span>             exc=exc.output.decode(<span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">utf-8</span><span class="ansi-yellow-fg">'</span>, <span class="ansi-yellow-fg">'</span><span class="ansi-yellow-fg">backslashreplace</span><span class="ansi-yellow-fg">'</span>))
+<span class="ansi-green-fg">    268</span>         ) <span class="ansi-bold" style="color: rgb(0,135,0)">from</span><span style="color: rgb(188,188,188)"> </span><span class="ansi-bold" style="color: rgb(0,135,0)">None</span>
+
+<span class="ansi-red-fg">RuntimeError</span>: Failed to process string with tex because latex could not be found
+</pre></div></div>
+</div>
+<p><img alt="Open in Colab" src="https://colab.research.google.com/assets/colab-badge.svg"/></p>
+</section>
+</section>
+</div><div class="flex justify-between items-center pt-6 mt-12 border-t border-border gap-4">
+</div></main></div><aside class="hidden text-sm xl:block" id="right-sidebar">
+<div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
+<ul>
+<li></li>
+<li><a :data-current="activeSection === '#QUICK-DESCRIPTION:'" class="reference internal" href="#QUICK-DESCRIPTION:">QUICK DESCRIPTION:</a><ul>
+<li><a :data-current="activeSection === '#2.-Sensitivity-Analysis-using-Re-Emission'" class="reference internal" href="#2.-Sensitivity-Analysis-using-Re-Emission">2. Sensitivity Analysis using Re-Emission</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</aside>
+
+</div>
+</div><footer class="py-6 border-t border-border md:py-0">
+<div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+<div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
+<p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2024, Tomasz Janus, University of Manchester, United Kingdom Built with <a class="font-medium underline underline-offset-4" href="https://www.sphinx-doc.org" rel="noreferrer">Sphinx 8.1.3</a></p>
+</div>
+</div>
+</footer>
+
+<script src="../_static/documentation_options.js?v=8d563738"></script>
+<script src="../_static/doctools.js?v=9bcbadda"></script>
+<script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../_static/copybutton.js?v=f281be69"></script>
+<script src="../_static/toggleprompt.js?v=5801b3bb"></script>
+<script defer="defer" src="../_static/theme.js?v=073f68d9"></script>
+<script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+<script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+<script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</body>
+</html>

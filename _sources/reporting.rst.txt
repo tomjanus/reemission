@@ -10,6 +10,14 @@ PDF report
 
 :pdfembed:`src: _static/demo/demo_GHG_outputs.pdf, height:1200, width:1200, align:top, page:1`
 
+HTML report
+-----------
+
+.. raw:: html
+
+    <iframe src="_static/demo/demo_GHG_outputs.html" width="1200" height="1200" style="border:none;">
+    </iframe>
+
 Spreadsheet File
 ----------------
 

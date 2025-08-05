@@ -1,998 +1,4 @@
 {
-    "Yunzalin": {
-        "inputs": {
-            "coordinates": {
-                "name": "Reservoir coordinates (lat/lon)",
-                "unit": "deg",
-                "value": [
-                    18.295,
-                    97.3408
-                ]
-            },
-            "id": {
-                "name": "Reservoir ID",
-                "unit": "",
-                "value": "152"
-            },
-            "type": {
-                "name": "Reservoir type",
-                "unit": "",
-                "value": "unknown"
-            },
-            "monthly_temps": {
-                "name": "Monthly Temperatures",
-                "unit": "deg C",
-                "value": [
-                    21.3,
-                    23.3,
-                    26.2,
-                    28.9,
-                    28.3,
-                    26.3,
-                    25.9,
-                    25.9,
-                    26.2,
-                    26.1,
-                    24.5,
-                    21.9
-                ]
-            },
-            "year_profile": {
-                "name": "Year vector for emission profiles",
-                "unit": "yr",
-                "value": [
-                    1,
-                    5,
-                    10,
-                    20,
-                    30,
-                    40,
-                    50,
-                    65,
-                    80,
-                    100
-                ]
-            },
-            "gasses": {
-                "name": "Calculated gas emissions",
-                "unit": "-",
-                "value": [
-                    "co2",
-                    "ch4",
-                    "n2o"
-                ]
-            },
-            "biogenic_factors": {
-                "name": "Biogenic factors",
-                "biome": {
-                    "name": "Biome",
-                    "unit": "",
-                    "value": "tropical moist broadleaf"
-                },
-                "climate": {
-                    "name": "Climate",
-                    "unit": "",
-                    "value": "tropical"
-                },
-                "soil_type": {
-                    "name": "Soil Type",
-                    "unit": "",
-                    "value": "mineral"
-                },
-                "treatment_factor": {
-                    "name": "Treatment Factor",
-                    "unit": "",
-                    "value": "primary (mechanical)"
-                },
-                "landuse_intensity": {
-                    "name": "Landuse Intensity",
-                    "unit": "",
-                    "value": "low intensity"
-                }
-            },
-            "catchment_inputs": {
-                "name": "Inputs for catchment-level process calculations",
-                "runoff": {
-                    "name": "Annual runoff",
-                    "unit": "mm/year",
-                    "value": 469.0
-                },
-                "area": {
-                    "name": "Catchment area",
-                    "unit": "km2",
-                    "value": 1370.371
-                },
-                "riv_length": {
-                    "name": "Length of inundated river",
-                    "unit": "km",
-                    "value": 5.59
-                },
-                "population": {
-                    "name": "Population",
-                    "unit": "capita",
-                    "value": 3908.0
-                },
-                "area_fractions": {
-                    "name": "Area fractions",
-                    "unit": "-",
-                    "value": "0.0, 0.0, 0.0, 0.0, 0.002, 0.003, 0.459, 0.536, 0.0"
-                },
-                "slope": {
-                    "name": "Mean catchment slope",
-                    "unit": "%",
-                    "value": 24.0
-                },
-                "precip": {
-                    "name": "Mean annual precipitation",
-                    "unit": "mm/year",
-                    "value": 1451.0
-                },
-                "etransp": {
-                    "name": "Mean annual evapotranspiration",
-                    "unit": "mm/year",
-                    "value": 1274.0
-                },
-                "soil_wetness": {
-                    "name": "Soil wetness",
-                    "unit": "mm over profile",
-                    "value": 412.0
-                },
-                "mean_olsen": {
-                    "name": "Soil Olsen P content",
-                    "unit": "kgP/ha",
-                    "value": 5.658
-                }
-            },
-            "reservoir_inputs": {
-                "name": "Inputs for reservoir-level process calculations",
-                "volume": {
-                    "name": "Reservoir volume",
-                    "unit": "m3",
-                    "value": 461865094.0
-                },
-                "area": {
-                    "name": "Reservoir area",
-                    "unit": "km2",
-                    "value": 6.791
-                },
-                "max_depth": {
-                    "name": "Maximum reservoir depth",
-                    "unit": "m",
-                    "value": 185.0
-                },
-                "mean_depth": {
-                    "name": "Mean reservoir depth",
-                    "unit": "m",
-                    "value": 68.0
-                },
-                "area_fractions": {
-                    "name": "Inundated area fractions",
-                    "unit": "-",
-                    "value": "0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.97, 0.03, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0"
-                },
-                "soil_carbon": {
-                    "name": "Soil carbon in inundated area",
-                    "unit": "kgC/m2",
-                    "value": 5.648
-                },
-                "mean_radiance": {
-                    "name": "Mean monthly horizontal radiance",
-                    "unit": "kWh/m2/d",
-                    "value": 4.92
-                },
-                "mean_radiance_may_sept": {
-                    "name": "Mean monthly horizontal radiance: May - Sept",
-                    "unit": "kWh/m2/d",
-                    "value": 4.17
-                },
-                "mean_radiance_nov_mar": {
-                    "name": "Mean monthly horizontal radiance: Nov - Mar",
-                    "unit": "kWh/m2/d",
-                    "value": 5.416
-                },
-                "mean_monthly_windspeed": {
-                    "name": "Mean monthly wind speed",
-                    "unit": "m/s",
-                    "value": 1.04
-                },
-                "water_intake_depth": {
-                    "name": "Water intake depth below surface",
-                    "unit": "m",
-                    "value": null
-                }
-            }
-        },
-        "outputs": {
-            "co2_diffusion": {
-                "name": "CO2 diffusion flux",
-                "gas_name": "CO2",
-                "unit": "gCO2eq m-2 yr-1",
-                "long_description": "Total CO2 emissions from a reservoir integrated over lifetime",
-                "value": 614.0891
-            },
-            "co2_diffusion_nonanthro": {
-                "name": "Nonanthropogenic CO2 diffusion flux",
-                "gas_name": "CO2",
-                "unit": "gCO2eq m-2 yr-1",
-                "long_description": "CO2 diffusion flux taken at (after) 100 years",
-                "value": 421.4361
-            },
-            "co2_preimp": {
-                "name": "Preimpoundment CO2 emissions",
-                "gas_name": "CO2",
-                "unit": "gCO2eq m-2 yr-1",
-                "long_description": "CO2 emission in the area covered by the reservoir prior to impoundment",
-                "value": -15.4
-            },
-            "co2_minus_nonanthro": {
-                "name": "CO2 emission minus non-anthropogenic",
-                "gas_name": "CO2",
-                "unit": "gCO2eq m-2 yr-1",
-                "long_description": "CO2 emissions minus non-anthropogenic over a number of years",
-                "value": 192.653
-            },
-            "co2_net": {
-                "name": "Net CO2 emission",
-                "gas_name": "CO2",
-                "unit": "gCO2eq m-2 yr-1",
-                "long_description": "Overall integrated emissions for lifetime",
-                "value": 208.053
-            },
-            "co2_total_per_year": {
-                "name": "Total CO2 emission per year",
-                "gas_name": "CO2",
-                "unit": "tCO2eq yr-1",
-                "long_description": "Total CO2 emission per year integrated over lifetime",
-                "value": 1412.8879
-            },
-            "co2_total_lifetime": {
-                "name": "Total CO2 emission per lifetime",
-                "gas_name": "CO2",
-                "unit": "tCO2eq",
-                "long_description": "Total CO2 emission integrated over lifetime",
-                "value": 141.2888
-            },
-            "co2_profile": {
-                "name": "CO2 emission profile",
-                "gas_name": "CO2",
-                "unit": "gCO2eq m-2 yr-1",
-                "long_description": "CO2 emission per year for a defined list of years",
-                "value": [
-                    1520.2986,
-                    726.5511,
-                    494.9783,
-                    310.7537,
-                    220.9844,
-                    164.1964,
-                    123.7147,
-                    79.7782,
-                    47.6046,
-                    15.4
-                ]
-            },
-            "ch4_diffusion": {
-                "name": "CH4 emission via diffusion",
-                "gas_name": "CH4",
-                "unit": "g CO2eq m-2 yr-1",
-                "long_description": "CH4 emission via diffusion integrated over a number of years.",
-                "value": 99.7324
-            },
-            "ch4_ebullition": {
-                "name": "CH4 emission via ebullition",
-                "gas_name": "CH4",
-                "unit": "g CO2eq m-2 yr-1",
-                "long_description": "CH4 emission via ebullition",
-                "value": 44.8219
-            },
-            "ch4_degassing": {
-                "name": "CH4 emission via degassing",
-                "gas_name": "CH4",
-                "unit": "g CO2eq m-2 yr-1",
-                "long_description": "CH4 emission via degassing integrated for a number of years",
-                "value": 306.4067
-            },
-            "ch4_preimp": {
-                "name": "Pre-impounment CH4 emission",
-                "gas_name": "CH4",
-                "unit": "g CO2eq m-2 yr-1",
-                "long_description": "Pre-impounment CH4 emission",
-                "value": 0.0
-            },
-            "ch4_net": {
-                "name": "Net CH4 emission",
-                "gas_name": "CH4",
-                "unit": "g CO2eq m-2 yr-1",
-                "long_description": "Net per area CH4 emission",
-                "value": 450.9609
-            },
-            "ch4_total_per_year": {
-                "name": "Total CH4 emission per year",
-                "gas_name": "CH4",
-                "unit": "tCO2eq yr-1",
-                "long_description": "Total CH4 emission per year integrated over lifetime",
-                "value": 3062.4757
-            },
-            "ch4_total_lifetime": {
-                "name": "Total CH4 emission per lifetime",
-                "gas_name": "CH4",
-                "unit": "ktCO2eq",
-                "long_description": "Total CH4 emission integrated over lifetime",
-                "value": 306.2476
-            },
-            "ch4_profile": {
-                "name": "CH4 emission profile",
-                "gas_name": "CH4",
-                "unit": "g CO2eq m-2 yr-1",
-                "long_description": "CH4 emission per year for a defined list of years",
-                "value": [
-                    1390.7628,
-                    1225.8901,
-                    1047.9033,
-                    768.3554,
-                    566.7145,
-                    421.2687,
-                    316.357,
-                    211.1669,
-                    146.7264,
-                    97.8417
-                ]
-            },
-            "n2o_methodA": {
-                "name": "N2O emission, method A",
-                "gas_name": "N2O",
-                "unit": "g CO2eq m-2 yr-1",
-                "long_description": "N2O emission, method A",
-                "value": 2.8059
-            },
-            "n2o_methodB": {
-                "name": "N2O emission, method B",
-                "gas_name": "N2O",
-                "unit": "g CO2eq m-2 yr-1",
-                "long_description": "N2O emission, method B",
-                "value": 1.6008
-            },
-            "n2o_mean": {
-                "name": "N2O emission, mean value",
-                "gas_name": "N2O",
-                "unit": "g CO2eq m-2 yr-1",
-                "long_description": "N2O emission factor, average of two methods",
-                "value": 2.2033
-            },
-            "n2o_total_per_year": {
-                "name": "Total N2O emission per year",
-                "gas_name": "N2O",
-                "unit": "tCO2eq yr-1",
-                "long_description": "Total N2O emission per year integrated over lifetime",
-                "value": 19.0548
-            },
-            "n2o_total_lifetime": {
-                "name": "Total N2O emission per lifetime",
-                "gas_name": "N2O",
-                "unit": "ktCO2eq",
-                "long_description": "Total N2O emission integrated over lifetime",
-                "value": 1.9055
-            },
-            "n2o_profile": {
-                "name": "N2O emission profile",
-                "gas_name": "N2O",
-                "unit": "g CO2eq m-2 yr-1",
-                "long_description": "N2O emission per year for a defined list of years",
-                "value": [
-                    2.8059,
-                    2.8059,
-                    2.8059,
-                    2.8059,
-                    2.8059,
-                    2.8059,
-                    2.8059,
-                    2.8059,
-                    2.8059,
-                    2.8059
-                ]
-            }
-        },
-        "intern_vars": {
-            "inflow_p_conc": {
-                "name": "Influent total P concentration",
-                "unit": "micrograms / L",
-                "long_description": "Median influent total phosphorus concentration in micrograms/L entering the reservoir with runoff",
-                "value": 38.3392
-            },
-            "retention_coeff": {
-                "name": "Retention coefficient",
-                "unit": "-",
-                "long_description": "",
-                "value": 0.3653
-            },
-            "trophic_status": {
-                "name": "Trophic status of the reservoir",
-                "unit": "-",
-                "long_description": "",
-                "value": "eutrophic"
-            },
-            "inflow_n_conc": {
-                "name": "Influent total N concentration",
-                "unit": "micrograms / L",
-                "long_description": "Median influent total nitrogen concentration in micrograms/L entering the reservoir with runoff",
-                "value": 17.5786
-            },
-            "reservoir_tn": {
-                "name": "Reservoir TN concentration",
-                "unit": "micrograms / L",
-                "long_description": "",
-                "value": 11.1568
-            },
-            "reservoir_tp": {
-                "name": "Reservoir TP concentration",
-                "unit": "micrograms / L",
-                "long_description": "",
-                "value": 24.2825
-            },
-            "littoral_area_frac": {
-                "name": "Percentage of reservoir's surface area that is littoral",
-                "unit": "%",
-                "long_description": "",
-                "value": 2.7738
-            },
-            "mean_radiance_lat": {
-                "name": "Mean radiance at the reservoir",
-                "unit": "kWh m-2 d-1",
-                "long_description": "",
-                "value": 4.92
-            },
-            "global_radiance": {
-                "name": "Cumulative global horizontal radiance at the reservoir",
-                "unit": "kWh m-2 d-1",
-                "long_description": "",
-                "value": 59.04
-            },
-            "bottom_temperature": {
-                "name": "Bottom (hypolimnion) temperature in the reservoir",
-                "unit": "deg C",
-                "long_description": "",
-                "value": 24.6835
-            },
-            "bottom_density": {
-                "name": "Water density at the bottom of the reservoir",
-                "unit": "kg/m3",
-                "long_description": "",
-                "value": 997.1558
-            },
-            "surface_temperature": {
-                "name": "Surface (epilimnion) temperature in the reservoir",
-                "unit": "deg C",
-                "long_description": "",
-                "value": 27.425
-            },
-            "surface_density": {
-                "name": "Water density at the surface of the reservoir",
-                "unit": "kg/m3",
-                "long_description": "",
-                "value": 996.4261
-            },
-            "thermocline_depth": {
-                "name": "Thermocline depth",
-                "unit": "m",
-                "long_description": "",
-                "value": 1.459
-            },
-            "nitrogen_load": {
-                "name": "Influent total N load",
-                "unit": "kgN / yr-1",
-                "long_description": "",
-                "value": 11297.8458
-            },
-            "phosphorus_load": {
-                "name": "Influent total P load",
-                "unit": "kgP / yr-1",
-                "long_description": "",
-                "value": 24640.7573
-            },
-            "nitrogen_downstream_conc": {
-                "name": "Downstream TN concentration",
-                "unit": "mg / L",
-                "long_description": "",
-                "value": 0.0162
-            }
-        }
-    },
-    "Belin": {
-        "inputs": {
-            "coordinates": {
-                "name": "Reservoir coordinates (lat/lon)",
-                "unit": "deg",
-                "value": [
-                    17.5197,
-                    97.2435
-                ]
-            },
-            "id": {
-                "name": "Reservoir ID",
-                "unit": "",
-                "value": "9"
-            },
-            "type": {
-                "name": "Reservoir type",
-                "unit": "",
-                "value": "unknown"
-            },
-            "monthly_temps": {
-                "name": "Monthly Temperatures",
-                "unit": "deg C",
-                "value": [
-                    22.3,
-                    24.0,
-                    27.0,
-                    29.5,
-                    28.9,
-                    26.8,
-                    26.3,
-                    26.3,
-                    26.8,
-                    27.1,
-                    25.7,
-                    23.1
-                ]
-            },
-            "year_profile": {
-                "name": "Year vector for emission profiles",
-                "unit": "yr",
-                "value": [
-                    1,
-                    5,
-                    10,
-                    20,
-                    30,
-                    40,
-                    50,
-                    65,
-                    80,
-                    100
-                ]
-            },
-            "gasses": {
-                "name": "Calculated gas emissions",
-                "unit": "-",
-                "value": [
-                    "co2",
-                    "ch4",
-                    "n2o"
-                ]
-            },
-            "biogenic_factors": {
-                "name": "Biogenic factors",
-                "biome": {
-                    "name": "Biome",
-                    "unit": "",
-                    "value": "tropical moist broadleaf"
-                },
-                "climate": {
-                    "name": "Climate",
-                    "unit": "",
-                    "value": "tropical"
-                },
-                "soil_type": {
-                    "name": "Soil Type",
-                    "unit": "",
-                    "value": "mineral"
-                },
-                "treatment_factor": {
-                    "name": "Treatment Factor",
-                    "unit": "",
-                    "value": "primary (mechanical)"
-                },
-                "landuse_intensity": {
-                    "name": "Landuse Intensity",
-                    "unit": "",
-                    "value": "low intensity"
-                }
-            },
-            "catchment_inputs": {
-                "name": "Inputs for catchment-level process calculations",
-                "runoff": {
-                    "name": "Annual runoff",
-                    "unit": "mm/year",
-                    "value": 1578.0
-                },
-                "area": {
-                    "name": "Catchment area",
-                    "unit": "km2",
-                    "value": 1906.529
-                },
-                "riv_length": {
-                    "name": "Length of inundated river",
-                    "unit": "km",
-                    "value": 74.985
-                },
-                "population": {
-                    "name": "Population",
-                    "unit": "capita",
-                    "value": 12238.0
-                },
-                "area_fractions": {
-                    "name": "Area fractions",
-                    "unit": "-",
-                    "value": "0.0, 0.0, 0.0, 0.0, 0.028, 0.018, 0.671, 0.284, 0.0"
-                },
-                "slope": {
-                    "name": "Mean catchment slope",
-                    "unit": "%",
-                    "value": 24.0
-                },
-                "precip": {
-                    "name": "Mean annual precipitation",
-                    "unit": "mm/year",
-                    "value": 2619.0
-                },
-                "etransp": {
-                    "name": "Mean annual evapotranspiration",
-                    "unit": "mm/year",
-                    "value": 1338.0
-                },
-                "soil_wetness": {
-                    "name": "Soil wetness",
-                    "unit": "mm over profile",
-                    "value": 527.0
-                },
-                "mean_olsen": {
-                    "name": "Soil Olsen P content",
-                    "unit": "kgP/ha",
-                    "value": 7.322
-                }
-            },
-            "reservoir_inputs": {
-                "name": "Inputs for reservoir-level process calculations",
-                "volume": {
-                    "name": "Reservoir volume",
-                    "unit": "m3",
-                    "value": 26052597058.0
-                },
-                "area": {
-                    "name": "Reservoir area",
-                    "unit": "km2",
-                    "value": 434.864
-                },
-                "max_depth": {
-                    "name": "Maximum reservoir depth",
-                    "unit": "m",
-                    "value": 139.0
-                },
-                "mean_depth": {
-                    "name": "Mean reservoir depth",
-                    "unit": "m",
-                    "value": 59.9
-                },
-                "area_fractions": {
-                    "name": "Inundated area fractions",
-                    "unit": "-",
-                    "value": "0.0, 0.0, 0.0, 0.0, 0.0, 0.075, 0.776, 0.149, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0"
-                },
-                "soil_carbon": {
-                    "name": "Soil carbon in inundated area",
-                    "unit": "kgC/m2",
-                    "value": 6.04
-                },
-                "mean_radiance": {
-                    "name": "Mean monthly horizontal radiance",
-                    "unit": "kWh/m2/d",
-                    "value": 4.87
-                },
-                "mean_radiance_may_sept": {
-                    "name": "Mean monthly horizontal radiance: May - Sept",
-                    "unit": "kWh/m2/d",
-                    "value": 3.995
-                },
-                "mean_radiance_nov_mar": {
-                    "name": "Mean monthly horizontal radiance: Nov - Mar",
-                    "unit": "kWh/m2/d",
-                    "value": 5.459
-                },
-                "mean_monthly_windspeed": {
-                    "name": "Mean monthly wind speed",
-                    "unit": "m/s",
-                    "value": 1.05
-                },
-                "water_intake_depth": {
-                    "name": "Water intake depth below surface",
-                    "unit": "m",
-                    "value": null
-                }
-            }
-        },
-        "outputs": {
-            "co2_diffusion": {
-                "name": "CO2 diffusion flux",
-                "gas_name": "CO2",
-                "unit": "gCO2eq m-2 yr-1",
-                "long_description": "Total CO2 emissions from a reservoir integrated over lifetime",
-                "value": 541.4894
-            },
-            "co2_diffusion_nonanthro": {
-                "name": "Nonanthropogenic CO2 diffusion flux",
-                "gas_name": "CO2",
-                "unit": "gCO2eq m-2 yr-1",
-                "long_description": "CO2 diffusion flux taken at (after) 100 years",
-                "value": 371.6125
-            },
-            "co2_preimp": {
-                "name": "Preimpoundment CO2 emissions",
-                "gas_name": "CO2",
-                "unit": "gCO2eq m-2 yr-1",
-                "long_description": "CO2 emission in the area covered by the reservoir prior to impoundment",
-                "value": -76.4867
-            },
-            "co2_minus_nonanthro": {
-                "name": "CO2 emission minus non-anthropogenic",
-                "gas_name": "CO2",
-                "unit": "gCO2eq m-2 yr-1",
-                "long_description": "CO2 emissions minus non-anthropogenic over a number of years",
-                "value": 169.8769
-            },
-            "co2_net": {
-                "name": "Net CO2 emission",
-                "gas_name": "CO2",
-                "unit": "gCO2eq m-2 yr-1",
-                "long_description": "Overall integrated emissions for lifetime",
-                "value": 246.3636
-            },
-            "co2_total_per_year": {
-                "name": "Total CO2 emission per year",
-                "gas_name": "CO2",
-                "unit": "tCO2eq yr-1",
-                "long_description": "Total CO2 emission per year integrated over lifetime",
-                "value": 107134.6446
-            },
-            "co2_total_lifetime": {
-                "name": "Total CO2 emission per lifetime",
-                "gas_name": "CO2",
-                "unit": "tCO2eq",
-                "long_description": "Total CO2 emission integrated over lifetime",
-                "value": 10713.4645
-            },
-            "co2_profile": {
-                "name": "CO2 emission profile",
-                "gas_name": "CO2",
-                "unit": "gCO2eq m-2 yr-1",
-                "long_description": "CO2 emission per year for a defined list of years",
-                "value": [
-                    1403.471,
-                    703.563,
-                    499.3676,
-                    336.9227,
-                    257.7662,
-                    207.6918,
-                    171.996,
-                    133.2539,
-                    104.884,
-                    76.4867
-                ]
-            },
-            "ch4_diffusion": {
-                "name": "CH4 emission via diffusion",
-                "gas_name": "CH4",
-                "unit": "g CO2eq m-2 yr-1",
-                "long_description": "CH4 emission via diffusion integrated over a number of years.",
-                "value": 109.1442
-            },
-            "ch4_ebullition": {
-                "name": "CH4 emission via ebullition",
-                "gas_name": "CH4",
-                "unit": "g CO2eq m-2 yr-1",
-                "long_description": "CH4 emission via ebullition",
-                "value": 42.5642
-            },
-            "ch4_degassing": {
-                "name": "CH4 emission via degassing",
-                "gas_name": "CH4",
-                "unit": "g CO2eq m-2 yr-1",
-                "long_description": "CH4 emission via degassing integrated for a number of years",
-                "value": 130.6735
-            },
-            "ch4_preimp": {
-                "name": "Pre-impounment CH4 emission",
-                "gas_name": "CH4",
-                "unit": "g CO2eq m-2 yr-1",
-                "long_description": "Pre-impounment CH4 emission",
-                "value": 0.0
-            },
-            "ch4_net": {
-                "name": "Net CH4 emission",
-                "gas_name": "CH4",
-                "unit": "g CO2eq m-2 yr-1",
-                "long_description": "Net per area CH4 emission",
-                "value": 282.3818
-            },
-            "ch4_total_per_year": {
-                "name": "Total CH4 emission per year",
-                "gas_name": "CH4",
-                "unit": "tCO2eq yr-1",
-                "long_description": "Total CH4 emission per year integrated over lifetime",
-                "value": 122797.6666
-            },
-            "ch4_total_lifetime": {
-                "name": "Total CH4 emission per lifetime",
-                "gas_name": "CH4",
-                "unit": "ktCO2eq",
-                "long_description": "Total CH4 emission integrated over lifetime",
-                "value": 12279.7667
-            },
-            "ch4_profile": {
-                "name": "CH4 emission profile",
-                "gas_name": "CH4",
-                "unit": "g CO2eq m-2 yr-1",
-                "long_description": "CH4 emission per year for a defined list of years",
-                "value": [
-                    842.8341,
-                    744.7999,
-                    638.9688,
-                    472.751,
-                    352.858,
-                    266.3792,
-                    204.002,
-                    141.4603,
-                    103.1476,
-                    74.0841
-                ]
-            },
-            "n2o_methodA": {
-                "name": "N2O emission, method A",
-                "gas_name": "N2O",
-                "unit": "g CO2eq m-2 yr-1",
-                "long_description": "N2O emission, method A",
-                "value": 0.5073
-            },
-            "n2o_methodB": {
-                "name": "N2O emission, method B",
-                "gas_name": "N2O",
-                "unit": "g CO2eq m-2 yr-1",
-                "long_description": "N2O emission, method B",
-                "value": 0.1043
-            },
-            "n2o_mean": {
-                "name": "N2O emission, mean value",
-                "gas_name": "N2O",
-                "unit": "g CO2eq m-2 yr-1",
-                "long_description": "N2O emission factor, average of two methods",
-                "value": 0.3058
-            },
-            "n2o_total_per_year": {
-                "name": "Total N2O emission per year",
-                "gas_name": "N2O",
-                "unit": "tCO2eq yr-1",
-                "long_description": "Total N2O emission per year integrated over lifetime",
-                "value": 220.6093
-            },
-            "n2o_total_lifetime": {
-                "name": "Total N2O emission per lifetime",
-                "gas_name": "N2O",
-                "unit": "ktCO2eq",
-                "long_description": "Total N2O emission integrated over lifetime",
-                "value": 22.0609
-            },
-            "n2o_profile": {
-                "name": "N2O emission profile",
-                "gas_name": "N2O",
-                "unit": "g CO2eq m-2 yr-1",
-                "long_description": "N2O emission per year for a defined list of years",
-                "value": [
-                    0.5073,
-                    0.5073,
-                    0.5073,
-                    0.5073,
-                    0.5073,
-                    0.5073,
-                    0.5073,
-                    0.5073,
-                    0.5073,
-                    0.5073
-                ]
-            }
-        },
-        "intern_vars": {
-            "inflow_p_conc": {
-                "name": "Influent total P concentration",
-                "unit": "micrograms / L",
-                "long_description": "Median influent total phosphorus concentration in micrograms/L entering the reservoir with runoff",
-                "value": 15.5957
-            },
-            "retention_coeff": {
-                "name": "Retention coefficient",
-                "unit": "-",
-                "long_description": "",
-                "value": 0.874
-            },
-            "trophic_status": {
-                "name": "Trophic status of the reservoir",
-                "unit": "-",
-                "long_description": "",
-                "value": "eutrophic"
-            },
-            "inflow_n_conc": {
-                "name": "Influent total N concentration",
-                "unit": "micrograms / L",
-                "long_description": "Median influent total nitrogen concentration in micrograms/L entering the reservoir with runoff",
-                "value": 14.1373
-            },
-            "reservoir_tn": {
-                "name": "Reservoir TN concentration",
-                "unit": "micrograms / L",
-                "long_description": "",
-                "value": 1.7498
-            },
-            "reservoir_tp": {
-                "name": "Reservoir TP concentration",
-                "unit": "micrograms / L",
-                "long_description": "",
-                "value": 1.9941
-            },
-            "littoral_area_frac": {
-                "name": "Percentage of reservoir's surface area that is littoral",
-                "unit": "%",
-                "long_description": "",
-                "value": 2.8402
-            },
-            "mean_radiance_lat": {
-                "name": "Mean radiance at the reservoir",
-                "unit": "kWh m-2 d-1",
-                "long_description": "",
-                "value": 4.87
-            },
-            "global_radiance": {
-                "name": "Cumulative global horizontal radiance at the reservoir",
-                "unit": "kWh m-2 d-1",
-                "long_description": "",
-                "value": 58.44
-            },
-            "bottom_temperature": {
-                "name": "Bottom (hypolimnion) temperature in the reservoir",
-                "unit": "deg C",
-                "long_description": "",
-                "value": 25.34
-            },
-            "bottom_density": {
-                "name": "Water density at the bottom of the reservoir",
-                "unit": "kg/m3",
-                "long_description": "",
-                "value": 996.9874
-            },
-            "surface_temperature": {
-                "name": "Surface (epilimnion) temperature in the reservoir",
-                "unit": "deg C",
-                "long_description": "",
-                "value": 28.125
-            },
-            "surface_density": {
-                "name": "Water density at the surface of the reservoir",
-                "unit": "kg/m3",
-                "long_description": "",
-                "value": 996.2286
-            },
-            "thermocline_depth": {
-                "name": "Thermocline depth",
-                "unit": "m",
-                "long_description": "",
-                "value": 4.0815
-            },
-            "nitrogen_load": {
-                "name": "Influent total N load",
-                "unit": "kgN / yr-1",
-                "long_description": "",
-                "value": 42532.0938
-            },
-            "phosphorus_load": {
-                "name": "Influent total P load",
-                "unit": "kgP / yr-1",
-                "long_description": "",
-                "value": 46919.644
-            },
-            "nitrogen_downstream_conc": {
-                "name": "Downstream TN concentration",
-                "unit": "mg / L",
-                "long_description": "",
-                "value": 0.0021
-            }
-        }
-    },
     "Kabaung": {
         "inputs": {
             "coordinates": {
@@ -1202,7 +208,7 @@
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "Total CO2 emissions from a reservoir integrated over lifetime",
-                "value": 1067.9568
+                "value": 1067.8172
             },
             "co2_diffusion_nonanthro": {
                 "name": "Nonanthropogenic CO2 diffusion flux",
@@ -1223,28 +229,28 @@
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "CO2 emissions minus non-anthropogenic over a number of years",
-                "value": 335.0411
+                "value": 334.9014
             },
             "co2_net": {
                 "name": "Net CO2 emission",
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "Overall integrated emissions for lifetime",
-                "value": 406.3944
+                "value": 406.2548
             },
             "co2_total_per_year": {
                 "name": "Total CO2 emission per year",
                 "gas_name": "CO2",
                 "unit": "tCO2eq yr-1",
                 "long_description": "Total CO2 emission per year integrated over lifetime",
-                "value": 17960.1948
+                "value": 17954.023
             },
             "co2_total_lifetime": {
                 "name": "Total CO2 emission per lifetime",
                 "gas_name": "CO2",
                 "unit": "tCO2eq",
                 "long_description": "Total CO2 emission integrated over lifetime",
-                "value": 1796.0195
+                "value": 1795.4023
             },
             "co2_profile": {
                 "name": "CO2 emission profile",
@@ -1269,7 +275,7 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission via diffusion integrated over a number of years.",
-                "value": 230.9829
+                "value": 238.6546
             },
             "ch4_ebullition": {
                 "name": "CH4 emission via ebullition",
@@ -1283,7 +289,7 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission via degassing integrated for a number of years",
-                "value": 614.3304
+                "value": 0.0
             },
             "ch4_preimp": {
                 "name": "Pre-impounment CH4 emission",
@@ -1297,21 +303,21 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "Net per area CH4 emission",
-                "value": 1055.921
+                "value": 449.2623
             },
             "ch4_total_per_year": {
                 "name": "Total CH4 emission per year",
                 "gas_name": "CH4",
                 "unit": "tCO2eq yr-1",
                 "long_description": "Total CH4 emission per year integrated over lifetime",
-                "value": 46665.372
+                "value": 19854.6961
             },
             "ch4_total_lifetime": {
                 "name": "Total CH4 emission per lifetime",
                 "gas_name": "CH4",
                 "unit": "ktCO2eq",
                 "long_description": "Total CH4 emission integrated over lifetime",
-                "value": 4666.5372
+                "value": 1985.4696
             },
             "ch4_profile": {
                 "name": "CH4 emission profile",
@@ -1319,16 +325,16 @@
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission per year for a defined list of years",
                 "value": [
-                    3014.5375,
-                    2671.0647,
-                    2300.2723,
-                    1717.9024,
-                    1297.8336,
-                    994.8339,
-                    776.2775,
-                    557.1413,
-                    422.8968,
-                    321.059
+                    995.2125,
+                    899.0871,
+                    795.3183,
+                    632.3439,
+                    514.7949,
+                    430.0098,
+                    368.8566,
+                    307.5449,
+                    269.9877,
+                    241.4993
                 ]
             },
             "n2o_methodA": {
@@ -1468,7 +474,7 @@
                 "name": "Thermocline depth",
                 "unit": "m",
                 "long_description": "",
-                "value": 1.9326
+                "value": 2.0544
             },
             "nitrogen_load": {
                 "name": "Influent total N load",
@@ -1699,7 +705,7 @@
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "Total CO2 emissions from a reservoir integrated over lifetime",
-                "value": 911.9245
+                "value": 911.8052
             },
             "co2_diffusion_nonanthro": {
                 "name": "Nonanthropogenic CO2 diffusion flux",
@@ -1720,28 +726,28 @@
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "CO2 emissions minus non-anthropogenic over a number of years",
-                "value": 286.0904
+                "value": 285.9711
             },
             "co2_net": {
                 "name": "Net CO2 emission",
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "Overall integrated emissions for lifetime",
-                "value": 331.2637
+                "value": 331.1445
             },
             "co2_total_per_year": {
                 "name": "Total CO2 emission per year",
                 "gas_name": "CO2",
                 "unit": "tCO2eq yr-1",
                 "long_description": "Total CO2 emission per year integrated over lifetime",
-                "value": 21747.4624
+                "value": 21739.6337
             },
             "co2_total_lifetime": {
                 "name": "Total CO2 emission per lifetime",
                 "gas_name": "CO2",
                 "unit": "tCO2eq",
                 "long_description": "Total CO2 emission integrated over lifetime",
-                "value": 2174.7462
+                "value": 2173.9634
             },
             "co2_profile": {
                 "name": "CO2 emission profile",
@@ -1766,7 +772,7 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission via diffusion integrated over a number of years.",
-                "value": 236.9741
+                "value": 244.8448
             },
             "ch4_ebullition": {
                 "name": "CH4 emission via ebullition",
@@ -1780,7 +786,7 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission via degassing integrated for a number of years",
-                "value": 609.4919
+                "value": 0.0
             },
             "ch4_preimp": {
                 "name": "Pre-impounment CH4 emission",
@@ -1794,21 +800,21 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "Net per area CH4 emission",
-                "value": 1077.9919
+                "value": 476.3708
             },
             "ch4_total_per_year": {
                 "name": "Total CH4 emission per year",
                 "gas_name": "CH4",
                 "unit": "tCO2eq yr-1",
                 "long_description": "Total CH4 emission per year integrated over lifetime",
-                "value": 70770.1714
+                "value": 31273.7416
             },
             "ch4_total_lifetime": {
                 "name": "Total CH4 emission per lifetime",
                 "gas_name": "CH4",
                 "unit": "ktCO2eq",
                 "long_description": "Total CH4 emission integrated over lifetime",
-                "value": 7077.0171
+                "value": 3127.3742
             },
             "ch4_profile": {
                 "name": "CH4 emission profile",
@@ -1816,16 +822,16 @@
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission per year for a defined list of years",
                 "value": [
-                    3039.9022,
-                    2695.8843,
-                    2324.5034,
-                    1741.2096,
-                    1320.4745,
-                    1016.9945,
-                    798.0915,
-                    578.6081,
-                    444.151,
-                    342.152
+                    1036.4817,
+                    937.8631,
+                    831.4027,
+                    664.2012,
+                    543.6032,
+                    456.619,
+                    393.8796,
+                    330.9776,
+                    292.4463,
+                    263.2189
                 ]
             },
             "n2o_methodA": {
@@ -1965,7 +971,7 @@
                 "name": "Thermocline depth",
                 "unit": "m",
                 "long_description": "",
-                "value": 2.146
+                "value": 2.2812
             },
             "nitrogen_load": {
                 "name": "Influent total N load",
@@ -2196,7 +1202,7 @@
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "Total CO2 emissions from a reservoir integrated over lifetime",
-                "value": 783.4004
+                "value": 783.2979
             },
             "co2_diffusion_nonanthro": {
                 "name": "Nonanthropogenic CO2 diffusion flux",
@@ -2217,28 +1223,28 @@
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "CO2 emissions minus non-anthropogenic over a number of years",
-                "value": 245.7696
+                "value": 245.6671
             },
             "co2_net": {
                 "name": "Net CO2 emission",
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "Overall integrated emissions for lifetime",
-                "value": 294.0229
+                "value": 293.9205
             },
             "co2_total_per_year": {
                 "name": "Total CO2 emission per year",
                 "gas_name": "CO2",
                 "unit": "tCO2eq yr-1",
                 "long_description": "Total CO2 emission per year integrated over lifetime",
-                "value": 2531.5373
+                "value": 2530.6553
             },
             "co2_total_lifetime": {
                 "name": "Total CO2 emission per lifetime",
                 "gas_name": "CO2",
                 "unit": "tCO2eq",
                 "long_description": "Total CO2 emission integrated over lifetime",
-                "value": 253.1537
+                "value": 253.0655
             },
             "co2_profile": {
                 "name": "CO2 emission profile",
@@ -2263,7 +1269,7 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission via diffusion integrated over a number of years.",
-                "value": 183.9916
+                "value": 190.1026
             },
             "ch4_ebullition": {
                 "name": "CH4 emission via ebullition",
@@ -2277,7 +1283,7 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission via degassing integrated for a number of years",
-                "value": 954.7034
+                "value": 0.0
             },
             "ch4_preimp": {
                 "name": "Pre-impounment CH4 emission",
@@ -2291,21 +1297,21 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "Net per area CH4 emission",
-                "value": 1273.4621
+                "value": 324.8697
             },
             "ch4_total_per_year": {
                 "name": "Total CH4 emission per year",
                 "gas_name": "CH4",
                 "unit": "tCO2eq yr-1",
                 "long_description": "Total CH4 emission per year integrated over lifetime",
-                "value": 10964.5087
+                "value": 2797.1278
             },
             "ch4_total_lifetime": {
                 "name": "Total CH4 emission per lifetime",
                 "gas_name": "CH4",
                 "unit": "ktCO2eq",
                 "long_description": "Total CH4 emission integrated over lifetime",
-                "value": 1096.4509
+                "value": 279.7128
             },
             "ch4_profile": {
                 "name": "CH4 emission profile",
@@ -2313,16 +1319,16 @@
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission per year for a defined list of years",
                 "value": [
-                    3897.8939,
-                    3436.9328,
-                    2939.3054,
-                    2157.7229,
-                    1593.9556,
-                    1187.3018,
-                    893.9763,
-                    599.8699,
-                    419.696,
-                    283.0143
+                    759.7514,
+                    683.1818,
+                    600.5238,
+                    470.7051,
+                    377.0703,
+                    309.534,
+                    260.8218,
+                    211.9834,
+                    182.0669,
+                    159.3741
                 ]
             },
             "n2o_methodA": {
@@ -2462,7 +1468,7 @@
                 "name": "Thermocline depth",
                 "unit": "m",
                 "long_description": "",
-                "value": 1.3631
+                "value": 1.449
             },
             "nitrogen_load": {
                 "name": "Influent total N load",
@@ -2693,7 +1699,7 @@
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "Total CO2 emissions from a reservoir integrated over lifetime",
-                "value": 953.5329
+                "value": 953.4082
             },
             "co2_diffusion_nonanthro": {
                 "name": "Nonanthropogenic CO2 diffusion flux",
@@ -2714,28 +1720,28 @@
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "CO2 emissions minus non-anthropogenic over a number of years",
-                "value": 299.1438
+                "value": 299.0191
             },
             "co2_net": {
                 "name": "Net CO2 emission",
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "Overall integrated emissions for lifetime",
-                "value": 441.8505
+                "value": 441.7258
             },
             "co2_total_per_year": {
                 "name": "Total CO2 emission per year",
                 "gas_name": "CO2",
                 "unit": "tCO2eq yr-1",
                 "long_description": "Total CO2 emission per year integrated over lifetime",
-                "value": 18641.6728
+                "value": 18636.4122
             },
             "co2_total_lifetime": {
                 "name": "Total CO2 emission per lifetime",
                 "gas_name": "CO2",
                 "unit": "tCO2eq",
                 "long_description": "Total CO2 emission integrated over lifetime",
-                "value": 1864.1673
+                "value": 1863.6412
             },
             "co2_profile": {
                 "name": "CO2 emission profile",
@@ -2760,7 +1766,7 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission via diffusion integrated over a number of years.",
-                "value": 245.2103
+                "value": 253.3545
             },
             "ch4_ebullition": {
                 "name": "CH4 emission via ebullition",
@@ -2774,7 +1780,7 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission via degassing integrated for a number of years",
-                "value": 799.3289
+                "value": 0.0
             },
             "ch4_preimp": {
                 "name": "Pre-impounment CH4 emission",
@@ -2788,21 +1794,21 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "Net per area CH4 emission",
-                "value": 1293.1903
+                "value": 502.0057
             },
             "ch4_total_per_year": {
                 "name": "Total CH4 emission per year",
                 "gas_name": "CH4",
                 "unit": "tCO2eq yr-1",
                 "long_description": "Total CH4 emission per year integrated over lifetime",
-                "value": 54559.7004
+                "value": 21179.6186
             },
             "ch4_total_lifetime": {
                 "name": "Total CH4 emission per lifetime",
                 "gas_name": "CH4",
                 "unit": "ktCO2eq",
                 "long_description": "Total CH4 emission integrated over lifetime",
-                "value": 5455.97
+                "value": 2117.9619
             },
             "ch4_profile": {
                 "name": "CH4 emission profile",
@@ -2810,16 +1816,16 @@
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission per year for a defined list of years",
                 "value": [
-                    3709.005,
-                    3285.1255,
-                    2827.5304,
-                    2108.8261,
-                    1590.4165,
-                    1216.4817,
-                    946.7583,
-                    676.3187,
-                    510.6446,
-                    384.9637
+                    1081.5836,
+                    979.5374,
+                    869.3769,
+                    696.3642,
+                    571.5747,
+                    481.5674,
+                    416.6475,
+                    351.5593,
+                    311.6887,
+                    281.4455
                 ]
             },
             "n2o_methodA": {
@@ -2959,7 +1965,7 @@
                 "name": "Thermocline depth",
                 "unit": "m",
                 "long_description": "",
-                "value": 1.9207
+                "value": 2.0417
             },
             "nitrogen_load": {
                 "name": "Influent total N load",
@@ -3190,7 +2196,7 @@
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "Total CO2 emissions from a reservoir integrated over lifetime",
-                "value": 783.9224
+                "value": 783.8199
             },
             "co2_diffusion_nonanthro": {
                 "name": "Nonanthropogenic CO2 diffusion flux",
@@ -3211,28 +2217,28 @@
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "CO2 emissions minus non-anthropogenic over a number of years",
-                "value": 245.9334
+                "value": 245.8308
             },
             "co2_net": {
                 "name": "Net CO2 emission",
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "Overall integrated emissions for lifetime",
-                "value": 362.46
+                "value": 362.3575
             },
             "co2_total_per_year": {
                 "name": "Total CO2 emission per year",
                 "gas_name": "CO2",
                 "unit": "tCO2eq yr-1",
                 "long_description": "Total CO2 emission per year integrated over lifetime",
-                "value": 31182.0729
+                "value": 31173.254
             },
             "co2_total_lifetime": {
                 "name": "Total CO2 emission per lifetime",
                 "gas_name": "CO2",
                 "unit": "tCO2eq",
                 "long_description": "Total CO2 emission integrated over lifetime",
-                "value": 3118.2073
+                "value": 3117.3254
             },
             "co2_profile": {
                 "name": "CO2 emission profile",
@@ -3257,7 +2263,7 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission via diffusion integrated over a number of years.",
-                "value": 195.5002
+                "value": 201.9934
             },
             "ch4_ebullition": {
                 "name": "CH4 emission via ebullition",
@@ -3271,7 +2277,7 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission via degassing integrated for a number of years",
-                "value": 506.5099
+                "value": 0.0
             },
             "ch4_preimp": {
                 "name": "Pre-impounment CH4 emission",
@@ -3285,21 +2291,21 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "Net per area CH4 emission",
-                "value": 825.2175
+                "value": 325.2008
             },
             "ch4_total_per_year": {
                 "name": "Total CH4 emission per year",
                 "gas_name": "CH4",
                 "unit": "tCO2eq yr-1",
                 "long_description": "Total CH4 emission per year integrated over lifetime",
-                "value": 70992.6343
+                "value": 27976.7012
             },
             "ch4_total_lifetime": {
                 "name": "Total CH4 emission per lifetime",
                 "gas_name": "CH4",
                 "unit": "ktCO2eq",
                 "long_description": "Total CH4 emission integrated over lifetime",
-                "value": 7099.2634
+                "value": 2797.6701
             },
             "ch4_profile": {
                 "name": "CH4 emission profile",
@@ -3307,16 +2313,16 @@
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission per year for a defined list of years",
                 "value": [
-                    2452.1995,
-                    2166.9048,
-                    1858.918,
-                    1375.1913,
-                    1026.2749,
-                    774.5982,
-                    593.0616,
-                    411.0435,
-                    299.5379,
-                    214.9498
+                    787.2843,
+                    705.9253,
+                    618.0971,
+                    480.1582,
+                    380.6666,
+                    308.9059,
+                    257.1468,
+                    205.2536,
+                    173.4657,
+                    149.3536
                 ]
             },
             "n2o_methodA": {
@@ -3456,7 +2462,7 @@
                 "name": "Thermocline depth",
                 "unit": "m",
                 "long_description": "",
-                "value": 2.3194
+                "value": 2.4656
             },
             "nitrogen_load": {
                 "name": "Influent total N load",
@@ -3475,6 +2481,1000 @@
                 "unit": "mg / L",
                 "long_description": "",
                 "value": 0.0081
+            }
+        }
+    },
+    "Belin": {
+        "inputs": {
+            "coordinates": {
+                "name": "Reservoir coordinates (lat/lon)",
+                "unit": "deg",
+                "value": [
+                    17.5197,
+                    97.2435
+                ]
+            },
+            "id": {
+                "name": "Reservoir ID",
+                "unit": "",
+                "value": "9"
+            },
+            "type": {
+                "name": "Reservoir type",
+                "unit": "",
+                "value": "unknown"
+            },
+            "monthly_temps": {
+                "name": "Monthly Temperatures",
+                "unit": "deg C",
+                "value": [
+                    22.3,
+                    24.0,
+                    27.0,
+                    29.5,
+                    28.9,
+                    26.8,
+                    26.3,
+                    26.3,
+                    26.8,
+                    27.1,
+                    25.7,
+                    23.1
+                ]
+            },
+            "year_profile": {
+                "name": "Year vector for emission profiles",
+                "unit": "yr",
+                "value": [
+                    1,
+                    5,
+                    10,
+                    20,
+                    30,
+                    40,
+                    50,
+                    65,
+                    80,
+                    100
+                ]
+            },
+            "gasses": {
+                "name": "Calculated gas emissions",
+                "unit": "-",
+                "value": [
+                    "co2",
+                    "ch4",
+                    "n2o"
+                ]
+            },
+            "biogenic_factors": {
+                "name": "Biogenic factors",
+                "biome": {
+                    "name": "Biome",
+                    "unit": "",
+                    "value": "tropical moist broadleaf"
+                },
+                "climate": {
+                    "name": "Climate",
+                    "unit": "",
+                    "value": "tropical"
+                },
+                "soil_type": {
+                    "name": "Soil Type",
+                    "unit": "",
+                    "value": "mineral"
+                },
+                "treatment_factor": {
+                    "name": "Treatment Factor",
+                    "unit": "",
+                    "value": "primary (mechanical)"
+                },
+                "landuse_intensity": {
+                    "name": "Landuse Intensity",
+                    "unit": "",
+                    "value": "low intensity"
+                }
+            },
+            "catchment_inputs": {
+                "name": "Inputs for catchment-level process calculations",
+                "runoff": {
+                    "name": "Annual runoff",
+                    "unit": "mm/year",
+                    "value": 1578.0
+                },
+                "area": {
+                    "name": "Catchment area",
+                    "unit": "km2",
+                    "value": 1906.529
+                },
+                "riv_length": {
+                    "name": "Length of inundated river",
+                    "unit": "km",
+                    "value": 74.985
+                },
+                "population": {
+                    "name": "Population",
+                    "unit": "capita",
+                    "value": 12238.0
+                },
+                "area_fractions": {
+                    "name": "Area fractions",
+                    "unit": "-",
+                    "value": "0.0, 0.0, 0.0, 0.0, 0.028, 0.018, 0.671, 0.284, 0.0"
+                },
+                "slope": {
+                    "name": "Mean catchment slope",
+                    "unit": "%",
+                    "value": 24.0
+                },
+                "precip": {
+                    "name": "Mean annual precipitation",
+                    "unit": "mm/year",
+                    "value": 2619.0
+                },
+                "etransp": {
+                    "name": "Mean annual evapotranspiration",
+                    "unit": "mm/year",
+                    "value": 1338.0
+                },
+                "soil_wetness": {
+                    "name": "Soil wetness",
+                    "unit": "mm over profile",
+                    "value": 527.0
+                },
+                "mean_olsen": {
+                    "name": "Soil Olsen P content",
+                    "unit": "kgP/ha",
+                    "value": 7.322
+                }
+            },
+            "reservoir_inputs": {
+                "name": "Inputs for reservoir-level process calculations",
+                "volume": {
+                    "name": "Reservoir volume",
+                    "unit": "m3",
+                    "value": 26052597058.0
+                },
+                "area": {
+                    "name": "Reservoir area",
+                    "unit": "km2",
+                    "value": 434.864
+                },
+                "max_depth": {
+                    "name": "Maximum reservoir depth",
+                    "unit": "m",
+                    "value": 139.0
+                },
+                "mean_depth": {
+                    "name": "Mean reservoir depth",
+                    "unit": "m",
+                    "value": 59.9
+                },
+                "area_fractions": {
+                    "name": "Inundated area fractions",
+                    "unit": "-",
+                    "value": "0.0, 0.0, 0.0, 0.0, 0.0, 0.075, 0.776, 0.149, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0"
+                },
+                "soil_carbon": {
+                    "name": "Soil carbon in inundated area",
+                    "unit": "kgC/m2",
+                    "value": 6.04
+                },
+                "mean_radiance": {
+                    "name": "Mean monthly horizontal radiance",
+                    "unit": "kWh/m2/d",
+                    "value": 4.87
+                },
+                "mean_radiance_may_sept": {
+                    "name": "Mean monthly horizontal radiance: May - Sept",
+                    "unit": "kWh/m2/d",
+                    "value": 3.995
+                },
+                "mean_radiance_nov_mar": {
+                    "name": "Mean monthly horizontal radiance: Nov - Mar",
+                    "unit": "kWh/m2/d",
+                    "value": 5.459
+                },
+                "mean_monthly_windspeed": {
+                    "name": "Mean monthly wind speed",
+                    "unit": "m/s",
+                    "value": 1.05
+                },
+                "water_intake_depth": {
+                    "name": "Water intake depth below surface",
+                    "unit": "m",
+                    "value": null
+                }
+            }
+        },
+        "outputs": {
+            "co2_diffusion": {
+                "name": "CO2 diffusion flux",
+                "gas_name": "CO2",
+                "unit": "gCO2eq m-2 yr-1",
+                "long_description": "Total CO2 emissions from a reservoir integrated over lifetime",
+                "value": 541.4186
+            },
+            "co2_diffusion_nonanthro": {
+                "name": "Nonanthropogenic CO2 diffusion flux",
+                "gas_name": "CO2",
+                "unit": "gCO2eq m-2 yr-1",
+                "long_description": "CO2 diffusion flux taken at (after) 100 years",
+                "value": 371.6125
+            },
+            "co2_preimp": {
+                "name": "Preimpoundment CO2 emissions",
+                "gas_name": "CO2",
+                "unit": "gCO2eq m-2 yr-1",
+                "long_description": "CO2 emission in the area covered by the reservoir prior to impoundment",
+                "value": -76.4867
+            },
+            "co2_minus_nonanthro": {
+                "name": "CO2 emission minus non-anthropogenic",
+                "gas_name": "CO2",
+                "unit": "gCO2eq m-2 yr-1",
+                "long_description": "CO2 emissions minus non-anthropogenic over a number of years",
+                "value": 169.8061
+            },
+            "co2_net": {
+                "name": "Net CO2 emission",
+                "gas_name": "CO2",
+                "unit": "gCO2eq m-2 yr-1",
+                "long_description": "Overall integrated emissions for lifetime",
+                "value": 246.2928
+            },
+            "co2_total_per_year": {
+                "name": "Total CO2 emission per year",
+                "gas_name": "CO2",
+                "unit": "tCO2eq yr-1",
+                "long_description": "Total CO2 emission per year integrated over lifetime",
+                "value": 107103.8525
+            },
+            "co2_total_lifetime": {
+                "name": "Total CO2 emission per lifetime",
+                "gas_name": "CO2",
+                "unit": "tCO2eq",
+                "long_description": "Total CO2 emission integrated over lifetime",
+                "value": 10710.3852
+            },
+            "co2_profile": {
+                "name": "CO2 emission profile",
+                "gas_name": "CO2",
+                "unit": "gCO2eq m-2 yr-1",
+                "long_description": "CO2 emission per year for a defined list of years",
+                "value": [
+                    1403.471,
+                    703.563,
+                    499.3676,
+                    336.9227,
+                    257.7662,
+                    207.6918,
+                    171.996,
+                    133.2539,
+                    104.884,
+                    76.4867
+                ]
+            },
+            "ch4_diffusion": {
+                "name": "CH4 emission via diffusion",
+                "gas_name": "CH4",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "CH4 emission via diffusion integrated over a number of years.",
+                "value": 112.7692
+            },
+            "ch4_ebullition": {
+                "name": "CH4 emission via ebullition",
+                "gas_name": "CH4",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "CH4 emission via ebullition",
+                "value": 42.5642
+            },
+            "ch4_degassing": {
+                "name": "CH4 emission via degassing",
+                "gas_name": "CH4",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "CH4 emission via degassing integrated for a number of years",
+                "value": 0.0
+            },
+            "ch4_preimp": {
+                "name": "Pre-impounment CH4 emission",
+                "gas_name": "CH4",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "Pre-impounment CH4 emission",
+                "value": 0.0
+            },
+            "ch4_net": {
+                "name": "Net CH4 emission",
+                "gas_name": "CH4",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "Net per area CH4 emission",
+                "value": 155.3334
+            },
+            "ch4_total_per_year": {
+                "name": "Total CH4 emission per year",
+                "gas_name": "CH4",
+                "unit": "tCO2eq yr-1",
+                "long_description": "Total CH4 emission per year integrated over lifetime",
+                "value": 67548.8864
+            },
+            "ch4_total_lifetime": {
+                "name": "Total CH4 emission per lifetime",
+                "gas_name": "CH4",
+                "unit": "ktCO2eq",
+                "long_description": "Total CH4 emission integrated over lifetime",
+                "value": 6754.8886
+            },
+            "ch4_profile": {
+                "name": "CH4 emission profile",
+                "gas_name": "CH4",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "CH4 emission per year for a defined list of years",
+                "value": [
+                    413.306,
+                    367.8848,
+                    318.8519,
+                    241.8432,
+                    186.2989,
+                    146.2362,
+                    117.3401,
+                    88.369,
+                    70.6225,
+                    57.1611
+                ]
+            },
+            "n2o_methodA": {
+                "name": "N2O emission, method A",
+                "gas_name": "N2O",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "N2O emission, method A",
+                "value": 0.5073
+            },
+            "n2o_methodB": {
+                "name": "N2O emission, method B",
+                "gas_name": "N2O",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "N2O emission, method B",
+                "value": 0.1043
+            },
+            "n2o_mean": {
+                "name": "N2O emission, mean value",
+                "gas_name": "N2O",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "N2O emission factor, average of two methods",
+                "value": 0.3058
+            },
+            "n2o_total_per_year": {
+                "name": "Total N2O emission per year",
+                "gas_name": "N2O",
+                "unit": "tCO2eq yr-1",
+                "long_description": "Total N2O emission per year integrated over lifetime",
+                "value": 220.6093
+            },
+            "n2o_total_lifetime": {
+                "name": "Total N2O emission per lifetime",
+                "gas_name": "N2O",
+                "unit": "ktCO2eq",
+                "long_description": "Total N2O emission integrated over lifetime",
+                "value": 22.0609
+            },
+            "n2o_profile": {
+                "name": "N2O emission profile",
+                "gas_name": "N2O",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "N2O emission per year for a defined list of years",
+                "value": [
+                    0.5073,
+                    0.5073,
+                    0.5073,
+                    0.5073,
+                    0.5073,
+                    0.5073,
+                    0.5073,
+                    0.5073,
+                    0.5073,
+                    0.5073
+                ]
+            }
+        },
+        "intern_vars": {
+            "inflow_p_conc": {
+                "name": "Influent total P concentration",
+                "unit": "micrograms / L",
+                "long_description": "Median influent total phosphorus concentration in micrograms/L entering the reservoir with runoff",
+                "value": 15.5957
+            },
+            "retention_coeff": {
+                "name": "Retention coefficient",
+                "unit": "-",
+                "long_description": "",
+                "value": 0.874
+            },
+            "trophic_status": {
+                "name": "Trophic status of the reservoir",
+                "unit": "-",
+                "long_description": "",
+                "value": "eutrophic"
+            },
+            "inflow_n_conc": {
+                "name": "Influent total N concentration",
+                "unit": "micrograms / L",
+                "long_description": "Median influent total nitrogen concentration in micrograms/L entering the reservoir with runoff",
+                "value": 14.1373
+            },
+            "reservoir_tn": {
+                "name": "Reservoir TN concentration",
+                "unit": "micrograms / L",
+                "long_description": "",
+                "value": 1.7498
+            },
+            "reservoir_tp": {
+                "name": "Reservoir TP concentration",
+                "unit": "micrograms / L",
+                "long_description": "",
+                "value": 1.9941
+            },
+            "littoral_area_frac": {
+                "name": "Percentage of reservoir's surface area that is littoral",
+                "unit": "%",
+                "long_description": "",
+                "value": 2.8402
+            },
+            "mean_radiance_lat": {
+                "name": "Mean radiance at the reservoir",
+                "unit": "kWh m-2 d-1",
+                "long_description": "",
+                "value": 4.87
+            },
+            "global_radiance": {
+                "name": "Cumulative global horizontal radiance at the reservoir",
+                "unit": "kWh m-2 d-1",
+                "long_description": "",
+                "value": 58.44
+            },
+            "bottom_temperature": {
+                "name": "Bottom (hypolimnion) temperature in the reservoir",
+                "unit": "deg C",
+                "long_description": "",
+                "value": 25.34
+            },
+            "bottom_density": {
+                "name": "Water density at the bottom of the reservoir",
+                "unit": "kg/m3",
+                "long_description": "",
+                "value": 996.9874
+            },
+            "surface_temperature": {
+                "name": "Surface (epilimnion) temperature in the reservoir",
+                "unit": "deg C",
+                "long_description": "",
+                "value": 28.125
+            },
+            "surface_density": {
+                "name": "Water density at the surface of the reservoir",
+                "unit": "kg/m3",
+                "long_description": "",
+                "value": 996.2286
+            },
+            "thermocline_depth": {
+                "name": "Thermocline depth",
+                "unit": "m",
+                "long_description": "",
+                "value": 4.3386
+            },
+            "nitrogen_load": {
+                "name": "Influent total N load",
+                "unit": "kgN / yr-1",
+                "long_description": "",
+                "value": 42532.0938
+            },
+            "phosphorus_load": {
+                "name": "Influent total P load",
+                "unit": "kgP / yr-1",
+                "long_description": "",
+                "value": 46919.644
+            },
+            "nitrogen_downstream_conc": {
+                "name": "Downstream TN concentration",
+                "unit": "mg / L",
+                "long_description": "",
+                "value": 0.0021
+            }
+        }
+    },
+    "Yunzalin": {
+        "inputs": {
+            "coordinates": {
+                "name": "Reservoir coordinates (lat/lon)",
+                "unit": "deg",
+                "value": [
+                    18.295,
+                    97.3408
+                ]
+            },
+            "id": {
+                "name": "Reservoir ID",
+                "unit": "",
+                "value": "152"
+            },
+            "type": {
+                "name": "Reservoir type",
+                "unit": "",
+                "value": "unknown"
+            },
+            "monthly_temps": {
+                "name": "Monthly Temperatures",
+                "unit": "deg C",
+                "value": [
+                    21.3,
+                    23.3,
+                    26.2,
+                    28.9,
+                    28.3,
+                    26.3,
+                    25.9,
+                    25.9,
+                    26.2,
+                    26.1,
+                    24.5,
+                    21.9
+                ]
+            },
+            "year_profile": {
+                "name": "Year vector for emission profiles",
+                "unit": "yr",
+                "value": [
+                    1,
+                    5,
+                    10,
+                    20,
+                    30,
+                    40,
+                    50,
+                    65,
+                    80,
+                    100
+                ]
+            },
+            "gasses": {
+                "name": "Calculated gas emissions",
+                "unit": "-",
+                "value": [
+                    "co2",
+                    "ch4",
+                    "n2o"
+                ]
+            },
+            "biogenic_factors": {
+                "name": "Biogenic factors",
+                "biome": {
+                    "name": "Biome",
+                    "unit": "",
+                    "value": "tropical moist broadleaf"
+                },
+                "climate": {
+                    "name": "Climate",
+                    "unit": "",
+                    "value": "tropical"
+                },
+                "soil_type": {
+                    "name": "Soil Type",
+                    "unit": "",
+                    "value": "mineral"
+                },
+                "treatment_factor": {
+                    "name": "Treatment Factor",
+                    "unit": "",
+                    "value": "primary (mechanical)"
+                },
+                "landuse_intensity": {
+                    "name": "Landuse Intensity",
+                    "unit": "",
+                    "value": "low intensity"
+                }
+            },
+            "catchment_inputs": {
+                "name": "Inputs for catchment-level process calculations",
+                "runoff": {
+                    "name": "Annual runoff",
+                    "unit": "mm/year",
+                    "value": 469.0
+                },
+                "area": {
+                    "name": "Catchment area",
+                    "unit": "km2",
+                    "value": 1370.371
+                },
+                "riv_length": {
+                    "name": "Length of inundated river",
+                    "unit": "km",
+                    "value": 5.59
+                },
+                "population": {
+                    "name": "Population",
+                    "unit": "capita",
+                    "value": 3908.0
+                },
+                "area_fractions": {
+                    "name": "Area fractions",
+                    "unit": "-",
+                    "value": "0.0, 0.0, 0.0, 0.0, 0.002, 0.003, 0.459, 0.536, 0.0"
+                },
+                "slope": {
+                    "name": "Mean catchment slope",
+                    "unit": "%",
+                    "value": 24.0
+                },
+                "precip": {
+                    "name": "Mean annual precipitation",
+                    "unit": "mm/year",
+                    "value": 1451.0
+                },
+                "etransp": {
+                    "name": "Mean annual evapotranspiration",
+                    "unit": "mm/year",
+                    "value": 1274.0
+                },
+                "soil_wetness": {
+                    "name": "Soil wetness",
+                    "unit": "mm over profile",
+                    "value": 412.0
+                },
+                "mean_olsen": {
+                    "name": "Soil Olsen P content",
+                    "unit": "kgP/ha",
+                    "value": 5.658
+                }
+            },
+            "reservoir_inputs": {
+                "name": "Inputs for reservoir-level process calculations",
+                "volume": {
+                    "name": "Reservoir volume",
+                    "unit": "m3",
+                    "value": 461865094.0
+                },
+                "area": {
+                    "name": "Reservoir area",
+                    "unit": "km2",
+                    "value": 6.791
+                },
+                "max_depth": {
+                    "name": "Maximum reservoir depth",
+                    "unit": "m",
+                    "value": 185.0
+                },
+                "mean_depth": {
+                    "name": "Mean reservoir depth",
+                    "unit": "m",
+                    "value": 68.0
+                },
+                "area_fractions": {
+                    "name": "Inundated area fractions",
+                    "unit": "-",
+                    "value": "0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.97, 0.03, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0"
+                },
+                "soil_carbon": {
+                    "name": "Soil carbon in inundated area",
+                    "unit": "kgC/m2",
+                    "value": 5.648
+                },
+                "mean_radiance": {
+                    "name": "Mean monthly horizontal radiance",
+                    "unit": "kWh/m2/d",
+                    "value": 4.92
+                },
+                "mean_radiance_may_sept": {
+                    "name": "Mean monthly horizontal radiance: May - Sept",
+                    "unit": "kWh/m2/d",
+                    "value": 4.17
+                },
+                "mean_radiance_nov_mar": {
+                    "name": "Mean monthly horizontal radiance: Nov - Mar",
+                    "unit": "kWh/m2/d",
+                    "value": 5.416
+                },
+                "mean_monthly_windspeed": {
+                    "name": "Mean monthly wind speed",
+                    "unit": "m/s",
+                    "value": 1.04
+                },
+                "water_intake_depth": {
+                    "name": "Water intake depth below surface",
+                    "unit": "m",
+                    "value": null
+                }
+            }
+        },
+        "outputs": {
+            "co2_diffusion": {
+                "name": "CO2 diffusion flux",
+                "gas_name": "CO2",
+                "unit": "gCO2eq m-2 yr-1",
+                "long_description": "Total CO2 emissions from a reservoir integrated over lifetime",
+                "value": 614.0088
+            },
+            "co2_diffusion_nonanthro": {
+                "name": "Nonanthropogenic CO2 diffusion flux",
+                "gas_name": "CO2",
+                "unit": "gCO2eq m-2 yr-1",
+                "long_description": "CO2 diffusion flux taken at (after) 100 years",
+                "value": 421.4361
+            },
+            "co2_preimp": {
+                "name": "Preimpoundment CO2 emissions",
+                "gas_name": "CO2",
+                "unit": "gCO2eq m-2 yr-1",
+                "long_description": "CO2 emission in the area covered by the reservoir prior to impoundment",
+                "value": -15.4
+            },
+            "co2_minus_nonanthro": {
+                "name": "CO2 emission minus non-anthropogenic",
+                "gas_name": "CO2",
+                "unit": "gCO2eq m-2 yr-1",
+                "long_description": "CO2 emissions minus non-anthropogenic over a number of years",
+                "value": 192.5727
+            },
+            "co2_net": {
+                "name": "Net CO2 emission",
+                "gas_name": "CO2",
+                "unit": "gCO2eq m-2 yr-1",
+                "long_description": "Overall integrated emissions for lifetime",
+                "value": 207.9727
+            },
+            "co2_total_per_year": {
+                "name": "Total CO2 emission per year",
+                "gas_name": "CO2",
+                "unit": "tCO2eq yr-1",
+                "long_description": "Total CO2 emission per year integrated over lifetime",
+                "value": 1412.3425
+            },
+            "co2_total_lifetime": {
+                "name": "Total CO2 emission per lifetime",
+                "gas_name": "CO2",
+                "unit": "tCO2eq",
+                "long_description": "Total CO2 emission integrated over lifetime",
+                "value": 141.2343
+            },
+            "co2_profile": {
+                "name": "CO2 emission profile",
+                "gas_name": "CO2",
+                "unit": "gCO2eq m-2 yr-1",
+                "long_description": "CO2 emission per year for a defined list of years",
+                "value": [
+                    1520.2986,
+                    726.5511,
+                    494.9783,
+                    310.7537,
+                    220.9844,
+                    164.1964,
+                    123.7147,
+                    79.7782,
+                    47.6046,
+                    15.4
+                ]
+            },
+            "ch4_diffusion": {
+                "name": "CH4 emission via diffusion",
+                "gas_name": "CH4",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "CH4 emission via diffusion integrated over a number of years.",
+                "value": 103.0448
+            },
+            "ch4_ebullition": {
+                "name": "CH4 emission via ebullition",
+                "gas_name": "CH4",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "CH4 emission via ebullition",
+                "value": 44.8219
+            },
+            "ch4_degassing": {
+                "name": "CH4 emission via degassing",
+                "gas_name": "CH4",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "CH4 emission via degassing integrated for a number of years",
+                "value": 0.0
+            },
+            "ch4_preimp": {
+                "name": "Pre-impounment CH4 emission",
+                "gas_name": "CH4",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "Pre-impounment CH4 emission",
+                "value": 0.0
+            },
+            "ch4_net": {
+                "name": "Net CH4 emission",
+                "gas_name": "CH4",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "Net per area CH4 emission",
+                "value": 147.8667
+            },
+            "ch4_total_per_year": {
+                "name": "Total CH4 emission per year",
+                "gas_name": "CH4",
+                "unit": "tCO2eq yr-1",
+                "long_description": "Total CH4 emission per year integrated over lifetime",
+                "value": 1004.1628
+            },
+            "ch4_total_lifetime": {
+                "name": "Total CH4 emission per lifetime",
+                "gas_name": "CH4",
+                "unit": "ktCO2eq",
+                "long_description": "Total CH4 emission integrated over lifetime",
+                "value": 100.4163
+            },
+            "ch4_profile": {
+                "name": "CH4 emission profile",
+                "gas_name": "CH4",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "CH4 emission per year for a defined list of years",
+                "value": [
+                    383.5937,
+                    342.0893,
+                    297.2846,
+                    226.9166,
+                    176.162,
+                    139.554,
+                    113.1497,
+                    86.6769,
+                    70.4607,
+                    58.1601
+                ]
+            },
+            "n2o_methodA": {
+                "name": "N2O emission, method A",
+                "gas_name": "N2O",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "N2O emission, method A",
+                "value": 2.8059
+            },
+            "n2o_methodB": {
+                "name": "N2O emission, method B",
+                "gas_name": "N2O",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "N2O emission, method B",
+                "value": 1.6008
+            },
+            "n2o_mean": {
+                "name": "N2O emission, mean value",
+                "gas_name": "N2O",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "N2O emission factor, average of two methods",
+                "value": 2.2033
+            },
+            "n2o_total_per_year": {
+                "name": "Total N2O emission per year",
+                "gas_name": "N2O",
+                "unit": "tCO2eq yr-1",
+                "long_description": "Total N2O emission per year integrated over lifetime",
+                "value": 19.0548
+            },
+            "n2o_total_lifetime": {
+                "name": "Total N2O emission per lifetime",
+                "gas_name": "N2O",
+                "unit": "ktCO2eq",
+                "long_description": "Total N2O emission integrated over lifetime",
+                "value": 1.9055
+            },
+            "n2o_profile": {
+                "name": "N2O emission profile",
+                "gas_name": "N2O",
+                "unit": "g CO2eq m-2 yr-1",
+                "long_description": "N2O emission per year for a defined list of years",
+                "value": [
+                    2.8059,
+                    2.8059,
+                    2.8059,
+                    2.8059,
+                    2.8059,
+                    2.8059,
+                    2.8059,
+                    2.8059,
+                    2.8059,
+                    2.8059
+                ]
+            }
+        },
+        "intern_vars": {
+            "inflow_p_conc": {
+                "name": "Influent total P concentration",
+                "unit": "micrograms / L",
+                "long_description": "Median influent total phosphorus concentration in micrograms/L entering the reservoir with runoff",
+                "value": 38.3392
+            },
+            "retention_coeff": {
+                "name": "Retention coefficient",
+                "unit": "-",
+                "long_description": "",
+                "value": 0.3653
+            },
+            "trophic_status": {
+                "name": "Trophic status of the reservoir",
+                "unit": "-",
+                "long_description": "",
+                "value": "eutrophic"
+            },
+            "inflow_n_conc": {
+                "name": "Influent total N concentration",
+                "unit": "micrograms / L",
+                "long_description": "Median influent total nitrogen concentration in micrograms/L entering the reservoir with runoff",
+                "value": 17.5786
+            },
+            "reservoir_tn": {
+                "name": "Reservoir TN concentration",
+                "unit": "micrograms / L",
+                "long_description": "",
+                "value": 11.1568
+            },
+            "reservoir_tp": {
+                "name": "Reservoir TP concentration",
+                "unit": "micrograms / L",
+                "long_description": "",
+                "value": 24.2825
+            },
+            "littoral_area_frac": {
+                "name": "Percentage of reservoir's surface area that is littoral",
+                "unit": "%",
+                "long_description": "",
+                "value": 2.7738
+            },
+            "mean_radiance_lat": {
+                "name": "Mean radiance at the reservoir",
+                "unit": "kWh m-2 d-1",
+                "long_description": "",
+                "value": 4.92
+            },
+            "global_radiance": {
+                "name": "Cumulative global horizontal radiance at the reservoir",
+                "unit": "kWh m-2 d-1",
+                "long_description": "",
+                "value": 59.04
+            },
+            "bottom_temperature": {
+                "name": "Bottom (hypolimnion) temperature in the reservoir",
+                "unit": "deg C",
+                "long_description": "",
+                "value": 24.6835
+            },
+            "bottom_density": {
+                "name": "Water density at the bottom of the reservoir",
+                "unit": "kg/m3",
+                "long_description": "",
+                "value": 997.1558
+            },
+            "surface_temperature": {
+                "name": "Surface (epilimnion) temperature in the reservoir",
+                "unit": "deg C",
+                "long_description": "",
+                "value": 27.425
+            },
+            "surface_density": {
+                "name": "Water density at the surface of the reservoir",
+                "unit": "kg/m3",
+                "long_description": "",
+                "value": 996.4261
+            },
+            "thermocline_depth": {
+                "name": "Thermocline depth",
+                "unit": "m",
+                "long_description": "",
+                "value": 1.5509
+            },
+            "nitrogen_load": {
+                "name": "Influent total N load",
+                "unit": "kgN / yr-1",
+                "long_description": "",
+                "value": 11297.8458
+            },
+            "phosphorus_load": {
+                "name": "Influent total P load",
+                "unit": "kgP / yr-1",
+                "long_description": "",
+                "value": 24640.7573
+            },
+            "nitrogen_downstream_conc": {
+                "name": "Downstream TN concentration",
+                "unit": "mg / L",
+                "long_description": "",
+                "value": 0.0162
             }
         }
     },
@@ -3687,7 +3687,7 @@
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "Total CO2 emissions from a reservoir integrated over lifetime",
-                "value": 755.0835
+                "value": 754.9848
             },
             "co2_diffusion_nonanthro": {
                 "name": "Nonanthropogenic CO2 diffusion flux",
@@ -3708,28 +3708,28 @@
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "CO2 emissions minus non-anthropogenic over a number of years",
-                "value": 236.886
+                "value": 236.7872
             },
             "co2_net": {
                 "name": "Net CO2 emission",
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "Overall integrated emissions for lifetime",
-                "value": 461.726
+                "value": 461.6272
             },
             "co2_total_per_year": {
                 "name": "Total CO2 emission per year",
                 "gas_name": "CO2",
                 "unit": "tCO2eq yr-1",
                 "long_description": "Total CO2 emission per year integrated over lifetime",
-                "value": 13714.1852
+                "value": 13711.2524
             },
             "co2_total_lifetime": {
                 "name": "Total CO2 emission per lifetime",
                 "gas_name": "CO2",
                 "unit": "tCO2eq",
                 "long_description": "Total CO2 emission integrated over lifetime",
-                "value": 1371.4185
+                "value": 1371.1252
             },
             "co2_profile": {
                 "name": "CO2 emission profile",
@@ -3754,7 +3754,7 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission via diffusion integrated over a number of years.",
-                "value": 126.934
+                "value": 131.1499
             },
             "ch4_ebullition": {
                 "name": "CH4 emission via ebullition",
@@ -3768,7 +3768,7 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission via degassing integrated for a number of years",
-                "value": 272.1178
+                "value": 0.0
             },
             "ch4_preimp": {
                 "name": "Pre-impounment CH4 emission",
@@ -3782,21 +3782,21 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "Net per area CH4 emission",
-                "value": 486.6047
+                "value": 218.7028
             },
             "ch4_total_per_year": {
                 "name": "Total CH4 emission per year",
                 "gas_name": "CH4",
                 "unit": "tCO2eq yr-1",
                 "long_description": "Total CH4 emission per year integrated over lifetime",
-                "value": 14453.1317
+                "value": 6495.9096
             },
             "ch4_total_lifetime": {
                 "name": "Total CH4 emission per lifetime",
                 "gas_name": "CH4",
                 "unit": "ktCO2eq",
                 "long_description": "Total CH4 emission integrated over lifetime",
-                "value": 1445.3132
+                "value": 649.591
             },
             "ch4_profile": {
                 "name": "CH4 emission profile",
@@ -3804,16 +3804,16 @@
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission per year for a defined list of years",
                 "value": [
-                    1413.1838,
-                    1250.7966,
-                    1075.4935,
-                    800.1615,
-                    601.5626,
-                    458.3118,
-                    354.9839,
-                    251.3824,
-                    187.9156,
-                    139.77
+                    518.7234,
+                    465.8988,
+                    408.8738,
+                    319.3132,
+                    254.7155,
+                    208.1228,
+                    174.5168,
+                    140.8237,
+                    120.1845,
+                    104.529
                 ]
             },
             "n2o_methodA": {
@@ -3953,7 +3953,7 @@
                 "name": "Thermocline depth",
                 "unit": "m",
                 "long_description": "",
-                "value": 2.1024
+                "value": 2.2349
             },
             "nitrogen_load": {
                 "name": "Influent total N load",
@@ -4184,7 +4184,7 @@
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "Total CO2 emissions from a reservoir integrated over lifetime",
-                "value": 877.6264
+                "value": 877.5117
             },
             "co2_diffusion_nonanthro": {
                 "name": "Nonanthropogenic CO2 diffusion flux",
@@ -4205,28 +4205,28 @@
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "CO2 emissions minus non-anthropogenic over a number of years",
-                "value": 275.3303
+                "value": 275.2156
             },
             "co2_net": {
                 "name": "Net CO2 emission",
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "Overall integrated emissions for lifetime",
-                "value": 302.0237
+                "value": 301.9089
             },
             "co2_total_per_year": {
                 "name": "Total CO2 emission per year",
                 "gas_name": "CO2",
                 "unit": "tCO2eq yr-1",
                 "long_description": "Total CO2 emission per year integrated over lifetime",
-                "value": 23026.8889
+                "value": 23018.139
             },
             "co2_total_lifetime": {
                 "name": "Total CO2 emission per lifetime",
                 "gas_name": "CO2",
                 "unit": "tCO2eq",
                 "long_description": "Total CO2 emission integrated over lifetime",
-                "value": 2302.6889
+                "value": 2301.8139
             },
             "co2_profile": {
                 "name": "CO2 emission profile",
@@ -4251,7 +4251,7 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission via diffusion integrated over a number of years.",
-                "value": 236.9001
+                "value": 244.7683
             },
             "ch4_ebullition": {
                 "name": "CH4 emission via ebullition",
@@ -4265,7 +4265,7 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission via degassing integrated for a number of years",
-                "value": 704.432
+                "value": 0.0
             },
             "ch4_preimp": {
                 "name": "Pre-impounment CH4 emission",
@@ -4279,21 +4279,21 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "Net per area CH4 emission",
-                "value": 1157.0994
+                "value": 460.5356
             },
             "ch4_total_per_year": {
                 "name": "Total CH4 emission per year",
                 "gas_name": "CH4",
                 "unit": "tCO2eq yr-1",
                 "long_description": "Total CH4 emission per year integrated over lifetime",
-                "value": 88219.5742
+                "value": 35112.1588
             },
             "ch4_total_lifetime": {
                 "name": "Total CH4 emission per lifetime",
                 "gas_name": "CH4",
                 "unit": "ktCO2eq",
                 "long_description": "Total CH4 emission integrated over lifetime",
-                "value": 8821.9574
+                "value": 3511.2159
             },
             "ch4_profile": {
                 "name": "CH4 emission profile",
@@ -4301,16 +4301,16 @@
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission per year for a defined list of years",
                 "value": [
-                    3335.9637,
-                    2953.7509,
-                    2541.1368,
-                    1893.0808,
-                    1425.6311,
-                    1088.4548,
-                    845.246,
-                    601.3916,
-                    452.0042,
-                    338.6788
+                    1020.4717,
+                    921.8838,
+                    815.4567,
+                    648.3074,
+                    527.747,
+                    440.79,
+                    378.0702,
+                    315.1879,
+                    276.6686,
+                    247.4503
                 ]
             },
             "n2o_methodA": {
@@ -4450,7 +4450,7 @@
                 "name": "Thermocline depth",
                 "unit": "m",
                 "long_description": "",
-                "value": 2.1756
+                "value": 2.3127
             },
             "nitrogen_load": {
                 "name": "Influent total N load",
@@ -4681,7 +4681,7 @@
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "Total CO2 emissions from a reservoir integrated over lifetime",
-                "value": 423.7947
+                "value": 423.7393
             },
             "co2_diffusion_nonanthro": {
                 "name": "Nonanthropogenic CO2 diffusion flux",
@@ -4702,28 +4702,28 @@
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "CO2 emissions minus non-anthropogenic over a number of years",
-                "value": 132.9535
+                "value": 132.8981
             },
             "co2_net": {
                 "name": "Net CO2 emission",
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "Overall integrated emissions for lifetime",
-                "value": 143.3669
+                "value": 143.3115
             },
             "co2_total_per_year": {
                 "name": "Total CO2 emission per year",
                 "gas_name": "CO2",
                 "unit": "tCO2eq yr-1",
                 "long_description": "Total CO2 emission per year integrated over lifetime",
-                "value": 3899.8657
+                "value": 3898.3582
             },
             "co2_total_lifetime": {
                 "name": "Total CO2 emission per lifetime",
                 "gas_name": "CO2",
                 "unit": "tCO2eq",
                 "long_description": "Total CO2 emission integrated over lifetime",
-                "value": 389.9866
+                "value": 389.8358
             },
             "co2_profile": {
                 "name": "CO2 emission profile",
@@ -4748,7 +4748,7 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission via diffusion integrated over a number of years.",
-                "value": 228.8881
+                "value": 236.4902
             },
             "ch4_ebullition": {
                 "name": "CH4 emission via ebullition",
@@ -4762,7 +4762,7 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission via degassing integrated for a number of years",
-                "value": 5538.9185
+                "value": 0.0
             },
             "ch4_preimp": {
                 "name": "Pre-impounment CH4 emission",
@@ -4776,21 +4776,21 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "Net per area CH4 emission",
-                "value": 5936.6848
+                "value": 405.3684
             },
             "ch4_total_per_year": {
                 "name": "Total CH4 emission per year",
                 "gas_name": "CH4",
                 "unit": "tCO2eq yr-1",
                 "long_description": "Total CH4 emission per year integrated over lifetime",
-                "value": 161489.6986
+                "value": 11026.8313
             },
             "ch4_total_lifetime": {
                 "name": "Total CH4 emission per lifetime",
                 "gas_name": "CH4",
                 "unit": "ktCO2eq",
                 "long_description": "Total CH4 emission integrated over lifetime",
-                "value": 16148.9699
+                "value": 1102.6831
             },
             "ch4_profile": {
                 "name": "CH4 emission profile",
@@ -4798,16 +4798,16 @@
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission per year for a defined list of years",
                 "value": [
-                    19152.9806,
-                    16827.5962,
-                    14317.2336,
-                    10374.3887,
-                    7530.3305,
-                    5478.8507,
-                    3999.0746,
-                    2515.3439,
-                    1606.3766,
-                    916.815
+                    946.3673,
+                    851.1137,
+                    748.2859,
+                    586.7897,
+                    470.3067,
+                    386.2906,
+                    325.692,
+                    264.9364,
+                    227.7198,
+                    199.4897
                 ]
             },
             "n2o_methodA": {
@@ -4947,7 +4947,7 @@
                 "name": "Thermocline depth",
                 "unit": "m",
                 "long_description": "",
-                "value": 1.7829
+                "value": 1.8952
             },
             "nitrogen_load": {
                 "name": "Influent total N load",
@@ -5178,7 +5178,7 @@
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "Total CO2 emissions from a reservoir integrated over lifetime",
-                "value": 554.2396
+                "value": 554.1671
             },
             "co2_diffusion_nonanthro": {
                 "name": "Nonanthropogenic CO2 diffusion flux",
@@ -5199,28 +5199,28 @@
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "CO2 emissions minus non-anthropogenic over a number of years",
-                "value": 173.8769
+                "value": 173.8044
             },
             "co2_net": {
                 "name": "Net CO2 emission",
                 "gas_name": "CO2",
                 "unit": "gCO2eq m-2 yr-1",
                 "long_description": "Overall integrated emissions for lifetime",
-                "value": 672.8369
+                "value": 672.7644
             },
             "co2_total_per_year": {
                 "name": "Total CO2 emission per year",
                 "gas_name": "CO2",
                 "unit": "tCO2eq yr-1",
                 "long_description": "Total CO2 emission per year integrated over lifetime",
-                "value": 6759.3197
+                "value": 6758.5916
             },
             "co2_total_lifetime": {
                 "name": "Total CO2 emission per lifetime",
                 "gas_name": "CO2",
                 "unit": "tCO2eq",
                 "long_description": "Total CO2 emission integrated over lifetime",
-                "value": 675.932
+                "value": 675.8592
             },
             "co2_profile": {
                 "name": "CO2 emission profile",
@@ -5245,7 +5245,7 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission via diffusion integrated over a number of years.",
-                "value": 84.8171
+                "value": 87.6342
             },
             "ch4_ebullition": {
                 "name": "CH4 emission via ebullition",
@@ -5259,7 +5259,7 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission via degassing integrated for a number of years",
-                "value": 118.1406
+                "value": 0.0
             },
             "ch4_preimp": {
                 "name": "Pre-impounment CH4 emission",
@@ -5273,21 +5273,21 @@
                 "gas_name": "CH4",
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "Net per area CH4 emission",
-                "value": 244.5322
+                "value": 129.2086
             },
             "ch4_total_per_year": {
                 "name": "Total CH4 emission per year",
                 "gas_name": "CH4",
                 "unit": "tCO2eq yr-1",
                 "long_description": "Total CH4 emission per year integrated over lifetime",
-                "value": 2456.5706
+                "value": 1298.0301
             },
             "ch4_total_lifetime": {
                 "name": "Total CH4 emission per lifetime",
                 "gas_name": "CH4",
                 "unit": "ktCO2eq",
                 "long_description": "Total CH4 emission integrated over lifetime",
-                "value": 245.6571
+                "value": 129.803
             },
             "ch4_profile": {
                 "name": "CH4 emission profile",
@@ -5295,16 +5295,16 @@
                 "unit": "g CO2eq m-2 yr-1",
                 "long_description": "CH4 emission per year for a defined list of years",
                 "value": [
-                    718.0142,
-                    635.15,
-                    545.6953,
-                    405.1979,
-                    303.8568,
-                    230.7593,
-                    178.0339,
-                    125.1693,
-                    92.7845,
-                    68.2179
+                    329.682,
+                    294.3847,
+                    256.2807,
+                    196.4364,
+                    153.2723,
+                    122.1391,
+                    99.6836,
+                    77.1699,
+                    63.3789,
+                    52.9179
                 ]
             },
             "n2o_methodA": {
@@ -5444,7 +5444,7 @@
                 "name": "Thermocline depth",
                 "unit": "m",
                 "long_description": "",
-                "value": 1.6092
+                "value": 1.7106
             },
             "nitrogen_load": {
                 "name": "Influent total N load",

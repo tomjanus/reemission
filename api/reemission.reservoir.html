@@ -74,6 +74,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">About the Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../theory.html">Theoretical Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../config.html">Configuration</a></li>
 <li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="../installation/index.html">Installation<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
 <li class="toctree-l2"><a class="reference internal" href="../installation/install_package.html">Installing RE-Emission</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../installation/using_docker.html">About Docker</a></li>
@@ -97,9 +98,9 @@
 <li class="toctree-l2"><a class="reference internal" href="reemission.catchment.html">Catchment Model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.ns_catchment.html">Post-impoundment catchment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.emissions.html">Emissions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.emission_profile.html">Emission Profile Calculator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.temperature.html">MonthlyTemperature</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.biogenic.html">Biogenic Factors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reemission.profile.html">Emission Profile Calculator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.presenter.html">Presenter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.utils.html">Utility functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.auxiliary.html">Auxiliary functions</a></li>
@@ -111,6 +112,8 @@
 <li class="toctree-l2"><a class="reference internal" href="reemission.download.html">External Data Downloader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.globals.html">Global variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reemission.main.html">Main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.salib.html">SALib Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reemission.postprocessing.html">Postprocessing</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../license.html">License</a></li>
@@ -146,7 +149,7 @@
 <p id="module-reemission.reservoir">Reservoir class for storing and validating reservoir parameters and calculation of reservoir characteristics and operational parameters from primary data.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="reemission.reservoir.Reservoir">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.reservoir.</span></span><span class="sig-name descname"><span class="pre">Reservoir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coordinates</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="reemission.temperature.html#reemission.temperature.MonthlyTemperature" title="reemission.temperature.MonthlyTemperature"><span class="pre">MonthlyTemperature</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_depth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_depth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inflow_rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">soil_carbon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_fractions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_radiance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_radiance_may_sept</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_radiance_nov_mar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_monthly_windspeed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">water_intake_depth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'n/a'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/reservoir.html#Reservoir"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">reemission.reservoir.</span></span><span class="sig-name descname"><span class="pre">Reservoir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coordinates</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="reemission.temperature.html#reemission.temperature.MonthlyTemperature" title="reemission.temperature.MonthlyTemperature"><span class="pre">MonthlyTemperature</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_depth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_depth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inflow_rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">soil_carbon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_fractions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_radiance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_radiance_may_sept</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_radiance_nov_mar</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_monthly_windspeed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">water_intake_depth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'n/a'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'unknown'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/reemission/reservoir.html#Reservoir"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Model of a generic reservoir.</p>
 <dl class="py attribute">
@@ -272,7 +275,7 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="reemission.reservoir.Reservoir.mean_monthly_windspeed">
 <span class="sig-name descname"><span class="pre">mean_monthly_windspeed</span></span></dt>
-<dd><p>Mean annual monthly wind speed, m/s (<strong>assumed to be measured at the height of 50 metres.</strong>)</p>
+<dd><p>Mean annual monthly wind speed, m/s (<strong>assumed to be measured at the height of 10 metres by default. If it’s not measured at 10m it needs to be rescaled - see __post_init__’</strong>)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
@@ -285,7 +288,16 @@
 <dd><p>Water intake depth below surface, m.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dd class="field-odd"><p>float, optional</p>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="reemission.reservoir.Reservoir.type">
+<span class="sig-name descname"><span class="pre">type</span></span></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str, default ‘unknown’</p>
 </dd>
 </dl>
 </dd></dl>
@@ -364,7 +376,7 @@ as the coldest mean monthly temperature in the 12x1 temperature profile.</p>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="reemission.reservoir.Reservoir.ch4_preemission_factor">
-<span class="sig-name descname"><span class="pre">ch4_preemission_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wind_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/reemission/reservoir.html#Reservoir.ch4_preemission_factor"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">ch4_preemission_factor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/reemission/reservoir.html#Reservoir.ch4_preemission_factor"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Calculate the CH<span class="math notranslate nohighlight">\(_4\)</span> emission factor for the water body, in kg CH<span class="math notranslate nohighlight">\(_4\)</span>/ha/yr.
 Refer to Eq. A.20. in <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S1364815221001602">Praire2021</a>.</p>
 <p>This value is used for estimating preimpoundment reservoir CH<span class="math notranslate nohighlight">\(_4\)</span>
@@ -372,14 +384,11 @@ emissions from water bodies present in the inundated area prior to
 inundation on top of what was emitted from soil (based on inundated
 soil land cover composition and soil type).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>wind_height</strong> (<em>float</em>) – The height at which the wind speed is measured, in meters. Default is 50 meters.</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The CH<span class="math notranslate nohighlight">\(_4\)</span> emission factor for the water body, kg CH<span class="math notranslate nohighlight">\(_4\)</span>/ha/yr.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The CH<span class="math notranslate nohighlight">\(_4\)</span> emission factor for the water body, kg CH<span class="math notranslate nohighlight">\(_4\)</span>/ha/yr.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -633,11 +642,12 @@ With assumed units of m<span class="math notranslate nohighlight">\(^3\)</span> 
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="reemission.reservoir.Reservoir.retention_coeff">
-<span class="sig-name descname"><span class="pre">retention_coeff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/reemission/reservoir.html#Reservoir.retention_coeff"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">retention_coeff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../_modules/reemission/reservoir.html#Reservoir.retention_coeff"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Return the retention coefficient using the chosen calculation method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>method</strong> (<em>str</em>) – Retention coefficient calculation method.</p>
+<dd class="field-odd"><p><strong>method</strong> (<em>str</em><em>, </em><em>optional</em>) – Retention coefficient calculation method.
+If method not given (is None), it will be read from config.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The retention coefficient based on the selected method.</p>
@@ -735,7 +745,7 @@ the 4 warmest months in a year. Refer to Equation A.4. in <a class="reference ex
 <dd></dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="reemission.reservoir.Reservoir.thermocline_depth">
-<span class="sig-name descname"><span class="pre">thermocline_depth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wind_speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wind_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/reservoir.html#Reservoir.thermocline_depth"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">thermocline_depth</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/reservoir.html#Reservoir.thermocline_depth"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Calculate the thermocline depth required for the calculation of CH<span class="math notranslate nohighlight">\(_4\)</span>
 degassing.</p>
 <p>Assumes that the surface water temperature is equal to
@@ -746,21 +756,15 @@ the mean monthly air temperature from the 4 warmest months in the year.</p>
 and the Depth of the Summer Thermocline</cite>, Gorham, Eville and Boyce,
 Farrell M. Journal of Great Lakes ResearchOpen AccessVolume 15,
 Issue 2, Pages 233 - 245, 1989.</p>
-<p>If wind_speed or monthly_temp is not supplied, a simplified equation
+<p>If data for the wind speed or monthly temperature is not provided (None), a simplified equation
 from Hanna 1990 is used, as implemented in <a class="reference external" href="https://www.grestool.org/">G-Res</a>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>wind_speed</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em>) – Average annual wind speed at the location of the reservoir, m/s.</p></li>
-<li><p><strong>wind_height</strong> (<em>float</em>) – Height at which wind_speed is measured, in meters. Default is 50 meters.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The thermocline depth of the reservoir, m.
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The thermocline depth of the reservoir, m.
 None: If the reservoir is not stratified.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>float</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
 </dd>
 </dl>
 </dd></dl>
@@ -784,13 +788,17 @@ TP concentration.</p>
 </dd>
 </dl>
 </dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id13">
+<span class="sig-name descname"><span class="pre">type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'unknown'</span></em></dt>
+<dd></dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="reemission.reservoir.Reservoir.validate_attributes">
-<span class="sig-name descname"><span class="pre">validate_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/reservoir.html#Reservoir.validate_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-name descname"><span class="pre">validate_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/reemission/reservoir.html#Reservoir.validate_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Validate object attributes and correct if necessary.</p>
 </dd></dl>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id13">
+<dt class="sig sig-object py" id="id14">
 <span class="sig-name descname"><span class="pre">volume</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em></dt>
 <dd></dd></dl>
 <dl class="py property">
@@ -824,8 +832,8 @@ TP concentration.</p>
 </dl>
 </dd></dl>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="id14">
-<span class="sig-name descname"><span class="pre">water_intake_depth</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em></dt>
+<dt class="sig sig-object py" id="id15">
+<span class="sig-name descname"><span class="pre">water_intake_depth</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em></dt>
 <dd></dd></dl>
 </dd></dl>
 </section>
@@ -864,6 +872,7 @@ TP concentration.</p>
 <li><a :data-current="activeSection === '#reemission.reservoir.Reservoir.mean_radiance_nov_mar'" class="reference internal" href="#reemission.reservoir.Reservoir.mean_radiance_nov_mar"><code class="docutils literal notranslate"><span class="pre">Reservoir.mean_radiance_nov_mar</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.reservoir.Reservoir.mean_monthly_windspeed'" class="reference internal" href="#reemission.reservoir.Reservoir.mean_monthly_windspeed"><code class="docutils literal notranslate"><span class="pre">Reservoir.mean_monthly_windspeed</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.reservoir.Reservoir.water_intake_depth'" class="reference internal" href="#reemission.reservoir.Reservoir.water_intake_depth"><code class="docutils literal notranslate"><span class="pre">Reservoir.water_intake_depth</span></code></a></li>
+<li><a :data-current="activeSection === '#reemission.reservoir.Reservoir.type'" class="reference internal" href="#reemission.reservoir.Reservoir.type"><code class="docutils literal notranslate"><span class="pre">Reservoir.type</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.reservoir.Reservoir.name'" class="reference internal" href="#reemission.reservoir.Reservoir.name"><code class="docutils literal notranslate"><span class="pre">Reservoir.name</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.reservoir.Reservoir.__post_init__'" class="reference internal" href="#reemission.reservoir.Reservoir.__post_init__"><code class="docutils literal notranslate"><span class="pre">Reservoir.__post_init__()</span></code></a></li>
 <li><a :data-current="activeSection === '#id0'" class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">Reservoir.area</span></code></a></li>
@@ -903,11 +912,12 @@ TP concentration.</p>
 <li><a :data-current="activeSection === '#id12'" class="reference internal" href="#id12"><code class="docutils literal notranslate"><span class="pre">Reservoir.temperature</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.reservoir.Reservoir.thermocline_depth'" class="reference internal" href="#reemission.reservoir.Reservoir.thermocline_depth"><code class="docutils literal notranslate"><span class="pre">Reservoir.thermocline_depth()</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.reservoir.Reservoir.trophic_status'" class="reference internal" href="#reemission.reservoir.Reservoir.trophic_status"><code class="docutils literal notranslate"><span class="pre">Reservoir.trophic_status()</span></code></a></li>
+<li><a :data-current="activeSection === '#id13'" class="reference internal" href="#id13"><code class="docutils literal notranslate"><span class="pre">Reservoir.type</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.reservoir.Reservoir.validate_attributes'" class="reference internal" href="#reemission.reservoir.Reservoir.validate_attributes"><code class="docutils literal notranslate"><span class="pre">Reservoir.validate_attributes()</span></code></a></li>
-<li><a :data-current="activeSection === '#id13'" class="reference internal" href="#id13"><code class="docutils literal notranslate"><span class="pre">Reservoir.volume</span></code></a></li>
+<li><a :data-current="activeSection === '#id14'" class="reference internal" href="#id14"><code class="docutils literal notranslate"><span class="pre">Reservoir.volume</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.reservoir.Reservoir.volume_km3'" class="reference internal" href="#reemission.reservoir.Reservoir.volume_km3"><code class="docutils literal notranslate"><span class="pre">Reservoir.volume_km3</span></code></a></li>
 <li><a :data-current="activeSection === '#reemission.reservoir.Reservoir.wat_area_frac_pre'" class="reference internal" href="#reemission.reservoir.Reservoir.wat_area_frac_pre"><code class="docutils literal notranslate"><span class="pre">Reservoir.wat_area_frac_pre</span></code></a></li>
-<li><a :data-current="activeSection === '#id14'" class="reference internal" href="#id14"><code class="docutils literal notranslate"><span class="pre">Reservoir.water_intake_depth</span></code></a></li>
+<li><a :data-current="activeSection === '#id15'" class="reference internal" href="#id15"><code class="docutils literal notranslate"><span class="pre">Reservoir.water_intake_depth</span></code></a></li>
 </ul>
 </li>
 </ul>

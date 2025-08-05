@@ -37,7 +37,9 @@ Dependencies
 * branca
 * fpdf
 * geojson
+* rich
 * rich-click
+* pint
 
 .. attention::
     The code currently relies on the old version of ``pydantic`` and will fail if the ``pydantic`` version is greater than 1.10

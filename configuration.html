@@ -75,6 +75,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">About the Library</a></li>
 <li class="toctree-l1"><a class="reference internal" href="theory.html">Theoretical Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">Configuration</a></li>
 <li class="toctree-l1" x-data="{ expanded: $el.classList.contains('current') ? true : false }"><a :class="{ 'expanded' : expanded }" @click="expanded = !expanded" class="reference internal expandable" href="installation/index.html">Installation<button @click.prevent.stop="expanded = !expanded" type="button"><span class="sr-only"></span><svg fill="currentColor" height="18px" stroke="none" viewbox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg></button></a><ul x-show="expanded">
 <li class="toctree-l2"><a class="reference internal" href="installation/install_package.html">Installing RE-Emission</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/using_docker.html">About Docker</a></li>
@@ -98,9 +99,9 @@
 <li class="toctree-l2"><a class="reference internal" href="api/reemission.catchment.html">Catchment Model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/reemission.ns_catchment.html">Post-impoundment catchment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/reemission.emissions.html">Emissions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.emission_profile.html">Emission Profile Calculator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/reemission.temperature.html">MonthlyTemperature</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/reemission.biogenic.html">Biogenic Factors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/reemission.profile.html">Emission Profile Calculator</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/reemission.presenter.html">Presenter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/reemission.utils.html">Utility functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/reemission.auxiliary.html">Auxiliary functions</a></li>
@@ -112,6 +113,8 @@
 <li class="toctree-l2"><a class="reference internal" href="api/reemission.download.html">External Data Downloader</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/reemission.globals.html">Global variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/reemission.main.html">Main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.salib.html">SALib Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/reemission.postprocessing.html">Postprocessing</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
@@ -271,6 +274,11 @@ For now, in order to modify the config file, the users need to find the file in 
 </span><span id="line-75"><span class="linenos">75</span><span class="na">nitrous_oxide_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">model_1</span>
 </span><span id="line-76"><span class="linenos">76</span><span class="c1"># Use reduced ns_catchment, i.e. catchment - reservoir for P exports</span>
 </span><span id="line-77"><span class="linenos">77</span><span class="na">use_ns_catchment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
+</span><span id="line-78"><span class="linenos">78</span><span class="c1"># List reservoir types for which degassing is being calculated if no information about outflow depth is given (comma separated)</span>
+</span><span id="line-79"><span class="linenos">79</span><span class="c1"># type all if degassing is calculated for all reservoir types or none if it's not calculated for any reservoirs</span>
+</span><span id="line-80"><span class="linenos">80</span><span class="na">res_types_with_degassing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">hydroelectric, multipurpose</span>
+</span><span id="line-81"><span class="linenos">81</span><span class="c1"># Wind height in the input data (in metres) - usually at 10 metres</span>
+</span><span id="line-82"><span class="linenos">82</span><span class="na">wind_height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">10</span>
 </span></code></pre></div>
 </div>
 </div>
@@ -938,12 +946,12 @@ output files for reporting.</p></li>
 </span><span id="line-7"><span class="linenos"> 7</span><span class="w">  </span><span class="nt">mineral</span><span class="p">:</span>
 </span><span id="line-8"><span class="linenos"> 8</span><span class="w">    </span><span class="nt">bare</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 </span><span id="line-9"><span class="linenos"> 9</span><span class="w">    </span><span class="nt">crops</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
-</span><span id="line-10"><span class="linenos">10</span><span class="w">    </span><span class="nt">forest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-0.4</span>
+</span><span id="line-10"><span class="linenos">10</span><span class="w">    </span><span class="nt">forest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-0.4</span><span class="w"> </span><span class="c1"># (-0.45)</span>
 </span><span id="line-11"><span class="linenos">11</span><span class="w">    </span><span class="nt">shrubs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 </span><span id="line-12"><span class="linenos">12</span><span class="w">    </span><span class="nt">urban</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 </span><span id="line-13"><span class="linenos">13</span><span class="w">    </span><span class="nt">wetlands</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 </span><span id="line-14"><span class="linenos">14</span><span class="w">  </span><span class="nt">organic</span><span class="p">:</span>
-</span><span id="line-15"><span class="linenos">15</span><span class="w">    </span><span class="nt">bare</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.8</span>
+</span><span id="line-15"><span class="linenos">15</span><span class="w">    </span><span class="nt">bare</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.8</span><span class="w"> </span><span class="c1"># (3.0)</span>
 </span><span id="line-16"><span class="linenos">16</span><span class="w">    </span><span class="nt">crops</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7.9</span>
 </span><span id="line-17"><span class="linenos">17</span><span class="w">    </span><span class="nt">forest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.6</span>
 </span><span id="line-18"><span class="linenos">18</span><span class="w">    </span><span class="nt">shrubs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5.7</span>
@@ -968,12 +976,12 @@ output files for reporting.</p></li>
 </span><span id="line-37"><span class="linenos">37</span><span class="w">  </span><span class="nt">mineral</span><span class="p">:</span>
 </span><span id="line-38"><span class="linenos">38</span><span class="w">    </span><span class="nt">bare</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 </span><span id="line-39"><span class="linenos">39</span><span class="w">    </span><span class="nt">crops</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
-</span><span id="line-40"><span class="linenos">40</span><span class="w">    </span><span class="nt">forest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-0.9</span>
+</span><span id="line-40"><span class="linenos">40</span><span class="w">    </span><span class="nt">forest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-0.91</span>
 </span><span id="line-41"><span class="linenos">41</span><span class="w">    </span><span class="nt">shrubs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 </span><span id="line-42"><span class="linenos">42</span><span class="w">    </span><span class="nt">urban</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 </span><span id="line-43"><span class="linenos">43</span><span class="w">    </span><span class="nt">wetlands</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 </span><span id="line-44"><span class="linenos">44</span><span class="w">  </span><span class="nt">organic</span><span class="p">:</span>
-</span><span id="line-45"><span class="linenos">45</span><span class="w">    </span><span class="nt">bare</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.8</span>
+</span><span id="line-45"><span class="linenos">45</span><span class="w">    </span><span class="nt">bare</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.8</span><span class="w"> </span><span class="c1"># (3.0)</span>
 </span><span id="line-46"><span class="linenos">46</span><span class="w">    </span><span class="nt">crops</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7.9</span>
 </span><span id="line-47"><span class="linenos">47</span><span class="w">    </span><span class="nt">forest</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 </span><span id="line-48"><span class="linenos">48</span><span class="w">    </span><span class="nt">shrubs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5.0</span>
