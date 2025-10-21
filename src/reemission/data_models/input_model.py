@@ -1,47 +1,25 @@
-"""Input model for RE-Emission.
-
-Used for describing and validating inputs from external sources, e.g.
-from other applications, such as catchment delineation/analysis tools or
-derived manually.
-
-Validated data models are then used to construct inputs to the RE-EMISSION 
-package.
-
-Uses `pydantic` package for data modelling and validation.
-"""
+"""Input model for RE-Emission."""
 from __future__ import annotations
 import logging
 import math
 import copy
-from typing import List, Optional, Literal
-from pydantic import BaseModel, Field, PositiveFloat, validator
-#from pydantic.dataclasses import dataclass
+from typing import List, Optional, Literal, Dict, Any, Type, get_type_hints
 from datetime import date
 import pandas as pd
 from reemission.constants import Biome, Climate, SoilType, TreatmentFactor, \
     LanduseIntensity
 from reemission.auxiliary import rollout_nested_list
 
+# Import appropriate version-specific components
+from pydantic import BaseModel, Field, field_validator, ConfigDict
+from pydantic.functional_validators import model_validator
 
-# Custom exception hook for removing tracebacks - currently used as an
-# experimental feature to polish up exception presentation in pydantic
+# Custom exception hook
 def validation_exception_handler(exception_type, exception, traceback):
     """Remove trace and log the exception message"""
     logging.error("%s: %s", exception_type.__name__, exception)
 
-
-#sys.excepthook = validation_exception_handler
-
-EPS = 0.01
-# Number of soil categories for determining soil type area fraction vectors
-LENGTH_AREA_FRACTIONS = 9
-
-ReservoirType = Literal[
-    'hydroelectric', 'multipurpose', 'potable', 'irrigation', 'flood control', 
-    'unknown']
-
-
-#@dataclass
+# Model classes
 class DamDataModel(BaseModel):
     """Dam information"""
     name: str = Field(description="Dam name")
@@ -52,10 +30,13 @@ class DamDataModel(BaseModel):
     monthly_temps: List[float] = Field(
         description="Monthly average air temperatures, degC", 
         default_factory=list)
-        
-    def __post_init__(self) -> None:
-        """ """
+    
+    # Post init to set default type if not provided
+    @model_validator(mode="after")
+    def set_defaults(self):
+        """Set default values after validation."""
         self.type = 'unknown'
+        return self
     
     @classmethod
     def from_row(cls, row: pd.Series) -> DamDataModel:
@@ -74,13 +55,13 @@ class BuildStatusModel(BaseModel):
     def from_row(cls, row: pd.Series) -> BuildStatusModel:
         return cls(**row.to_dict())
 
-    @validator('status', pre=True)
+    @field_validator('status', mode='before')
     @classmethod
     def parse_status_literals(cls, value):
         """Convert status literals into lower case before validation"""
         return value.lower()
 
-    @validator('construction_date')
+    @field_validator('construction_date')
     @classmethod
     def check_construction_date(cls, value, values, **kwargs):
         """Check construction date against status and current date"""
@@ -109,23 +90,22 @@ class BiogenicFactorsModel(BaseModel):
 
     @classmethod
     def from_row(cls, row: pd.Series) -> BiogenicFactorsModel:
-        """ """
         return cls(**row.to_dict())
 
-    class Config:
-        use_enum_values = True
-
+    # Config
+    model_config = ConfigDict(moddel_dump_enum_values=True)
+    
 
 class CatchmentModel(BaseModel):
     """Model for Re-Emission catchment parameters"""
-    runoff: PositiveFloat = Field(..., description="Annual runoff, mm/year")
-    area: PositiveFloat = Field(..., description="Catchment area, km2")
+    runoff: float = Field(..., gt=0, description="Annual runoff, mm/year")
+    area: float = Field(..., gt=0, description="Catchment area, km2")
     riv_length: float = Field(
         ..., ge=0, description="Inundated river length, km")
     population: float = Field(
         ..., ge=0, description="Population in the catchment, capita")
     area_fractions: List[float] = Field(
-        ge=0, description="Area fractions of landuse types, -", 
+        description="Area fractions of landuse types, -", 
         default_factory=list)
     slope: float = Field(..., ge=0, description="Mean catchment slope, %")
     precip: float = Field(
@@ -141,15 +121,14 @@ class CatchmentModel(BaseModel):
     def from_row(cls, row: pd.Series) -> CatchmentModel:
         return cls(**row.to_dict())
 
-    @validator('riv_length', pre=True)
+    @field_validator('riv_length', mode='before')
     @classmethod
     def convert_novals_to_zero(cls, value):
-        """ """
         if math.isnan(value):
             return 0.0
         return value
 
-    @validator('area_fractions')
+    @field_validator('area_fractions')
     @classmethod
     def check_area_fractions(cls, value):
         """Check that area fractions add up to approx. 1"""
@@ -163,14 +142,14 @@ class CatchmentModel(BaseModel):
 
 class ReservoirModel(BaseModel):
     """Model for Re-Emission reservoir parameters"""
-    volume: PositiveFloat = Field(..., description="Reservoir volume, m3")
-    area: PositiveFloat = Field(..., description="Reservoir area, km2")
-    max_depth: PositiveFloat = Field(
-        ..., description="Mean monthly horizontal radiance: Nov-Mar, kWh/m2/d")
-    mean_depth: PositiveFloat = Field(
-        ..., description="Mean reservoir depth, m")
+    volume: float = Field(..., gt=0, description="Reservoir volume, m3")
+    area: float = Field(..., gt=0, description="Reservoir area, km2")
+    max_depth: float = Field(
+        ..., gt=0, description="Maximum reservoir depth, m")
+    mean_depth: float = Field(
+        ..., gt=0, description="Mean reservoir depth, m")
     area_fractions: List[float] = Field(
-        ge=0, description="Inundated area fractions of landuse types, -", 
+        description="Inundated area fractions of landuse types, -", 
         default_factory=list)
     soil_carbon: float = Field(
         ..., ge=0, description="Soil carbon in inundated area, kgC/m2")
@@ -184,15 +163,14 @@ class ReservoirModel(BaseModel):
         description="Mean monthly horizontal radiance Nov-Mar, kWh/m2/d")
     mean_monthly_windspeed: float = Field(
         ..., ge=0, description="Mean monthly wind speed, m/s")
-    water_intake_depth: Optional[PositiveFloat] = Field(
+    water_intake_depth: Optional[float] = Field(
         default=None, description="Water intake depth below surface, m")
 
     @classmethod
     def from_row(cls, row: pd.Series) -> ReservoirModel:
-        """ """
         return cls(**row.to_dict())
 
-    @validator('area_fractions')
+    @field_validator('area_fractions')
     @classmethod
     def check_area_fractions(cls, value):
         """Check that area fractions add up to approx. 1"""
@@ -204,7 +182,7 @@ class ReservoirModel(BaseModel):
                 f"Sum {sum(value)} of area fractions not equal 1") from err
         return value
 
-    @validator('mean_depth')
+    @field_validator('mean_depth')
     @classmethod
     def validate_mean_depth(cls, value, values):
         """Check that mean_dept < max_depth"""
@@ -214,7 +192,7 @@ class ReservoirModel(BaseModel):
                 f'Mean depth {value} larger than max depth {max_depth}')
         return value
 
-    @validator("water_intake_depth")
+    @field_validator("water_intake_depth")
     @classmethod
     def validate_water_intake_depth(cls, value, values):
         """Check that (if water intake depth) then depth <= max_depth"""
@@ -222,9 +200,10 @@ class ReservoirModel(BaseModel):
         if value and max_depth:
             if value > max_depth:
                 raise ValueError("Water intake below reservoir bottom")
+        return value  # Need to return the value in v2
 
-    class Config:
-        allow_population_by_field_name = True
+    # Config
+    model_config = ConfigDict(populate_by_name=True)
 
 
 class InputModel(BaseModel):
@@ -234,6 +213,10 @@ class InputModel(BaseModel):
     catchment: CatchmentModel
     reservoir: ReservoirModel
     biogenic_factors: BiogenicFactorsModel
+
+
+EPS = 0.01
+ReservoirType = Literal['hydroelectric', 'multipurpose', 'potable', 'irrigation', 'flood control', 'unknown']
 
 
 if __name__ == "__main__":
