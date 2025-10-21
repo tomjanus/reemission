@@ -28,7 +28,7 @@ import reemission.presenter
 from reemission.app_logger import create_logger
 from reemission.utils import (
     add_version, get_package_file, get_folder_size, 
-    clean_folder, debug_on_exception)
+    clean_folder, debug_on_exception, deep_get)
 from reemission.model import EmissionModel
 from reemission.input import Inputs
 from reemission.integration.cli import cli as integration_cli
@@ -51,8 +51,8 @@ log = create_logger(logger_name=__name__)
 FIGLET: bool = True
 model_config = registry.config.get("model_config")
 # Read default parameters from config
-p_export_cal = model_config.get("CALCULATIONS", "p_export_cal")
-nitrous_oxide_model = model_config.get("CALCULATIONS", "nitrous_oxide_model")
+p_export_cal = deep_get(model_config, "CALCULATIONS", "p_export_cal")
+nitrous_oxide_model = deep_get(model_config, "CALCULATIONS", "nitrous_oxide_model")
 
 
 def run_command(command, print_result: bool = False, check: bool = False):
@@ -178,8 +178,8 @@ def calculate(input_file, output_files, output_config, author,
         file_ext = pathlib.Path(file).suffix.lower()
         popped_writer = ext_writer_dict.pop(file_ext, None)
         if popped_writer is None:
-            log.warning("Unable to save file %s. Unrecognized extension.",
-                        file)
+            log.warning("Unable to save file %s. Unrecognized extension %s.",
+                        file, file_ext)
         else:
             writers.append(popped_writer)
 
