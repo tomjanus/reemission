@@ -54,15 +54,18 @@ from abc import ABC, abstractmethod
 import configparser
 import os
 from io import BytesIO
+import shutil
 import base64
 import math
 import logging
 import json
 import matplotlib.pyplot as plt
 import matplotlib
+from matplotlib import font_manager
 matplotlib.use("Agg")
 import numpy as np
 import pandas as pd
+from rich import print as rprint
 from pylatex.utils import bold
 from pylatex.errors import CompilerError
 from pylatex import (
@@ -87,19 +90,81 @@ from reemission.constants import Landuse
 from reemission.auxiliary import rollout_nested_list
 from reemission.document_compiler import BatchCompiler
 from reemission import registry
+from rich.logging import RichHandler
+from rich.console import Console
 
-# Set up module logger
-logging.basicConfig(level=logging.INFO)
-log = logging.getLogger(__name__)
-
-# Format pyplot
-plt.rcParams.update(
-    {
-        "text.usetex": True,
-        "font.family": "serif",
-        "font.serif": ["Palatino"],
-    }
+# Make sure no handlers are already attached
+logging.shutdown()
+for handler in logging.root.handlers[:]:
+    logging.root.removeHandler(handler)
+# Configure Rich logging
+logging.basicConfig(
+    level="INFO",
+    format="%(message)s",
+    handlers=[RichHandler(rich_tracebacks=True, markup=True)]
 )
+log = logging.getLogger(__name__)
+log.setLevel(logging.DEBUG)
+
+
+def _check_latex_usable() -> bool:
+    """Check whether LaTeX is installed and can compile a minimal document."""
+    latex = shutil.which("latex")
+    if latex is None:
+        return False
+
+    test_snippet = br"\documentclass{article}\begin{document}Test\end{document}"
+
+    try:
+        subprocess.run(
+            [latex, "-interaction=nonstopmode", "-halt-on-error"],
+            input=test_snippet,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=5,
+            check=True,
+        )
+        return True
+    except Exception as e:
+        log.debug(f"LaTeX check failed: {e}")
+        return False
+
+def safe_matplotlib_setup(
+    preferred_font: str = "Palatino",
+    fallback_font: str = "DejaVu Serif"
+):
+    # 1. Check if TeX (LaTeX) is installed *and usable*
+    tex_usable = _check_latex_usable()
+
+    # 2. Safely check for available fonts
+    available_fonts = set()
+    for font_path in font_manager.findSystemFonts():
+        try:
+            name = font_manager.FontProperties(fname=font_path).get_name()
+            available_fonts.add(name)
+        except RuntimeError:
+            continue  # skip unreadable fonts
+
+    font_available = preferred_font in available_fonts
+
+    # 3. Configure matplotlib safely
+    rc = {
+        "text.usetex": tex_usable,
+        "font.family": "serif",
+        "font.serif": [preferred_font if font_available else fallback_font],
+    }
+    plt.rcParams.update(rc)
+
+    # 4. Logging diagnostics
+    log.debug(f"LaTeX usable: {tex_usable}")
+    log.debug(f"Preferred font '{preferred_font}' available: {font_available}")
+    if not font_available:
+        log.debug(f"Using fallback font: {fallback_font}")
+
+    if not tex_usable:
+        log.info("LaTeX not usable or missing required fonts — using standard Matplotlib text rendering.")
+
+safe_matplotlib_setup()
 
 # Plot parameters
 LABEL_FONTSIZE = 10
