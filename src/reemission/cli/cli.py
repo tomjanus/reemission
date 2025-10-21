@@ -14,7 +14,7 @@ Why does this file exist, and why not put this in __main__?
 
   Also see (1) from http://click.pocoo.org/5/setuptools/#setuptools-integration
 """
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Union, Optional
 import os
 import logging
 import pathlib
@@ -34,6 +34,11 @@ from reemission.input import Inputs
 from reemission.integration.cli import cli as integration_cli
 from reemission import registry
 click.rich_click.USE_MARKDOWN = True
+import rich
+from rich.console import Console
+from rich.table import Table
+from rich.prompt import Confirm
+from rich.progress import Progress
 
 # Update this section if new writers are added to the package
 ext_writer_dict = {
@@ -47,26 +52,96 @@ ext_writer_dict = {
 
 # Set up module logger
 log = create_logger(logger_name=__name__)
+console = Console()
 
 FIGLET: bool = True
+FIGLET_FONT = "slant"
 model_config = registry.config.get("model_config")
 # Read default parameters from config
 p_export_cal = deep_get(model_config, "CALCULATIONS", "p_export_cal")
 nitrous_oxide_model = deep_get(model_config, "CALCULATIONS", "nitrous_oxide_model")
 
 
-def run_command(command, print_result: bool = False, check: bool = False):
-    #log.debug("Command: {}".format(command))
-    result = subprocess.run(command, shell=False, capture_output=False, check=check)
-    if result.stderr:
-        raise subprocess.CalledProcessError(
-                returncode = result.returncode,
-                cmd = result.args,
-                stderr = result.stderr
-                )
-    if result.stdout and print_result:
-        log.debug("Command Result: {}".format(result.stdout.decode('utf-8')))
-    return result
+def run_command(
+        command: Union[str, List[str]],
+        *,
+        print_result: bool = False,
+        check: bool = True,
+        capture_output: bool = True,
+        text: bool = True,
+        cwd: Optional[str] = None) -> subprocess.CompletedProcess:
+    """
+    Run a shell command with improved safety, error handling, and logging.
+
+    This is a modern, Pythonic wrapper around :func:`subprocess.run` designed
+    for CLI tools. It captures output, logs command execution, and raises
+    informative errors when a command fails.
+
+    Args:
+        command:
+            The command to execute. Can be provided as a string (if ``shell=True``)
+            or a list of arguments (recommended for safety).
+        print_result:
+            Whether to print (or log) the command's stdout to the logger.
+            Defaults to ``False``.
+        check:
+            If ``True``, raises :class:`subprocess.CalledProcessError` on
+            non-zero exit status. Defaults to ``True``.
+        capture_output:
+            Whether to capture the command's stdout/stderr. Defaults to ``True``.
+        text:
+            Whether to decode bytes output into strings. Defaults to ``True``.
+        cwd:
+            Optional working directory in which to execute the command.
+
+    Returns:
+        A :class:`subprocess.CompletedProcess` instance with attributes:
+        ``args``, ``returncode``, ``stdout``, and ``stderr``.
+
+    Raises:
+        subprocess.CalledProcessError:
+            If ``check=True`` and the command exits with a non-zero status.
+
+    Example:
+        >>> run_command(["echo", "Hello, world!"], print_result=True)
+        INFO: Command succeeded: echo Hello, world!
+        Hello, world!
+    """
+
+    # Ensure safety for string commands
+    if isinstance(command, str):
+        shell = True
+        log.debug(f"Running shell command: {command}")
+    else:
+        shell = False
+        log.debug(f"Running command: {' '.join(command)}")
+
+    try:
+        result = subprocess.run(
+            command,
+            shell=shell,
+            check=check,
+            capture_output=capture_output,
+            text=text,
+            cwd=cwd,
+        )
+
+        if print_result and result.stdout:
+            log.info(result.stdout.strip())
+
+        if result.stderr:
+            log.debug(f"Command stderr: {result.stderr.strip()}")
+
+        return result
+
+    except subprocess.CalledProcessError as e:
+        log.error(f"Command failed ({e.returncode}): {e.cmd}")
+        if e.stderr:
+            log.error(e.stderr.strip())
+        raise
+    except FileNotFoundError:
+        log.error(f"Command not found: {command}")
+        raise
 
 
 @click.group()
@@ -83,113 +158,116 @@ See the full documentation at : https://tomjanus.github.io/reemission/index.html
         result = pyfiglet.figlet_format("RE-Emission")
         click.echo(click.style(result, fg='blue'))
 
-
 @click.command()
 @click.argument("input-file", nargs=1, type=click.Path(exists=True))
-@click.option("-o", "--output-files", type=click.Path(), multiple=True,
-              default=None,
+@click.option("-o", "--output-files", type=click.Path(), multiple=True, default=None,
               help="Files the outputs are written to.")
-@click.option("-c", "--output-config", type=click.Path(exists=True),
-              default=None,
+@click.option("-r", "--output-config", type=click.Path(exists=True), default=None,
               help="RE-Emission output configuration file.")
 @click.option("-a", "--author", type=click.STRING, default="",
-              help="Author's name")
+              help="Author's name.")
 @click.option("-t", "--title", type=click.STRING, default="Results",
-              help="Report/Study title")
-@click.option("-p", "--p-model", type=click.STRING, default=p_export_cal,
-              help="P-calculation method for CO2 emissions: g-res/mcdowell")
-@click.option("-n", "--n2o-model", type=click.STRING,
-              default=nitrous_oxide_model,
-              help="Model for calculating N2O emissions: model_1/model_2")
-@click.option("-c", "--confirm", is_flag=True, show_default=True, default=False)
+              help="Report or study title.")
+@click.option("-p", "--p-model", type=click.STRING, default="g-res",
+              help="P-calculation method for CO₂ emissions: g-res/mcdowell.")
+@click.option("-n", "--n2o-model", type=click.STRING, default="model_1",
+              help="Model for calculating N₂O emissions: model_1/model_2.")
+@click.option("--confirm", is_flag=True, show_default=True, default=False,
+              help="Ask for confirmation before running.")
 def calculate(input_file, output_files, output_config, author,
               title, p_model, n2o_model, confirm) -> None:
     """
     Calculates emissions based on the data in the JSON INPUT_FILE.
-    Saves the results to output file(s) defined in option '--output-files'.
-    Two types of output files are available: '.json' and 'tex/pdf'.
-    'pdf' files are written using latex intermediary. Latex source files are
-    saved alongside 'pdf' files.
 
-    Args:
-    input_file: JSON file with information about catchment and reservoir
-        related inputs.
-    output_files: Paths of outputs files.
-    output_config: YAML output configuration file.
-    author: Author's name.
-    title: Report/Study title.
-    p_model: Method for estimating phosphorus loading to reservoirs
-    n2o_model: Model for estimating N2O emissions.
+    Results are saved to one or more output files defined by '--output-files'.
+    Supported formats include '.json', '.tex', and '.pdf'. PDF reports are
+    generated using a LaTeX intermediary, with sources stored alongside them.
     """
-    click.echo("Loading inputs...\n")
-    input_data = Inputs.fromfile(input_file)
-    # Use the default config file if not provided as an argument
+
+    console.rule("[bold cyan]RE-Emission Calculation[/bold cyan]")
+
+    # Step 1. Load inputs
+    console.print("[yellow]Loading inputs...[/yellow]")
+    try:
+        input_data = Inputs.fromfile(input_file)
+    except Exception as e:
+        console.print(f"[red]Failed to load input file:[/red] {e}")
+        raise click.Abort()
+
+    # Step 2. Resolve output configuration
     if not output_config:
         output_config = registry.config.get("report_outputs")
+
+    # Step 3. Summarize configuration in a table
+    table = Table(title="Calculation Parameters", header_style="bold magenta")
+    table.add_column("Parameter", style="cyan")
+    table.add_column("Value", style="white")
+
+    table.add_row("Input JSON file", click.format_filename(input_file))
+    table.add_row("Output config file",
+                  click.format_filename(output_config) if isinstance(output_config, str)
+                  else "Loaded from config registry")
+    table.add_row("Output files",
+                  ", ".join([click.format_filename(f) for f in output_files]) if output_files else "None")
+    table.add_row("Author", author or "N/A")
+    table.add_row("Title", title)
+    table.add_row("P-load model", p_model)
+    table.add_row("N₂O model", n2o_model)
+    console.print(table)
+
+    # Step 4. Confirm before running
+    if confirm:
+        if not Confirm.ask("[bold yellow]Continue with these settings?[/bold yellow]"):
+            console.print("[red]Aborted by user.[/red]")
+            raise click.Abort()
+
+    # Step 5. Build model
+    console.print("[yellow]Initializing model...[/yellow]")
     model = EmissionModel(
         inputs=input_data,
         presenter_config=output_config,
         author=author,
         report_title=title,
-        p_model=p_model)
-    # Format all file names by converting to unicode
-    input_file_str = f"{click.format_filename(input_file)}"
-    if isinstance(output_config, str):
-        output_config_str = f"{click.format_filename(output_config)}"
-    else:
-        output_config_str = "read directly from the config registry"
-    output_files_unicode = [
-        f"{click.format_filename(file)}" for file in output_files]
-    output_files_str = ', '.join(output_files_unicode)
-    # Create a confirmation message
-    if not confirm:
-        msgs = [
-            "Running reemission with the following inputs:\n",
-            f"Input JSON file: {input_file_str}\n",
-            f"Output config file: {output_config_str}\n",
-            f"Output files: {output_files_str}\n",
-            f"Phosphorus load estimation method: {p_model}\n",
-            f"Model for estimating nitrous oxide emissions: {n2o_model}\n"]
-    else:
-        msgs = [
-            "About to run reemission with the following inputs:\n",
-            f"Input JSON file: {input_file_str}\n",
-            f"Output config file: {output_config_str}\n",
-            f"Output files: {output_files_str}\n",
-            f"Phosphorus load estimation method: {p_model}\n",
-            f"Model for estimating nitrous oxide emissions: {n2o_model}\n"]    
-        click.echo("".join(msgs))
-        click.echo('Continue? [yn] ', nl=False)
-        c_input = click.getchar()
-        click.echo()
-        if c_input.lower() == 'y':
-            click.echo('Ready to calculate.')
-        elif c_input.lower() == 'n':
-            click.echo('Aborting.')
-            return
-        else:
-            click.echo(f'Input `{c_input}` not recognized. Please try again.')
-            return
-        click.echo("Calculating...")
-    model.calculate()
+        p_model=p_model,
+    )
 
+    # Step 6. Perform calculation with progress feedback
+    console.print("[yellow]Starting calculations...[/yellow]")
+    with Progress(transient=True) as progress:
+        task = progress.add_task("Computing emissions...", total=1)
+        try:
+            model.calculate()
+        except Exception as e:
+            console.print(f"[red]Error during calculation:[/red] {e}")
+            raise click.Abort()
+        progress.advance(task)
+
+    # Step 7. Prepare file writers
     writers = []
-    for file in output_files:
+    for file in output_files or []:
         file_ext = pathlib.Path(file).suffix.lower()
         popped_writer = ext_writer_dict.pop(file_ext, None)
         if popped_writer is None:
             log.warning("Unable to save file %s. Unrecognized extension %s.",
                         file, file_ext)
+            console.print(f"[red]Skipping unknown extension:[/red] {file_ext}")
         else:
             writers.append(popped_writer)
 
+    # Step 8. Save results
     if writers:
-        click.echo("Writing outputs...")
-        model.add_presenter(
-            writers=writers,
-            output_files=output_files)
-        model.save_results()
-        click.echo("Outputs written to files.")
+        console.print("[yellow]Writing outputs...[/yellow]")
+        try:
+            model.add_presenter(writers=writers, output_files=output_files)
+            model.save_results()
+        except Exception as e:
+            console.print(f"[red]Error writing outputs:[/red] {e}")
+            raise click.Abort()
+        console.print("[green]Outputs successfully written.[/green]")
+    else:
+        console.print("[red]No valid output writers available.[/red]")
+
+    console.rule("[bold green]Calculation Complete[/bold green]")
 
 
 @click.command()
@@ -221,25 +299,37 @@ def log_to_pdf() -> None:
                 pdf.cell(0, fontsize_mm, wrap, ln=1)
         # Output the PDF file
         pdf.output(filename, 'F')
-    
-    log_path = registry.config.get("app_config")['logging']['log_dir']
-    log_filename = registry.config.get("app_config")['logging']['log_filename']
-    log_filename_no_ext = log_filename.split(".")[0]
-    log_file_path = pathlib.Path.joinpath(log_path, log_filename)
-    
+
+    # -------------------------------------------------------------------------
+    # Resolve paths from config
+    # -------------------------------------------------------------------------
     try:
-        with open(log_file_path, 'r', encoding='utf-8') as file:
-            text_content = file.read()
-    except FileNotFoundError:
-        log.error("Log file cannot be converted to PDF")
-        log.error("Log file %s not found", log_file_path.as_posix())
-    else:
-        log_filename_pdf = ".".join([log_filename_no_ext,"pdf"])
-        pdf_log_file_path = pathlib.Path.joinpath(log_path, log_filename_pdf)
-        _text_to_pdf(text_content, pdf_log_file_path)
-        log.info(
-            "Log file converted to pdf file %s",
-            pdf_log_file_path.as_posix())
+        app_config = registry.config.get("app_config")
+        log_dir = get_package_file(".") / pathlib.Path(app_config['logging']['log_dir'])
+        log_filename = app_config['logging']['log_filename']
+    except KeyError as e:
+        click.secho(f"❌ Missing logging configuration key: {e}", fg="red")
+        return
+        
+    log_file_path = log_dir / log_filename
+    log_filename_no_ext = pathlib.Path(log_filename).stem
+    pdf_log_file_path = log_dir / f"{log_filename_no_ext}.pdf"
+
+    # -------------------------------------------------------------------------
+    # Read and convert log
+    # -------------------------------------------------------------------------
+    if not log_file_path.exists():
+        click.secho(f"❌ Log file not found: {log_file_path.resolve()}", fg="red")
+        return
+
+    click.echo(f"📖 Reading log file: {log_file_path.resolve()}")
+    with log_file_path.open('r', encoding='utf-8') as file:
+        text_content = file.read()
+
+    click.echo(f"📝 Converting to PDF: {pdf_log_file_path.resolve()}")
+    _text_to_pdf(text_content, pdf_log_file_path)
+
+    click.secho(f"✅ Log successfully converted to: {pdf_log_file_path.resolve()}", fg="green")
 
 
 @click.command()
