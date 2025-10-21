@@ -54,6 +54,7 @@ from reemission.utils import save_return
 from reemission.constants import Landuse
 from reemission.catchment import Catchment
 from reemission.reservoir import Reservoir
+from reemission.river import River
 from reemission.ns_catchment import NSCatchmentCreator
 from reemission.temperature import MonthlyTemperature
 from reemission.exceptions import WrongN2OModelError
@@ -64,11 +65,17 @@ from reemission import registry
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
-internals_config = registry.config.get("report_internal")
+
+# Configuration for saving internal variables
+internals_config = registry.config.get("report_internal") or {}
 
 
 @lru_cache(maxsize=None)
-def check_preimpoundment_area(preimp_area: float, reservoir_area: float, reservoir_name: str) -> None:
+def check_preimpoundment_area(
+        preimp_area: float,
+        reservoir_area: float,
+        reservoir_name: str
+    ) -> None:
     """
     Checks if the pre-impoundment area is larger than the reservoir area and logs a warning if it is.
 
@@ -110,11 +117,13 @@ class Emission(ABC):
     reservoir: Reservoir
     preinund_area: float
     config: Dict
+    #river: Optional[River] = None
 
     def __init__(
             self,
             catchment: Catchment,
             reservoir: Reservoir,
+            river: Optional[River] = None,
             preinund_area: Optional[float] = None,
             config: Optional[Dict] = None):
         """
@@ -123,11 +132,13 @@ class Emission(ABC):
         Args:
             catchment (Catchment): Catchment object containing catchment data and methods.
             reservoir (Reservoir): Reservoir object containing reservoir data and methods.
+            river (River, optional): River object containing river data and methods. Defaults to None.
             preinund_area (float, optional): Pre-inundation area of the reservoir in hectares. Defaults to None.
             config (dict): Configuration dictionary with model equation constants/parameters. Defaults to None.
         """
         self.catchment = catchment
         self.reservoir = reservoir
+        self.river = river
         if not config:
             self.config = registry.config.get("model_config")
         if preinund_area is None:
@@ -740,7 +751,7 @@ class MethaneEmission(Emission):
         emission_in_ch4 = 10 ** (
             self.par.k1_ebull + 
             self.par.k2_ebull * math.log10(littoral_perc / 100.0) + 
-            self.par.k3_ebull * self.reservoir.global_radiance()
+            self.par.k3_ebull * (self.reservoir.global_radiance() / 30.4)
         )
         # Convert CH4 emission from mg CH4-C m-2 d-1 to g CO2eq m-2 yr-1
         co2_c_ratio = self.par.weight_CH4 / self.par.weight_C

@@ -119,22 +119,39 @@ class Reservoir:
                 self.mean_monthly_windspeed, 
                 wind_height=wind_height_config, new_height=10)
 
-    def validate_attributes(self, verbose: bool = False) -> None:
-        """Validate object attributes and correct if necessary."""
-        if self.water_intake_depth == "null" or self.water_intake_depth is None:
-            # If water intake depth value is not given, assume that
-            # the intake is positioned deep in the reservoir and therefore,
-            # degassing occurs. We assume 80% if maximum depth.
+    def validate_attributes(self, verbose: bool = False, default_depth_fraction: float = 0.8) -> None:
+        """Validate reservoir attributes and correct if necessary."""
+        # Determine the corrected water intake depth
+        if self.water_intake_depth in (None, "null"):
+            corrected_depth = default_depth_fraction * self.max_depth
             if verbose:
                 log.info(
-                    "Water intake depth is null."
-                    "Assumed intake depth position (shallow / deep) depends on the reservoir type.")
+                    f"Water intake depth is null. "
+                    f"Assumed intake depth: {corrected_depth:.2f} "
+                    f"(fraction {default_depth_fraction} of max depth)."
+                )
         elif self.water_intake_depth > self.max_depth:
+            corrected_depth = default_depth_fraction * self.max_depth
             log.warning(
-                "Water intake depth in reservoir %s greater than max depth",
-                self.name)
-            log.warning("Setting intake depth to 0.8 of max depth.")
-            self.water_intake_depth = 0.8 * self.max_depth
+                f"Water intake depth in reservoir {self.name} "
+                f"({self.water_intake_depth}) exceeds max depth ({self.max_depth})."
+            )
+            log.warning(
+                f"Setting intake depth to {corrected_depth:.2f} "
+                f"(fraction {default_depth_fraction} of max depth)."
+            )
+        elif self.water_intake_depth < 0:
+            corrected_depth = 0.0
+            log.warning(
+                f"Water intake depth in reservoir {self.name} "
+                f"({self.water_intake_depth}) is negative. Setting it to 0."
+            )
+        else:
+            # If the depth is valid, keep it as-is
+            corrected_depth = self.water_intake_depth
+        # Apply the correction
+        self.water_intake_depth = corrected_depth
+
 
     @classmethod
     def from_dict(cls: Type[ReservoirType], parameters: dict,
@@ -260,29 +277,51 @@ class Reservoir:
         return radiance
 
     @save_return(internal, internals_config['global_radiance']['include'])
-    def global_radiance(self, period: str = "d") -> float:
-        """Calculate cumulative global horizontal radiance as a function of reservoir's latitude.
+    def global_radiance(self, radiance_unit: str = "kWh/m2/d") -> float:
+        """
+        Calculate the cumulative global horizontal radiance as a function of the reservoir's latitude.
 
-        Eq. A.29. from Praire2021_.
+        This method computes the total annual radiance (solar energy per unit area)
+        based on the mean radiance at the reservoir’s latitude and the number of months
+        with a mean air temperature above 0 degrees Celcius. 
+
+        The computation follows Eq. A.29. from Praire2021_.
 
         Args:
-            period (str): Time period. Options are "d" for day and "m" for month.
+            radiance_unit : str, optional
+                Unit of the input radiance. Must be one of:
+                - ``"kWh/m2/d"`` or ``"kWh/m2/day"`` for daily radiance values (default)
+                - ``"kWh/m2/m"`` or ``"kWh/m2/month"`` for monthly radiance values
+                
+                The unit determines the conversion multiplier applied in the calculation.
 
         Returns:
-            float: Global horizontal radiance, kWh/m$^2$/period.       
-        
-        Caution:
-            The multiplier of 30.4 was included in the published in `G-Res Technical Documentation`_ but not in Praire2021_.
-            This multiplier converts the unit of radiance from kWh/m$^2$/day to kWh/m$^2$/month. 
-            However, this results in very high CH$_4$ emissions. Hence, we set it to 1.0.
+            float: Cumulative annual global horizontal radiance (in kWh/m2/year).
+
+        Raises:
+            ValueError
+                If an unsupported radiance unit is provided.
+
+        Notes:
+        - The factor of 30.4 converts from kWh/m2/day to kWh/m2/month,
+          assuming an average of 30.4 days per month.
+        - The number of active months (temperature above 0 deg C) determines
+          how many months contribute to the annual cumulative radiance.
         """
         number_months_above_0 = self.temperature.number_months_above(threshold=0)
-        if period.lower() in ("d", "day"):
-            multiplier = 1.0
-        if period.lower() in ("m", "month"):
+            
+        # Normalize and validate radiance unit
+        unit = radiance_unit.lower()
+        if unit in {"kwh/m2/d", "kwh/m2/day"}:
             multiplier = 30.4
-        else:
+        elif unit in {"kwh/m2/m", "kwh/m2/month"}:
             multiplier = 1.0
+        else:
+            raise ValueError(
+                f"Unsupported radiance unit '{radiance_unit}'. "
+                "Valid options are: 'kWh/m2/d', 'kWh/m2/day', 'kWh/m2/m', 'kWh/m2/month'."
+            )
+        
         return self.mean_radiance_lat() * number_months_above_0 * multiplier
 
     def compare_mean_depth(self) -> float:
@@ -420,14 +459,17 @@ class Reservoir:
 
         If data for the wind speed or monthly temperature is not provided (None), a simplified equation
         from Hanna 1990 is used, as implemented in G-Res_.
+        
+        The equation of Hanna is taken from the original publication:
+        Hanna, Micheline. (1990). `Evaluation of Models Predicting Mixing Depth`. 
+        Canadian Journal of Fisheries and Aquatic Sciences, 47(5), 940–947. doi:10.1139/f90-108
 
         Returns:
             float: The thermocline depth of the reservoir, m.
             None: If the reservoir is not stratified.
         """
         if self.mean_monthly_windspeed is None:
-            #thermocline_depth = 10**(0.185 * math.log10(self.area) + 0.842)
-            thermocline_depth = 6.95 * self.area**0.185
+            thermocline_depth = 10**(0.185 * math.log10(self.area) + 0.842)
             log.debug("Thermocline depth calculated with model of Hanna.")
         else:
             # Calculate CD coefficient and scale wind speed to 10m

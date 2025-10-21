@@ -29,6 +29,11 @@ internals_config = registry.config.get("report_internal")
 CatchmentType = TypeVar('CatchmentType', bound='Catchment')
 
 
+class CatchmentException(Exception):
+    """Base class for exceptions in this module."""
+    pass
+
+
 @dataclass
 class Catchment:
     """
