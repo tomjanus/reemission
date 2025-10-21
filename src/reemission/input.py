@@ -41,6 +41,10 @@ import json
 import logging
 from reemission.biogenic import BiogenicFactors
 
+from reemission.data_models.input_model import (
+    InputModel, DamDataModel, BuildStatusModel, CatchmentModel, ReservoirModel, 
+    BiogenicFactorsModel)
+
 # Set up module logger
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
@@ -79,6 +83,47 @@ class Input:
         for data_key, data_value in defaults.items():
             if data_key not in self.data.keys():
                 self.data[data_key] = data_value
+
+    def get_validated_model(self) -> Optional[InputModel]:
+        """Create a validated input model from raw data.
+        
+        Returns:
+            InputModel: Validated model if data is valid, None otherwise
+            
+        Raises:
+            ValidationError: If data fails validation
+        """
+        if not self.data:
+            return None
+            
+        try:
+            # Prepare the data structure
+            dam_data = {
+                "name": self.name,
+                "id": self.data.get("id", self.name),
+                "type": self.data.get("type", "unknown"),
+                "longitude": self.data.get("coordinates", [0.0, 0.0])[0],
+                "latitude": self.data.get("coordinates", [0.0, 0.0])[1],
+                "monthly_temps": self.monthly_temps or []
+            }
+            
+            # Extract build status data
+            build_data = self.data.get("build_status", {})
+            
+            # Create and validate the complete model
+            validated_model = InputModel(
+                dam_data=DamDataModel(**dam_data),
+                build_status=BuildStatusModel(**build_data),
+                catchment=CatchmentModel(**self.catchment_data),
+                reservoir=ReservoirModel(**self.reservoir_data),
+                biogenic_factors=BiogenicFactorsModel(**self.catchment_data["biogenic_factors"].todict())
+            )
+            
+            return validated_model
+            
+        except Exception as e:
+            log.error(f"Validation error for reservoir {self.name}: {str(e)}")
+            raise
 
     @property
     def reservoir_data(self) -> Optional[Dict]:
@@ -134,14 +179,18 @@ class Input:
         return self.data.get('monthly_temps')
 
     @classmethod
-    def fromfile(cls: Type[InputType], file: str,
-                 reservoir_name: str) -> InputType:
+    def fromfile(
+            cls: Type[InputType],
+            file: str,
+            reservoir_name: str,
+            validate_input: bool = True) -> InputType:
         """Load inputs dictionary from file.
 
         Args:
             cls (Type[InputType]): The class type.
             file (str): Path to JSON file.
             reservoir_name (str): Reservoir name.
+            validate_input (bool): Whether to validate the input data against the model.
 
         Returns:
             InputType: An instance of the Input class.
@@ -153,7 +202,10 @@ class Input:
                 log.error("Reservoir '%s' not found. Returning empty class",
                           reservoir_name)
                 return cls(name=reservoir_name, data={})
-        return cls(name=reservoir_name, data=data)
+        input_class = cls(name=reservoir_name, data=data)
+        if validate_input:
+            input_class.get_validated_model()
+        return input_class
 
 
 @dataclass
@@ -185,7 +237,10 @@ class Inputs:
         return self.inputs.get(name)
 
     @classmethod
-    def fromfile(cls: Type[InputsType], file: str) -> InputsType:
+    def fromfile(
+            cls: Type[InputsType],
+            file: str,
+            validate_input: bool = True) -> InputsType:
         """Load inputs dictionary from JSON file.
 
         Args:

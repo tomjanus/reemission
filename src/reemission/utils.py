@@ -7,7 +7,6 @@ import pathlib
 from functools import wraps
 # from distutils.spawn import find_executable # DEPRECATED
 import shutil
-import pathlib
 import hashlib
 import time
 from enum import Enum, EnumMeta
@@ -433,16 +432,16 @@ def save_to_json(
     return os.EX_CANTCREAT
 
 
-def strip_double_quotes(input: str) -> str:
+def strip_double_quotes(input_string: str) -> str:
     """Strip double quotes from a string.
     
     Args:
-        input: Input string.
+        input_string: Input string.
     
     Returns:
         str: String with sinfgle quotes.
     """
-    return input.replace('"','')
+    return input_string.replace('"','')
 
 
 def save_return(output: Dict, save_output: bool=True) -> Callable:
@@ -492,3 +491,35 @@ def debug_on_exception(func: Callable) -> Callable:
             pdb.set_trace()
 
     return wrapper
+    
+
+def deep_get(dictionary: Dict[str, Any], *keys: str, default: Optional[Any] = None) -> Any:
+    """
+    Safely retrieve a value from a nested dictionary using a sequence of keys.
+
+    This function allows access to deeply nested dictionary values without 
+    having to repeatedly check for key existence at each level. If any key 
+    in the path is missing or an intermediate value is not a dictionary, 
+    the function returns the provided default value.
+
+    Args:
+        dictionary: 
+            The dictionary from which to retrieve the value.
+        *keys: 
+            A sequence of keys specifying the path to the desired value.
+            Each key corresponds to one level of nesting.
+        default: 
+            The value to return if the key path cannot be fully resolved.
+            Defaults to ``None``.
+
+    Returns:
+        The value located at the specified nested key path, 
+        or the ``default`` value if any key is missing or the structure 
+        does not contain nested dictionaries as expected.
+    """
+    for key in keys:
+        if isinstance(dictionary, dict):
+            dictionary = dictionary.get(key, default)
+        else:
+            return default
+    return dictionary

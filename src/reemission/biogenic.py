@@ -26,8 +26,11 @@ Usage Example:
     print(factors)
 """
 from __future__ import annotations
-from dataclasses import dataclass, field
-from typing import Dict, Literal, Any, List
+import importlib
+from typing import Dict, Literal, ClassVar, Type, Any, Set, Protocol
+from pydantic import BaseModel, ConfigDict, create_model, Field
+from rich import print as rprint
+from rich.repr import RichReprResult
 from reemission.constants import (
     Biome, Climate, SoilType, TreatmentFactor, LanduseIntensity)
 from reemission.exceptions import ConversionMethodUnknownException
@@ -36,131 +39,369 @@ from reemission.exceptions import ConversionMethodUnknownException
 ToDictMethod = Literal["name", "value"]
 
 
-@dataclass
-class BiogenicFactors:
-    """
-    Catchment's properties impacting the reservoir's trophic status.
+class DictLike(Protocol):
+    """Protocol for objects that can be converted to a dictionary."""
+    def to_dict(self) -> Dict[str, Any]: ...
 
-    Attributes:
-        biome (Biome): The biome type of the catchment area.
-        climate (Climate): The climate type of the catchment area.
-        soil_type (SoilType): The soil type of the catchment area. Defaults to SoilType.MINERAL.
-        treatment_factor (TreatmentFactor): The wastewater treatment factor. Defaults to TreatmentFactor.NONE.
-        landuse_intensity (LanduseIntensity): The land use intensity. Defaults to LanduseIntensity.LOW.
+
+class BaseBiogenicFactors(BaseModel):
+    """Base model for all biogenic factors with field definitions."""
     
-    Note:
+    # Define class variables to store metadata
+    _all_fields: ClassVar[Dict[str, Type]] = {
+        "biome": Biome,
+        "climate": Climate,
+        "soil_type": SoilType,
+        "treatment_factor": TreatmentFactor,
+        "landuse_intensity": LanduseIntensity,
+    }
+    
+    _default_values: ClassVar[Dict[str, Any]] = {
+        "soil_type": SoilType.MINERAL,
+        "treatment_factor": TreatmentFactor.NONE,
+        "landuse_intensity": LanduseIntensity.LOW,
+    }
 
-        Move optional attributes to a config file
-    """
-    biome: Biome
-    climate: Climate
-    soil_type: SoilType = field(default=SoilType.MINERAL)
-    treatment_factor: TreatmentFactor = field(default=TreatmentFactor.NONE)
-    landuse_intensity: LanduseIntensity = field(default=LanduseIntensity.LOW)
+    model_config = ConfigDict(
+        validate_assignment=True,
+        extra="forbid",
+        frozen=False,
+    )
+    
+    def __repr__(self):
+        # Only show actual instance fields
+        fields = ", ".join(
+            f"{k}={v!r}" for k, v in self.__dict__.items()
+        )
+        return f"{self.__class__.__name__}({fields})"
 
+    def __str__(self):
+        # Only show actual instance fields
+        fields = ", ".join(
+            f"{k}={v!r}" for k, v in self.__dict__.items()
+        )
+        return f"{self.__class__.__name__}({fields})"
+    
+    def __rich_repr__(self) -> RichReprResult:
+        # Only show actual fields, no model_config
+        for k, v in self.__dict__.items():
+            if k != "model_config" and not k.startswith("_"):
+                yield k, v
+       
     @classmethod
-    def fromdict(cls, data_dict: Dict, method: ToDictMethod = "name") -> BiogenicFactors:
+    def register_field(cls, name: str, field_type: Type, default_value: Any = None) -> None:
         """
-        Initialize class from a dictionary.
-
+        Register a new field type for use in BiogenicFactors models.
+        
         Args:
-            data_dict (Dict): Dictionary containing the data to initialize the class.
-            method (ToDictMethod): Method to convert dictionary values. Either "name" or "value". Defaults to "name".
-
-        Returns:
-            BiogenicFactors: An instance of BiogenicFactors.
-
-        Raises:
-            ConversionMethodUnknownException: If the method provided is not recognized.
+            name: Field name
+            field_type: Field type (usually an Enum class)
+            default_value: Optional default value for the field
         """
-        fields_and_enums = [
-            ('biome', Biome), ('climate', Climate), ('soil_type', SoilType), 
-            ('treatment_factor', TreatmentFactor), 
-            ('landuse_intensity', LanduseIntensity)]
+        # Add to available fields
+        cls._all_fields[name] = field_type
         
-        def _instantiate_from_keys(cls) -> BiogenicFactors:
-            """
-            Instantiate the class using enum names from the dictionary.
-
-            Returns:
-                BiogenicFactors: An instance of BiogenicFactors.
-            """
-            input_dict = {}
-            for key, enum_class in fields_and_enums:
-                try:
-                    value = data_dict[key]
-                    input_dict.update({key: enum_class.from_key(value)})
-                except KeyError:
-                    pass
-            return cls(**input_dict)
-
-        def _instantiate_from_values(cls) -> BiogenicFactors:
-            """
-            Instantiate the class using enum values from the dictionary.
-
-            Returns:
-                BiogenicFactors: An instance of BiogenicFactors.
-            """
-            input_dict = {}
-            for key, enum_class in fields_and_enums:
-                try:
-                    value = data_dict[key]
-                    input_dict.update({key: enum_class.from_value(value)})
-                except KeyError:
-                    pass
-            return cls(**input_dict)
-
-        if method == "name":
-            return _instantiate_from_keys(cls)
-        elif method == "value":
-            return _instantiate_from_values(cls)
-        else:
-            raise ConversionMethodUnknownException(
-                conversion_method=method,
-                available_methods=ToDictMethod.__args__)
+        # Add default value if provided
+        if default_value is not None:
+            cls._default_values[name] = default_value
+            
+    @classmethod
+    def update_fields_from_dict(cls, fields_dict: Dict[str, Dict[str, Any]]) -> None:
+        """
+        Update field definitions from a dictionary.
         
-    def get_attributes(self) -> List[str]:
+        Args:
+            fields_dict: Dictionary where keys are field names and values are dictionaries 
+                        with 'type' and optional 'default' keys.
+                        
+        Example:
+            {
+                "new_field": {
+                    "type": "reemission.constants.NewEnum", 
+                    "default": "DEFAULT_VALUE"
+                }
+            }
         """
-        Get a list of non-callable attributes of the class that do not start with '__'.
-
+        for field_name, field_config in fields_dict.items():
+            # Get type from string if needed
+            field_type = field_config["type"]
+            if isinstance(field_type, str):
+                # Format: "module.submodule.ClassName"
+                module_path, class_name = field_type.rsplit(".", 1)
+                module = importlib.import_module(module_path)
+                field_type = getattr(module, class_name)
+            
+            # Register the field
+            default_value = field_config.get("default")
+            if default_value is not None and isinstance(default_value, str):
+                # Convert string default to enum value
+                if hasattr(field_type, "from_key"):
+                    default_value = field_type.from_key(default_value)
+                else:
+                    # Try to find the enum value by name
+                    default_value = getattr(field_type, default_value)
+                    
+            cls.register_field(field_name, field_type, default_value)
+    
+    @classmethod
+    def create_model(cls, fields: Set[str] = None) -> Type[BaseBiogenicFactors]:
+        """
+        Create a custom BiogenicFactors model with specified fields.
+        
+        Args:
+            fields: Set of field names to include. If None, includes all fields.
+            
         Returns:
-            List[str]: A list of attribute names.
+            A new Pydantic model class with the specified fields
+        
+        Example:
+            # Create a model with only biome and climate
+            MinimalFactors = BiogenicFactors.create_model({"biome", "climate"})
+            factors = MinimalFactors(biome=Biome.DESERTS, climate=Climate.TROPICAL)
         """
-        return [
-            attr for attr in dir(self) if not callable(getattr(self, attr)) and 
-            not attr.startswith("__")]
+        if fields is None:
+            fields = set(cls._all_fields.keys())
+        
+        # Validate that all requested fields exist
+        invalid_fields = fields - set(cls._all_fields.keys())
+        if invalid_fields:
+            raise ValueError(f"Unknown field(s): {', '.join(invalid_fields)}")
+        
+        # Build field definitions
+        field_definitions = {}
+        for field_name in fields:
+            field_type = cls._all_fields[field_name]
+            
+            # Add default value if available
+            if field_name in cls._default_values:
+                field_definitions[field_name] = (field_type, Field(default=cls._default_values[field_name]))
+            else:
+                field_definitions[field_name] = (field_type, ...)  # ... means required
+        
+        # Create and return the model
+        NewModel = create_model(
+            'BiogenicFactors', 
+            __base__=BaseBiogenicFactors,
+            **field_definitions
+        )
+        
+        # override repr/str to avoid model_config leaking
+        def __repr__(self):
+            return f"{self.__class__.__name__}({self.todict()})"
 
+        def __str__(self):
+            return f"{self.__class__.__name__}({self.todict()})"
+
+        NewModel.__repr__ = __repr__
+        NewModel.__str__ = __str__
+        
+        return NewModel
+    
+    @classmethod
+    def get_available_fields(cls) -> Dict[str, Type]:
+        """Return all available fields and their types."""
+        return cls._all_fields.copy()
+    
     def todict(self, method: ToDictMethod = "name") -> Dict:
         """
-        Convert the class to its dictionary representation.
-
+        Convert the model to a dictionary.
+        
         Args:
-            method (ToDictMethod): Method to convert attributes. Either "name" or "value". Defaults to "name".
-
+            method: Either "name" to use enum names or "value" to use enum values
+            
         Returns:
-            Dict: A dictionary representation of the class.
-
-        Raises:
-            ConversionMethodUnknownException: If the method provided is not recognized.
+            Dictionary of biogenic factors
         """
-        biogenic_factors = {}
-        if method == "name":
-            for attribute_name in self.get_attributes():
-                biogenic_factors[attribute_name] = getattr(self, attribute_name).name
-        elif method == "value":
-            for attribute_name in self.get_attributes():
-                biogenic_factors[attribute_name] = getattr(self, attribute_name).value
-        else:
+        if method not in ["name", "value"]:
             raise ConversionMethodUnknownException(
                 conversion_method=method,
                 available_methods=ToDictMethod.__args__)
-        return biogenic_factors
-
-    def __repr__(self) -> str:
+            
+        # Get model as dict, with compatibility for both Pydantic v1 and v2
+        try:
+            # Pydantic v2
+            model_dict = self.model_dump(exclude={"model_config"})
+        except AttributeError:
+            # Pydantic v1 fallback
+            model_dict = self.dict(exclude={"model_config"})
+        
+        result = {}
+        for field_name, field_value in model_dict.items():
+            # Skip model_config and other internal fields
+            if field_name == "model_config" or field_name.startswith("_"):
+                continue
+            if field_value is not None:
+                # Check if the field value is an enum (has name and value attributes)
+                if hasattr(field_value, 'name') and hasattr(field_value, 'value'):
+                    if method == "name":
+                        result[field_name] = field_value.name
+                    else:  # method == "value"
+                        result[field_name] = field_value.value
+                else:
+                    # If not an enum, just use the value as is
+                    result[field_name] = field_value
+        return result
+    
+    @classmethod
+    def fromdict(cls, data: Dict, method: ToDictMethod = "name") -> BaseBiogenicFactors:
         """
-        Return a string representation of the BiogenicFactors instance.
-
+        Create a model instance from a dictionary.
+        
+        Args:
+            data: Dictionary of field values
+            method: Either "name" to interpret values as enum names or "value" for enum values
+            
         Returns:
-            str: String representation of the instance.
+            New BiogenicFactors instance
         """
-        return f'{self.todict()}'
+        if method not in ["name", "value"]:
+            raise ConversionMethodUnknownException(
+                conversion_method=method,
+                available_methods=ToDictMethod.__args__)
+        
+        # Convert dictionary values to enums based on method
+        converted_data = {}
+        
+        # Get fields for this specific model class with Pydantic version compatibility
+        try:
+            # Pydantic v2
+            model_fields = cls.model_fields
+            field_names = model_fields.keys()
+        except AttributeError:
+            # Pydantic v1 fallback
+            model_fields = cls.__fields__
+            field_names = model_fields.keys()
+        
+        for field_name, raw_value in data.items():
+            if field_name not in field_names:
+                continue
+                
+            # Skip fields that aren't defined in our _all_fields
+            if field_name not in cls._all_fields:
+                continue
+                
+            # Get expected enum type
+            enum_type = cls._all_fields[field_name]
+            
+            # Convert based on method
+            if method == "name":
+                converted_data[field_name] = enum_type.from_key(raw_value)
+            else:  # method == "value"
+                converted_data[field_name] = enum_type.from_value(raw_value)
+        
+        return cls(**converted_data)
+
+
+# For backward compatibility, create the full BiogenicFactors model
+BiogenicFactors = BaseBiogenicFactors.create_model()
+
+
+if __name__ == "__main__":
+    """ """
+    # Create with all fields (same as the original)
+    factors = BiogenicFactors(
+        biome=Biome.DESERTS,
+        climate=Climate.TROPICAL,
+        soil_type=SoilType.ORGANIC
+    )
+
+    # Create a custom model with only 3 fields
+    MinimalFactors = BaseBiogenicFactors.create_model(
+        {"biome", "soil_type", "treatment_factor"}
+    )
+
+    # Create an instance
+    factors = MinimalFactors(
+        biome=Biome.DESERTS,
+        soil_type=SoilType.ORGANIC,
+        treatment_factor=TreatmentFactor.TERTIARY
+    )
+
+    # This would raise an error because climate isn't included in this model
+    # factors = MinimalFactors(biome=Biome.DESERTS, climate=Climate.TROPICAL)
+    
+    # Get all available fields and their types
+    field_info = BaseBiogenicFactors.get_available_fields()
+    rprint("Available fields and types:")
+    rprint(field_info)
+    # {'biome': <enum 'Biome'>, 'climate': <enum 'Climate'>, ...}
+    
+    # Using the name method (default)
+    factors_dict = factors.todict()
+    new_factors = MinimalFactors.fromdict(factors_dict)
+
+    # Using the value method
+    factors_dict_values = factors.todict(method="value")
+    new_factors_from_values = MinimalFactors.fromdict(factors_dict_values, method="value")
+    rprint("Factors from dictionary:")
+    rprint(new_factors_from_values)
+    
+    # Create a new custom enum
+    from enum import Enum
+
+    class VegetationDensity(Enum):
+        LOW = "low"
+        MEDIUM = "medium"
+        HIGH = "high"
+        
+        @classmethod
+        def from_key(cls, key):
+            return cls[key.upper()]
+        
+        @classmethod
+        def from_value(cls, value):
+            for member in cls:
+                if member.value == value:
+                    return member
+            raise ValueError(f"No member with value {value}")
+
+    # Register the new field
+    BaseBiogenicFactors.register_field(
+        "vegetation_density", 
+        VegetationDensity, 
+        default_value=VegetationDensity.MEDIUM
+    )
+
+    # Create a model with the new field
+    ExtendedFactors = BaseBiogenicFactors.create_model(
+        {"biome", "climate", "vegetation_density"}
+    )
+
+    # Use it
+    factors = ExtendedFactors(
+        biome=Biome.DESERTS,
+        climate=Climate.TROPICAL,
+        vegetation_density=VegetationDensity.HIGH
+    )
+    
+    rprint(factors)
+    
+    
+    class ModelSpecification:
+        def __init__(self, name: str, fields: Dict[str, Dict[str, Any]]):
+            self.name = name
+            self.fields = fields
+            
+        def register_with_biogenic_factors(self):
+            BaseBiogenicFactors.update_fields_from_dict(self.fields)
+            return BaseBiogenicFactors.create_model(set(self.fields.keys()))
+
+    # Define a model specification
+    my_spec = ModelSpecification(
+        name="CustomAnalysis",
+        fields={
+            "biome": {
+                "type": Biome,
+                "default": "DESERTS"
+            },
+            "vegetation_density": {  # Use the class we already defined earlier
+                "type": VegetationDensity,
+                "default": "MEDIUM"  # This will be converted to VegetationDensity.MEDIUM
+            }
+        }
+    )
+
+    # Apply it
+    CustomModel = my_spec.register_with_biogenic_factors()
+    rprint(CustomModel())
+    print(CustomModel())
