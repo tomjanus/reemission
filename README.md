@@ -66,6 +66,16 @@ It calculates full life-cycle emissions as well as emission profiles over time f
 * Integrates with the upstream catchment and reservoir delineation package GeoCARET (formerly HEET), whcih is currently in Beta version and undergoing development.
 * Combines tabular and GIS inputs from catchment delineation with gas emission outputs and visualizes the combined data in interactive maps.
 
+For further details on the scientific background and methodology, please see our [pre-print article](https://www.researchsquare.com/article/rs-7252618/v1).
+
+## Disclaimer
+
+Re-Emission is an open-source research framework for modelling, experimentation, and analysis of reservoir greenhouse gas (GHG) emissions. While the framework supports the implementation of published models such as G-res, it is not intended to replicate or guarantee numerical equivalence with any specific version of the G-res Tool or other external software. Model formulations, parameterisations, and results may vary depending on user configuration, input data, and methodological choices.
+
+The framework is designed to provide transparent, extensible, and reproducible workflows for scientific research and advanced applications, including sensitivity analysis, optimisation, and large-scale scenario simulations. Community contributions are encouraged to extend functionality or integrate updates to external models.
+
+For reference, users should consult the original publications and technical documentation of any implemented model for details of its theoretical formulation and assumptions.
+
 ### A quick demo of results from RE-Emission using input data from catchment delineation tool GeoCARET
 
 Preliminary results of our first case study (for presentation use only), are shown in [https://tomjanus.github.io/mya_emissions_map/](https://tomjanus.github.io/mya_emissions_map/). The case study looks into an assessment of gas emissions from existing and planned hydroelectric reservoirs in Myanmar. A snapshot of the map is presented below. 
