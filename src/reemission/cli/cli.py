@@ -23,6 +23,11 @@ import rich_click as click
 import pyfiglet
 from fpdf import FPDF
 import subprocess
+import rich
+from rich.console import Console
+from rich.table import Table
+from rich.prompt import Confirm
+from rich.progress import Progress
 import reemission
 import reemission.presenter
 from reemission.app_logger import create_logger
@@ -33,12 +38,12 @@ from reemission.model import EmissionModel
 from reemission.input import Inputs
 from reemission.integration.cli import cli as integration_cli
 from reemission import registry
+from reemission.registry import config as reemission_config
+from reemission.config_registration import discover_and_reset_configs
+
 click.rich_click.USE_MARKDOWN = True
-import rich
-from rich.console import Console
-from rich.table import Table
-from rich.prompt import Confirm
-from rich.progress import Progress
+
+
 
 # Update this section if new writers are added to the package
 ext_writer_dict = {
@@ -58,8 +63,8 @@ FIGLET: bool = True
 FIGLET_FONT = "slant"
 model_config = registry.config.get("model_config")
 # Read default parameters from config
-p_export_cal = deep_get(model_config, "CALCULATIONS", "p_export_cal")
-nitrous_oxide_model = deep_get(model_config, "CALCULATIONS", "nitrous_oxide_model")
+# p_export_cal = deep_get(model_config, "CALCULATIONS", "p_export_cal")
+# nitrous_oxide_model = deep_get(model_config, "CALCULATIONS", "nitrous_oxide_model")
 
 
 def run_command(
@@ -162,20 +167,25 @@ See the full documentation at : https://tomjanus.github.io/reemission/index.html
 @click.argument("input-file", nargs=1, type=click.Path(exists=True))
 @click.option("-o", "--output-files", type=click.Path(), multiple=True, default=None,
               help="Files the outputs are written to.")
-@click.option("-r", "--output-config", type=click.Path(exists=True), default=None,
-              help="RE-Emission output configuration file.")
+@click.option("-cf", "--config-folder", type=click.Path(exists=True), default=None,
+              help="Path to custom RE-Emission config files.")
 @click.option("-a", "--author", type=click.STRING, default="",
               help="Author's name.")
 @click.option("-t", "--title", type=click.STRING, default="Results",
               help="Report or study title.")
 @click.option("-p", "--p-model", type=click.STRING, default="g-res",
               help="P-calculation method for CO₂ emissions: g-res/mcdowell.")
-@click.option("-n", "--n2o-model", type=click.STRING, default="model_1",
-              help="Model for calculating N₂O emissions: model_1/model_2.")
-@click.option("--confirm", is_flag=True, show_default=True, default=False,
+@click.option("-n", "--n2o-model", type=click.STRING, default="maavara_1",
+              help="Model for calculating N₂O emissions: maavara_1/maavara_2.")
+@click.option("-rc", "--retention-coefficient", type=click.STRING, default="larsen",
+              help="Phosphorus retention coefficient model: larsen/maavara.")              
+@click.option("-c", "--confirm", is_flag=True, show_default=True, default=False,
               help="Ask for confirmation before running.")
-def calculate(input_file, output_files, output_config, author,
-              title, p_model, n2o_model, confirm) -> None:
+@click.option("-v", "--verbose", is_flag=True, show_default=True, default=False,
+              help="Provide additional output during execution.")
+def calculate(input_file, output_files, config_folder, author,
+              title, p_model, n2o_model, retention_coefficient, confirm,
+              verbose) -> None:
     """
     Calculates emissions based on the data in the JSON INPUT_FILE.
 
@@ -195,33 +205,45 @@ def calculate(input_file, output_files, output_config, author,
         raise click.Abort()
 
     # Step 2. Resolve output configuration
-    if not output_config:
-        output_config = registry.config.get("report_outputs")
+    if config_folder:
+        if verbose:
+            console.print(f"[blue]Discovering config files in folder:[/blue] [bold white]{config_folder}[/bold white] ...")
+        discover_and_reset_configs(config_folder, verbose)
+        
+    output_config = registry.config.get("report_outputs")
+        
+    # Step 3. Update the P-retention coefficient dynamically via config
+    if retention_coefficient not in {"larsen", "maavara"}:
+        console.print(f"[red] Phosphorus retention model '{retention_coefficient}' not known. Using Larsen and Mercier.[/red]")
+        retention_coefficient = "larsen"
+    reemission_config.update("model_config", {("CALCULATIONS",): {"ret_coeff_method": retention_coefficient}})
+    retention_coefficient_updated = deep_get(model_config, "CALCULATIONS", "ret_coeff_method")
 
-    # Step 3. Summarize configuration in a table
-    table = Table(title="Calculation Parameters", header_style="bold magenta")
+    # Step 4. Summarize configuration in a table
+    table = Table(title="\nCalculation Parameters", header_style="bold magenta")
     table.add_column("Parameter", style="cyan")
     table.add_column("Value", style="white")
 
     table.add_row("Input JSON file", click.format_filename(input_file))
-    table.add_row("Output config file",
-                  click.format_filename(output_config) if isinstance(output_config, str)
-                  else "Loaded from config registry")
+    table.add_row("Config folder with custom configs",
+                  click.format_filename(config_folder) if isinstance(config_folder, str)
+                  else "All configs loaded from config registry")
     table.add_row("Output files",
                   ", ".join([click.format_filename(f) for f in output_files]) if output_files else "None")
     table.add_row("Author", author or "N/A")
     table.add_row("Title", title)
-    table.add_row("P-load model", p_model)
-    table.add_row("N₂O model", n2o_model)
+    table.add_row("P-load model (g-res / mc-dowell)", p_model)
+    table.add_row("P-retention model (larsen / maavara)", retention_coefficient_updated)
+    table.add_row("N₂O model (maavara_1 / maavara_2)", n2o_model)
     console.print(table)
 
-    # Step 4. Confirm before running
+    # Step 5. Confirm before running
     if confirm:
         if not Confirm.ask("[bold yellow]Continue with these settings?[/bold yellow]"):
-            console.print("[red]Aborted by user.[/red]")
+            #console.print("[red]Aborted by user.[/red]")
             raise click.Abort()
 
-    # Step 5. Build model
+    # Step 6. Build model
     console.print("[yellow]Initializing model...[/yellow]")
     model = EmissionModel(
         inputs=input_data,
@@ -231,7 +253,7 @@ def calculate(input_file, output_files, output_config, author,
         p_model=p_model,
     )
 
-    # Step 6. Perform calculation with progress feedback
+    # Step 7. Perform calculation with progress feedback
     console.print("[yellow]Starting calculations...[/yellow]")
     with Progress(transient=True) as progress:
         task = progress.add_task("Computing emissions...", total=1)
@@ -242,7 +264,7 @@ def calculate(input_file, output_files, output_config, author,
             raise click.Abort()
         progress.advance(task)
 
-    # Step 7. Prepare file writers
+    # Step 8. Prepare file writers
     writers = []
     for file in output_files or []:
         file_ext = pathlib.Path(file).suffix.lower()
@@ -254,7 +276,7 @@ def calculate(input_file, output_files, output_config, author,
         else:
             writers.append(popped_writer)
 
-    # Step 8. Save results
+    # Step 9. Save results
     if writers:
         console.print("[yellow]Writing outputs...[/yellow]")
         try:
