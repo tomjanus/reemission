@@ -1,6 +1,7 @@
 """Classes for calculating GHG emissions from reservoirs.
 
 .. _Praire2021: https://www.sciencedirect.com/science/article/pii/S1364815221001602
+.. _Maavara2018: https://onlinelibrary.wiley.com/doi/abs/10.1111/gcb.14504
 
 The net GHG emission is meant to represent the actual emission exclusively
 attributable to the reservoir impoundment and are calculated as follows:
@@ -418,12 +419,13 @@ class CarbonDioxideEmission(Emission):
         # is quantified.
         if time_horizon != 100:
             log.warning("Currently, the tool supports time horizon of 100 years only.")
+            time_horizon = 100
             gwp = self.par.co2_gwp100
         else:
             gwp = self.par.co2_gwp100
 
         flux = (
-            gwp * self.par.weight_CO2 / self.par.weight_C / 1000 * 365.25
+            gwp * self.par.weight_CO2 / self.par.weight_C / 1_000 * 365.25
             * 10.0
             ** (
                 self.par.k1_diff
@@ -739,12 +741,12 @@ class MethaneEmission(Emission):
         # is quantified.
         if time_horizon != 100:
             log.warning("Currently, the tool supports time horizon of 100 years only.")
+            time_horizon = 100
             gwp = self.par.ch4_gwp100
         else:
             gwp = self.par.ch4_gwp100
         # Check if the user supplied year in the arguments
-        if year is not None:
-            log.info("Ebullition is not time-dependent. year argument takes no effect.")
+
         # Percentage of surface area that is littoral (near the shore)
         littoral_perc = self.reservoir.littoral_area_frac()
         # Calculate CH4 emission in mg CH4-C m-2 d-1
@@ -755,7 +757,9 @@ class MethaneEmission(Emission):
         )
         # Convert CH4 emission from mg CH4-C m-2 d-1 to g CO2eq m-2 yr-1
         co2_c_ratio = self.par.weight_CH4 / self.par.weight_C
-        emission_in_co2 = emission_in_ch4 * 365 * co2_c_ratio * gwp * 1 / 1000
+        emission_in_co2 = emission_in_ch4 * 365 * co2_c_ratio * gwp * 1 / 1_000
+        if year is not None:
+            return emission_in_co2 / time_horizon
         return emission_in_co2
 
     def ebullition_flux_int(self, time_horizon: int = 100) -> float:
@@ -781,7 +785,7 @@ class MethaneEmission(Emission):
         Returns:
             float: Integrated ebullition flux in g CO$_{2e}$ m$^{-2}$ yr$^{-1}$.
         """
-        return self.ebullition_flux(time_horizon=time_horizon)
+        return self.ebullition_flux(year = None, time_horizon=time_horizon)
 
     def _ebullition_flux_profile(self, years: Tuple[int, ...] = (1, 5, 10, 20, 30, 40, 50, 100)) -> List[float]:
         """Converts ebullition emission into a profile with points (emission
@@ -797,7 +801,7 @@ class MethaneEmission(Emission):
         Returns:
             List[float]: List of ebullition flux values in g CO$_{2e}$ m$^{-2}$ yr$^{-1}$ corresponding to the input years.
         """
-        return [self.ebullition_flux_int()] * len(years)
+        return [self.ebullition_flux_int(time_horizon=100)] * len(years)
 
     def diffusion_flux(self, year: float, time_horizon: int = 100) -> float:
         r"""Calculate CH$_4$ emission via diffusion in g CO$_{2e}$ m$^{-2}$ yr$^{-1}$ for a given year.
@@ -844,6 +848,7 @@ class MethaneEmission(Emission):
         if time_horizon != 100:
             log.warning("Currently, the tool supports time horizon of 100 years only.")
             gwp = self.par.ch4_gwp100
+            time_horizon = 100
         else:
             gwp = self.par.ch4_gwp100
         # Percentage of surface area that is littoral (near the shore)
@@ -855,7 +860,7 @@ class MethaneEmission(Emission):
         aux_var_2 = self.par.k3_diff * math.log10(littoral_perc / 100.0)
         aux_var_3 = self.par.k4_diff * eff_temp
         flux = 10 ** (self.par.k1_diff + aux_var_1 + aux_var_2 + aux_var_3) * \
-            self.par.weight_CH4 / self.par.weight_C * gwp * 365 / 1000
+            self.par.weight_CH4 / self.par.weight_C * gwp * 365 / 1_000
         return flux
 
     def diffusion_flux_int(self, time_horizon: int = 100) -> float:
@@ -900,7 +905,7 @@ class MethaneEmission(Emission):
                     self.par.k4_diff * self.monthly_temp.eff_temp(gas='ch4')
             aux_var2 = 100 * -self.par.k2_diff * math.log(10)
             flux = 10 ** aux_var1 * (1 - 10 ** (100 * self.par.k2_diff)) / aux_var2 * \
-            self.par.weight_CH4 / self.par.weight_C * gwp * 365 / 1000
+            self.par.weight_CH4 / self.par.weight_C * gwp * 365 / 1_000
         else:
             # Alternative (derived analytically from gross yearly flux equation)
             aux1 = self.diffusion_flux(year=1E-6, time_horizon=time_horizon)
@@ -983,6 +988,7 @@ class MethaneEmission(Emission):
         # is quantified.
         if time_horizon != 100:
             log.warning("Currently, the tool supports time horizon of 100 years only.")
+            time_horizon = 100
             gwp = self.par.ch4_gwp100
         else:
             gwp = self.par.ch4_gwp100
@@ -1064,18 +1070,25 @@ class MethaneEmission(Emission):
 
     def _degassing_flux_profile(
             self,
+            flat_profile: bool = True,
             years: Tuple[int, ...] = (1, 5, 10, 20, 30, 40, 50, 100)) -> List[float]:
         """
         Calculate degassing profile for a vector of years.
 
         Args:
+            flat_profile (bool, optional): Sets the emission profile to constant (as in Praire2021_) if True,
+                Otherwise, uses the profile back-calculated from gross integrated degassing flux in Praire2021_
+                (own approach.)
             years (Tuple[int, ...], optional): Vector of years for emission profile
                 (default: (1, 5, 10, 20, 30, 40, 50, 100)).
 
         Returns:
             List[float]: List of degassing flux values in gCO$_{2e} m$^{-2}$ yr$^{-1}$ corresponding to the input years.
         """
-        profile = [self.degassing_flux(year) for year in years]
+        if flat_profile:
+            profile = [self.degassing_flux_int(time_horizon = 100)] * len(years)
+        else:
+            profile = [self.degassing_flux(year) for year in years]
         return profile
 
     def factor(self, number_of_years: int = 100) -> float:
@@ -1147,14 +1160,16 @@ class MethaneEmission(Emission):
 @dataclass
 class NitrousOxideEmission(Emission):
     """Class for calculating N$_2$0 emissions from reservoirs.
+    
+    Uses two model published in Maavara2018_
 
     Attributes:
         available_models (ClassVar[Tuple[str, ...]]): Tuple of supported N2O emission models.
-        model (str): Selected N$_2$O emission model ('model_1', 'model_2').
+        model (str): Selected N$_2$O emission model ('maavara_1', 'maavara_2').
         p_export_model (str): Model for calculating P export from catchments.
     """
 
-    available_models: ClassVar[Tuple[str, ...]] = ('model_1', 'model_2')
+    available_models: ClassVar[Tuple[str, ...]] = ('maavara_1', 'maavara_2')
     model: str
     p_export_model: str
 
@@ -1173,15 +1188,15 @@ class NitrousOxideEmission(Emission):
         Args:
             catchment (Catchment): The catchment area.
             reservoir (Reservoir): The reservoir.
-            model (str): Selected N$_2$O emission model ('model_1', 'model_2').
+            model (str): Selected N$_2$O emission model ('maavara_1', 'maavara_2').
             p_export_model (str): Model for calculating P export from catchments.
             preinund_area (Optional[float], optional): Pre-inundation area. Defaults to None.
             config (dict): Configuration dictionary with model equation constants/parameters. Defaults to None.
         """
         if model not in self.available_models:
             log.warning('Model %s unknown. ', model)
-            log.info('Initializing with default model 1')
-            model = 'model_1'
+            log.info('Initializing with default maavara_1 model')
+            model = 'maavara_1'
         super().__init__(catchment=catchment, reservoir=reservoir, config=config, preinund_area=preinund_area)
         # List of parameters required for CH4 emission calculations
         par_list = ['nitrous_gwp100', 'weight_O', 'weight_P', 'weight_N']
@@ -1271,13 +1286,13 @@ class NitrousOxideEmission(Emission):
         if not model:
             model = self.model
         if model not in self.available_models:
-            raise WrongN2OModelError(permitted_models=self.available_models)
+            raise WrongN2OModelError(model, permitted_models=self.available_models)
         if mean:
             output = 0.5 * (self._n2o_emission_m1_co2() + self._n2o_emission_m2_co2())
         else:
-            if model == "model_1":
+            if model == "maavara_1":
                 output = self._n2o_emission_m1_co2()
-            if model == "model_2":
+            if model == "maavara_2":
                 output = self._n2o_emission_m2_co2()
         return output
 

@@ -97,7 +97,7 @@ The usage for the calculate function can be explored by typing ``reemission calc
    │ --author         -a  TEXT  Author's name                                                                                                                                                   │
    │ --title          -t  TEXT  Report/Study title                                                                                                                                              │
    │ --p-model        -p  TEXT  P-calculation method for CO2 emissions: g-res/mcdowell                                                                                                          │
-   │ --n2o-model      -n  TEXT  Model for calculating N2O emissions: model_1/model_2                                                                                                            │
+   │ --n2o-model      -n  TEXT  Model for calculating N2O emissions: maavara_1/maavara_2                                                                                                            │
    │ --help                     Show this message and exit.                                                                                                                                     │
    ╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 

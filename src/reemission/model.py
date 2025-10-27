@@ -228,9 +228,9 @@ class EmissionModel:
         if n2o_em:
             n2o_exec = {
                 'n2o_methodA': {
-                    'ref': n2o_em.factor, 'args': {'model': 'model_1'}},
+                    'ref': n2o_em.factor, 'args': {'model': 'maavara_1'}},
                 'n2o_methodB': {
-                    'ref': n2o_em.factor, 'args': {'model': 'model_2'}},
+                    'ref': n2o_em.factor, 'args': {'model': 'maavara_2'}},
                 'n2o_mean': {
                     'ref': n2o_em.factor, 'args': {'mean': True}},
                 'n2o_total_per_year': {
@@ -289,7 +289,7 @@ class EmissionModel:
         """Calculate emissions for a number of variables defined in config."""
         # Check the calculation options given in input arguments.
         avail_p_calc_methods = ('g-res', 'mcdowell')
-        avail_n2o_models = ('model_1', 'model_2')
+        avail_n2o_models = ('maavara_1', 'maavara_2')
         if self.p_model not in avail_p_calc_methods:
             log.warning(
                 "Invalid P calculation method. Expected: %s. " +
@@ -299,9 +299,9 @@ class EmissionModel:
         if self.n2o_model not in avail_n2o_models:
             log.warning(
                 "Invalid total N2O emission model. Expected: %s. " +
-                "Using default model 1.",
+                "Using default maavara_1 model.",
                 ', '.join(avail_n2o_models))
-            self.n2o_model = 'model_1'
+            self.n2o_model = 'maavara_1'
 
         # Iterate through each set of inputs and output results in a dict
         for _, model_input in self.inputs.inputs.items():

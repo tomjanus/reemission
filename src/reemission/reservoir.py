@@ -3,6 +3,8 @@
 .. _G-Res Technical Documentation: https://www.hydropower.org/publications/the-ghg-reservoir-tool-g-res-technical-documentation
 .. _Praire2021: https://www.sciencedirect.com/science/article/pii/S1364815221001602
 .. _G-Res: https://www.grestool.org/
+.. _Maavara: https://www.pnas.org/doi/full/10.1073/pnas.1511797112
+.. _Larsen: https://cdnsciencepub.com/doi/10.1139/f76-221
 
 """
 import logging
@@ -212,10 +214,11 @@ class Reservoir:
         return self.inflow_rate
 
     @property
-    def retention_coeff_emp(self) -> float:
-        r"""Empirical retention coefficient for solutes.
+    def retention_coeff_maavara(self) -> float:
+        r"""Empirical retention coefficient for solutes using the model of Maavara (2015).
 
         Obtained from regression with residence time in years.
+        Source: Global phosphorus retention by river damming - Maavara_.
         
         .. math::
             f_R = 1 - \frac{1}{1+0.801\,WRT}
@@ -228,6 +231,7 @@ class Reservoir:
     @property
     def retention_coeff_larsen(self) -> float:
         """Retention coefficient using the model of Larsen and Mercier (1976) for Phosphorus retention.
+        Source: Phosphorus Retention Capacity of Lakes - Larsen_
 
         .. math::
             f_R = \frac{1}{1 + 1 / sqrt{WRT}}
@@ -610,8 +614,8 @@ class Reservoir:
             method = self.config['CALCULATIONS']["ret_coeff_method"]
         if method == 'larsen':
             ret_coeff = self.retention_coeff_larsen
-        elif method in ['emp', 'empirical']:
-            ret_coeff = self.retention_coeff_emp
+        elif method in ['maavara', 'empirical']:
+            ret_coeff = self.retention_coeff_maavara
         else:
             # Otherwise, use the Larsen and Mercier model
             log.warning('Residence time calculation method %s unknown. ' +

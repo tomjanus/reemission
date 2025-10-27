@@ -14,18 +14,21 @@ class WrongN2OModelError(Exception):
     """
     def __init__(
             self,
+            model: str,
             permitted_models: Tuple[str, ...],
-            message: str = "Model not recognized."):
+            message: str = "Model not recognized. "):
         """
         Initializes the WrongN2OModelError with permitted models and an optional message.
 
         Args:
+            model (str): The model name that was not recognized.
             permitted_models (Tuple[str, ...]): Permitted N$_2$O emission models.
             message (str, optional): Additional message to include in the exception. Defaults to "Model not recognized.".
         """
         self.permitted_models = permitted_models
+        permitted_models_str = ", ".join(self.permitted_models)
         self.message = message + \
-            f"Permitted models: {self.permitted_models}"
+            f"Permitted models: {permitted_models_str}, Model entered: {model}."
         super().__init__(self.message)
 
 
