@@ -14,7 +14,7 @@ Why does this file exist, and why not put this in __main__?
 
   Also see (1) from http://click.pocoo.org/5/setuptools/#setuptools-integration
 """
-from typing import Callable, List, Optional, Tuple, Any
+from typing import Callable, List, Optional, Tuple
 import sys
 import pathlib
 import rich_click as click

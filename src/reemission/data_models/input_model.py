@@ -31,6 +31,8 @@ class DamDataModel(BaseModel):
         description="Monthly average air temperatures, degC", 
         default_factory=list)
     
+    model_config = ConfigDict(extra="allow")
+    
     # Post init to set default type if not provided
     @model_validator(mode="after")
     def set_defaults(self):
@@ -51,6 +53,8 @@ class BuildStatusModel(BaseModel):
         None, description="Date of construction of the reservoir", ge=1800,
         le=2200)
     
+    model_config = ConfigDict(extra="allow")
+    
     @classmethod
     def from_row(cls, row: pd.Series) -> BuildStatusModel:
         return cls(**row.to_dict())
@@ -63,8 +67,9 @@ class BuildStatusModel(BaseModel):
 
     @field_validator('construction_date')
     @classmethod
-    def check_construction_date(cls, value, values, **kwargs):
+    def check_construction_date(cls, value, info):
         """Check construction date against status and current date"""
+        values = info.data
         if value and 'status' in values:
             construction_date = date(value, 1, 1)
             if values['status'] == "future" and construction_date < date.today():
@@ -88,12 +93,12 @@ class BiogenicFactorsModel(BaseModel):
     landuse_intensity: LanduseIntensity = Field(
         description="Degree of agricultural land use")
 
+    model_config = ConfigDict(extra="allow", model_dump_enum_values=True)
+    
     @classmethod
     def from_row(cls, row: pd.Series) -> BiogenicFactorsModel:
         return cls(**row.to_dict())
 
-    # Config
-    model_config = ConfigDict(moddel_dump_enum_values=True)
     
 
 class CatchmentModel(BaseModel):
@@ -117,6 +122,8 @@ class CatchmentModel(BaseModel):
     mean_olsen: float = Field(
         ..., ge=0, description="Soil Olsen P content, kgP/ha")
 
+    model_config = ConfigDict(extra="allow")
+    
     @classmethod
     def from_row(cls, row: pd.Series) -> CatchmentModel:
         return cls(**row.to_dict())
@@ -166,6 +173,8 @@ class ReservoirModel(BaseModel):
     water_intake_depth: Optional[float] = Field(
         default=None, description="Water intake depth below surface, m")
 
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+    
     @classmethod
     def from_row(cls, row: pd.Series) -> ReservoirModel:
         return cls(**row.to_dict())
@@ -184,8 +193,9 @@ class ReservoirModel(BaseModel):
 
     @field_validator('mean_depth')
     @classmethod
-    def validate_mean_depth(cls, value, values):
+    def validate_mean_depth(cls, value, info):
         """Check that mean_dept < max_depth"""
+        values = info.data
         max_depth = values.get('max_depth')
         if max_depth is not None and value > max_depth:
             raise ValueError(
@@ -194,16 +204,14 @@ class ReservoirModel(BaseModel):
 
     @field_validator("water_intake_depth")
     @classmethod
-    def validate_water_intake_depth(cls, value, values):
+    def validate_water_intake_depth(cls, value, info):
         """Check that (if water intake depth) then depth <= max_depth"""
+        values = info.data
         max_depth = values.get('max_depth')
         if value and max_depth:
             if value > max_depth:
                 raise ValueError("Water intake below reservoir bottom")
-        return value  # Need to return the value in v2
-
-    # Config
-    model_config = ConfigDict(populate_by_name=True)
+        return value
 
 
 class InputModel(BaseModel):

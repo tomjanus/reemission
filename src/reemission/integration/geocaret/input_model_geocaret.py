@@ -1,8 +1,11 @@
-""" """
+"""GeoCARET input model integration for RE-Emission."""
 from __future__ import annotations
-from typing import ClassVar, Dict, Tuple, List, Union, Sequence
-from pydantic import validator, root_validator
+from typing import ClassVar, Dict, Tuple, List, Union, Sequence, Any, Optional, cast
+import sys
 import pandas as pd
+
+from pydantic import BaseModel, Field, field_validator, model_validator, ConfigDict
+
 from reemission.data_models.input_model import BuildStatusModel, \
     BiogenicFactorsModel, CatchmentModel, ReservoirModel, DamDataModel
 from reemission.auxiliary import rollout_nested_list
@@ -17,49 +20,69 @@ precipitation_field = strip_double_quotes(geocaret_config['calculations']['preci
 et_field = strip_double_quotes(geocaret_config['calculations']['et_field'])
 
 
+def validator_decorator(field_name: str, pre: bool = False):
+    """Create a validator decorator."""
+    mode = "before" if pre else "after"
+    return field_validator(field_name, mode=mode)
+
+
+def root_validator_decorator(pre: bool = False):
+    """Create a root validator decorator."""
+    mode = "before" if pre else "after"
+    return model_validator(mode=mode)
+
+
 class DamDataModelGeoCaret(DamDataModel):
     """Dam, data model adapted to data format from GeoCARET"""
     
-    @root_validator(pre=True)
+    # Define field aliases based on version
+    name: str = Field(alias='name')
+    id: str = Field(alias='id')
+    type: str = Field(alias='type')
+    longitude: float = Field(alias='dam_lon')
+    latitude: float = Field(alias='dam_lat')
+    
+    @field_validator('id', mode='before')
     @classmethod
-    def root_validator(cls, values):
-        """Obtain a vector of monthly air temperatures for RE-EMISSION
-        """
+    def convert_id_to_string(cls, value):
+        """Convert numeric IDs to strings"""
+        return str(value)
+    
+    # Root validator for monthly temperatures
+    @model_validator(mode="before")
+    @classmethod
+    def transform_data(cls, values):
+        """Obtain a vector of monthly air temperatures for RE-EMISSION"""
+        values = cast(Dict[str, Any], values)
         values["monthly_temps"] = [
             values['r_mean_temp_'+str(ix)] for ix in range(1, 13)]
         return values
     
-    class Config:
-        """Add field aliases specific to the output data format received from
-        GeoCARET."""
-        allow_population_by_field_name = False
-        allow_extra_values = False
-        fields = {
-            'name': {'alias': 'name'},
-            'id': {'alias': 'id'},
-            'type': {'alias': 'type'},
-            'longitude': {'alias': 'dam_lon'},
-            'latitude': {'alias': 'dam_lat'},
-            'monthly_temps': {'alias': 'monthly_temps'}}
+    # Version-specific configuration
+    model_config = ConfigDict(
+        populate_by_name=False,  # was: validate_by_name=False
+        extra="ignore"           # was: allow_extra_values=False
+    )
 
 
 class BuildStatusModelGeoCaret(BuildStatusModel):
     """Build status model adapted to data format from GeoCARET"""
 
-    class Config:
-        """Add field aliases specific to the output data format received from
-        GeoCARET."""
-        allow_population_by_field_name = False
-        allow_extra_values = False
-        fields = {
-            'status': {'alias': 'r_status'},
-            'construction_date': {'alias': 'r_construction_date'}}
+    # Define field aliases based on version
+    status: str = Field(alias='r_status')
+    construction_date: Optional[int] = Field(default=None, alias='r_construction_date')
+
+    # Version-specific configuration
+    model_config = ConfigDict(
+        populate_by_name=False,
+        extra='ignore'
+    )
         
     @classmethod
     def from_row(
             cls, row: pd.Series, r_status, 
             r_construction_date) -> BuildStatusModelGeoCaret:
-        """ """
+        """Create model from dataframe row with additional parameters."""
         row = row.copy()
         # Supply missing information
         row['r_status'] = r_status
@@ -71,6 +94,13 @@ class BiogenicFactorsModelGeoCaret(BiogenicFactorsModel):
     """Model for Re-Emission biogenic factor parameters adapted to read and
     parse model output from GeoCARET"""
 
+    # Define field aliases based on version
+    biome: str = Field(alias='c_biome')
+    climate: str = Field(alias='c_climate_zone')
+    soil_type: str = Field(alias='c_soil_type')
+    treatment_factor: str = Field(alias='c_treatment_factor')
+    landuse_intensity: str = Field(alias='c_landuse_intensity')
+    
     # Add custom data parsers/translators for reading GeoCARET output data
     biome_map: ClassVar[Dict[str, str]] = {
         "Deserts & Xeric Shrublands ": "deserts",
@@ -117,22 +147,28 @@ class BiogenicFactorsModelGeoCaret(BiogenicFactorsModel):
         letter)"""
         return geocaret_soil_type.lower()
 
-    class Config:
-        use_enum_values = True
-        allow_population_by_field_name = False
-        allow_extra_values = False
-        fields = {
-            'biome': {'alias': 'c_biome'},
-            'climate': {'alias': 'c_climate_zone'},
-            'soil_type': {'alias': 'c_soil_type'},
-            'treatment_factor': {'alias': 'c_treatment_factor'},
-            'landuse_intensity': {'alias': 'c_landuse_intensity'}}
+    # Version-specific configuration
+    model_config = ConfigDict(
+        model_dump_enum_values=True,
+        populate_by_name=False,
+        extra='ignore'
+    )
 
     # Input value translators
-    _translate_biome = validator('biome', pre=True)(translate_biome_names)
-    _translate_climate = validator('climate', pre=True)(c_cat_from_koppen)
-    _translate_soil_type = validator('soil_type', pre=True)(
-        geocaret_soil_type_to_reemission)
+    @field_validator('biome', mode='before')
+    @classmethod
+    def translate_biome(cls, v):
+        return cls.translate_biome_names(v)
+        
+    @field_validator('climate', mode='before')
+    @classmethod
+    def translate_climate(cls, v):
+        return cls.c_cat_from_koppen(v)
+        
+    @field_validator('soil_type', mode='before')
+    @classmethod
+    def translate_soil_type(cls, v):
+        return cls.geocaret_soil_type_to_reemission(v)
 
 
 def map_c_landuse(
@@ -144,7 +180,7 @@ def map_c_landuse(
         "WATER": 7,
         "WETLANDS": 4,
         "CROPS": 1,
-        "SHRUBS": 2,  # Initially shrubs were 3 and forests were 2. There seems to have been a mistake in how areas were categorized in GeoCARET
+        "SHRUBS": 2,
         "FOREST": 3,
         "NODATA": 0}
     return [input_fractions['c_landcover_'+str(ix)] for ix in 
@@ -154,16 +190,7 @@ def map_c_landuse(
 def map_r_landuse(r_landuses: List[float], aggregate: bool = False) -> Sequence:
     """
     Maps between 27 categories in reservoir landuse output data and
-    9 categories used by the re-emission tool
-    NOTE: DATA IS DIVIDED INTO LANDUSE TYPE PER SOIL (MINERAL, ORGANIC, and
-    NO-DATA)
-
-    Processes those three soil categories independently and creates 3 9x1
-    lists.
-
-    If aggregate is True, adds the three lists together and output a single
-    list in which each item of index "i" for "i = 0:8" is the sum of items
-    of index "i" in all three lists.
+    9 categories used by the re-emission tool.
     """
     index_order: Dict[str, List[int]] = {
         "mineral": [6,  8,  5,  7,  4,  1,  2,  3,  0],
@@ -185,46 +212,61 @@ def map_r_landuse(r_landuses: List[float], aggregate: bool = False) -> Sequence:
 class CatchmentModelGeoCaret(CatchmentModel):
     """Model for Re-Emission catchment parameters adapted to read and
     parse model output from GeoCARET"""
-    runoff_field: str = 'c_mar_mm_alt2'
-
-    @root_validator(pre=True)
+    
+    # Define field aliases based on version
+    runoff: float = Field(alias=runoff_field)
+    area: float = Field(alias='c_area_km2')
+    riv_length: float = Field(alias="ms_length")
+    population: float = Field(alias='n_population')
+    area_fractions: List[float] = Field(alias='c_area_fractions')
+    slope: float = Field(alias='c_mean_slope_pc')
+    precip: float = Field(alias=precipitation_field)
+    etransp: float = Field(alias=et_field)
+    soil_wetness: float = Field(alias='c_masm_mm')
+    mean_olsen: float = Field(alias='c_mean_olsen')
+    
+    # Root validator for area fractions
+    @model_validator(mode="before")
     @classmethod
-    def root_validator(cls, values):
-        """Obtain a vector of c area fractions for RE-EMISSION from fractions
-        in c_landcover_[i] fields in raw tabular GeoCARET output data.
-        Remaps area fraction indices to match order of landuses in constants.Landuse"""
+    def transform_data(cls, values):
+        """Obtain a vector of c area fractions for RE-EMISSION"""
+        values = cast(Dict[str, Any], values)
         values["c_area_fractions"] = map_c_landuse(values)
         return values
 
-    class Config:
-        import inspect
-        allow_population_by_field_name = False
-        allow_extra_values = True
-        fields = {
-            "runoff": {'alias': runoff_field},
-            "area": {'alias': 'c_area_km2'},
-            "riv_length": {'alias': "ms_length"},
-            "population": {'alias': 'n_population'},
-            "area_fractions": {'alias': 'c_area_fractions'},
-            "slope": {'alias': 'c_mean_slope_pc'},
-            "precip": {'alias': precipitation_field},
-            "etransp": {'alias': et_field},
-            "soil_wetness": {'alias': 'c_masm_mm'},
-            "mean_olsen": {'alias': 'c_mean_olsen'}}
+    # Version-specific configuration
+    model_config = ConfigDict(
+        populate_by_name=False,
+        extra='ignore'
+    )
 
 
 class ReservoirModelGeoCaret(ReservoirModel):
     """Model for Re-Emission reservoir parameters adapted to read and
     parse model output from GeoCARET"""
 
-    @root_validator(pre=True)
+    # Define field aliases based on version
+    volume: float = Field(alias='r_volume_m3')
+    area: float = Field(alias='r_area_km2')
+    max_depth: float = Field(alias="r_maximum_depth_m")
+    mean_depth: float = Field(alias='r_mean_depth_m')
+    area_fractions: List[float] = Field(alias="r_area_fractions")
+    soil_carbon: float = Field(alias="r_msocs_kgperm2")
+    mean_radiance: float = Field(alias="r_mghr_all_kwhperm2perday")
+    mean_radiance_may_sept: float = Field(alias="r_mghr_may_sept_kwhperm2perday")
+    mean_radiance_nov_mar: float = Field(alias="r_mghr_nov_mar_kwhperm2perday")
+    mean_monthly_windspeed: float = Field(alias="r_mean_annual_windspeed")
+    water_intake_depth: Optional[float] = None
+
+    # Root validator for area fractions
+    @model_validator(mode="before")
     @classmethod
-    def root_validator(cls, values):
-        """Obtain a vector of r area fractions for RE-EMISSION from fractions
-        in r_landcover_[i] fields in raw tabular GeoCARET output data"""
+    def transform_data(cls, values):
+        """Process reservoir landuse data"""
+        values = cast(Dict[str, Any], values)
         values['r_area_fractions'] = map_r_landuse(
-                r_landuses=[values['r_landcover_bysoil_'+str(ix)] for
-                            ix in range(0, 27)])
+            r_landuses=[values['r_landcover_bysoil_'+str(ix)] for
+                        ix in range(0, 27)])
         return values
 
     def get_water_area_frac_in_res(self) -> float:
@@ -232,21 +274,11 @@ class ReservoirModelGeoCaret(ReservoirModel):
         prior to impoundment"""
         return sum([self.area_fractions[i] for i in (7, 16, 25)])
 
-    class Config:
-        allow_population_by_field_name = False
-        allow_extra_values = True
-        fields = {
-            "volume": {'alias': 'r_volume_m3'},
-            "area": {'alias': 'r_area_km2'},
-            "max_depth": {'alias': "r_maximum_depth_m"},
-            "mean_depth": {'alias': 'r_mean_depth_m'},
-            "area_fractions": {'alias': "r_area_fractions"},
-            "soil_carbon": {'alias': "r_msocs_kgperm2"},
-            "mean_radiance": {'alias': "r_mghr_all_kwhperm2perday"},
-            "mean_radiance_may_sept": {'alias': "r_mghr_may_sept_kwhperm2perday"},
-            "mean_radiance_nov_mar": {'alias': "r_mghr_nov_mar_kwhperm2perday"},
-            "mean_monthly_windspeed": {'alias': "r_mean_annual_windspeed"},
-            "water_intake_depth": {}}
+    # Version-specific configuration
+    model_config = ConfigDict(
+        populate_by_name=False,
+        extra='ignore'
+    )
 
 
 if __name__ == "__main__":

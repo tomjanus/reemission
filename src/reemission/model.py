@@ -276,8 +276,8 @@ class EmissionModel:
         """Save results using presenters defined in the presenters list."""
         if not bool(self.outputs):
             log.error(
-                "Output dictionary empty. Run calculations first and " +
-                " try again.")
+                "No outputs present in the `EmissionModel` object. " +
+                "Run calculations first and try again.")
             return None
         if self.presenter is not None:
             self.presenter.output()
@@ -369,7 +369,7 @@ class EmissionModel:
 
             output = {}
             # Iterate through all emission components and record those that
-            # are marked for outputting
+            # are marked for outputting           
             if isinstance(self.presenter_config, dict):
                 for emission, em_config in self.presenter_config['outputs'].items():
                     if emission in exec_dict.keys() and \
