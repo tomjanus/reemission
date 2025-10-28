@@ -16,6 +16,7 @@ Why does this file exist, and why not put this in __main__?
 """
 from typing import List, Tuple, Union, Optional
 import warnings
+import shutil
 import os
 import pathlib
 import textwrap
@@ -173,9 +174,13 @@ def get_folder_size_rich(folder: str) -> int:
                 total += os.path.getsize(fp)
     return total
 
+
 def clean_folder_rich(folder: str) -> None:
-    """Delete all contents of a folder."""
-    import shutil
+    """Delete all contents of a folder, reporting issues gracefully."""
+    if not os.path.exists(folder):
+        console.print(f"[yellow]Warning:[/] Folder '{folder}' does not exist.")
+        return
+
     for filename in os.listdir(folder):
         file_path = os.path.join(folder, filename)
         try:
@@ -183,8 +188,14 @@ def clean_folder_rich(folder: str) -> None:
                 os.unlink(file_path)
             elif os.path.isdir(file_path):
                 shutil.rmtree(file_path)
-        except Exception as e:
-            console.print(f"[red]Error deleting {file_path}: {e}[/red]")
+        except PermissionError:
+            console.print(f"[red]Permission denied:[/] {file_path}")
+        except FileNotFoundError:
+            console.print(f"[yellow]File already removed:[/] {file_path}")
+        except OSError as e:
+            console.print(f"[red]OS error while deleting {file_path}: {e.strerror}[/red]")
+
+    console.print(f"[green]✓ Cleaned contents of folder:[/] {folder}")
 
 
 @click.group()
@@ -571,165 +582,6 @@ def run_demo(demo_folder: str) -> None:
             box=box.ROUNDED,
         )
     )
-
-
-@click.command()
-@click.argument("demo_folder", nargs=1, type=click.Path())
-def run_demo_old(demo_folder: str) -> None:
-    """Run a demo analysis for a set of existing and future dams.
-    
-    Uses a subset of dams from Myanmar case study on assessment of gas emissions
-    from existing and future hydroelectric reservoirs in Myanmar
-    """
-    os.makedirs(demo_folder, exist_ok=True)
-    # Import modules in /examples/demo in order to run the demo example
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    
-    #demo_folder = get_package_file("demo")
-    from reemission.demo.fetch_inputs import download_mya_case_study_inputs
-    from reemission.demo.postprocess_results import process_mya_case_study_results
-
-    # Define folders and remote addresses for downloading input data
-    INPUT_FOLDER=os.path.join(demo_folder, "reemission_demo_delineations")
-    INPUT_FOLDER_LINK="https://drive.google.com/file/d/1PYqzy4-5P2aW8tvYZPPJ-3fDSDUoHgOv/view?usp=drive_link"
-    TARGET_INPUT_FOLDER_SIZE=1179364  # Specify the target size in bytes
-    IFC_DB_FOLDER=os.path.join(demo_folder, "reemission_demo_dam_db")
-    IFC_DB_LINK="https://drive.google.com/file/d/1OZAVdRMOQN8J-7h3bZIMeQzIfBuo5adC/view?usp=drive_link"
-    IFC_DB_SIZE=51854 # Size in bytes
-    
-    click.echo("RUNNING CALCULATIONS FOR A SUBSET OF EXISTING AND FUTURE HYDROELECTRIC RESERVOIRS IN MYANMAR...")
-    
-    click.echo("\n1. Fetching the demo dabase of dams from external sources...")
-    if os.path.isdir(IFC_DB_FOLDER):
-        folder_size = get_folder_size(IFC_DB_FOLDER)
-        if folder_size == IFC_DB_SIZE:
-            click.echo(f"The DAMS database folder {IFC_DB_FOLDER} exists and has the correct size.")
-            click.echo("Fetching the dam database from external sources not required.")
-        else:
-            click.echo(
-                f"The DAMS database in {IFC_DB_FOLDER} exists but its size is not {IFC_DB_SIZE} bytes.")
-            # Remove the existing contents of the IFC_DB_FOLDER
-            clean_folder(IFC_DB_FOLDER)
-            click.echo("Downloading the database form external sources. Please Wait...")
-            download_mya_case_study_inputs(
-                IFC_DB_LINK, os.path.join(IFC_DB_FOLDER,"reemission_demo_dam_db.zip"))
-    else:
-        click.echo(f"The DAMS database folder {IFC_DB_FOLDER} does not exist.")
-        os.makedirs(IFC_DB_FOLDER, exist_ok=True)
-        click.echo("Downloading the database form external sources. Please Wait...")
-        download_mya_case_study_inputs(
-                IFC_DB_LINK, os.path.join(IFC_DB_FOLDER,"reemission_demo_dam_db.zip"))
-
-    click.echo("\n2. Fetching reservoir and catchment delineations from external sources...")
-    if os.path.isdir(INPUT_FOLDER):
-        folder_size = get_folder_size(INPUT_FOLDER)
-        if folder_size == TARGET_INPUT_FOLDER_SIZE:
-            click.echo(f"The DAMS database folder {INPUT_FOLDER} exists and has the correct size.")
-            click.echo("Fetching the dam database from external sources not required.")
-        else:
-            click.echo(
-                f"The DAMS database in {INPUT_FOLDER} exists but its size is not {TARGET_INPUT_FOLDER_SIZE} bytes.")
-            # Remove the existing contents of the INPUT_FOLDER
-            clean_folder(INPUT_FOLDER)
-            click.echo("Downloading the database form external sources. Please Wait...")
-            download_mya_case_study_inputs(
-                INPUT_FOLDER_LINK, os.path.join(INPUT_FOLDER,"reemission_demo_delineations.zip"))
-    else:
-        click.echo(f"The DAMS database folder {INPUT_FOLDER} does not exist.")
-        os.makedirs(INPUT_FOLDER, exist_ok=True)
-        click.echo("Downloading the database form external sources. Please Wait...")
-        download_mya_case_study_inputs(
-                INPUT_FOLDER_LINK, os.path.join(INPUT_FOLDER,"reemission_demo_delineations.zip"))
-
-    OUTPUTS_FOLDER=os.path.join(demo_folder, "geocaret_outputs")
-    click.echo(f"\n3. Creating the outputs folder {OUTPUTS_FOLDER} ...")
-    # Create outputs folder if it does not exist already
-    if not os.path.isdir(OUTPUTS_FOLDER):
-        os.makedirs(OUTPUTS_FOLDER, exist_ok=True)
-        click.echo(f"Folder created: {OUTPUTS_FOLDER}")
-    else:
-        click.echo(f"Folder already exists: {OUTPUTS_FOLDER}")
-
-    click.echo(
-        "\n4. Merging tabular data into a single CSV file and saving to "+
-        f"{os.path.join(OUTPUTS_FOLDER,'geocaret_outputs.csv')} ...")
-    # Find subfolders in the shp folder
-    shp_folders = [f.path for f in os.scandir(INPUT_FOLDER) if f.is_dir()]
-    combined_csv_file = os.path.join(OUTPUTS_FOLDER, "geocaret_outputs.csv")
-    # Run CLI command as a subprocess
-    command_1 = ["reemission-geocaret", "process-tab-outputs"]
-    for input_folder in shp_folders:
-        command_1.append("-i")
-        input_file = os.path.join(input_folder, "output_parameters.csv")
-        command_1.append(f"{input_file}")
-    # Append missing columns to data that are required but not given in GeoCARET
-    missing_col_value_pairs: List[Tuple[str, str]] = [
-        ("c_treatment_factor", "primary (mechanical)"), 
-        ("c_landuse_intensity", "low intensity"),
-        ('type', 'unknown')]
-    for col_name, col_val in missing_col_value_pairs:
-        command_1.append('-cv')
-        command_1.append(col_name)
-        command_1.append(col_val)
-    command_1.append("-o")
-    command_1.append(combined_csv_file)
-    #print(command_1)
-    run_command(command_1)
-    #res = subprocess.run(command_1, shell=True, capture_output=False)
-    #print(res)
-
-    click.echo("\n5. Merging shape files for individual reservoirs into combined shape files...")
-    # Convert the csv file into a JSON input file to RE-Emission
-    # Write reemission tab2json CLI function
-    # Join shape files for individual reservoirs into combined shapes for each category of shapes
-    command_2 = ["reemission-geocaret", "join-shapes"]
-    for input_folder in shp_folders:
-        command_2.append("-i")
-        command_2.append(input_folder)
-    command_2 += [
-        "-o", OUTPUTS_FOLDER, "-gp", "R_*.shp, C_*.shp, MS_*.shp, PS_*.shp", 
-        "-f", "reservoirs.shp, catchments.shp, rivers.shp, dams.shp"]
-    run_command(command_2)
-    #subprocess.run(command_2, capture_output=True)
-
-    click.echo("\n6. Converting GeoCARET tabular data to the RE-Emission input JSON file")
-    command_3 = ["reemission-geocaret", "tab-to-json", "-i", combined_csv_file,
-                 "-o", os.path.join(OUTPUTS_FOLDER,"reemission_inputs.json")]
-    #subprocess.run(command_3, capture_output=True)
-    run_command(command_3)
-
-    REEMISSION_OUTPUTS_FOLDER=os.path.join(demo_folder, "reemission_outputs")
-    click.echo(f"\n7. Creating the outputs folder {REEMISSION_OUTPUTS_FOLDER} ...")
-    if not os.path.isdir(REEMISSION_OUTPUTS_FOLDER):
-        os.makedirs(REEMISSION_OUTPUTS_FOLDER, exist_ok=True)
-        click.echo(f"Folder created: {REEMISSION_OUTPUTS_FOLDER}")
-    else:
-        click.echo(f"Folder already exists: {REEMISSION_OUTPUTS_FOLDER}")
-
-    click.echo("\n8. Calculating GHG emissions with RE-EMISSION")
-    # Estimate gas emissions and save output files
-    command_4 = [
-        "reemission", "calculate", 
-        os.path.join(OUTPUTS_FOLDER, "reemission_inputs.json"),
-        "-a", "Default User",
-        "-t", "Demo Example Results",
-        "-o", os.path.join(REEMISSION_OUTPUTS_FOLDER, "demo_GHG_outputs.html"),
-        "-o", os.path.join(REEMISSION_OUTPUTS_FOLDER, "demo_GHG_outputs.json"),
-        "-o", os.path.join(REEMISSION_OUTPUTS_FOLDER, "demo_GHG_outputs_.xlsx")
-    ]
-    run_command(command_4)
-    #subprocess.run(command_4, capture_output=True)
-
-    # Merge results into shape files and visualise on a map
-    click.echo("\n9. Merging input and output data into shape files")
-    process_mya_case_study_results(
-        shp_folder = pathlib.Path(demo_folder)/"geocaret_outputs",
-        output_json_file =pathlib.Path(demo_folder)/"reemission_outputs/demo_GHG_outputs.json",
-        map_path = pathlib.Path(demo_folder)/"demo_interactive_map",
-        ifc_dam_path = pathlib.Path(demo_folder)/"reemission_demo_dam_db"/"dam_db.shp")
-
-    click.echo("\nDONE")
-
 
 main.add_command(calculate)
 main.add_command(log_to_pdf)
