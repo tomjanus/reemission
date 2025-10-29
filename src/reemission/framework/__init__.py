@@ -36,10 +36,10 @@ from reemission.framework.core import (
     ModelMixin,
     PydanticModelMixin,
     CycleDetectionError,
-    detect_output_keys,
+    detect_output_vars,
 )
 
-from reemission.framework.dag import ModelNode
+from reemission.framework.dag import DAG
 
 from reemission.framework.utils import create_pydantic_model
 from reemission.framework._config import HAS_PYDANTIC, HAS_TYPING_EXTENSIONS
@@ -49,9 +49,9 @@ __all__ = [
     "ModelMixin",
     "PydanticModelMixin",
     "CycleDetectionError",
-    "ModelNode",
+    "DAG",
     "create_pydantic_model",
-    "detect_output_keys",
+    "detect_output_vars",
     "HAS_PYDANTIC",
     "HAS_TYPING_EXTENSIONS",
 ]

@@ -55,10 +55,13 @@ import uuid
 import inspect
 import json
 from rich import print as rprint
+import numpy as np
+import pandas as pd
 
 from reemission.framework.exceptions import CycleDetectionError
 from reemission.framework.metaclasses import ModelMeta, PydanticModelMeta
-from reemission.framework.dag import ModelNode
+from reemission.framework.dag import DAG, NxDAG
+from reemission.framework.utils import detect_output_vars
 
 # Define HAS_PYDANTIC locally in this module
 try:
@@ -105,121 +108,6 @@ _DEFAULT_KEY = "__default__"
 TModel = TypeVar("TModel", bound="ModelMixin")
 TOutput = TypeVar("TOutput")
 DependencyMap: TypeAlias = Mapping[str, Union[str, Iterable[str]]]
-
-
-
-
-
-def detect_output_keys(cls: Type[ModelMixin]) -> List[str]:
-    """
-    Detect output keys from type annotations on the `_execute` method.
-
-    Looks for Dict[str, X] or similar return type annotations to extract output keys.
-
-    Args:
-        cls: The ModelMixin subclass to inspect.
-
-    Returns:
-        List of output key names, or an empty list if undetermined.
-    """
-    # Defensive checks
-    if not hasattr(cls, "_execute"):
-        return []
-
-    try:
-        hints = get_type_hints(cls._execute)
-    except (NameError, TypeError, AttributeError):
-        # NameError: forward refs unresolved
-        # TypeError: not callable or missing signature
-        # AttributeError: method missing annotations
-        return []
-
-    return_type = hints.get("return")
-    if return_type is None:
-        return []
-
-    # Debug info - let's see what we're working with
-    # print(f"DEBUG: Processing {cls.__name__}")
-    # print(f"DEBUG: return_type = {return_type}")
-    # print(f"DEBUG: type(return_type) = {type(return_type)}")
-    # print(f"DEBUG: str(return_type) = {str(return_type)}")
-    # print(f"DEBUG: hasattr __annotations__: {hasattr(return_type, '__annotations__')}")
-    # if hasattr(return_type, '__annotations__'):
-    #     print(f"DEBUG: __annotations__ = {return_type.__annotations__}")
-
-    # Case 1: Return type is Dict[str, X] - basic dict types don't reveal specific keys
-    origin = get_origin(return_type)
-    if origin in (dict, Dict):
-        # For basic Dict types, we can't determine specific keys
-        return []
-
-    # Case 2: Check for dataclass first (most reliable)
-    try:
-        import dataclasses
-        if dataclasses.is_dataclass(return_type):
-            # Get field names from dataclass
-            fields = dataclasses.fields(return_type)
-            return [field.name for field in fields]
-    except Exception:
-        pass
-    
-    # Case 3: Check for TypedDict by looking at the class hierarchy and attributes
-    # TypedDict classes have special characteristics
-    try:
-        # Check if it has __annotations__ and other TypedDict markers
-        if hasattr(return_type, "__annotations__") and return_type.__annotations__:
-            # Additional checks to confirm it's a TypedDict
-            type_name = getattr(return_type, "__name__", "")
-            module_name = getattr(return_type, "__module__", "")
-            
-            # Check for TypedDict-specific attributes
-            has_total = hasattr(return_type, "__total__")
-            has_required_keys = hasattr(return_type, "__required_keys__")
-            has_optional_keys = hasattr(return_type, "__optional_keys__")
-            
-            # If it looks like a TypedDict, extract the keys
-            if has_total or has_required_keys or has_optional_keys or "typing" in module_name:
-                return list(return_type.__annotations__.keys())
-            
-            # Fallback: if it has __annotations__ and looks like a structured type
-            # (not a regular class), assume it's a TypedDict-like structure
-            if (not hasattr(return_type, "__init__") or 
-                str(return_type).startswith("typing") or
-                "TypedDict" in str(type(return_type))):
-                return list(return_type.__annotations__.keys())
-                
-    except Exception as e:
-        # print(f"DEBUG: Exception in TypedDict detection: {e}")
-        pass
-    
-    # Case 4: Check class name and string representation for TypedDict patterns
-    try:
-        return_type_str = str(return_type)
-        type_repr = repr(return_type)
-        
-        # Look for typing_extensions or typing patterns
-        if (("typing_extensions" in return_type_str or "typing" in return_type_str) and 
-            hasattr(return_type, "__annotations__")):
-            return list(return_type.__annotations__.keys())
-            
-        # Check if the type repr contains TypedDict indicators
-        if "TypedDict" in type_repr and hasattr(return_type, "__annotations__"):
-            return list(return_type.__annotations__.keys())
-            
-    except Exception:
-        pass
-
-    # Case 5: Last resort - check for any class with __annotations__ that isn't a basic type
-    try:
-        if (hasattr(return_type, "__annotations__") and 
-            return_type.__annotations__ and
-            hasattr(return_type, "__name__") and
-            not return_type.__name__.startswith("_")):  # Skip private types
-            return list(return_type.__annotations__.keys())
-    except Exception:
-        pass
-
-    return []
 
 
 class ModelMixin(ABC, metaclass=ModelMeta):
@@ -341,37 +229,55 @@ class ModelMixin(ABC, metaclass=ModelMeta):
         # If using Pydantic, validation happens automatically in __init__
         return cls(**kwargs)  # type: ignore
 
-    def to_dict(self, include_outputs: bool = False) -> Dict[str, Any]:
-        """Serialize model to dictionary.
+    def to_dict(
+            self,
+            include_outputs: bool = False,
+            _seen: Optional[Set[int]] = None) -> Dict[str, Any]:
+        """Serialize model to dictionary safely, handling cycles and non-JSON types.
 
         Args:
             include_outputs: Whether to include computed outputs in serialization.
+            _seen: Internal set to track already-serialized objects (avoid cycles).
 
         Returns:
             Dictionary representation of the model.
         """
-        result: Dict[str, Any] = {
+        if _seen is None:
+            _seen = set()
+        obj_id = id(self)
+        if obj_id in _seen:
+            # Object already serialized: return reference
+            return {"_ref": getattr(self, "_uuid", None)}
+        _seen.add(obj_id)   
+        # Basic metadata    
+        _result: Dict[str, Any] = {
             "_class": self.__class__.__name__,
             "_uuid": self._uuid,
         }
-
         for name, value in vars(self).items():
             if name.startswith("_"):
                 continue
-
+            # Nested ModelMixin: recursive serialization
             if isinstance(value, ModelMixin):
-                result[name] = value.to_dict(include_outputs=include_outputs)
-            elif _HAS_PYDANTIC and isinstance(value, BaseModel):
-                result[name] = value.dict()
+                _result[name] = value.to_dict(include_outputs=include_outputs)
+            # Pydantic models
+            elif isinstance(value, BaseModel):
+                _result[name] = value.dict()
+            # NumPy arrays
+            elif isinstance(value, np.ndarray):
+                result[name] = value.tolist()
+            # Pandas DataFrames
+            elif isinstance(value, pd.DataFrame):
+                result[name] = value.to_dict(orient="records")
+            # JSON-serializable objects
             else:
                 # Try to serialize, skip if not serializable
                 try:
                     json.dumps(value)
-                    result[name] = value
+                    _result[name] = value
                 except (TypeError, ValueError):
-                    result[name] = str(value)
-
-        return result
+                    _result[name] = str(value)
+        return _result
 
     def to_json(self, indent: int = 2, include_outputs: bool = False) -> str:
         """Serialize model to JSON string.
@@ -383,9 +289,12 @@ class ModelMixin(ABC, metaclass=ModelMeta):
         Returns:
             JSON string representation.
         """
-        return json.dumps(self.to_dict(include_outputs=include_outputs), indent=indent)
+        return json.dumps(
+            self.to_dict(include_outputs=include_outputs),
+            indent=indent
+        )
 
-    def build_dag(self, name: str = "root") -> ModelNode:
+    def build_dag(self, name: str = "root") -> DAG:
         """Build a DAG representation of the model hierarchy.
 
         Args:
@@ -395,27 +304,23 @@ class ModelMixin(ABC, metaclass=ModelMeta):
             ModelNode representing the DAG structure.
         """
         # Get output keys from type annotations
-        output_keys = detect_output_keys(self.__class__)
-
-        node = ModelNode(
+        output_vars = detect_output_vars(self.__class__)
+        _node = DAG(
             name=name,
             class_name=self.__class__.__name__,
             uuid=self._uuid,
-            output_keys=output_keys,
+            output_vars=output_vars,
         )
-
         # Collect children and primitives
         for attr_name, attr_value in vars(self).items():
             if attr_name.startswith("_"):
                 continue
-
             if isinstance(attr_value, ModelMixin):
                 child_node = attr_value.build_dag(name=attr_name)
-                node.children[attr_name] = child_node
+                _node.children[attr_name] = child_node
             else:
-                node.primitive_attrs[attr_name] = attr_value
-
-        return node
+                _node.primitive_attrs[attr_name] = attr_value
+        return _node
 
     def visualize(self) -> str:
         """Generate a pretty-printed visualization of the model DAG.
@@ -423,8 +328,8 @@ class ModelMixin(ABC, metaclass=ModelMeta):
         Returns:
             String representation of the model tree.
         """
-        dag = self.build_dag()
-        return dag.pretty_print()
+        _dag = self.build_dag()
+        return _dag.pretty_print()
 
     def build_networkx_dag(self) -> "nx.DiGraph":
         """Build NetworkX DiGraph for advanced graph operations.
@@ -439,16 +344,15 @@ class ModelMixin(ABC, metaclass=ModelMeta):
             raise RuntimeError(
                 "NetworkX not available. Install with: pip install networkx"
             )
-
-        dag = nx.DiGraph()
+        # Recursively build NetworkX DAG
+        dag = NxDAG()
         self._build_networkx_dag(dag)
         return dag
 
-    def _build_networkx_dag(self, dag: "nx.DiGraph") -> None:
+    def _build_networkx_dag(self, dag: NxDAG) -> None:
         """Recursively build NetworkX DAG."""
         if self not in dag:
             dag.add_node(self)
-
         # Add edges from children to parent
         for name, attr in vars(self).items():
             if isinstance(attr, ModelMixin) and not name.startswith("_"):
@@ -463,19 +367,12 @@ class ModelMixin(ABC, metaclass=ModelMeta):
         """
         if not _HAS_NETWORKX:
             return self.detect_cycles()  # fallback to existing method
-
         try:
-            dag = self.build_networkx_dag()
-            if not nx.is_directed_acyclic_graph(dag):
-                cycles = list(nx.simple_cycles(dag))
-                if cycles:
-                    # Return first cycle with readable names
-                    cycle = cycles[0]
-                    return [node.__class__.__name__ for node in cycle]
-        except Exception:
+            _dag = self.build_networkx_dag()
+            return _dag.detect_cycles()
+        except nx.NetworkXError:
             return self.detect_cycles()  # fallback
 
-        return None
 
     def visualize_graph(
         self, show_plot: bool = True, save_path: Optional[str] = None
@@ -1136,9 +1033,9 @@ class ModelMixin(ABC, metaclass=ModelMeta):
         # Handle complex types
         if type_str.startswith('List['):
             return []
-        elif type_str.startswith('Dict['):
+        if type_str.startswith('Dict['):
             return {}
-        elif type_str.startswith('Union['):
+        if type_str.startswith('Union['):
             # Extract first type from Union
             inner = type_str[6:-1]  # Remove 'Union[' and ']'
             first_type = inner.split(',')[0].strip()
@@ -1461,7 +1358,7 @@ if __name__ == "__main__":
                 return {
                     "using_double": inputs["multiplier"],
                     "scaled": inputs["multiplier"] * 0.5
-                }
+                } 
         
         selective = SelectiveComposite()
         selective_result = selective.run()
@@ -1852,7 +1749,7 @@ if __name__ == "__main__":
     rprint("\n[bold green]10. Output Key Detection from Type Annotations[/bold green]")
     
     # Add debugging function
-    def debug_detect_output_keys(cls, description=""):
+    def debug_detect_output_vars(cls, description=""):
         """Debug helper to show detection process."""
         rprint(f"\n[cyan]Debugging {cls.__name__} {description}:[/cyan]")
         
@@ -1903,7 +1800,7 @@ if __name__ == "__main__":
             except:
                 rprint("  • Dataclass check failed")
                 
-            detected = detect_output_keys(cls)
+            detected = detect_output_vars(cls)
             rprint(f"  • Detected keys: {detected}")
             return detected
             
@@ -1920,7 +1817,7 @@ if __name__ == "__main__":
         def _execute(self, inputs: Dict[str, Any]) -> Dict[str, float]:
             return {"result": 42.0}
     
-    simple_keys = detect_output_keys(SimpleReturn)
+    simple_keys = detect_output_vars(SimpleReturn)
     rprint(f"SimpleReturn output keys: {simple_keys}")
     
     # Model with TypedDict return type (should detect specific keys)
@@ -1944,7 +1841,7 @@ if __name__ == "__main__":
                     sum_of_factors=inputs["a"] + inputs["b"]
                 )
         
-        typed_dict_keys = detect_output_keys(TypedDictModel)
+        typed_dict_keys = detect_output_vars(TypedDictModel)
         rprint(f"TypedDictModel output keys: {typed_dict_keys}")
         
         # Test the model to show it works
@@ -1958,12 +1855,10 @@ if __name__ == "__main__":
         def _execute(self, inputs):  # No type hints
             return {"unknown": "value"}
     
-    no_annotations_keys = detect_output_keys(NoAnnotationsModel)
+    no_annotations_keys = detect_output_vars(NoAnnotationsModel)
     rprint(f"NoAnnotationsModel output keys: {no_annotations_keys}")
     
-    # Model with dataclass-like return type
-    from dataclasses import dataclass
-    
+    # Model with dataclass-like return type 
     @dataclass
     class ComputationResult:
         value: float
@@ -1991,7 +1886,7 @@ if __name__ == "__main__":
                 "description": result.description
             }
     
-    dataclass_keys = detect_output_keys(DataclassReturnModel)
+    dataclass_keys = detect_output_vars(DataclassReturnModel)
     rprint(f"DataclassReturnModel output keys: {dataclass_keys}")
     
     # Test the dataclass model
@@ -2009,7 +1904,7 @@ if __name__ == "__main__":
         dag_node = typed_model.build_dag("typed_model")
         rprint(f"DAG node for TypedDictModel:")
         rprint(f"  - Class: {dag_node.class_name}")
-        rprint(f"  - Detected output keys: {dag_node.output_keys}")
+        rprint(f"  - Detected output keys: {dag_node.output_vars}")
         rprint(f"  - Primitive attributes: {dag_node.primitive_attrs}")
     
     # Compare models with and without detected output keys
@@ -2017,10 +1912,10 @@ if __name__ == "__main__":
     dataclass_dag = DataclassReturnModel().build_dag("dataclass")
     
     rprint(f"\nComparison of detected output keys:")
-    rprint(f"  - SimpleReturn: {simple_dag.output_keys}")
-    rprint(f"  - DataclassReturnModel: {dataclass_dag.output_keys}")
+    rprint(f"  - SimpleReturn: {simple_dag.output_vars}")
+    rprint(f"  - DataclassReturnModel: {dataclass_dag.output_vars}")
     if _HAS_PYDANTIC:
-        rprint(f"  - TypedDictModel: {dag_node.output_keys}")
+        rprint(f"  - TypedDictModel: {dag_node.output_vars}")
     
     # ============================================================================
     # 10.2. Output key detection in complex models
@@ -2090,7 +1985,7 @@ if __name__ == "__main__":
         def __init__(self):
             super().__init__()
             # Manually document expected outputs (this is just for demo)
-            self._documented_outputs = ["manual_result", "manual_status"]
+            self.output_vars = ["manual_result", "manual_status"]
         
         def _execute(self, inputs: Dict[str, Any]) -> Dict[str, Any]:
             return {
@@ -2118,11 +2013,11 @@ if __name__ == "__main__":
                     "auto_timestamp": time.time()
                 }
         
-        manual_keys = detect_output_keys(ManualKeysModel)
-        auto_keys = detect_output_keys(AutoKeysModel)
+        manual_keys = detect_output_vars(ManualKeysModel)
+        auto_keys = detect_output_vars(AutoKeysModel)
         
         rprint(f"Manual approach - detected keys: {manual_keys}")
-        rprint(f"Manual approach - documented keys: {ManualKeysModel()._documented_outputs}")
+        rprint(f"Manual approach - documented keys: {ManualKeysModel().output_vars}")
         rprint(f"Automatic approach - detected keys: {auto_keys}")
         
         # Create instances and test them
@@ -2137,7 +2032,7 @@ if __name__ == "__main__":
         rprint(f"AutoKeysModel result: {auto_result}")
         
         # Show detected vs actual output keys
-        rprint(f"  - ManualKeysModel documented outputs: {manual_model._documented_outputs}")
+        rprint(f"  - ManualKeysModel documented outputs: {manual_model.output_vars}")
         rprint(f"  - AutoKeysModel detected outputs: {list(AutoOutputSchema.__annotations__.keys())}")
         
         # Show how this affects DAG building
@@ -2145,15 +2040,15 @@ if __name__ == "__main__":
         auto_dag = AutoKeysModel().build_dag("auto")
         
         rprint(f"\nDAG output keys:")
-        rprint(f"  - Manual model: {manual_dag.output_keys}")
-        rprint(f"  - Auto model: {auto_dag.output_keys}")
+        rprint(f"  - Manual model: {manual_dag.output_vars}")
+        rprint(f"  - Auto model: {auto_dag.output_vars}")
         
         # Test the debug function on the AutoKeysModel to see what's happening
-        debug_detect_output_keys(AutoKeysModel, "(TypedDict)")
-        debug_detect_output_keys(ManualKeysModel, "(Regular Dict)")
+        debug_detect_output_vars(AutoKeysModel, "(TypedDict)")
+        debug_detect_output_vars(ManualKeysModel, "(Regular Dict)")
         
         # Also debug the working TypedDictModel for comparison
-        debug_detect_output_keys(TypedDictModel, "(Working TypedDict)")
+        debug_detect_output_vars(TypedDictModel, "(Working TypedDict)")
     
     rprint("\n[cyan]Output key detection features:[/cyan]")
     rprint("  • detect_output_keys() - Extract output keys from type annotations")

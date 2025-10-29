@@ -1,331 +1,96 @@
-"""
-Examples demonstrating the enhanced model framework features:
-- Pydantic validation and defaults
-- Type-annotated outputs
-- DAG visualization
-- Cycle detection
+""" """
 
-Run this file to see all features in action.
-"""
+from typing import TypedDict, Dict, List, Union, Annotated, get_origin
+import dataclasses
+from dataclasses import dataclass
+import inspect
+from rich import print as rprint
 
-from typing import Dict, Any
-import sys
-import os
+def detect_output_keys(cls) -> List[str]:
+    """
+    Detect output keys from type annotations on the `_execute` method.
+    Looks for Dict[str, X] or similar return type annotations to extract output keys.
+    Supports dataclasses, TypedDicts, and Annotated/Union-wrapped types.
 
-# Add parent directory to path for imports
-#sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    Args:
+        cls: Class to inspect (typically a subclass of ModelMixin).
 
-try:
-    from pydantic import Field, field_validator
-    _HAS_PYDANTIC = True
-except ImportError:
+    Returns:
+        List of output key names, or an empty list if undetermined.
+    """
+    # 1. Check if the class defines `_execute`
+    if not hasattr(cls, "_execute"):
+        return []
+    # 2. Attempt to extract return type hint from _execute output annotation
     try:
-        from pydantic import Field, validator
-        field_validator = validator
-        _HAS_PYDANTIC = True
-    except ImportError:
-        _HAS_PYDANTIC = False
-        Field = lambda **kwargs: None
-
-from reemission.framework.core import (
-    ModelMixin, 
-    PydanticModelMixin, 
-    CycleDetectionError
-)
-
-
-# ============================================================================
-# Example 1: Basic ModelMixin with type-annotated outputs
-# ============================================================================
-
-class Add(ModelMixin):
-    """Simple addition model with typed outputs."""
+        hints = get_type_hints(cls._execute)
+    except (NameError, TypeError, AttributeError):
+        # NameError: forward refs unresolved
+        # TypeError: not callable or missing signature
+        # AttributeError: method missing annotations
+        return []
+    return_type = hints.get("return")
+    if return_type is None:
+        return []
     
-    def __init__(self, x: float = 0.0, y: float = 0.0):
-        super().__init__()
-        self.x = x
-        self.y = y
-    
-    def _execute(self, inputs: Dict[str, Any]) -> Dict[str, float]:
-        """Return sum and product as named outputs."""
-        return {
-            "sum": inputs["x"] + inputs["y"],
-            "product": inputs["x"] * inputs["y"]
-        }
-
-
-class Square(ModelMixin):
-    """Square a value."""
-    
-    def __init__(self, value: float = 0.0):
-        super().__init__()
-        self.value = value
-    
-    def _execute(self, inputs: Dict[str, Any]) -> Dict[str, float]:
-        return {"squared": inputs["value"] ** 2}
-
-
-class Composite(ModelMixin):
-    """Composite model demonstrating dependency resolution."""
-    
-    def __init__(self):
-        super().__init__()
-        self.adder = Add(x=2.0, y=3.0)
-        self.squarer = Square(value=4.0)
-    
-    def depends_on(self) -> Dict[str, str]:
-        """Specify we want the 'sum' output from adder."""
-        return {"adder": "sum"}
-    
-    def _execute(self, inputs: Dict[str, Any]) -> Dict[str, float]:
-        return {
-            "final": inputs["adder"] + inputs["squarer"]["squared"]
-        }
-
-
-# ============================================================================
-# Example 2: Pydantic-validated models (if Pydantic available)
-# ============================================================================
-
-if _HAS_PYDANTIC:
-    class ValidatedMultiply(PydanticModelMixin):
-        """Multiplication with validation constraints."""
+    # --- Normalize the return type ---
+    # Handle Annotated[T, ...]
+    if get_origin(return_type) is Annotated:
+        return_type = get_args(return_type)[0]
         
-        x: float = Field(default=1.0, ge=0, description="First multiplicand (non-negative)")
-        y: float = Field(default=1.0, ge=0, description="Second multiplicand (non-negative)")
+    # Handle Union[T, None] → use T
+    if get_origin(return_type) is Union:
+        non_none = [t for t in get_args(return_type) if t is not type(None)]
+        if non_none:
+            return_type = non_none[0]
+    
+    # --- Case 1: Dict[...] (no specific keys known) ---
+    if get_origin(return_type) in (dict, Dict):
+        return []
         
-        @field_validator('x', 'y')
-        @classmethod
-        def check_reasonable_range(cls, v: float) -> float:
-            """Ensure values are in reasonable range."""
-            if v > 1000:
-                raise ValueError("Value too large (max 1000)")
-            return v
+    # --- Case 2: Dataclass ---
+    if dataclasses.is_dataclass(return_type):
+        return [f.name for f in dataclasses.fields(return_type)]
+
+    # --- Case 3: TypedDict ---
+    # Robust TypedDict detection (works even for typing_extensions.TypedDict)
+    if inspect.isclass(return_type) and issubclass(return_type, dict):
+        if hasattr(return_type, "__annotations__") and (
+            hasattr(return_type, "__required_keys__") or hasattr(return_type, "__optional_keys__")
+        ):
+            return list(return_type.__annotations__.keys())
+    
+    # --- Case 4: Fallback - any structured class with annotations ---
+    if inspect.isclass(return_type) and hasattr(return_type, "__annotations__"):
+        ann = getattr(return_type, "__annotations__", {})
+        if ann and not return_type.__name__.startswith("_"):
+            return list(ann.keys())
+
+    return []
+    
+    
+class Outputs(TypedDict):
+    flux: float
+    volume: float
+    
+@dataclass
+class OutputsDC:
+    flux: float
+    volume: float
+    
+class OutputsManual:
+    flux: float
+    volume: float
+    description: str = "optional metadata"
+
+class ExampleModel:
+    def _execute(self) -> OutputsManual:
+        return {"flux": 1.0, "volume": 42.0}
         
-        def _execute(self, inputs: Dict[str, Any]) -> Dict[str, float]:
-            return {
-                "product": inputs["x"] * inputs["y"],
-                "sum": inputs["x"] + inputs["y"]
-            }
-    
-    
-    class ValidatedComposite(PydanticModelMixin):
-        """Composite model with validation."""
         
-        scale: float = Field(default=1.0, gt=0, description="Scaling factor")
-        
-        def __init__(self, **kwargs):
-            super().__init__(**kwargs)
-            self.mult = ValidatedMultiply(x=3.0, y=4.0)
-        
-        def depends_on(self) -> Dict[str, str]:
-            return {"mult": "product"}
-        
-        def _execute(self, inputs: Dict[str, Any]) -> Dict[str, float]:
-            return {"scaled_result": inputs["mult"] * inputs["scale"]}
-
-
-# ============================================================================
-# Example 3: Cycle detection
-# ============================================================================
-
-class NodeA(ModelMixin):
-    """First node in potential cycle."""
-    
-    def _execute(self, inputs: Dict[str, Any]) -> Dict[str, float]:
-        if "b_value" in inputs:
-            return {"a_value": inputs["b_value"] + 1}
-        return {"a_value": 1.0}
-
-
-class NodeB(ModelMixin):
-    """Second node in potential cycle."""
-    
-    def _execute(self, inputs: Dict[str, Any]) -> Dict[str, float]:
-        if "c_value" in inputs:
-            return {"b_value": inputs["c_value"] + 1}
-        return {"b_value": 2.0}
-
-
-class NodeC(ModelMixin):
-    """Third node that could create a cycle."""
-    
-    def _execute(self, inputs: Dict[str, Any]) -> Dict[str, float]:
-        if "a_value" in inputs:
-            return {"c_value": inputs["a_value"] + 1}
-        return {"c_value": 3.0}
-
-
-class CyclicModel(ModelMixin):
-    """Model that creates a cycle when improperly connected."""
-    
-    def __init__(self, create_cycle: bool = False):
-        super().__init__()
-        self.a = NodeA()
-        self.b = NodeB()
-        self.c = NodeC()
-        
-        if create_cycle:
-            # This will create: a -> b -> c -> a (cycle!)
-            self.a.b_ref = self.b
-            self.b.c_ref = self.c
-            self.c.a_ref = self.a  # Creates the cycle
-    
-    def _execute(self, inputs: Dict[str, Any]) -> float:
-        return sum(inputs.get(k, {}).get(f"{k}_value", 0) for k in ["a", "b", "c"])
-
-
-# ============================================================================
-# Main demonstration
-# ============================================================================
-
-def demonstrate_basic_usage():
-    """Demonstrate basic model composition."""
-    print("=" * 70)
-    print("EXAMPLE 1: Basic Model Composition")
-    print("=" * 70)
-    
-    model = Composite()
-    result = model.run()
-    print(f"\nResult: {result}")
-    print(f"Expected: {{'final': 21.0}} (sum=5, squared=16, final=21)")
-
-
-def demonstrate_visualization():
-    """Demonstrate DAG visualization."""
-    print("\n" + "=" * 70)
-    print("EXAMPLE 2: DAG Visualization")
-    print("=" * 70)
-    
-    model = Composite()
-    print("\nModel structure:")
-    print(model.visualize())
-    
-    print("\nSerialized to JSON:")
-    print(model.to_json(indent=2))
-
-
-def demonstrate_pydantic_validation():
-    """Demonstrate Pydantic validation (if available)."""
-    if not _HAS_PYDANTIC:
-        print("\n" + "=" * 70)
-        print("EXAMPLE 3: Pydantic Validation (SKIPPED - Pydantic not installed)")
-        print("=" * 70)
-        return
-    
-    print("\n" + "=" * 70)
-    print("EXAMPLE 3: Pydantic Validation")
-    print("=" * 70)
-    
-    # Valid model
-    print("\n3a. Valid model:")
-    model = ValidatedMultiply(x=3.0, y=4.0)
-    result = model.run()
-    print(f"Result: {result}")
-    
-    # Test validation - negative value
-    print("\n3b. Invalid model (negative value):")
-    try:
-        invalid = ValidatedMultiply(x=-1.0, y=4.0)
-        print("ERROR: Should have raised validation error!")
-    except Exception as e:
-        print(f"✓ Validation caught: {type(e).__name__}: {str(e)[:80]}...")
-    
-    # Test validation - value too large
-    print("\n3c. Invalid model (value too large):")
-    try:
-        invalid = ValidatedMultiply(x=1001.0, y=4.0)
-        print("ERROR: Should have raised validation error!")
-    except Exception as e:
-        print(f"✓ Validation caught: {type(e).__name__}: {str(e)[:80]}...")
-    
-    # Composite with validation
-    print("\n3d. Composite validated model:")
-    composite = ValidatedComposite(scale=2.0)
-    result = composite.run()
-    print(f"Result: {result}")
-    print(f"Expected: {{'scaled_result': 24.0}} (3*4*2)")
-
-
-def demonstrate_cycle_detection():
-    """Demonstrate cycle detection."""
-    print("\n" + "=" * 70)
-    print("EXAMPLE 4: Cycle Detection")
-    print("=" * 70)
-    
-    # Valid model (no cycle)
-    print("\n4a. Valid model (no cycle):")
-    model = CyclicModel(create_cycle=False)
-    try:
-        result = model.run()
-        print(f"✓ Model executed successfully: {result}")
-    except CycleDetectionError as e:
-        print(f"ERROR: Unexpected cycle detected: {e}")
-    
-    # Invalid model (with cycle)
-    print("\n4b. Invalid model (with cycle):")
-    cyclic = CyclicModel(create_cycle=True)
-    try:
-        result = cyclic.run()
-        print("ERROR: Should have detected cycle!")
-    except CycleDetectionError as e:
-        print(f"✓ Cycle detected successfully!")
-        print(f"   Cycle path: {' -> '.join(e.cycle_path)}")
-
-
-def demonstrate_from_dict():
-    """Demonstrate model construction from dictionary."""
-    print("\n" + "=" * 70)
-    print("EXAMPLE 5: Construction from Dictionary")
-    print("=" * 70)
-    
-    config = {
-        "x": 5.0,
-        "y": 6.0
-    }
-    
-    model = Add.from_dict(config)
-    result = model.run()
-    print(f"\nConfig: {config}")
-    print(f"Result: {result}")
-    print(f"Expected: {{'sum': 11.0, 'product': 30.0}}")
-
-
-def demonstrate_keyed_outputs():
-    """Demonstrate working with keyed outputs."""
-    print("\n" + "=" * 70)
-    print("EXAMPLE 6: Keyed Outputs and Dependency Resolution")
-    print("=" * 70)
-    
-    add_model = Add(x=10, y=20)
-    result = add_model.run()
-    
-    print(f"\nAdd model returns multiple keyed outputs:")
-    print(f"  Result: {result}")
-    print(f"  Available keys: {list(result.keys())}")
-    
-    # Using in a composite
-    print(f"\nUsing keyed outputs in composite model:")
-    composite = Composite()
-    print(f"  Composite.depends_on(): {composite.depends_on()}")
-    print(f"  This means: use only the 'sum' key from 'adder' child")
-    
-    result = composite.run()
-    print(f"  Final result: {result}")
-
-
 if __name__ == "__main__":
-    print("\n" + "=" * 70)
-    print("ENHANCED MODEL FRAMEWORK DEMONSTRATION")
-    print("=" * 70)
+    """ """
+    from typing import get_type_hints
     
-    demonstrate_basic_usage()
-    demonstrate_visualization()
-    demonstrate_pydantic_validation()
-    demonstrate_cycle_detection()
-    demonstrate_from_dict()
-    demonstrate_keyed_outputs()
-    
-    print("\n" + "=" * 70)
-    print("ALL EXAMPLES COMPLETED")
-    print("=" * 70)
+    return_types = detect_output_keys(ExampleModel)
+    rprint(return_types)

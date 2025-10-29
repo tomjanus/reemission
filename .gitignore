@@ -177,3 +177,4 @@ aux_scripts_n_data/
 examples/myanmar_case_study/
 
 .vscode
+src/reemission/cutoffs/
