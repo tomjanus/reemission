@@ -164,3 +164,16 @@ examples/demo/*
 
 # Unused legacy files
 legacy/
+
+# Temporary gits
+tests/
+src/reemission/demo/demo_interactive_map/
+src/reemission/demo/geocaret_outputs/
+src/reemission/demo/reemission_demo_dam_db/
+src/reemission/demo/reemission_demo_delineations/
+src/reemission/demo/reemission_outputs/
+test_input_7_9_backup_and_delete/
+aux_scripts_n_data/
+examples/myanmar_case_study/
+
+.vscode
