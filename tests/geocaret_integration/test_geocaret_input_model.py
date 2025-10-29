@@ -1,11 +1,11 @@
 """ """
 import unittest
 from reemission.integration.geocaret.input_model_geocaret import (
-    DamDataModelHeet, BuildStatusModelHeet, BiogenicFactorsModelHeet, 
-    CatchmentModelHeet, ReservoirModelHeet)
+    DamDataModelGeoCaret, BuildStatusModelGeoCaret, BiogenicFactorsModelGeoCaret, 
+    CatchmentModelGeoCaret, ReservoirModelGeoCaret)
 
 
-class TestHeetInputModel(unittest.TestCase):
+class TestGeoCaretInputModel(unittest.TestCase):
     """ """
     @classmethod
     def setUpClass(cls):
@@ -41,7 +41,7 @@ class TestHeetInputModel(unittest.TestCase):
             "r_mean_temp_10": 13.9,
             "r_mean_temp_11": 14.2,
             "r_mean_temp_12": 14.8}
-        dam_data = DamDataModelHeet(**dam_data_dict)
+        dam_data = DamDataModelGeoCaret(**dam_data_dict)
         dam_data_txt = dam_data.json(indent=None)
         dam_data_expected = \
             '{"name": "Shweli 1", "longitude": 97.506, "latitude": 23.698, ' + \
@@ -55,7 +55,7 @@ class TestHeetInputModel(unittest.TestCase):
             "r_status": "ExisTing",
             "r_construction_date": "2000",
             "construction_date": 1998}
-        status = BuildStatusModelHeet(**status_dict)
+        status = BuildStatusModelGeoCaret(**status_dict)
         status_data_txt = status.json(indent=None)
         status_data_expected = '{"status": "existing", "construction_date": 2000}'
         self.assertEqual(status_data_txt, status_data_expected)
@@ -68,7 +68,7 @@ class TestHeetInputModel(unittest.TestCase):
             "c_soil_type": "MINERAL",
             "c_treatment_factor": "primary (mechanical)",
             "c_landuse_intensity": "low intensity"}
-        biogenic_factors = BiogenicFactorsModelHeet(**biogenic_factors_dict)
+        biogenic_factors = BiogenicFactorsModelGeoCaret(**biogenic_factors_dict)
         biogenic_factors_data_txt = biogenic_factors.json(indent=None)
         biogenic_factors_data_expected = '{"biome": "tropical dry broadleaf", ' \
         + '"climate": "temperate", "soil_type": "mineral", "treatment_factor": ' \
@@ -96,7 +96,7 @@ class TestHeetInputModel(unittest.TestCase):
             "c_mpet_mm": 1123.0,
             "c_masm_mm": 144.0,
             "c_mean_olsen": 5.85}
-        catchment_data = CatchmentModelHeet(**catchment_data_dict)
+        catchment_data = CatchmentModelGeoCaret(**catchment_data_dict)
         catchment_data_txt = catchment_data.json(indent=None)
         catchment_data_expected = \
             '{"runoff": 1115.0, "area": 12582.613, "riv_length": 0.0, "population": 1587658.0, ' + \
@@ -144,7 +144,7 @@ class TestHeetInputModel(unittest.TestCase):
             "r_mghr_nov_mar_kwhperm2perday": 4.852,
             "r_mean_annual_windspeed": 1.08,
             "water_intake_depth": None}
-        reservoir_data = ReservoirModelHeet(**reservoir_dict)
+        reservoir_data = ReservoirModelGeoCaret(**reservoir_dict)
         reservoir_data_txt = reservoir_data.json(indent=None)
         reservoir_data_expected = \
             '{"volume": 7238166.0, "area": 1.604, "max_depth": 22.0, "mean_depth": 4.5, ' + \

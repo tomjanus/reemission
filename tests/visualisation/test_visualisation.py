@@ -11,7 +11,7 @@ TEST_OUTPUT_FOLDER = './test_output'
 log = create_logger(logger_name="visualisation test")
 
 
-class TestHeetReemissionResultVisualisation(unittest.TestCase):
+class TestGeoCaretReemissionResultVisualisation(unittest.TestCase):
     """ """
     @classmethod
     def setUpClass(cls):
@@ -20,7 +20,7 @@ class TestHeetReemissionResultVisualisation(unittest.TestCase):
             pathlib.Path("test_data/reservoirs_updated.shp"))
         cls.dams_ifc = load_geojson(
             pathlib.Path(
-                "../heet_integration/test_data/ifc_db/ifc_test.geojson"))
+                "../geocaret_integration/test_data/ifc_db/ifc_test.geojson"))
         pathlib.Path(TEST_OUTPUT_FOLDER).mkdir(parents=True, exist_ok=True)
 
     @classmethod

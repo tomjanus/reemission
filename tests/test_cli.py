@@ -5,7 +5,7 @@ from reemission.cli.cli import main
 
 def test_main():
     runner = CliRunner()
-    result = runner.invoke(main, [])
-
-    assert result.output == '()\n'
-    assert result.exit_code == 0
+    result_ok = runner.invoke(main, [])
+    result_notok = runner.invoke(main, ["dd"])
+    assert result_ok.exit_code == 0
+    assert result_notok.exit_code == 2

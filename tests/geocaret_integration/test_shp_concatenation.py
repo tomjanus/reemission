@@ -2,7 +2,7 @@
 the concetenated shape files into a single file
 
 Shape concatenation functionality is used for processing reservoir and catchment
-delineations coming as outputs from the HEET reservoir and catchment delineation
+delineations coming as outputs from the GeoCARET reservoir and catchment delineation
 tool. The shape files representing individual reservoirs or dams need to be
 concatenated into a single shape file (layer) with multiple reservoirs / dams / 
 catchments / river fragments for easier post-processing, visualisation and 

@@ -42,21 +42,22 @@ class TestPresenter(unittest.TestCase):
     def test_presenter_init(self):
         """ Check if initializations from dict and json produce the same data
             sets """
-        pres1 = Presenter(inputs=self.inputs, outputs=self.outputs,
+        pres1 = Presenter(inputs=self.inputs, outputs=self.outputs, intern_vars={},
                           author="Anonymous 1", title="Sample Title")
         pres2 = Presenter.fromfiles(
             input_file=self.input_file_path, output_file=self.output_file_path,
+            interns_file=None,
             author="Anonymous 2", title="Sample Title 2")
         self.assertEqual(pres1.outputs, pres2.outputs)
 
     def test_presenter_config(self):
         """ Check Presenter config data load in post init """
-        pres1 = Presenter(inputs=self.inputs, outputs=self.outputs)
+        pres1 = Presenter(inputs=self.inputs, outputs=self.outputs, intern_vars={})
         self.assertIsInstance(pres1.input_config, dict)
 
     def test_latex(self):
         """ Test writing output data to .tex / .pdf using LatexWriter """
-        pres_latex = Presenter(inputs=self.inputs, outputs=self.outputs,
+        pres_latex = Presenter(inputs=self.inputs, outputs=self.outputs, intern_vars={},
                                author="Anonymus",
                                title="HEET Test Results")
         pres_latex.add_writer(writer=LatexWriter,
@@ -65,7 +66,7 @@ class TestPresenter(unittest.TestCase):
 
     def test_excel(self):
         """ Test writing output data to .xlsx using Pandas """
-        pres_xls = Presenter(inputs=self.inputs, outputs=self.outputs,
+        pres_xls = Presenter(inputs=self.inputs, outputs=self.outputs, intern_vars={},
                              author="Anonymus",
                              title="HEET Test Results")
         pres_xls.add_writer(writer=ExcelWriter,

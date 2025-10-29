@@ -14,7 +14,7 @@ TEST_OUTPUT_FOLDER = './test_output'
 log = create_logger(logger_name="results postprocessing test")
 
 
-class TestHeetReemissionIntegration(unittest.TestCase):
+class TestGeoCaretReemissionIntegration(unittest.TestCase):
     """ """
     @classmethod
     def setUpClass(cls):
@@ -40,7 +40,7 @@ class TestHeetReemissionIntegration(unittest.TestCase):
 
     def test_geocaret_outputs_to_shapes(self) -> None:
         """ Create shape files with extra fields with values obtained from the
-        tabular HEET output csv file. Assert that the file has been created """
+        tabular GEOCARET output csv file. Assert that the file has been created """
         append_data_to_shapes(
             self.shp_folder, self.data_file, self.config, TEST_OUTPUT_FOLDER)
         self.assertTrue(pathlib.Path.exists(

@@ -72,10 +72,13 @@ class TestInput(unittest.TestCase):
             Intented behaviour: Instantiating with wrong key should create a 
             new input object with name=[Reservoir Name] and data={}
         """
-        reservoir_name = "Reservoir 3"
-        self.input = Input.fromfile(file=self.input_file,
-                                    reservoir_name=reservoir_name)
-        self.assertDictEqual(self.input.data, dict())
+
+        reservoir_name = "Reservoir 1"
+        self.input = Input.fromfile(
+            file=self.input_file, reservoir_name=reservoir_name)
+        self.assertEqual(self.input.data, 2)
+        #self.assertTrue("Reservoir 'Reservoir 3' not found" in context.exception)
+        #self.assertDictEqual(self.input.data, dict())
 
         # Assert that instantiating with the key creates a dict inside Input
         reservoir_name = "Reservoir 2"

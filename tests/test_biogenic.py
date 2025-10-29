@@ -42,7 +42,7 @@ class TestBiogenic(unittest.TestCase):
         # Initialize BiogenicFactors from dictionary and then convert
         # the data to a dictionary and check if both are equal
         biogenic_factors = BiogenicFactors.fromdict(self.data)
-        self.assertEqual(self.data, biogenic_factors.todict())
+        self.assertEqual(self.data, biogenic_factors.todict(method="value"))
 
 
 if __name__ == '__main__':
