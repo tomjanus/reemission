@@ -461,8 +461,9 @@ class Reservoir:
         """
         return water_density(temp=self.surface_temperature())
 
+
     @save_return(internal, internals_config['thermocline_depth']['include'])
-    def thermocline_depth(self) -> float | None:
+    def thermocline_depth(self) -> float:
         """Calculate the thermocline depth required for the calculation of CH$_4$
         degassing.
 
@@ -476,8 +477,11 @@ class Reservoir:
         Farrell M. Journal of Great Lakes ResearchOpen AccessVolume 15,
         Issue 2, Pages 233 - 245, 1989.
 
-        If data for the wind speed or monthly temperature is not provided (None), a simplified equation
-        from Hanna 1990 is used, as implemented in G-Res_.
+        A simplified equation from Hanna 1990 is used under two alternative conditions:
+        1. If data for the wind speed or monthly temperature is not provided (None)
+        2. If the model of Gorham and Boyce fails to produce stratificatin which may happen
+           if climate is too stable. In this case the predicted bottom density can be smaller 
+           than surface density
         
         The equation of Hanna is taken from the original publication:
         Hanna, Micheline. (1990). `Evaluation of Models Predicting Mixing Depth`. 
@@ -485,39 +489,40 @@ class Reservoir:
 
         Returns:
             float: The thermocline depth of the reservoir, m.
-            None: If the reservoir is not stratified.
         """
+        
+        def _thermocline_hanna(area: float) -> float:
+            """ Calculate thermocline depth according to the equation from Hanna 1990"""
+            return 10**(0.185 * math.log10(self.area) + 0.842)
+        
         if self.mean_monthly_windspeed is None:
-            thermocline_depth = 10**(0.185 * math.log10(self.area) + 0.842)
-            log.debug("Thermocline depth calculated with model of Hanna.")
-        else:
-            # Calculate CD coefficient and scale wind speed to 10m
-            cd_coeff = cd_factor(self.mean_monthly_windspeed)
-            # Find thermocline depth in metres
-            aux_var_1 = cd_coeff * air_density(
-                self.temperature.mean_warmest(number_of_months=4)) * \
-                self.mean_monthly_windspeed**2
-            # It is possible that the second auxiliary variable turns out negative
-            # due to some previous empirical calculations not working properly for
-            # some combinations of input variables.
-            eps_density: float = 5E-1 # to avoid numerical errors
-            if self.bottom_density() <= self.surface_density() + eps_density:
-                return None
-            aux_var_2 = 9.80665 * (self.bottom_density() - self.surface_density())
-            aux_var_3 = math.sqrt(self.area * 10**6)
-            try:
-                thermocline_depth = 2 * math.sqrt(aux_var_1 / aux_var_2) * \
-                    math.sqrt(aux_var_3)
-                log.debug(
-                    "Thermocline depth calculated with model of Gorham and Boyce.")
-            except ValueError:
-                thermocline_depth = 6.95 * self.area**0.185
-                main_msg: str = \
-                    "Problem with thermocline depth calculation using Gorham and Boyce model."
-                extra_msg: str = \
-                    "Area, depth, wind and temperature inputs produce errorenous output.\n"
-                extra_msg += "Thermocline depth calculated with the model of Hanna instead."
-                log.debug(main_msg, extra={'detail': extra_msg})
+            log.warning("Thermocline depth calculated with model of Hanna due to missing windspeed data.")
+            return _thermocline_hanna(area = self.area)
+        # Attempt calculation with Gorham and Boyce (1989)
+        # Calculate CD coefficient and scale wind speed to 10m
+        cd_coeff = cd_factor(self.mean_monthly_windspeed)
+        # Find thermocline depth in metres
+        aux_var_1 = cd_coeff * air_density(
+            self.temperature.mean_warmest(number_of_months=4)) * \
+            self.mean_monthly_windspeed**2
+        eps_density: float = 5E-1 # to avoid numerical errors
+        # It is possible that the the bottom density turns out lower than surface density
+        # It is often due to stable temperature profile across the year - the limitation
+        # of the Gorham and Boyce model. In this case, fall back to Hanna
+        if self.bottom_density() <= self.surface_density() + eps_density:
+            log.warning("Thermocline depth calculated with model of Hanna due to failed stratification.")
+            return _thermocline_hanna(area = self.area)
+        aux_var_2 = 9.80665 * (self.bottom_density() - self.surface_density())
+        aux_var_3 = math.sqrt(self.area * 10**6)
+        try:
+            thermocline_depth = 2 * math.sqrt(aux_var_1 / aux_var_2) * \
+                math.sqrt(aux_var_3)
+        except ValueError:
+            _msg: str = \
+                "Unknown problem with thermocline depth calculation using Gorham and Boyce model."
+            _msg += "Thermocline depth calculated with the model of Hanna instead."
+            log.warning(_msg)
+            return _thermocline_hanna(area = self.area)
         return thermocline_depth
 
     def _k600_ch4(self, waterbody_area: float) -> float:
